@@ -143,18 +143,17 @@ public class Web {
 			System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir]");
 			System.exit(0);
 		}
+
+        Settings settings = com.bolsinga.web.util.Util.createSettings(args[2]);
 		
-        Settings settings = Web.initializeSettings(args[2]);
+        Web.initializeSettings(settings);
         
         int mainPageEntryCount = settings.getDiaryCount().intValue();
         
 		Web.generate(mainPageEntryCount, args[0], args[1], args[3]);
 	}
     
-    private static Settings initializeSettings(String settingsFile) {
-        Settings settings = com.bolsinga.web.util.Util.createSettings(settingsFile);
-
-		System.setProperty("web.ico", settings.getIco());
+    private static void initializeSettings(Settings settings) {
         com.bolsinga.settings.data.Image image = settings.getLogoImage();
 		System.setProperty("web.logo.url", image.getLocation());
 		System.setProperty("web.logo.width", image.getWidth().toString());
@@ -174,8 +173,6 @@ public class Web {
 		System.setProperty("ical.image.width", image.getWidth().toString());
 		System.setProperty("ical.image.height", image.getHeight().toString());
 		System.setProperty("ical.image.alt", image.getAlt());
-        
-        return settings;
     }
 
 	public static void generate(int mainPageEntryCount, String sourceFile, String musicFile, String outputDir) {

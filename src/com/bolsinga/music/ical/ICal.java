@@ -18,20 +18,20 @@ public class ICal {
 		}
 
         Settings settings = com.bolsinga.web.util.Util.createSettings(args[1]);
-		
-        String name = settings.getIcalName();
         
-		ICal.generate(args[0], name, args[2]);
+		ICal.generate(args[0], args[2]);
 	}
 
-	public static void generate(String sourceFile, String name, String outputDir) {
+	public static void generate(String sourceFile, String outputDir) {
 		Music music = Util.createMusic(sourceFile);
 		
-		generateICal(music, name, outputDir);
+		generateICal(music, outputDir);
 	}
 	
-	public static void generateICal(Music music, String name, String outputDir) {
+	public static void generateICal(Music music, String outputDir) {
 		OutputStreamWriter w = null;
+
+        String name = com.bolsinga.web.util.Util.getSettings().getIcalName();
 		
 		try {
 			File f = new File(outputDir, name + ".ics");

@@ -321,16 +321,15 @@ public class Web {
 			System.out.println("Usage: Web [source.xml] [settings.xml] [output.dir]");
 			System.exit(0);
 		}
+
+        Settings settings = com.bolsinga.web.util.Util.createSettings(args[1]);
         
-        Web.initializeSettings(args[1]);
+        Web.initializeSettings(settings);
 		
 		Web.generate(args[0], args[2]);
 	}
     
-    private static void initializeSettings(String settingsFile) {
-        Settings settings = com.bolsinga.web.util.Util.createSettings(settingsFile);
-
-		System.setProperty("web.ico", settings.getIco());
+    private static void initializeSettings(Settings settings) {
         com.bolsinga.settings.data.Image image = settings.getLogoImage();
 		System.setProperty("web.logo.url", image.getLocation());
 		System.setProperty("web.logo.width", image.getWidth().toString());

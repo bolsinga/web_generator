@@ -23,16 +23,14 @@ public class RSS {
 			System.exit(0);
 		}
 
-        Settings settings = RSS.initializeSettings(args[2]);
-		
-        int entryCount = settings.getRssCount().intValue();
-        
-		RSS.generate(entryCount, args[0], args[1], args[3]);
+        Settings settings = com.bolsinga.web.util.Util.createSettings(args[2]);
+
+        RSS.initializeSettings(settings);
+		        
+		RSS.generate(args[0], args[1], args[3]);
 	}
 
-    private static Settings initializeSettings(String settingsFile) {
-        Settings settings = com.bolsinga.web.util.Util.createSettings(settingsFile);
-
+    private static void initializeSettings(Settings settings) {
         com.bolsinga.settings.data.Image image = settings.getLogoImage();
 		System.setProperty("web.logo.url", image.getLocation());
 		System.setProperty("web.logo.width", image.getWidth().toString());
@@ -42,18 +40,16 @@ public class RSS {
 		System.setProperty("rss.contact", settings.getContact());
 		System.setProperty("rss.root", settings.getRssRoot());
 		System.setProperty("rss.description", settings.getRssDescription());
-        
-        return settings;
     }
 
-	public static void generate(int entryCount, String diaryFile, String musicFile, String outputFile) {
+	public static void generate(String diaryFile, String musicFile, String outputFile) {
 		Diary diary = com.bolsinga.diary.util.Util.createDiary(diaryFile);
 		Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
 		
-		generate(entryCount, diary, music, outputFile);
+		generate(diary, music, outputFile);
 	}
 	
-	public static void generate(int entryCount, Diary diary, Music music, String outputFile) {
+	public static void generate(Diary diary, Music music, String outputFile) {
 		OutputStream os = null;
 		try {
 			os = new FileOutputStream(outputFile);
@@ -63,7 +59,7 @@ public class RSS {
 			System.exit(1);
 		}
 	
-		generate(entryCount, diary, music, os);
+		generate(diary, music, os);
 	}
 
 	private static String getGenerator() {
@@ -89,7 +85,7 @@ public class RSS {
 		return sb.toString();
 	}
 	
-	public static void generate(int entryCount, Diary diary, Music music, OutputStream os) {
+	public static void generate(Diary diary, Music music, OutputStream os) {
 		com.bolsinga.rss.data.ObjectFactory objFactory = new com.bolsinga.rss.data.ObjectFactory();
 
 		try {		
@@ -120,6 +116,8 @@ public class RSS {
 			
 			com.bolsinga.music.util.Links musicLinks = com.bolsinga.music.util.Links.getLinks(false);
 			com.bolsinga.diary.util.Links diaryLinks = com.bolsinga.diary.util.Links.getLinks(false);
+
+            int entryCount = com.bolsinga.web.util.Util.getSettings().getRssCount().intValue();
 
 			Vector items = new Vector(entryCount);
 			items.addAll(shows.subList(0, entryCount / 2));

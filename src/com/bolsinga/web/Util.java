@@ -10,6 +10,7 @@ import javax.xml.bind.Unmarshaller;
 
 public class Util {
 
+    private static com.bolsinga.settings.data.Settings sSettings = null;
 	private static boolean sPrettyPrint = false;
 	static {
 		String value = System.getProperty("web.pretty_containers");
@@ -25,7 +26,7 @@ public class Util {
 	public static link getIconLink() {
 		link result = new link();
 		result.setRel("SHORTCUT ICON");
-		result.setHref(System.getProperty("web.ico"));
+		result.setHref(com.bolsinga.web.util.Util.getSettings().getIco());
 		return result;
 	}
 	
@@ -79,18 +80,23 @@ public class Util {
 		return an;
 	}
 
-	public static com.bolsinga.settings.data.Settings createSettings(String sourceFile) {
-		com.bolsinga.settings.data.Settings settings = null;
-		try {
-			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
-			Unmarshaller u = jc.createUnmarshaller();
-			
-			settings = (com.bolsinga.settings.data.Settings)u.unmarshal(new java.io.FileInputStream(sourceFile));
-		} catch (Exception ume) {
-			System.err.println("Exception: " + ume);
-			ume.printStackTrace();
-			System.exit(1);
-		}
-		return settings;
-	}
+    public synchronized static com.bolsinga.settings.data.Settings createSettings(String sourceFile) {
+        if (sSettings == null) {
+            try {
+                JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
+                Unmarshaller u = jc.createUnmarshaller();
+                
+                sSettings = (com.bolsinga.settings.data.Settings)u.unmarshal(new java.io.FileInputStream(sourceFile));
+            } catch (Exception ume) {
+                System.err.println("Exception: " + ume);
+                ume.printStackTrace();
+                System.exit(1);
+            }
+        }
+        return sSettings;
+    }
+
+    public synchronized static com.bolsinga.settings.data.Settings getSettings() {
+        return sSettings;
+    }
 }
