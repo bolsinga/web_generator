@@ -923,6 +923,8 @@ public class Web {
 	}
 
 	public static void addItem(Music music, Links links, Album album, Div div) {
+		Div albumDiv = new Div();
+		
 		StringBuffer sb;
 		Artist artist = null;
 		Song song;
@@ -947,7 +949,7 @@ public class Web {
 			sb.append(")");
 		}
 		
-		div.addElement(new H1().addElement(sb.toString()));
+		albumDiv.addElement(new H1().addElement(sb.toString()));
 		
 		OL albumListing = new OL();
 
@@ -975,7 +977,9 @@ public class Web {
 			albumListing.addElement(new LI(sb.toString()));
 		}
 		
-		div.addElement(albumListing);
+		albumDiv.addElement(albumListing);
+		
+		div.addElement(albumDiv);
 	}
 	
 	public static void addRelations(Music music, Links links, Artist artist, Div div) {
