@@ -561,6 +561,12 @@ public class Web {
 		return sb.toString();
 	}
 	
+	public static String embedLinks(String sourceFile, String data, boolean upOneLevel) {
+		Music music = createMusic(sourceFile);
+
+		return Encode.getEncode(music).addLinks(data, upOneLevel);
+	}
+	
 	public static void addItem(Music music, Links links, Artist artist, Document doc) {
 		Body b = doc.getBody();
 

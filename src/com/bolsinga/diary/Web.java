@@ -207,7 +207,7 @@ public class Web {
 		
 		generateMainPage(musicFile, mainPageEntryCount, diary, outputDir);
 		
-		generateArchivePages(diary, outputDir);
+		generateArchivePages(musicFile, diary, outputDir);
 	}
 
 	public static final Comparator ENTRY_COMPARATOR = new Comparator() {
@@ -239,7 +239,7 @@ public class Web {
 		sb.append("!");
 		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
 		
-		generateDiary(diary, mainPageEntryCount, td);
+		generateDiary(musicFile, diary, mainPageEntryCount, td);
 		tbody.addElement(td);
 		
 		td = new TD();
@@ -320,7 +320,7 @@ public class Web {
 		return d;
 	}
 	
-	private static void generateDiary(Diary diary, int mainPageEntryCount, TD td) {
+	private static void generateDiary(String musicFile, Diary diary, int mainPageEntryCount, TD td) {
 		List items = diary.getEntry();
 		Entry item = null;
 		TBody tbody = new TBody();
@@ -331,7 +331,7 @@ public class Web {
 		for (int i = 0; i < mainPageEntryCount; i++) {
 			item = (Entry)items.get(i);
 			
-			addItem(item, tbody);
+			addItem(musicFile, item, tbody, false);
 		}
 		
 		addBanner(new A("archives/2004.html", "Archives").toString(), tbody);
@@ -339,7 +339,7 @@ public class Web {
 		td.addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(tbody));
 	}
 	
-	public static void generateArchivePages(Diary diary, String outputDir) {
+	public static void generateArchivePages(String musicFile, Diary diary, String outputDir) {
 		List items = diary.getEntry();
 		Entry item = null;
 		
@@ -351,7 +351,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Entry)li.next();
 			
-			addItem(item, creator.getTableBody(item));
+			addItem(musicFile, item, creator.getTableBody(item), true);
 		}
 		
 		creator.close();
@@ -375,16 +375,22 @@ public class Web {
 		tb.addElement(tr);
 	}
 	
-	public static void addItem(Entry entry, TBody tb) {
+	public static void addItem(String musicFile, Entry entry, TBody tb, boolean upOneLevel) {
 		addBanner(sWebFormat.format(entry.getTimestamp().getTime()), tb);
 		
-		tb.addElement(new TR().addElement(new TD(Web.encodedComment(entry))));
+		tb.addElement(new TR().addElement(new TD(Web.encodedComment(musicFile, entry, upOneLevel))));
 	}
 	
 	private static Pattern sCommentEncoding = Pattern.compile("\n", Pattern.DOTALL);
-	private static String encodedComment(Entry entry) {
+	private static String encodedComment(String musicFile, Entry entry, boolean upOneLevel) {
+		String result = entry.getComment();
+		
 		// Convert new lines to <p>
-		Matcher m = sCommentEncoding.matcher(entry.getComment());
-		return m.replaceAll("<p>");
+		result = sCommentEncoding.matcher(result).replaceAll(" <p> ");
+		
+		// Automatically add artist to the comments.
+		result = com.bolsinga.music.web.Web.embedLinks(musicFile, result, upOneLevel);
+		
+		return result;
 	}
 }
