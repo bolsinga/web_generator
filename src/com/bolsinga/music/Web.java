@@ -833,12 +833,14 @@ public class Web {
 	}
 	
 	public static void addItem(Music music, Links links, Venue venue, Div div) {
+		Div venueDiv = new Div();
+		
 		A a = new A();
 		a.setName(venue.getId());
 		a.addElement("test", venue.getName());
-		div.addElement(new H1().addElement(a));
+		venueDiv.addElement(new H1().addElement(a));
 		
-		addRelations(music, links, venue, div);
+		addRelations(music, links, venue, venueDiv);
 
 		List shows = Lookup.getLookup(music).getShows(venue);
 		ListIterator li = shows.listIterator();
@@ -847,9 +849,9 @@ public class Web {
 			
 			String showLink = links.getLinkTo(show);
 			
-			UL showListing = new UL();
+			Div showDiv = new Div();
 			
-			showListing.addElement(new LI().addElement(new A(showLink, Util.toString(show.getDate()))));
+			showDiv.addElement(new H2().addElement(new A(showLink, Util.toString(show.getDate()))));
 			
 			UL showInfo = new UL();
 			
@@ -874,10 +876,12 @@ public class Web {
 				showInfo.addElement(new LI(new A(showLink, "Show Summary")));
 			}
 			
-			showListing.addElement(showInfo);
+			showDiv.addElement(showInfo);
 			
-			div.addElement(showListing);
+			venueDiv.addElement(showDiv);
 		}
+		
+		div.addElement(venueDiv);
 	}
 	
 	public static void addItem(Music music, Links links, Show show, Div showDiv) {
@@ -973,8 +977,9 @@ public class Web {
 	public static void addRelations(Music music, Links links, Artist artist, Div div) {
 		Collection relations = Lookup.getLookup(music).getRelations(artist);
 		if (relations != null) {
-			UL ul = new UL();
-			ul.addElement(new LI().addElement("See Also"));
+			Div relDiv = new Div();
+			
+			relDiv.addElement(new H2().addElement("See Also"));
 			
 			UL related = new UL();
 			Iterator li = relations.iterator();
@@ -986,17 +991,18 @@ public class Web {
 					related.addElement(new LI().addElement(new A(links.getLinkTo(a), a.getName())));
 				}
 			}
-			ul.addElement(related);
+			relDiv.addElement(related);
 			
-			div.addElement(ul);
+			div.addElement(relDiv);
 		}
 	}
 	
 	public static void addRelations(Music music, Links links, Venue venue, Div div) {
 		Collection relations = Lookup.getLookup(music).getRelations(venue);
 		if (relations != null) {
-			UL ul = new UL();
-			ul.addElement(new LI().addElement("See Also"));
+			Div relDiv = new Div();
+
+			relDiv.addElement(new H2().addElement("See Also"));
 			
 			UL related = new UL();
 			Iterator li = relations.iterator();
@@ -1008,9 +1014,9 @@ public class Web {
 					related.addElement(new LI().addElement(new A(links.getLinkTo(v), v.getName())));
 				}
 			}
-			ul.addElement(related);
+			relDiv.addElement(related);
 			
-			div.addElement(ul);
+			div.addElement(relDiv);
 		}
 	}
 
