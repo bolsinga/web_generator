@@ -23,18 +23,18 @@ public class Encode {
 		
 		Data(Artist artist, Links standardLinks, Links upLinks) {
 			fName = artist.getName();
-			fPattern = Pattern.compile(createRegex(fName), Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			fStandardLink = new A(standardLinks.getLinkTo(artist), fName).toString();
-			fUpLink = new A(upLinks.getLinkTo(artist), fName).toString();
+			fStandardLink = new A(standardLinks.getLinkTo(artist), "$2").toString();
+			fUpLink = new A(upLinks.getLinkTo(artist), "$2").toString();
 		}
 		
 		Data(Venue venue, Links standardLinks, Links upLinks) {
 			fName = venue.getName();
-			fPattern = Pattern.compile(createRegex(fName), Pattern.DOTALL);
+			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			fStandardLink = new A(standardLinks.getLinkTo(venue), fName).toString();
-			fUpLink = new A(upLinks.getLinkTo(venue), fName).toString();
+			fStandardLink = new A(standardLinks.getLinkTo(venue), "$2").toString();
+			fUpLink = new A(upLinks.getLinkTo(venue), "$2").toString();
 		}
 		
 		String getName() {
