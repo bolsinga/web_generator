@@ -382,15 +382,22 @@ public class Web {
 	}
 	
 	private static Pattern sCommentEncoding = Pattern.compile("\n", Pattern.DOTALL);
-	private static String encodedComment(String musicFile, Entry entry, boolean upOneLevel) {
-		String result = entry.getComment();
+	
+	private static HashMap sLinkedData = new HashMap();
+	
+	private static synchronized String encodedComment(String musicFile, Entry entry, boolean upOneLevel) {
+		String comment = entry.getComment();
 		
-		// Automatically add music links to the comments.
-		result = com.bolsinga.music.web.Web.embedLinks(musicFile, result, upOneLevel);
+		if (!sLinkedData.containsKey(comment)) {
+			// Automatically add music links to the comments.
+			String result = com.bolsinga.music.web.Web.embedLinks(musicFile, comment, upOneLevel);
+			
+			// Convert new lines to <p>
+			result = sCommentEncoding.matcher(result).replaceAll("<p>");
+			
+			sLinkedData.put(comment, result);
+		}
 		
-		// Convert new lines to <p>
-		result = sCommentEncoding.matcher(result).replaceAll("<p>");
-		
-		return result;
+		return (String)sLinkedData.get(comment);
 	}
 }
