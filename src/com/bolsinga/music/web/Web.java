@@ -82,7 +82,7 @@ abstract class DocumentCreator {
 	}
 	
 	private void addHeader() {
-		fDocument.getBody().addElement(new Center(Web.getImage()));
+		fDocument.getBody().addElement(new Center(com.bolsinga.web.util.Util.getLogo()));
 	}
 	
 	protected void addWebNavigator() {
@@ -464,7 +464,7 @@ public class Web {
 		Table navigation = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0);
 		
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(Web.getImage()));
+		tr.addElement(new TD(com.bolsinga.web.util.Util.getLogo()));
 		navigation.addElement(tr);
 		
 		sb = new StringBuffer();
@@ -948,21 +948,13 @@ public class Web {
 		d.getHtml().setPrettyPrint(true);
 		
 		Head h = d.getHead();
+		h.addElement(com.bolsinga.web.util.Util.getIconLink());
 		h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
-		h.addElement(new Link().setRel("SHORTCUT ICON").setHref("http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico"));
 		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
 		h.addElement(new Meta().setContent(Web.getGenerator()).setName("Generator"));
 		h.addElement(new Meta().setContent(Web.getCopyright()).setName("Copyright"));
 
 		return d;
-	}
-	
-	static IMG getImage() {
-		IMG img = new IMG("http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif");
-		img.setHeight(90);
-		img.setWidth(120);
-		img.setAlt("[Busy computing... for you!]");
-		return img;
 	}
 }

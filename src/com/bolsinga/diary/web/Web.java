@@ -92,11 +92,7 @@ class DiaryDocumentCreator {
 	}
 	
 	private void addHeader() {
-		IMG img = new IMG("http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif");
-		img.setHeight(90);
-		img.setWidth(120);
-		img.setAlt("[Busy computing... for you!]");
-		fDocument.getBody().addElement(new Center(img));
+		fDocument.getBody().addElement(new Center(com.bolsinga.web.util.Util.getLogo()));
 	}
 
 	private void addIndexNavigator() {
@@ -286,8 +282,8 @@ public class Web {
 		d.getHtml().setPrettyPrint(true);
 		
 		Head h = d.getHead();
+		h.addElement(com.bolsinga.web.util.Util.getIconLink());
 		h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
-		h.addElement(new Link().setRel("SHORTCUT ICON").setHref("http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico"));
 		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
 		h.addElement(new Meta().setContent(getGenerator()).setName("Generator"));

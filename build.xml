@@ -140,6 +140,16 @@
 	</javac>
 </target>
 
+<target name="web_utilities" depends="prepare" >
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/web/util/**" />
+		<classpath refid="web_classpath" />
+	</javac>
+</target>
+
 <target name="converter" depends="music_utilities, diary_binding">
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
@@ -150,7 +160,7 @@
 	</javac>
 </target>
 
-<target name="music_web" depends="music_utilities">
+<target name="music_web" depends="web_utilities, music_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -188,7 +198,7 @@
 	</copy>
 </target>
 
-<target name="diary_web" depends="diary_utilities">
+<target name="diary_web" depends="web_utilities, diary_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -286,6 +296,11 @@
 <target name="generateMusicWeb" depends="music_web, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
+		<sysproperty key="web.ico" value="http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico" />
+		<sysproperty key="web.logo.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif" />
+		<sysproperty key="web.logo.width" value="120" />
+		<sysproperty key="web.logo.height" value="90" />
+		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="music.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="music.root" value="../index.html" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
@@ -323,6 +338,11 @@
 <target name="generateDiaryWeb" depends="music_web, diary_web, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.diary.web.Web" fork="true">
+		<sysproperty key="web.ico" value="http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico" />
+		<sysproperty key="web.logo.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif" />
+		<sysproperty key="web.logo.width" value="120" />
+		<sysproperty key="web.logo.height" value="90" />
+		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="diary.root" value="../index.html" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
