@@ -24,19 +24,9 @@ public class RSS {
 		}
 
         Settings settings = com.bolsinga.web.util.Util.createSettings(args[2]);
-
-        RSS.initializeSettings(settings);
 		        
 		RSS.generate(args[0], args[1], args[3]);
 	}
-
-    private static void initializeSettings(Settings settings) {
-        com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getLogoImage();
-		System.setProperty("web.logo.url", image.getLocation());
-		System.setProperty("web.logo.width", image.getWidth().toString());
-		System.setProperty("web.logo.height", image.getHeight().toString());
-		System.setProperty("web.logo.alt", image.getAlt());
-    }
 
 	public static void generate(String diaryFile, String musicFile, String outputFile) {
 		Diary diary = com.bolsinga.diary.util.Util.createDiary(diaryFile);

@@ -154,14 +154,9 @@ public class Web {
 	}
     
     private static void initializeSettings(Settings settings) {
-        com.bolsinga.settings.data.Image image = settings.getLogoImage();
-		System.setProperty("web.logo.url", image.getLocation());
-		System.setProperty("web.logo.width", image.getWidth().toString());
-		System.setProperty("web.logo.height", image.getHeight().toString());
-		System.setProperty("web.logo.alt", image.getAlt());
 		System.setProperty("web.layout.css", settings.getCssFile());
 		System.setProperty("rss.url", settings.getRssFile());
-        image = settings.getRssImage();
+        com.bolsinga.settings.data.Image image = settings.getRssImage();
 		System.setProperty("rss.image.url", image.getLocation());
 		System.setProperty("rss.image.width", image.getWidth().toString());
 		System.setProperty("rss.image.height", image.getHeight().toString());

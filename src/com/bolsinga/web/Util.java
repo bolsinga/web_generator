@@ -31,10 +31,13 @@ public class Util {
 	}
 	
 	public static img getLogo() {
-		img i = new img(System.getProperty("web.logo.url"));
-		i.setHeight(System.getProperty("web.logo.height"));
-		i.setWidth(System.getProperty("web.logo.width"));
-		i.setAlt(System.getProperty("web.logo.alt"));
+        com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getLogoImage();
+
+		img i = new img(image.getLocation());
+		i.setHeight(image.getHeight().intValue());
+		i.setWidth(image.getWidth().intValue());
+		i.setAlt(image.getAlt());
+        
 		return i;
 	}
 	
