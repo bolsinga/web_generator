@@ -4,7 +4,7 @@ import java.text.*;
 import java.util.regex.*;
 
 public class Util {
-	private static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyy HH:mm:ss z");
+	private static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
 	
 	public static String getRSSDate(java.util.Date date) {
 		return sRSSDateFormat.format(date);
