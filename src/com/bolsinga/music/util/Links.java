@@ -7,7 +7,7 @@ import java.math.*;
 import java.util.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.html.*;
+import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public class Links {
@@ -45,21 +45,21 @@ public class Links {
 		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
 		sb.append(" ");
 
-		StringBuffer link = new StringBuffer();
-		link.append("mailto:");
-		link.append(System.getProperty("music.contact"));
-		link.append("?Subject=");
-		link.append(program);
-		link.append("%20Message");
-		link.append("&amp;Body=");
-		link.append(program);
-		link.append("%20Message%0A");
-		A a = new A(link.toString(), "Contact"); // mailto: URL
-		sb.append(a.toString());
+		StringBuffer m = new StringBuffer();
+		m.append("mailto:");
+		m.append(System.getProperty("music.contact"));
+		m.append("?Subject=");
+		m.append(program);
+		m.append("%20Message");
+		m.append("&amp;Body=");
+		m.append(program);
+		m.append("%20Message%0A");
+		a an = new a(m.toString(), "Contact"); // mailto: URL
+		sb.append(an.toString());
 		sb.append(" ");
 
-		a = getLinkToHome();
-		sb.append(a.toString());
+		an = getLinkToHome();
+		sb.append(an.toString());
 		sb.append(" ");
 		
 		sb.append(getArtistLink());
@@ -154,206 +154,206 @@ public class Links {
 	}
 
 	public String getLinkToPage(Artist artist) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(ARTIST_DIR);
-		link.append(File.separator);
-		link.append(getPageFileName(artist));
-		link.append(HTML_EXT);
+		sb.append(ARTIST_DIR);
+		sb.append(File.separator);
+		sb.append(getPageFileName(artist));
+		sb.append(HTML_EXT);
 		
-		return link.toString();
+		return sb.toString();
 	}
 	
 	public String getLinkToPage(Venue venue) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(VENUE_DIR);
-		link.append(File.separator);
-		link.append(getPageFileName(venue));
-		link.append(HTML_EXT);
+		sb.append(VENUE_DIR);
+		sb.append(File.separator);
+		sb.append(getPageFileName(venue));
+		sb.append(HTML_EXT);
 
-		return link.toString();
+		return sb.toString();
 	}
 	
 	public String getLinkToPage(Show show) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(SHOW_DIR);
-		link.append(File.separator);
-		link.append(getPageFileName(show));
-		link.append(HTML_EXT);
+		sb.append(SHOW_DIR);
+		sb.append(File.separator);
+		sb.append(getPageFileName(show));
+		sb.append(HTML_EXT);
 
-		return link.toString();
+		return sb.toString();
 	}
 	
 	public String getLinkToPage(Album album) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(TRACKS_DIR);
-		link.append(File.separator);
-		link.append(getPageFileName(album));
-		link.append(HTML_EXT);
+		sb.append(TRACKS_DIR);
+		sb.append(File.separator);
+		sb.append(getPageFileName(album));
+		sb.append(HTML_EXT);
 
-		return link.toString();
+		return sb.toString();
 	}
 
 	public String getLinkTo(Artist artist) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
-		link.append(getLinkToPage(artist));
-		link.append(HASH);
-		link.append(artist.getId());
+		sb.append(getLinkToPage(artist));
+		sb.append(HASH);
+		sb.append(artist.getId());
 		
-		return link.toString();
+		return sb.toString();
 	}
 	
 	public String getLinkTo(Venue venue) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
-		link.append(getLinkToPage(venue));
-		link.append(HASH);
-		link.append(venue.getId());
+		sb.append(getLinkToPage(venue));
+		sb.append(HASH);
+		sb.append(venue.getId());
 		
-		return link.toString();
+		return sb.toString();
 	}
 	
 	public String getLinkTo(Show show) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
-		link.append(getLinkToPage(show));
-		link.append(HASH);
-		link.append(show.getId());
+		sb.append(getLinkToPage(show));
+		sb.append(HASH);
+		sb.append(show.getId());
 		
-		return link.toString();
+		return sb.toString();
 	}
 	
 	public String getLinkTo(Album album) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
-		link.append(getLinkToPage(album));
-		link.append(HASH);
-		link.append(album.getId());
+		sb.append(getLinkToPage(album));
+		sb.append(HASH);
+		sb.append(album.getId());
 		
-		return link.toString();
+		return sb.toString();
 	}
 
 	public String getArtistLink() {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(ARTIST_DIR);
-		link.append(File.separator);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Bands");
-		return a.toString();
+		sb.append(ARTIST_DIR);
+		sb.append(File.separator);
+		sb.append(STATS);
+		sb.append(HTML_EXT);
+		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Bands");
+		return an.toString();
 	}
 		
 	public String getShowLink() {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(SHOW_DIR);
-		link.append(File.separator);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Dates");
-		return a.toString();
+		sb.append(SHOW_DIR);
+		sb.append(File.separator);
+		sb.append(STATS);
+		sb.append(HTML_EXT);
+		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Dates");
+		return an.toString();
 	}
 	
 	public String getTracksLink() {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(TRACKS_DIR);
-		link.append(File.separator);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Tracks");
-		return a.toString();
+		sb.append(TRACKS_DIR);
+		sb.append(File.separator);
+		sb.append(STATS);
+		sb.append(HTML_EXT);
+		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Tracks");
+		return an.toString();
 	}
 
 	public String getAlbumsLink() {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(TRACKS_DIR);
-		link.append(File.separator);
-		link.append(ALBUM_STATS);
-		link.append(HTML_EXT);
-		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Albums");
-		return a.toString();
+		sb.append(TRACKS_DIR);
+		sb.append(File.separator);
+		sb.append(ALBUM_STATS);
+		sb.append(HTML_EXT);
+		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Albums");
+		return an.toString();
 	}
 
 	public String getVenueLink() {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(VENUE_DIR);
-		link.append(File.separator);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Venues");
-		return a.toString();
+		sb.append(VENUE_DIR);
+		sb.append(File.separator);
+		sb.append(STATS);
+		sb.append(HTML_EXT);
+		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Venues");
+		return an.toString();
 	}
 	
 	public String getCityLink() {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(CITIES_DIR);
-		link.append(File.separator);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Cities");
-		return a.toString();
+		sb.append(CITIES_DIR);
+		sb.append(File.separator);
+		sb.append(STATS);
+		sb.append(HTML_EXT);
+		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Cities");
+		return an.toString();
 	}
 
-	public A getICalLink() {
-		StringBuffer link = new StringBuffer();
-		link.append("webcal:");
+	public a getICalLink() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("webcal:");
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
-		link.append(ICAL_DIR);
-		link.append(File.separator);
-		link.append(System.getProperty("music.ical.url"));
+		sb.append(ICAL_DIR);
+		sb.append(File.separator);
+		sb.append(System.getProperty("music.ical.url"));
 
-		IMG img = new IMG(System.getProperty("ical.image.url"));
-		img.setHeight(System.getProperty("ical.image.height"));
-		img.setWidth(System.getProperty("ical.image.width"));
-		img.setAlt(System.getProperty("ical.image.alt"));
+		img i = new img(System.getProperty("ical.image.url"));
+		i.setHeight(System.getProperty("ical.image.height"));
+		i.setWidth(System.getProperty("ical.image.width"));
+		i.setAlt(System.getProperty("ical.image.alt"));
 		
-		return new A(link.toString(), img.toString()); // ical: URL
+		return new a(sb.toString(), i.toString()); // ical: URL
 	}
 	
 	public String getStyleSheetLink() {
@@ -368,15 +368,15 @@ public class Links {
 		return url.toString();
 	}
 
-	public Link getLinkToStyleSheet() {
-		Link result = new Link();
+	public link getLinkToStyleSheet() {
+		link result = new link();
 		result.setRel("stylesheet");
 		result.setType("text/css");
 		result.setHref(getStyleSheetLink());
 		return result;
 	}
 
-	public A getLinkToHome() {
+	public a getLinkToHome() {
 		StringBuffer url = new StringBuffer();
 		if (fUpOneLevel) {
 			url.append("..");

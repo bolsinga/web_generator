@@ -7,7 +7,7 @@ import java.text.*;
 import java.util.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.html.*;
+import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public class Links {
@@ -46,38 +46,38 @@ public class Links {
 	}
 
 	public String getLinkToPage(Entry entry) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
 		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
+			sb.append("..");
+			sb.append(File.separator);
 		}
 		
-		link.append(ARCHIVES_DIR);
-		link.append(File.separator);
-		link.append(getPageFileName(entry));
-		link.append(HTML_EXT);
+		sb.append(ARCHIVES_DIR);
+		sb.append(File.separator);
+		sb.append(getPageFileName(entry));
+		sb.append(HTML_EXT);
 		
-		return link.toString();
+		return sb.toString();
 	}
 	
 	public String getLinkTo(Entry entry) {
-		StringBuffer link = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		
-		link.append(getLinkToPage(entry));
-		link.append(HASH);
-		link.append(entry.getId());
+		sb.append(getLinkToPage(entry));
+		sb.append(HASH);
+		sb.append(entry.getId());
 		
-		return link.toString();
+		return sb.toString();
 	}
 	
-	public A getRSSLink() {
-		IMG img = new IMG(System.getProperty("rss.image.url"));
-		img.setHeight(System.getProperty("rss.image.height"));
-		img.setWidth(System.getProperty("rss.image.width"));
-		img.setAlt(System.getProperty("rss.image.alt"));
+	public a getRSSLink() {
+		img i = new img(System.getProperty("rss.image.url"));
+		i.setHeight(System.getProperty("rss.image.height"));
+		i.setWidth(System.getProperty("rss.image.width"));
+		i.setAlt(System.getProperty("rss.image.alt"));
 		
-		return new A(getRSSURL(), img.toString()); // rss feed URL
+		return new a(getRSSURL(), i.toString()); // rss feed URL
 	}
 
 	public String getRSSURL() {
@@ -92,8 +92,8 @@ public class Links {
 		return url.toString();
 	}
 	
-	public Link getLinkToRSS() {
-		Link result = new Link();
+	public link getLinkToRSS() {
+		link result = new link();
 		result.setRel("alternate");
 		result.setType("application/rss+xml");
 		result.setTitle("RSS");
@@ -113,15 +113,15 @@ public class Links {
 		return url.toString();
 	}
 
-	public Link getLinkToStyleSheet() {
-		Link result = new Link();
+	public link getLinkToStyleSheet() {
+		link result = new link();
 		result.setRel("stylesheet");
 		result.setType("text/css");
 		result.setHref(getStyleSheetLink());
 		return result;
 	}
 	
-	public A getLinkToHome() {
+	public a getLinkToHome() {
 		StringBuffer url = new StringBuffer();
 		if (fUpOneLevel) {
 			url.append("..");

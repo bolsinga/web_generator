@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.regex.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.html.*;
+import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public class Encode {

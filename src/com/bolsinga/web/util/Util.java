@@ -1,7 +1,7 @@
 package com.bolsinga.web.util;
 
 import org.apache.ecs.*;
-import org.apache.ecs.html.*;
+import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public class Util {
@@ -18,31 +18,31 @@ public class Util {
 		return sPrettyPrint;
 	}
 	
-	public static Link getIconLink() {
-		Link result = new Link();
+	public static link getIconLink() {
+		link result = new link();
 		result.setRel("SHORTCUT ICON");
 		result.setHref(System.getProperty("web.ico"));
 		return result;
 	}
 	
-	public static IMG getLogo() {
-		IMG img = new IMG(System.getProperty("web.logo.url"));
-		img.setHeight(System.getProperty("web.logo.height"));
-		img.setWidth(System.getProperty("web.logo.width"));
-		img.setAlt(System.getProperty("web.logo.alt"));
-		return img;
+	public static img getLogo() {
+		img i = new img(System.getProperty("web.logo.url"));
+		i.setHeight(System.getProperty("web.logo.height"));
+		i.setWidth(System.getProperty("web.logo.width"));
+		i.setAlt(System.getProperty("web.logo.alt"));
+		return i;
 	}
 	
-	public static UL convertToUnOrderedList(String data) {
-		UL ul = new UL();
+	public static ul convertToUnOrderedList(String data) {
+		ul list = new ul();
 		
 		// Convert each line to a li tag.
 		String[] lines = data.split("\\n");
 		for (int i = 0; i < lines.length; i++) {
-			ul.addElement(new LI(lines[i]));
+			list.addElement(new li(lines[i]));
 		}
 		
-		return ul;
+		return list;
 	}
 	
 	public static String convertToParagraphs(String data) {
@@ -50,22 +50,21 @@ public class Util {
 		StringBuffer tagged = new StringBuffer();
 		String[] lines = data.split("\\n");
 		for (int i = 0; i < lines.length; i++) {
-			tagged.append(new P());
-			tagged.append(lines[i]);
+			tagged.append(new p().addElement(lines[i]));
 		}
 		return tagged.toString();
 	}
 	
-	public static Div createDiv(String className) {
-		Div div = new Div();
-		div.setClass(className);
-		div.setPrettyPrint(Util.getPrettyPrint());
-		return div;
+	public static div createDiv(String className) {
+		div d = new div();
+		d.setClass(className);
+		d.setPrettyPrint(Util.getPrettyPrint());
+		return d;
 	}
 	
-	public static A createInternalA(String url, String value) {
-		A a = new A(url, value);
-		a.setClass(CSS.INTERNAL);
-		return a;
+	public static a createInternalA(String url, String value) {
+		a an = new a(url, value);
+		an.setClass(CSS.INTERNAL);
+		return an;
 	}
 }

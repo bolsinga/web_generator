@@ -2,8 +2,6 @@ package com.bolsinga.rss.util;
 
 import java.text.*;
 
-import org.apache.ecs.html.*;
-
 public class Util {
 	private static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
 	
