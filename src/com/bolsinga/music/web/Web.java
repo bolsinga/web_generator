@@ -203,7 +203,7 @@ class ShowDocumentCreator extends DocumentCreator {
 			fDate = d;
 			fMonthDiv = new Div();
 			
-			fMonthDiv.addElement(new H1().addElement(month));
+			fMonthDiv.addElement(new H2().addElement(month));
 		}
 
 		fMonthDiv.addElement(Web.addItem(music, fLinks, item));
@@ -770,7 +770,7 @@ public class Web {
 		A a = new A();
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
-		artistDiv.addElement(new H1().addElement(a));
+		artistDiv.addElement(new H2().addElement(a));
 		
 		if (artist.getAlbum().size() > 0) {
 			artistDiv.addElement(addTracks(music, links, artist));
@@ -791,7 +791,7 @@ public class Web {
 			    
 				Div showDiv = new Div();
 				
-			    showDiv.addElement(new H2().addElement(new A(showLink, Util.toString(show.getDate()))));
+			    showDiv.addElement(new H3().addElement(new A(showLink, Util.toString(show.getDate()))));
 			    
 			    UL showInfo = new UL();
 			    
@@ -837,7 +837,7 @@ public class Web {
 		A a = new A();
 		a.setName(venue.getId());
 		a.addElement("test", venue.getName());
-		venueDiv.addElement(new H1().addElement(a));
+		venueDiv.addElement(new H2().addElement(a));
 		
 		Collection relations = Lookup.getLookup(music).getRelations(venue);
 		if (relations != null) {
@@ -853,7 +853,7 @@ public class Web {
 			
 			Div showDiv = new Div();
 			
-			showDiv.addElement(new H2().addElement(new A(showLink, Util.toString(show.getDate()))));
+			showDiv.addElement(new H3().addElement(new A(showLink, Util.toString(show.getDate()))));
 			
 			UL showInfo = new UL();
 			
@@ -892,7 +892,7 @@ public class Web {
 		A a = new A();
 		a.setName(show.getId());
 		a.addElement("test", Util.toString(show.getDate()));
-		showDiv.addElement(new H2().addElement(a));
+		showDiv.addElement(new H3().addElement(a));
 		
 		UL showInfo = new UL();
 		
@@ -951,7 +951,7 @@ public class Web {
 			sb.append(")");
 		}
 		
-		albumDiv.addElement(new H1().addElement(sb.toString()));
+		albumDiv.addElement(new H2().addElement(sb.toString()));
 		
 		OL albumListing = new OL();
 
@@ -987,7 +987,7 @@ public class Web {
 	public static Div addRelations(Music music, Links links, Artist artist) {
 		Div relDiv = new Div();
 			
-		relDiv.addElement(new H2().addElement("See Also"));
+		relDiv.addElement(new H3().addElement("See Also"));
 		
 		UL related = new UL();
 		Iterator li = Lookup.getLookup(music).getRelations(artist).iterator();
@@ -1007,7 +1007,7 @@ public class Web {
 	public static Div addRelations(Music music, Links links, Venue venue) {
 		Div relDiv = new Div();
 
-		relDiv.addElement(new H2().addElement("See Also"));
+		relDiv.addElement(new H3().addElement("See Also"));
 		
 		UL related = new UL();
 		Iterator li = Lookup.getLookup(music).getRelations(venue).iterator();
@@ -1027,7 +1027,7 @@ public class Web {
 	public static Div addTracks(Music music, Links links, Artist artist) {
 		Div albumsDiv = new Div();
 			
-		albumsDiv.addElement(new H2().addElement("Albums"));
+		albumsDiv.addElement(new H3().addElement("Albums"));
 		
 		UL related = new UL();
 		Iterator li = artist.getAlbum().iterator();

@@ -328,7 +328,7 @@ public class Web {
 		archivesLink.append(Calendar.getInstance().get(Calendar.YEAR));
 		archivesLink.append(".html");
 		
-		mainDiv.addElement(new H1().addElement(new A(archivesLink.toString(), "Archives")));
+		mainDiv.addElement(new H2().addElement(new A(archivesLink.toString(), "Archives")));
 		
 		td.addElement(mainDiv);
 	}
@@ -360,7 +360,7 @@ public class Web {
 		a.setName(entry.getId());
 		a.addElement("test", Util.getTitle(entry));
 		
-		diaryDiv.addElement(new H1().addElement(a));
+		diaryDiv.addElement(new H2().addElement(a));
 		Div commentDiv = new Div();
 		diaryDiv.addElement(commentDiv.addElement(Web.encodedComment(music, entry, upOneLevel)));
 		
