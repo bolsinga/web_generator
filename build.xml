@@ -346,14 +346,6 @@
 	<pathelement path="${build.lib}/music.jar" />
 </path>
 
-<target name="generateITunesXML" depends="itunes_converter, shows_converter, jar">
-	<java classname="com.bolsinga.itunes.converter.ITunes" fork="true">
-		<arg value="${itunes.dir}iTunes Music Library.xml" />
-		<arg value="${data.dir}itunes.xml" />
-		<classpath refid="music_classpath" />
-	</java>
-</target>
-
 <target name="generateMusicXML" depends="music_converter, jar">
 	<java classname="com.bolsinga.music.converter.Music" fork="true">
 		<arg value="${legacy_data.dir}shows.txt" />
