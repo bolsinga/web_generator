@@ -19,7 +19,7 @@ public class RSS {
 
 	public static void main(String[] args) {
 		if (args.length != 4) {
-			System.out.println("Usage: RSS [diary.xml] [music.xml] [settings.xml] [output.file]");
+			System.out.println("Usage: RSS [diary.xml] [music.xml] [settings.xml] [output.dir]");
 			System.exit(0);
 		}
 
@@ -28,17 +28,24 @@ public class RSS {
 		RSS.generate(args[0], args[1], args[3]);
 	}
 
-	public static void generate(String diaryFile, String musicFile, String outputFile) {
+	public static void generate(String diaryFile, String musicFile, String outputDir) {
 		Diary diary = com.bolsinga.diary.util.Util.createDiary(diaryFile);
 		Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
 		
-		generate(diary, music, outputFile);
+		generate(diary, music, outputDir);
 	}
 	
-	public static void generate(Diary diary, Music music, String outputFile) {
+	public static void generate(Diary diary, Music music, String outputDir) {
 		OutputStream os = null;
 		try {
-			os = new FileOutputStream(outputFile);
+			File f = new File(outputDir, "rss/rss.xml");
+			File parent = new File(f.getParent());
+			if (!parent.exists()) {
+				if (!parent.mkdirs()) {
+					System.out.println("Can't: " + parent.getAbsolutePath());
+				}
+			}
+			os = new FileOutputStream(f);
 		} catch (IOException ioe) {
 			System.err.println(ioe);
 			ioe.printStackTrace();
