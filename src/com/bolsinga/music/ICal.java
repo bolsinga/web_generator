@@ -51,7 +51,7 @@ public class ICal {
 			item = (Show)li.next();
 			
 			if (!item.getDate().isUnknown()) {
-				addItem(music, item, cal);
+				addItem(item, cal);
 			}
 		}
 		
@@ -73,10 +73,10 @@ public class ICal {
 		}
 	}
 	
-	public static void addItem(Music music, Show show, VCalendar calendar) {
-		
+	public static void addItem(Show show, VCalendar calendar) {
 		com.bolsinga.music.data.Date d = show.getDate();
-		Calendar date = new GregorianCalendar(d.getYear().intValue(), d.getMonth().intValue(), d.getDay().intValue());
+		Calendar date = Calendar.getInstance();
+		date.set(d.getYear().intValue(), d.getMonth().intValue() - 1, d.getDay().intValue());
 		StringBuffer summary = new StringBuffer();
 		String url = null;
 
