@@ -31,14 +31,11 @@ public class RSS {
 	}
 
     private static void initializeSettings(Settings settings) {
-        com.bolsinga.settings.data.Image image = settings.getLogoImage();
+        com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getLogoImage();
 		System.setProperty("web.logo.url", image.getLocation());
 		System.setProperty("web.logo.width", image.getWidth().toString());
 		System.setProperty("web.logo.height", image.getHeight().toString());
 		System.setProperty("web.logo.alt", image.getAlt());
-        
-		System.setProperty("rss.root", settings.getRssRoot());
-		System.setProperty("rss.description", settings.getRssDescription());
     }
 
 	public static void generate(String diaryFile, String musicFile, String outputFile) {
@@ -93,14 +90,14 @@ public class RSS {
 			List channelElements = channel.getTitleOrLinkOrDescription();
 			
 			channelElements.add(objFactory.createTRssChannelTitle(diary.getTitle()));
-			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("rss.root")));
-			channelElements.add(objFactory.createTRssChannelDescription(System.getProperty("rss.description")));
+			channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.util.Util.getSettings().getRssRoot()));
+			channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.util.Util.getSettings().getRssDescription()));
 			channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
 			channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
 			channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.util.Util.getSettings().getContact()));
 
 			TRssChannel.Image logo = com.bolsinga.rss.util.Util.createLogo(objFactory);
-			logo.setLink(System.getProperty("rss.root"));
+			logo.setLink(com.bolsinga.web.util.Util.getSettings().getRssRoot());
 			logo.setDescription(diary.getTitle());
 			
 			channelElements.add(logo);

@@ -16,7 +16,7 @@ public class RSS {
 		
 		itemElements.add(objFactory.createTRssItemTitle(getTitle(show)));
 		itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.util.Util.getRSSDate(com.bolsinga.music.util.Util.toCalendar(show.getDate()).getTime())));
-		itemElements.add(objFactory.createTRssItemLink(System.getProperty("rss.root") + links.getLinkTo(show)));
+		itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.util.Util.getSettings().getRssRoot() + links.getLinkTo(show)));
 		itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.util.Util.convertToParagraphs(show.getComment())));
 		
 		channel.getItem().add(item);
