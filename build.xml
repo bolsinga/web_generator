@@ -155,7 +155,7 @@
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="music_utilities" depends="music_binding, web_utilities">
+<target name="music_utilities" depends="music_binding, settings_binding">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -165,7 +165,7 @@
 	</javac>
 </target>
 
-<target name="diary_utilities" depends="diary_binding">
+<target name="diary_utilities" depends="diary_binding, settings_binding">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -175,7 +175,7 @@
 	</javac>
 </target>
 
-<target name="rss_utilities" depends="rss_binding">
+<target name="rss_utilities" depends="rss_binding, settings_binding">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -195,7 +195,7 @@
 	</javac>
 </target>
 
-<target name="web_utilities" depends="settings_binding, prepare" >
+<target name="web_utilities" depends="settings_binding">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -265,7 +265,7 @@
 	</javac>
 </target>
 
-<target name="diary_web" depends="web_utilities, diary_utilities">
+<target name="diary_web" depends="web_utilities, diary_utilities, music_binding">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -295,7 +295,7 @@
 	</javac>
 </target>
 
-<target name="rss" depends="music_rss, diary_rss, music_utilities, diary_utilities">
+<target name="rss" depends="music_rss, diary_rss">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -400,7 +400,6 @@
 <target name="generateMusicWeb" depends="music_web, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
-		<sysproperty key="web.pretty_containers" value="true" />
 		<arg value="${data.dir}music.xml" />
 		<arg value="${data.dir}settings.xml" />
 		<arg value="${output.dir}" />
@@ -408,10 +407,9 @@
 	</java>
 </target>
 
-<target name="generateDiaryWeb" depends="music_web, diary_web, jar">
+<target name="generateDiaryWeb" depends="diary_web, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.diary.web.Web" fork="true">
-		<sysproperty key="web.pretty_containers" value="true" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${data.dir}music.xml" />
 		<arg value="${data.dir}settings.xml" />
@@ -477,14 +475,6 @@
 	</java>
 </target>
 
-<target name="music" depends="music_web, diary_web, rss, ical, jar" />
-
-<target name="generateXML" depends="music_converter, music, generateMusicXML, generateDiaryXML" />
-
-<target name="generateWeb" depends="music, generateMusicWeb, generateDiaryWeb" />
-
-<target name="generateAll" depends="generateXML, generateWeb, generateRSS, generateICal" />
-
-<target name="generateDiary" depends="music, generateDiaryXML, generateDiaryWeb, generateRSS" />
+<target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
 
 </project>
