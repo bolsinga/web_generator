@@ -15,8 +15,8 @@ public class VCalendar {
 		fEvents.add(event);
 	}
 	
-	public void output(OutputStream os) {
-		PrintWriter pw = new PrintWriter(os, true);
+	public void output(Writer w) {
+		PrintWriter pw = new PrintWriter(w, true);
 		output(pw);
 		pw.close();
 	}

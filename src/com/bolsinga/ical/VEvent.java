@@ -20,8 +20,8 @@ public class VEvent {
 		fUID = uid;
 	}
 
-	public void output(OutputStream os) {
-		PrintWriter pw = new PrintWriter(os, true);
+	public void output(Writer w) {
+		PrintWriter pw = new PrintWriter(w, true);
 		output(pw);
 		pw.close();
 	}
