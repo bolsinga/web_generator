@@ -64,7 +64,7 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${build.gensrc}" />
-                <include name="com/bolsinga/music/**" />
+                <include name="com/bolsinga/music/data/**" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
@@ -83,7 +83,7 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${build.gensrc}" />
-                <include name="com/bolsinga/diary/**" />
+                <include name="com/bolsinga/diary/data/**" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
@@ -102,7 +102,7 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${build.gensrc}" />
-                <include name="com/bolsinga/rss/**" />
+                <include name="com/bolsinga/rss/data/**" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
@@ -121,7 +121,7 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${build.gensrc}" />
-                <include name="com/bolsinga/plist/**" />
+                <include name="com/bolsinga/plist/data/**" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
@@ -140,7 +140,7 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${build.gensrc}" />
-                <include name="com/bolsinga/settings/**" />
+                <include name="com/bolsinga/settings/data/**" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
@@ -155,22 +155,12 @@
         <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="music_utilities" depends="music_binding, settings_binding">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/music/util/**" />
-                <classpath refid="web_classpath" />
-        </javac>
-</target>
-
 <target name="plist_utilities" depends="plist_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/plist/**" />
+                <include name="com/bolsinga/plist/*.java" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
@@ -180,7 +170,7 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/web/util/**" />
+                <include name="com/bolsinga/web/util/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
         <tstamp>
@@ -195,22 +185,22 @@
         </copy>
 </target>
 
-<target name="shows_converter" depends="music_utilities, diary_binding">
+<target name="shows_converter" depends="music, diary_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/shows/converter/**" />
+                <include name="com/bolsinga/shows/converter/*.java" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
 
-<target name="itunes_converter" depends="music_utilities, plist_utilities">
+<target name="itunes_converter" depends="plist_utilities, music">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/itunes/converter/**" />
+                <include name="com/bolsinga/itunes/converter/*.java" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
@@ -220,17 +210,19 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/music/converter/**" />
+                <include name="com/bolsinga/music/converter/*.java" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
 
-<target name="music_web" depends="web_utilities, music_utilities">
+<target name="music" depends="web_utilities, music_binding, settings_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/music/web/**" />
+                <include name="com/bolsinga/music/*.java" />
+                <include name="com/bolsinga/music/util/*.java" />
+                <include name="com/bolsinga/music/web/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
 </target>
@@ -240,19 +232,19 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/diary/**" />
-                <include name="com/bolsinga/diary/web/**" />
-                <include name="com/bolsinga/diary/util/**" />
+                <include name="com/bolsinga/diary/*.java" />
+                <include name="com/bolsinga/diary/web/*.java" />
+                <include name="com/bolsinga/diary/util/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
 </target>
 
-<target name="rss" depends="music_utilities, diary, rss_binding">
+<target name="rss" depends="music, diary, rss_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/rss/**" />
+                <include name="com/bolsinga/rss/*.java" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
@@ -262,26 +254,26 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/ical/**" />
+                <include name="com/bolsinga/ical/*.java" />
         </javac>
 </target>
 
-<target name="ical" depends="ical_gen, music_utilities">
+<target name="ical" depends="ical_gen, music">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/music/ical/**" />
+                <include name="com/bolsinga/music/ical/*.java" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
 
-<target name="web_site" depends="music_web, diary, rss, ical">
+<target name="web_site" depends="music, diary, rss, ical">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/web/site/**" />
+                <include name="com/bolsinga/web/site/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
 </target>
@@ -339,7 +331,7 @@
                 <sysproperty key="web.pretty_containers" value="true" />
 -->
 
-<target name="generateMusicWeb" depends="music_web, jar">
+<target name="generateMusicWeb" depends="music, jar">
         <mkdir dir="${output.dir}" />
         <java classname="com.bolsinga.music.web.Web" fork="true">
                 <arg value="${data.dir}music.xml" />
