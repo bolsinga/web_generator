@@ -223,7 +223,6 @@
 		<xs:sequence>
 			<xs:element name="performance" type="xs:IDREF" maxOccurs="unbounded" />
 			<xs:element name="date" type="date" />
-			<xs:element name="moddate" type="xs:date" />
 			<xs:element name="venue" type="xs:IDREF" minOccurs="0" />
 			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>

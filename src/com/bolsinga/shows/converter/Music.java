@@ -286,8 +286,6 @@ public class Music {
 			}
 			xShow.setId("sh" + index++);
 			
-			xShow.setModdate(Calendar.getInstance());
-			
 			music.getShow().add(xShow);
 		}
 	}
