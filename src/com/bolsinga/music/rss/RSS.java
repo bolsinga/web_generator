@@ -32,6 +32,19 @@ public class RSS {
 	}
 	
 	public static void generate(int entryCount, Music music, String outputFile) {
+		OutputStream os = null;
+		try {
+			os = new FileOutputStream(outputFile);
+		} catch (IOException ioe) {
+			System.err.println(ioe);
+			ioe.printStackTrace();
+			System.exit(1);
+		}
+		
+		generate(entryCount, music, os);
+	}
+	
+	public static void generate(int entryCount, Diary diary, OutputStream os) {
 		com.bolsinga.rss.data.ObjectFactory objFactory = new com.bolsinga.rss.data.ObjectFactory();
 
 		try {		
@@ -57,14 +70,6 @@ public class RSS {
 			Marshaller m = jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			
-			OutputStream os = null;
-			try {
-				os = new FileOutputStream(outputFile);
-			} catch (IOException ioe) {
-				System.err.println(ioe);
-				ioe.printStackTrace();
-				System.exit(1);
-			}
 			m.marshal(rss, os);
 			
 		} catch (JAXBException e) {
