@@ -25,10 +25,10 @@ public class ICal {
 	public static void generate(String sourceFile, String outputDir) {
 		Music music = Util.createMusic(sourceFile);
 		
-		generateICal(music, outputDir);
+		generate(music, outputDir);
 	}
 	
-	public static void generateICal(Music music, String outputDir) {
+	public static void generate(Music music, String outputDir) {
 		OutputStreamWriter w = null;
 
         String name = com.bolsinga.web.util.Util.getSettings().getIcalName();
@@ -48,10 +48,10 @@ public class ICal {
 			System.exit(1);
 		}
 		
-		generateICal(music, name, w);
+		generate(music, name, w);
 	}
 	
-	public static void generateICal(Music music, String name, Writer w) {
+	public static void generate(Music music, String name, Writer w) {
 		List items = music.getShow();
 		Show item = null;
 		

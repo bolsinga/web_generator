@@ -334,6 +334,16 @@
 	</javac>
 </target>
 
+<target name="web_site" depends="music_web, diary_web, rss, ical">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/web/site/**" />
+		<classpath refid="web_classpath" />
+	</javac>
+</target>
+
 <target name="jar">
 	<jar jarfile="${build.lib}/music.jar"
 		basedir="${build.classes}" >
@@ -431,9 +441,45 @@
 	</java>
 </target>
 
-<target name="music" depends="music_converter, music_web, diary_web, music_rss, diary_rss, rss, ical, jar" />
+<target name="Site" depends="web_site, jar">
+	<mkdir dir="${output.dir}" />
+	<java classname="com.bolsinga.web.site.Site" fork="true">
+		<arg value="${data.dir}diary.xml" />
+		<arg value="${data.dir}music.xml" />
+		<arg value="${data.dir}settings.xml" />
+		<arg value="${output.dir}" />
+        <arg value="all" />
+		<classpath refid="generate_web_classpath" />
+	</java>
+</target>
 
-<target name="generateXML" depends="music, generateMusicXML, generateDiaryXML" />
+<target name="SiteMusic" depends="web_site, jar">
+	<mkdir dir="${output.dir}" />
+	<java classname="com.bolsinga.web.site.Site" fork="true">
+		<arg value="${data.dir}diary.xml" />
+		<arg value="${data.dir}music.xml" />
+		<arg value="${data.dir}settings.xml" />
+		<arg value="${output.dir}" />
+        <arg value="music" />
+		<classpath refid="generate_web_classpath" />
+	</java>
+</target>
+
+<target name="SiteDiary" depends="web_site, jar">
+	<mkdir dir="${output.dir}" />
+	<java classname="com.bolsinga.web.site.Site" fork="true">
+		<arg value="${data.dir}diary.xml" />
+		<arg value="${data.dir}music.xml" />
+		<arg value="${data.dir}settings.xml" />
+		<arg value="${output.dir}" />
+        <arg value="diary" />
+		<classpath refid="generate_web_classpath" />
+	</java>
+</target>
+
+<target name="music" depends="music_web, diary_web, rss, ical, jar" />
+
+<target name="generateXML" depends="music_converter, music, generateMusicXML, generateDiaryXML" />
 
 <target name="generateWeb" depends="music, generateMusicWeb, generateDiaryWeb" />
 
