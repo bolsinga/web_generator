@@ -154,7 +154,6 @@ public class Web {
 	}
     
     private static void initializeSettings(Settings settings) {
-		System.setProperty("web.layout.css", settings.getCssFile());
 		System.setProperty("music.ical.url", settings.getIcalName() + ".ics");
     }
 

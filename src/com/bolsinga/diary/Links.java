@@ -111,7 +111,7 @@ public class Links {
 		}
 		url.append(STYLES_DIR);
 		url.append(File.separator);
-		url.append(System.getProperty("web.layout.css"));
+		url.append(com.bolsinga.web.util.Util.getSettings().getCssFile());
 		return url.toString();
 	}
 
