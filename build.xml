@@ -60,18 +60,13 @@
 	</copy>
 </target>
 
-<path id="web_classpath">
-	<path refid="jaxb_classpath" />
-	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
-</path>
-
 <target name="utilities" depends="jaxb">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/music/util/**" />
-		<classpath refid="web_classpath" />
+		<classpath refid="jaxb_classpath" />
 	</javac>
 </target>
 
@@ -84,6 +79,11 @@
 		<classpath refid="jaxb_classpath" />
 	</javac>
 </target>
+
+<path id="web_classpath">
+	<path refid="jaxb_classpath" />
+	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
+</path>
 
 <target name="web" depends="utilities">
 	<javac  destdir="${build.classes}"
@@ -146,10 +146,6 @@
 	<mkdir dir="/tmp/web/" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
 		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
-		<sysproperty key="music.program" value="MusicWeb" />
-		<sysproperty key="music.builddate" value="BUILD" />
-		<sysproperty key="music.contact" value="bolsinga@hotmail.com" />
-		<sysproperty key="music.root" value="http://www.io.com/~bolsinga" />
 		<arg value="${data.dir}music.xml" />
 		<arg value="/tmp/web/" />
 		<classpath refid="generate_web_classpath" />
