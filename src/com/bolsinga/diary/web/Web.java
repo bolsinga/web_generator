@@ -3,6 +3,7 @@ package com.bolsinga.diary.web;
 import com.bolsinga.diary.data.*;
 import com.bolsinga.diary.util.*;
 import com.bolsinga.music.data.*;
+import com.bolsinga.settings.data.*;
 
 import java.io.*;
 import java.text.*;
@@ -139,12 +140,43 @@ public class Web {
 
 	public static void main(String[] args) {
 		if (args.length != 4) {
-			System.out.println("Usage: Web [# entries on main page] [diary.xml] [music.xml] [output.dir]");
+			System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir]");
 			System.exit(0);
 		}
 		
-		Web.generate(Integer.parseInt(args[0]), args[1], args[2], args[3]);
+        Settings settings = Web.initializeSettings(args[2]);
+        
+        int mainPageEntryCount = settings.getDiaryCount().intValue();
+        
+		Web.generate(mainPageEntryCount, args[0], args[1], args[3]);
 	}
+    
+    private static Settings initializeSettings(String settingsFile) {
+        Settings settings = com.bolsinga.web.util.Util.createSettings(settingsFile);
+
+		System.setProperty("web.ico", settings.getIco());
+        com.bolsinga.settings.data.Image image = settings.getLogoImage();
+		System.setProperty("web.logo.url", image.getLocation());
+		System.setProperty("web.logo.width", image.getWidth().toString());
+		System.setProperty("web.logo.height", image.getHeight().toString());
+		System.setProperty("web.logo.alt", image.getAlt());
+		System.setProperty("web.layout.css", settings.getCssFile());
+		System.setProperty("diary.contact", settings.getContact());
+		System.setProperty("rss.url", settings.getRssFile());
+        image = settings.getRssImage();
+		System.setProperty("rss.image.url", image.getLocation());
+		System.setProperty("rss.image.width", image.getWidth().toString());
+		System.setProperty("rss.image.height", image.getHeight().toString());
+		System.setProperty("rss.image.alt", image.getAlt());
+		System.setProperty("music.ical.url", settings.getIcalName() + ".ics");
+        image = settings.getIcalImage();
+		System.setProperty("ical.image.url", image.getLocation());
+		System.setProperty("ical.image.width", image.getWidth().toString());
+		System.setProperty("ical.image.height", image.getHeight().toString());
+		System.setProperty("ical.image.alt", image.getAlt());
+        
+        return settings;
+    }
 
 	public static void generate(int mainPageEntryCount, String sourceFile, String musicFile, String outputDir) {
 		Diary diary = Util.createDiary(sourceFile);

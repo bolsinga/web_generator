@@ -155,7 +155,7 @@
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="music_utilities" depends="music_binding">
+<target name="music_utilities" depends="music_binding, web_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -245,7 +245,7 @@
 	</javac>
 </target>
 
-<target name="music_web" depends="web_utilities, music_utilities">
+<target name="music_web" depends="music_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -437,6 +437,7 @@
 <target name="generateMusicWeb" depends="music_web, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
+		<sysproperty key="web.pretty_containers" value="true" />
 		<arg value="${data.dir}music.xml" />
 		<arg value="${data.dir}settings.xml" />
 		<arg value="${output.dir}" />
@@ -447,26 +448,10 @@
 <target name="generateDiaryWeb" depends="music_web, diary_web, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.diary.web.Web" fork="true">
-		<sysproperty key="web.ico" value="http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico" />
-		<sysproperty key="web.logo.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif" />
-		<sysproperty key="web.logo.width" value="120" />
-		<sysproperty key="web.logo.height" value="90" />
-		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
-		<sysproperty key="web.layout.css" value="layout.css" />
-		<sysproperty key="diary.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="rss.url" value="rss.xml" />
-		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
-		<sysproperty key="rss.image.width" value="36" />
-		<sysproperty key="rss.image.height" value="14" />
-		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the latest from this web site." />
-		<sysproperty key="music.ical.url" value="Shows.ics" />
-		<sysproperty key="ical.image.url" value="http://icalshare.com/layout/iCalShare/theme-images/subscribe.gif" />
-		<sysproperty key="ical.image.width" value="14" />
-		<sysproperty key="ical.image.height" value="18" />
-		<sysproperty key="ical.image.alt" value="Click here to see an VCalendar representation of the shows." />
-		<arg value="3" />
+		<sysproperty key="web.pretty_containers" value="true" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${data.dir}music.xml" />
+		<arg value="${data.dir}settings.xml" />
 		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
 	</java>
