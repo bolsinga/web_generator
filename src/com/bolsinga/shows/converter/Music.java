@@ -49,14 +49,14 @@ public class Music {
 			com.bolsinga.music.Music music = objFactory.createMusic();
 		
 			List mVenues = music.getVenue();
-			createVenues(objFactory, venues, mVenues);
+			createVenues(objFactory, music, venues, mVenues);
 			
-			createBandSort(objFactory, bands);
+			createBandSort(objFactory, music, bands);
 
-			createRelations(objFactory, relations);
+			createRelations(objFactory, music, relations);
 		
 			List mShows = music.getShow();
-			convert(objFactory, shows, mShows);
+			convert(objFactory, music, shows, mShows);
 			dump(music);
 		} catch (JAXBException e) {
 			System.err.println(e);
@@ -64,7 +64,7 @@ public class Music {
 		}
 	}
 	
-	private static void createVenues(ObjectFactory objFactory, List venues, List mVenues) throws JAXBException {
+	private static void createVenues(ObjectFactory objFactory, com.bolsinga.music.Music music, List venues, List mVenues) throws JAXBException {
 		// Go through each venue.
 		//  Create a Venue for each		
 		// Make a hash of the Venue information by name
@@ -98,7 +98,7 @@ public class Music {
 		}
 	}
 	
-	private static void createBandSort(ObjectFactory objFactory, List bands) throws JAXBException {
+	private static void createBandSort(ObjectFactory objFactory, com.bolsinga.music.Music music, List bands) throws JAXBException {
 		// Make a hash of the band sort names by name
 		BandMap bandMap = null;
 		
@@ -109,7 +109,7 @@ public class Music {
 		}
 	}
 	
-	private static void createRelations(ObjectFactory objFactory, List relations) throws JAXBException {
+	private static void createRelations(ObjectFactory objFactory, com.bolsinga.music.Music music, List relations) throws JAXBException {
 	
 	}
 	
@@ -128,8 +128,17 @@ public class Music {
 		}
 		return result;
 	}
+	
+	private static com.bolsinga.music.Performance addPerformance(ObjectFactory objFactory, String name, String date) throws JAXBException {
+	
+		com.bolsinga.music.Artist artist = addArtist(objFactory, name);
 		
-	private static void convert(ObjectFactory objFactory, List shows, List mShows) throws JAXBException {
+		com.bolsinga.music.Performance perf = objFactory.createPerformance();
+
+		return null;
+	}
+		
+	private static void convert(ObjectFactory objFactory, com.bolsinga.music.Music music, List shows, List mShows) throws JAXBException {
 		// Go through each show.
 		//  Create an Artist for each band in the set, if it doesn't already exist. Use the sort name.
 		//  Create a Date.
@@ -141,13 +150,29 @@ public class Music {
 		Show oldShow = null;
 		com.bolsinga.music.Show xShow = null;
 		com.bolsinga.music.Artist xArtist = null;
-
+		
+		List oldBands = null;
+		ListIterator bi = null;
+		String oldBand = null;
+		
+		List xArtists = music.getArtist();
+		
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
 			oldShow = (Show)li.next();
 			
+			oldBands = oldShow.getBands();
+			bi = oldBands.listIterator();
+			while (bi.hasNext()) {
+				oldBand = (String)bi.next();
+				
+				xArtist = addArtist(objFactory, oldBand);
+			}
+			
 //			mShows.add(xShow);
 		}
+		
+		xArtists.addAll(sArtists.values());
 	}
 	
 	private static void dump(com.bolsinga.music.Music music) throws JAXBException {
