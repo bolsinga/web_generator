@@ -47,24 +47,8 @@ public class Compare {
 		public int compare(Object o1, Object o2) {
 			com.bolsinga.music.data.Date r1 = (com.bolsinga.music.data.Date)o1;
 			com.bolsinga.music.data.Date r2 = (com.bolsinga.music.data.Date)o2;
-			
-			int result = 0;
-			
-			if (r1.isUnknown()) {
-				if (r2.isUnknown()) {
-					result = convert(r1) - convert(r2);
-				} else {
-					result = -1;
-				}
-			} else {
-				if (r2.isUnknown()) {
-					result = 1;
-				} else {
-					result = convert(r1) - convert(r2);
-				}
-			}
-			
-			return result;
+
+			return convert(r1) - convert(r2);
 		}
 	};
 	
