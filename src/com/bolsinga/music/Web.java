@@ -313,7 +313,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new LI().addElement(comment));
+				showInfo.addElement(new LI(comment));
 			}
 			
 			showListing.addElement(showInfo);
