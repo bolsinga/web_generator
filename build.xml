@@ -115,7 +115,14 @@
 		<include name="com/bolsinga/music/web/**" />
 		<classpath refid="web_classpath" />
 	</javac>
+	<tstamp>
+		<format property="music.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+	</tstamp>
 	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/music/web/web.properties">
+		<filterset>
+			<filter token="builddate" value="${music.builddate}" />
+			<filter token="program" value="MusicWeb" />
+		</filterset>
 	</copy>
 </target>
 
@@ -128,7 +135,14 @@
 		<include name="com/bolsinga/diary/util/**" />
 		<classpath refid="web_classpath" />
 	</javac>
+	<tstamp>
+		<format property="diary.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+	</tstamp>
 	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/diary/web/web.properties">
+		<filterset>
+			<filter token="builddate" value="${diary.builddate}" />
+			<filter token="program" value="DiaryWeb" />
+		</filterset>
 	</copy>
 </target>
 
