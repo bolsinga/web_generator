@@ -385,11 +385,11 @@ public class Web {
 	private static String encodedComment(String musicFile, Entry entry, boolean upOneLevel) {
 		String result = entry.getComment();
 		
-		// Convert new lines to <p>
-		result = sCommentEncoding.matcher(result).replaceAll(" <p> ");
-		
-		// Automatically add artist to the comments.
+		// Automatically add music links to the comments.
 		result = com.bolsinga.music.web.Web.embedLinks(musicFile, result, upOneLevel);
+		
+		// Convert new lines to <p>
+		result = sCommentEncoding.matcher(result).replaceAll("<p>");
 		
 		return result;
 	}
