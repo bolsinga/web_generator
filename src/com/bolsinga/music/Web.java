@@ -96,6 +96,22 @@ public class Web {
 		}
 	}
 	
+	public static String getPageFileName(String name) {
+		String file = Compare.simplify(name).substring(0, 1).toUpperCase();
+		if (file.matches("\\W")) {
+			file = "other";
+		}
+		return file;
+	}
+	
+	public static String getPageFileName(BigInteger year) {
+		String file = "other";
+		if (year != null) {
+			file = year.toString();
+		}
+		return file;
+	}
+	
 	public static String getLinkTo(Artist artist) {
 		StringBuffer link = new StringBuffer();
 		
@@ -104,13 +120,9 @@ public class Web {
 			name = artist.getName();
 		}
 		
-		String file = Compare.simplify(name).substring(0, 1).toUpperCase();
-		if (file.matches("\\W")) {
-			file = "other";
-		}
 		link.append(Web.ARTIST_DIR);
 		link.append("/");
-		link.append(file);
+		link.append(getPageFileName(name));
 		link.append(Web.HTML_EXT);
 		link.append("#");
 		link.append(artist.getId());
@@ -121,11 +133,9 @@ public class Web {
 	public static String getLinkTo(Venue venue) {
 		StringBuffer link = new StringBuffer();
 		
-		String name = Compare.simplify(venue.getName());
-		
 		link.append(Web.VENUE_DIR);
 		link.append("/");
-		link.append(name.substring(0, 1).toUpperCase());
+		link.append(getPageFileName(venue.getName()));
 		link.append(Web.HTML_EXT);
 		link.append("#");
 		link.append(venue.getId());
@@ -135,20 +145,11 @@ public class Web {
 	
 	public static String getLinkTo(Show show) {
 		StringBuffer link = new StringBuffer();
-		BigInteger current = null;
-		String file = null;
-		com.bolsinga.music.data.Date date = show.getDate();
-		
-		current = date.getYear();
-		if (current != null) {
-			file = current.toString();
-		} else {
-			file = "unknown";
-		}
+		BigInteger current = show.getDate().getYear();
 		
 		link.append(Web.SHOW_DIR);
 		link.append("/");
-		link.append(file);
+		link.append(getPageFileName(current));
 		link.append(Web.HTML_EXT);
 		link.append("#");
 		link.append(show.getId());
