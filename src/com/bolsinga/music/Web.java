@@ -937,7 +937,7 @@ public class Web {
 	static Document createHTMLDocument(String title) {
 		Document d = new Document();
 		
-        d.setDoctype(new org.apache.ecs.Doctype.Html40Strict());
+        d.setDoctype(new org.apache.ecs.Doctype.Html40Transitional());
 		d.appendTitle(title);
 		d.getHtml().setPrettyPrint(true);
 		

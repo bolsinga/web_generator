@@ -312,6 +312,8 @@ public class Web {
 	
 	public static Document createDocument(String title) {
 		Document d = new Document();
+
+        d.setDoctype(new org.apache.ecs.Doctype.Html40Transitional());
 		d.appendTitle(title);
 		d.getHtml().setPrettyPrint(true);
 		
