@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="shows" default="generateAll" basedir=".">
+<project name="shows" default="Site" basedir=".">
 
 <!--    This assumes that jwsdp is installed at ${lib.dir}/jwsdp-1_3/ 
                 Otherwise can be set with "ant -Djwsdp.home=..." -->
