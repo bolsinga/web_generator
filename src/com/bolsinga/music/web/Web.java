@@ -211,18 +211,62 @@ public class Web {
 	public static void addArtist(Music music, Artist artist, OutputStream os) {
 		PrintWriter pw = new PrintWriter(os, true);
 		
-		pw.println(getLinkTo(artist));
+		List shows = Lookup.getLookup(music).getShows(artist);
+		
+		pw.println("----");
+		pw.println(artist.getName());
+		pw.println("----");
+		
+		ListIterator li = shows.listIterator();
+		while (li.hasNext()) {
+			Show show = (Show)li.next();
+			
+			pw.println(Util.toString(show.getDate()));
+			pw.println(((Venue)show.getVenue()).getName());
+			
+			ListIterator bi = show.getPerformance().listIterator();
+			while (bi.hasNext()) {
+				Performance p = (Performance)bi.next();
+				Artist a = (Artist)p.getArtist();
+				pw.print(a.getName());
+				pw.print(" - ");
+			}
+			pw.println("");
+			pw.println("----");
+		}
 	}
 	
 	public static void addVenue(Music music, Venue venue, OutputStream os) {
 		PrintWriter pw = new PrintWriter(os, true);
+
+		List shows = Lookup.getLookup(music).getShows(venue);
 		
-		pw.println(getLinkTo(venue));
+		pw.println("----");
+		pw.println(venue.getName());
+		pw.println("----");
+		
+		ListIterator li = shows.listIterator();
+		while (li.hasNext()) {
+			Show show = (Show)li.next();
+			
+			pw.println(Util.toString(show.getDate()));
+			pw.println(((Venue)show.getVenue()).getName());
+			
+			ListIterator bi = show.getPerformance().listIterator();
+			while (bi.hasNext()) {
+				Performance p = (Performance)bi.next();
+				Artist a = (Artist)p.getArtist();
+				pw.print(a.getName());
+				pw.print(" - ");
+			}
+			pw.println("");
+			pw.println("----");
+		}
 	}
 	
 	public static void addShow(Music music, Show show, OutputStream os) {
 		PrintWriter pw = new PrintWriter(os, true);
-		
+
 		pw.println(getLinkTo(show));
 	}
 	
