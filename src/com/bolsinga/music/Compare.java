@@ -126,7 +126,11 @@ public class Compare {
 			Album r1 = (Album)o1;
 			Album r2 = (Album)o2;
 			
-			return LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
+			int result = LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
+			if (result == 0) {
+				result = ARTIST_COMPARATOR.compare(r1.getPerformer(), r2.getPerformer());
+			}
+			return result;
 		}
 	};
 

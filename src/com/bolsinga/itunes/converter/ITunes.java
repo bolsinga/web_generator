@@ -248,7 +248,13 @@ public class ITunes {
 	    if (name == null) {
 			name = "Unknown - " + artist.getName();
 	    }
-	    if (!sAlbums.containsKey(name)) {
+		StringBuffer keyBuffer = new StringBuffer();
+		keyBuffer.append(name);
+		if (artist != null) {
+			keyBuffer.append(artist.getName());
+		}
+		String key = keyBuffer.toString();
+	    if (!sAlbums.containsKey(key)) {
 			result = objFactory.createAlbum();
 			
 			result.setTitle(name);
@@ -261,9 +267,9 @@ public class ITunes {
 			result.setId("a" + sAlbums.size());
 			
 			music.getAlbum().add(result);
-			sAlbums.put(name, result);
+			sAlbums.put(key, result);
 	    } else {
-			result = (Album)sAlbums.get(name);
+			result = (Album)sAlbums.get(key);
 	    }
 	    return result;
 	}
