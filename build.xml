@@ -245,7 +245,7 @@
 	</javac>
 </target>
 
-<target name="music_web" depends="music_utilities">
+<target name="music_web" depends="web_utilities, music_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
