@@ -405,28 +405,24 @@ public class Web {
 	}
 	
 	public static void generateCityPages(Music music, Links links, String outputDir) {
-		List items = music.getLocation();
-		Location item = null;
+		Collection items = Lookup.getLookup(music).getCities();
+		String item = null;
 		HashMap cityCount = new HashMap();
 		String city = null;
 		Integer val = null;
 		HashSet set = null;
-		HashSet cities = new HashSet();
 		
-		ListIterator li = items.listIterator();
+		Iterator li = items.iterator();
 		while (li.hasNext()) {
-			item = (Location)li.next();
-			
-			city = item.getCity();
-			cities.add(city);
+			item = (String)li.next();
 			
 			val = new Integer(Lookup.getLookup(music).getShows(item).size());
 			if (cityCount.containsKey(val)) {
 				set = (HashSet)cityCount.get(val);
-				set.add(city);
+				set.add(item);
 			} else {
 				set = new HashSet();
-				set.add(city);
+				set.add(item);
 				cityCount.put(val, set);
 			}
 		}
@@ -434,19 +430,19 @@ public class Web {
 		List keys = new Vector(cityCount.keySet());
 		Collections.sort(keys);
 		Collections.reverse(keys);
-		
-		String[] names = new String[cities.size()];
-		int[] values = new int[cities.size()];
+
+		String[] names = new String[items.size()];
+		int[] values = new int[items.size()];
 		int index = 0;
 		
 		Iterator i = keys.iterator();
 		while (i.hasNext()) {
 			val = (Integer)i.next();
 			
-			keys = new Vector((HashSet)cityCount.get(val));
-			Collections.sort(keys);
+			List k = new Vector((HashSet)cityCount.get(val));
+			Collections.sort(k);
 			
-			Iterator j = keys.iterator();
+			Iterator j = k.iterator();
 			while (j.hasNext()) {
 				names[index] = (String)j.next();
 				values[index] = val.intValue();
@@ -513,7 +509,11 @@ public class Web {
 		tbody.addElement(tr);
 		
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(links.getCityLink()));
+		sb = new StringBuffer();
+		sb.append(Lookup.getLookup(music).getCities().size());
+		sb.append(" ");
+		sb.append(links.getCityLink());
+		tr.addElement(new TD(sb.toString()));
 		tbody.addElement(tr);
 		
 		navigation = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0).addElement(tbody);

@@ -129,8 +129,8 @@ public class Lookup {
 		return (List)fVenueMap.get(venue.getId());
 	}
 	
-	public List getShows(Location location) {
-		return (List)fCityMap.get(location.getCity());
+	public List getShows(String city) {
+		return (List)fCityMap.get(city);
 	}
 	
 	public Collection getRelations(Artist artist) {
@@ -143,5 +143,9 @@ public class Lookup {
 	
 	public Collection getRelations(Label label) {
 		return (Collection)fLabelRelationMap.get(label.getId());
+	}
+	
+	public Collection getCities() {
+		return fCityMap.keySet();
 	}
 }
