@@ -36,9 +36,9 @@ public class Encode {
 		
 		String createRegex(String name) {
 			StringBuffer sb = new StringBuffer();
-			sb.append("\\W(");
+			sb.append("(\\W)(");
 			sb.append(name);
-			sb.append(")\\W");
+			sb.append(")(\\W)");
 			return sb.toString();
 		}
 		
@@ -47,7 +47,14 @@ public class Encode {
 		}
 		
 		String getLink(boolean upOneLevel) {
-			return upOneLevel ? fUpLink : fStandardLink;
+			StringBuffer sb = new StringBuffer();
+			
+			sb.append("$1");
+			sb.append(upOneLevel ? fUpLink : fStandardLink);
+			sb.append("$3");
+			
+			return sb.toString();
+			
 		}
 	}
 	
@@ -103,7 +110,14 @@ public class Encode {
 		while (li.hasNext()) {
 			data = (Data)li.next();
 			
-			result = data.getPattern().matcher(result).replaceAll(data.getLink(upOneLevel));
+			StringBuffer sb = new StringBuffer();
+			Matcher m = data.getPattern().matcher(result);
+			while (m.find()) {
+				m.appendReplacement(sb, data.getLink(upOneLevel));
+			}
+			m.appendTail(sb);
+			
+			result = sb.toString();
 		}
 		
 		return result;
