@@ -73,8 +73,6 @@ public class Links {
 	public String getRSSLink() {
 		StringBuffer link = new StringBuffer();
 		
-		link.append("feed:");
-		
 		link.append(System.getProperty("diary.root"));
 
 		link.append(RSS_DIR);
