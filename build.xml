@@ -169,6 +169,25 @@
 	</copy>
 </target>
 
+<target name="music_rss" depends="rss_utilities, music_utilities">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/music/rss/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+	<tstamp>
+		<format property="music.rss.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+	</tstamp>
+	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/music/rss/rss.properties">
+		<filterset>
+			<filter token="builddate" value="${music.rss.builddate}" />
+			<filter token="program" value="MusicRSS" />
+		</filterset>
+	</copy>
+</target>
+
 <target name="diary_web" depends="diary_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
@@ -276,6 +295,21 @@
 	</java>
 </target>
 
+<target name="generateMusicRSS" depends="music_rss, jar" >
+	<mkdir dir="${output.dir}/rss/" />
+	<java classname="com.bolsinga.music.rss.RSS" fork="true" >
+		<sysproperty key="music.title" value="Rock!" />
+		<sysproperty key="music.contact" value="bolsinga@hotmail.com" />
+		<sysproperty key="music.link" value="http://www.io.com/~bolsinga/" />
+		<sysproperty key="music.description" value="Recent Rock shows seen by Greg Bolsinga" />
+		<sysproperty key="music.no_embedded_links" value="true" />
+		<arg value="5" />
+		<arg value="${data.dir}music.xml" />
+		<arg value="${output.dir}/rss/music.xml" />
+		<classpath refid="generate_web_classpath" />
+	</java>
+</target>
+
 <target name="generateDiaryWeb" depends="music_web, diary_web, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.diary.web.Web" fork="true">
@@ -300,7 +334,7 @@
 		<arg value="5" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${output.dir}/rss/diary.xml" />
-		<classpath refid="music_classpath" />
+		<classpath refid="generate_web_classpath" />
 	</java>
 </target>
 
