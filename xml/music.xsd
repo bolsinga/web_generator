@@ -158,6 +158,30 @@
 	</xs:complexType>
 </xs:element>
 
+<!-- Define Relation -->
+<xs:simpleType name="relationID" >
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="relation_.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="relationType" >
+	<xs:restriction base="xs:string" >
+		<xs:enumeration value="artist" />
+		<xs:enumeration value="venue" />
+		<xs:enumeration value="label" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="relation">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="type" type="relationType" />
+			<xs:element name="member" type="xs:IDREF" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="id" type="relationID" />
+		<xs:attribute name="reason" type="xs:string" />
+	</xs:complexType>
+</xs:element>
+
 <!-- Define Performace -->
 <xs:simpleType name="performanceID">
 	<xs:restriction base="xs:ID" >
@@ -201,6 +225,7 @@
 			<xs:element ref="venue" maxOccurs="unbounded" />
 			<xs:element ref="artist" maxOccurs="unbounded" />
 			<xs:element ref="label" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="relation" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="album" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="performance" maxOccurs="unbounded" />

@@ -52,10 +52,11 @@ public class Music {
 			createVenues(objFactory, music, venues, mVenues);
 			
 			createBandSort(objFactory, music, bands);
-
-			createRelations(objFactory, music, relations);
 		
 			convert(objFactory, music, shows);
+
+			createRelations(objFactory, music, relations);
+
 			dump(music);
 		} catch (JAXBException e) {
 			System.err.println(e);
@@ -110,7 +111,47 @@ public class Music {
 	}
 	
 	private static void createRelations(ObjectFactory objFactory, com.bolsinga.music.Music music, List relations) throws JAXBException {
-	
+		Relation oldRelation = null;
+		com.bolsinga.music.Relation xRelation = null;
+		String type = null, member = null, reason = null;
+		ListIterator mi = null;
+		int index = 0;
+		
+		ListIterator li = relations.listIterator();
+		while (li.hasNext()) {
+			oldRelation = (Relation)li.next();
+			type = oldRelation.getType();
+			
+			xRelation = objFactory.createRelation();
+			reason = oldRelation.getReason();
+			if (!reason.equals("^")) {
+				xRelation.setReason(reason);
+			}
+			xRelation.setId("relation_" + index++);
+			
+			if (type.equals("band")) {
+				xRelation.setType("artist");
+
+				mi = oldRelation.getMembers().listIterator();
+				while (mi.hasNext()) {
+					member = (String)mi.next();
+					xRelation.getMember().add(sArtists.get(member));
+				}
+			} else if (type.equals("venue")) {
+				xRelation.setType(type);
+				
+				mi = oldRelation.getMembers().listIterator();
+				while (mi.hasNext()) {
+					member = (String)mi.next();
+					xRelation.getMember().add(sVenues.get(member));
+				}
+			} else {
+				System.err.println("Unknown relation type: " + type);
+				System.exit(1);
+			}
+			
+			music.getRelation().add(xRelation);
+		}
 	}
 	
 	private static com.bolsinga.music.Date createDate(ObjectFactory objFactory, String date) throws JAXBException {
