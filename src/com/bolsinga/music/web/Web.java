@@ -505,6 +505,10 @@ public class Web {
 		sb.append(links.getCityLink());
 		tr.addElement(new TD(sb.toString()));
 		navigation.addElement(tr);
+
+		tr = new TR().setAlign("right");
+		tr.addElement(new TD(links.getRSSLink()));
+		navigation.addElement(tr);
 		
 		Table recent = new Table().setBorder(0).setWidth("100%").setCellSpacing(5).setCellPadding(0);
 
@@ -889,6 +893,8 @@ public class Web {
 				c.addElement(new A((String)m.get(s), l));
 			}
 		}
+		
+		c.addElement(links.getRSSLink());
 		
 		doc.getBody().addElement(c);
 	}

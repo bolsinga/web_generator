@@ -18,6 +18,7 @@ public class Links {
 	public static final String VENUE_DIR = "venues";
 	public static final String SHOW_DIR = "dates";
 	public static final String CITIES_DIR = "cities";
+	public static final String RSS_DIR = "rss";
 	
 	private static final String OTHER = "other";
 	public static final String STATS = "stats";
@@ -265,5 +266,24 @@ public class Links {
 		link.append(HTML_EXT);
 		A a = new A(link.toString(), "Cities");
 		return a.toString();
+	}
+
+	public String getRSSLink() {
+		StringBuffer link = new StringBuffer();
+		
+		if (fUpOneLevel) {
+			link.append("..");
+			link.append(File.separator);
+		}
+		link.append(RSS_DIR);
+		link.append(File.separator);
+		link.append(System.getProperty("music.rss.url"));
+
+		IMG img = new IMG(System.getProperty("rss.image.url"));
+		img.setHeight(System.getProperty("rss.image.height"));
+		img.setWidth(System.getProperty("rss.image.width"));
+		img.setAlt(System.getProperty("rss.image.alt"));
+		
+		return new A(link.toString(), img.toString()).toString();
 	}
 }
