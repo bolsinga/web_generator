@@ -119,6 +119,15 @@ public class Compare {
 			return LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
 		}
 	};
+
+	public static final Comparator SONG_ORDER_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Song r1 = (Song)o1;
+			Song r2 = (Song)o2;
+			
+			return ((r1.getTrack() != null) ? r1.getTrack().intValue() : 0) - ((r2.getTrack() != null) ? r2.getTrack().intValue() : 0);
+		}
+	};
 	
 	public final Comparator ARTIST_STATS_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {

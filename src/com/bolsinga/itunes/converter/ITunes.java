@@ -158,24 +158,26 @@ public class ITunes {
 				com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)li.next();
 				
 				List tracks = dict.getKeyAndArrayOrData();
-				ITunes.add(objFactory, music, tracks);
+				ITunes.addTracks(objFactory, music, tracks);
 			} else {
 				Object o = li.next();
 			}
 	    }
 	}
 	
-	public static void add(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List tracks) {
+	private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List tracks) {
 	    ListIterator li = tracks.listIterator();
 	    while (li.hasNext()) {
 			com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)li.next();
 
 			com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)li.next();
-			ITunes.add(objFactory, music, track);
+			ITunes.addTrack(objFactory, music, track);
 	    }
+		
+		sortAlbumsSongOrder(music);
 	}
 	
-	public static void add(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) {
+	private static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) {
 	    ListIterator li = track.getKeyAndArrayOrData().listIterator();
 	    
 	    String songTitle = null;
@@ -231,10 +233,10 @@ public class ITunes {
 			}
 	    }
 	    
-	    ITunes.addTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, compilation);
+	    ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, compilation);
 	}
 	
-	public static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, boolean compilation) {
+	private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, boolean compilation) {
 	    try {
 			// Get or create the artist
 			Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
@@ -251,7 +253,7 @@ public class ITunes {
 	    }
 	}
 	
-	public static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {
+	private static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {
 	    Album result = null;
 	    if (name == null) {
 			name = "Unknown - " + artist.getName();
@@ -276,13 +278,13 @@ public class ITunes {
 	    return result;
 	}
 	
-	public static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, Calendar lastPlayed) throws JAXBException {
+	private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, Calendar lastPlayed) throws JAXBException {
 	    // Create the song
 	    Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed);
 	    
 	    // Add the song to the album
 	    List songs = album.getSong();
-	    songs.add(song);
+		songs.add(song);
 	    
 	    // Add the album to the artist if it isn't there already.
 	    List albums = artist.getAlbum();
@@ -291,7 +293,7 @@ public class ITunes {
 	    }
 	}
 	
-	static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, Calendar lastPlayed) throws JAXBException {
+	private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, Calendar lastPlayed) throws JAXBException {
 	    List songs = music.getSong();
 	    
 	    Song result = null;
@@ -307,7 +309,9 @@ public class ITunes {
 	    release.setYear(java.math.BigInteger.valueOf(year));
 	    result.setReleaseDate(release);
 	    
-	    result.setTrack(java.math.BigInteger.valueOf(index));
+		if (index != -1) {
+			result.setTrack(java.math.BigInteger.valueOf(index));
+		}
 	    	    
 	    result.setId("s" + songs.size());
 	    result.setDigitized(true);
@@ -315,5 +319,13 @@ public class ITunes {
 	    songs.add(result);
 	    
 	    return result;
+	}
+
+	private static void sortAlbumsSongOrder(com.bolsinga.music.data.Music music) {
+		ListIterator li = music.getAlbum().listIterator();
+		while (li.hasNext()) {
+			Album a = (Album)li.next();
+			Collections.sort(a.getSong(), com.bolsinga.music.util.Compare.SONG_ORDER_COMPARATOR);
+		}
 	}
 }
