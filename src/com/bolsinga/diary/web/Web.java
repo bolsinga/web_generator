@@ -318,7 +318,7 @@ public class Web {
 		for (int i = 0; i < mainPageEntryCount; i++) {
 			item = (Entry)items.get(i);
 			
-			addItem(music, item, mainDiv, false);
+			addItem(music, item, mainDiv, false, true);
 		}
 		
 		StringBuffer archivesLink = new StringBuffer();
@@ -345,13 +345,13 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Entry)li.next();
 			
-			addItem(music, item, creator.getMainDiv(item), true);
+			addItem(music, item, creator.getMainDiv(item), true, false);
 		}
 		
 		creator.close();
 	}
 
-	public static void addItem(Music music, Entry entry, Div mainDiv, boolean upOneLevel) {
+	public static void addItem(Music music, Entry entry, Div mainDiv, boolean upOneLevel, boolean cacheEncoding) {
 		Div diaryDiv = new Div();
 		
 		A a = new A();
@@ -360,23 +360,25 @@ public class Web {
 		
 		diaryDiv.addElement(new H2().addElement(a));
 		Div commentDiv = new Div();
-		diaryDiv.addElement(commentDiv.addElement(Web.encodedComment(music, entry, upOneLevel)));
+		diaryDiv.addElement(commentDiv.addElement(Web.encodedComment(music, entry, upOneLevel, cacheEncoding)));
 		
 		mainDiv.addElement(diaryDiv);
 	}
 	
 	private static HashMap sLinkedData = new HashMap();
 	
-	private static synchronized String encodedComment(Music music, Entry entry, boolean upOneLevel) {
-		String comment = entry.getComment();
+	private static synchronized String encodedComment(Music music, Entry entry, boolean upOneLevel, boolean cacheEncoding) {
+		String encoded = null;
 		
-		if (!sLinkedData.containsKey(comment)) {
-			// Automatically add music links to the comments.
-			String result = com.bolsinga.music.web.Web.embedLinks(music, comment, upOneLevel);
-			
-			sLinkedData.put(comment, com.bolsinga.web.util.Util.convertToParagraphs(result));
+		if (!cacheEncoding && sLinkedData.containsKey(entry.getId())) {
+			encoded = (String)sLinkedData.get(entry.getId());
+		} else {
+			encoded = com.bolsinga.web.util.Util.convertToParagraphs(com.bolsinga.music.web.Web.embedLinks(music, entry.getComment(), upOneLevel));
+			if (cacheEncoding) {
+				sLinkedData.put(entry.getId(), encoded);
+			}
 		}
 		
-		return (String)sLinkedData.get(comment);
+		return encoded;
 	}
 }
