@@ -153,9 +153,27 @@ class VenueDocumentCreator extends DocumentCreator {
 class ShowDocumentCreator extends DocumentCreator {
 	Show fDocShow = null;
 	Show fShow = null;
+	com.bolsinga.music.data.Date fDate = null;
 	
 	public ShowDocumentCreator(Music music, String outputDir) {
 		super(music, outputDir);
+	}
+	
+	public void add(Music music, Show item) {
+		Document doc = getDocument(item);
+		
+		com.bolsinga.music.data.Date d = item.getDate();
+		
+		if ((fDate == null) || (!Util.toMonth(d).equals(Util.toMonth(fDate)))) {
+			Body b = doc.getBody();
+
+			b.addElement(new HR());
+			b.addElement(new Center().addElement(new Big().addElement(Util.toMonth(d))));
+			
+			fDate = d;
+		}
+
+		Web.addItem(music, item, doc);
 	}
 	
 	public Document getDocument(Show show) {
@@ -260,7 +278,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Show)li.next();
 			
-			addItem(music, item, creator.getDocument(item));
+			creator.add(music, item);
 		}
 		creator.close();
 	}
@@ -377,8 +395,8 @@ public class Web {
 	public static void addItem(Music music, Show show, Document doc) {
 		Body b = doc.getBody();
 
-		b.addElement(new HR());
-		b.addElement(new Center().addElement(new Big().addElement(Util.toMonth(show.getDate()))));
+		b.addElement(new P());
+		b.addElement(((Venue)show.getVenue()).getName());
 		
 /*			
 		A a = new A();
