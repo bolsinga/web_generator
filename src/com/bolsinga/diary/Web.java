@@ -1,6 +1,7 @@
 package com.bolsinga.diary.web;
 
 import com.bolsinga.diary.data.*;
+import com.bolsinga.diary.util.*;
 
 import java.io.*;
 import java.text.*;
@@ -10,10 +11,6 @@ import java.util.regex.*;
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 class DiaryDocumentCreator {
 	Diary fDiary = null;
@@ -198,31 +195,16 @@ public class Web {
 	}
 
 	public static void generate(int mainPageEntryCount, String sourceFile, String musicFile, String outputDir) {
-		Diary diary = null;
-		try {
-			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
-			Unmarshaller u = jc.createUnmarshaller();
-			
-			diary = (Diary)u.unmarshal(new FileInputStream(sourceFile));
-		} catch (Exception ume) {
-			System.err.println("Exception: " + ume);
-			ume.printStackTrace();
-			System.exit(1);
-		}
+		Diary diary = Util.createDiary(sourceFile);
 		
+		generate(mainPageEntryCount, diary, musicFile, outputDir);
+	}
+	
+	public static void generate(int mainPageEntryCount, Diary diary, String musicFile, String outputDir) {
 		generateMainPage(musicFile, mainPageEntryCount, diary, outputDir);
 		
 		generateArchivePages(musicFile, diary, outputDir);
 	}
-
-	public static final Comparator ENTRY_COMPARATOR = new Comparator() {
-		public int compare(Object o1, Object o2) {
-			Entry e1 = (Entry)o1;
-			Entry e2 = (Entry)o2;
-			
-			return e1.getTimestamp().before(e2.getTimestamp()) ? -1 : 1;
-		}
-	};
 	
 	public static void generateMainPage(String musicFile, int mainPageEntryCount, Diary diary, String outputDir) {
 		Document doc = createDocument(diary.getTitle());
@@ -335,7 +317,7 @@ public class Web {
 		Entry item = null;
 		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
 		
-		Collections.sort(items, ENTRY_COMPARATOR);
+		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		Collections.reverse(items);
 		
 		for (int i = 0; i < mainPageEntryCount; i++) {
@@ -358,7 +340,7 @@ public class Web {
 		List items = diary.getEntry();
 		Entry item = null;
 		
-		Collections.sort(items, ENTRY_COMPARATOR);
+		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		
 		DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, outputDir, sResource.getString("program"));
 		

@@ -101,6 +101,16 @@
 	</javac>
 </target>
 
+<target name="diary_utilities" depends="diary_binding">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/diary/util/**" />
+		<classpath refid="web_classpath" />
+	</javac>
+</target>
+
 <target name="converter" depends="music_utilities, diary_binding">
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
@@ -130,13 +140,12 @@
 	</copy>
 </target>
 
-<target name="diary_web" depends="diary_binding">
+<target name="diary_web" depends="diary_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/diary/web/**" />
-		<include name="com/bolsinga/diary/util/**" />
 		<classpath refid="web_classpath" />
 	</javac>
 	<tstamp>
