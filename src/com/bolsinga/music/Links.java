@@ -278,23 +278,6 @@ public class Links {
 		return a.toString();
 	}
 
-	public Link getAlternateRSSLink() {
-		Link result = new Link();
-		result.setRel("alternate");
-		result.setType("application/rss+xml");
-		result.setTitle("RSS");
-		
-		StringBuffer sb = new StringBuffer();
-		sb.append(System.getProperty("music.root"));
-		sb.append(RSS_DIR);
-		sb.append(File.separator);
-		sb.append(System.getProperty("rss.url"));
-
-		result.setHref(sb.toString());
-		
-		return result;
-	}
-
 	public String getICalLink() {
 		StringBuffer link = new StringBuffer();
 		

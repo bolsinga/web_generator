@@ -294,7 +294,6 @@ public class Web {
 		h.addElement(com.bolsinga.web.util.Util.getIconLink());
 		
 		h.addElement(links.getAlternateRSSLink());
-		h.addElement(com.bolsinga.music.web.Web.createAlternateRSSLink());
 		
 		h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
 		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
