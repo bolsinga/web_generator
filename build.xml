@@ -289,6 +289,11 @@
 		<sysproperty key="music.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="music.root" value="../index.html" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
+		<sysproperty key="music.rss.url" value="music.xml" />
+		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
+		<sysproperty key="rss.image.width" value="36" />
+		<sysproperty key="rss.image.height" value="14" />
+		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the shows." />
 		<arg value="${data.dir}music.xml" />
 		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
@@ -316,6 +321,12 @@
 		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="diary.root" value="../index.html" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
+		<sysproperty key="diary.rss.url" value="diary.xml" />
+		<sysproperty key="music.rss.url" value="music.xml" />
+		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
+		<sysproperty key="rss.image.width" value="36" />
+		<sysproperty key="rss.image.height" value="14" />
+		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the diary." />
 		<arg value="3" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${data.dir}music.xml" />
