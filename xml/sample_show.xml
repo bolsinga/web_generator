@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<show date="2003-05-16">
+	<venue name="The Rozy" >
+		<location>
+			<street></street>
+			<city></city>
+			<state></state>
+			<zip></zip>
+			<country></country>
+			<url></url>
+		</location>
+		<relations>
+			<relation>The Rowy"</relation>
+		</relations>
+	</venue>
+	<artists>
+		<artist>
+			<name>The Plincks</name>
+			<sortname>Plincks, The</sortname>
+			<location>
+				...
+			</location>
+			<relations>
+				<relation>Plonks</relation>
+			</relations>
+			<albums>
+				<album name="Meet the Plincks">
+					<label></label>
+					<date></date>
+					<format></format>
+				</album>
+			</albums>
+		</artist>
+		<artist>
+			...
+		</artist>
+	</artists >
+	<comment>The Plincks are crazy. The show was nuts.</comment>
+</show>

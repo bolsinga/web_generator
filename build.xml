@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+
+<project name="shows" default="converter" basedir=".">
+
+<property name="src.dir" value="src" />
+<property name="dist.dir" value="dist" />
+
+<property name="build.dir" value="build" />
+<property name="build.classes" value="${build.dir}/classes" />
+<property name="build.lib" value="${build.dir}/lib" />
+
+<property name="javac.debug" value="no" />
+
+<target name="clean">
+	<delete dir="${build.dir}" />
+</target>
+
+<target name="prepare">
+	<tstamp/>
+	<mkdir dir="${build.dir}" />
+	<mkdir dir="${build.lib}" />
+</target>
+
+<target name="converter" depends="prepare">
+	<mkdir dir="${build.classes}" />
+	<javac	destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/shows/converter/**" />
+	</javac>
+	<jar jarfile="${build.lib}/converter.jar"
+		basedir="${build.classes}" >
+		<include name="com/bolsinga/shows/converter/**" />
+		<manifest>
+			<attribute name="Main-Class" value="com.bolsinga.shows.converter.Convert" />
+		</manifest>
+	</jar>
+</target>
+
+</project>

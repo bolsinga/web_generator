@@ -1,0 +1,17 @@
+<!ELEMENT artists (artist+)>
+<!ATTLIST artists version CDATA #REQUIRED>
+
+<!ELEMENT artist (name, sortedname?, relations?, homepage?, releases?)>
+
+<!ELEMENT name (#PCDATA)>
+
+<!ELEMENT sortedname (#PCDATA)>
+
+<!ELEMENT relations (relation+)>
+
+<!ELEMENT relation (#PCDATA)>
+<!ATTLIST relation reason CDATA #IMPLIED>
+
+<!ELEMENT releases (release+)>
+
+<!ELEMENT release (#PCDATA)>
