@@ -29,7 +29,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 
     public void add(Music music, Entry entry) {
         fCurEntry = entry;
-		getSubsection().addElement(Web.addItem(music, entry, true, false));
+		getSubsection().addElement(Web.addItem(music, entry, true));
         fLastEntry = fCurEntry;
     }
     
@@ -335,7 +335,7 @@ public class Web {
 		for (int i = 0; i < mainPageEntryCount; i++) {
 			item = (Entry)items.get(i);
 			
-			diaryDiv.addElement(Web.addItem(music, item, false, true));
+			diaryDiv.addElement(Web.addItem(music, item, false));
 		}
 		
 		sb = new StringBuffer();
@@ -368,7 +368,7 @@ public class Web {
 		creator.close();
 	}
 
-	public static div addItem(Music music, Entry entry, boolean upOneLevel, boolean cacheEncoding) {
+	public static div addItem(Music music, Entry entry, boolean upOneLevel) {
 		div diaryDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_ENTRY);
 		
 		a an = new a(); // named target
@@ -376,25 +376,12 @@ public class Web {
 		an.addElement("test", Util.getTitle(entry));
 		
 		diaryDiv.addElement(new h2().addElement(an));
-		diaryDiv.addElement(Web.encodedComment(music, entry, upOneLevel, cacheEncoding));
+		diaryDiv.addElement(Web.encodedComment(music, entry, upOneLevel));
 		
         return diaryDiv;
 	}
 	
-	private static HashMap sLinkedData = new HashMap();
-	
-	private static synchronized String encodedComment(Music music, Entry entry, boolean upOneLevel, boolean cacheEncoding) {
-		String encoded = null;
-		
-		if (!cacheEncoding && sLinkedData.containsKey(entry.getId())) {
-			encoded = (String)sLinkedData.get(entry.getId());
-		} else {
-			encoded = com.bolsinga.web.util.Util.convertToParagraphs(com.bolsinga.music.web.Web.embedLinks(music, entry.getComment(), upOneLevel));
-			if (cacheEncoding) {
-				sLinkedData.put(entry.getId(), encoded);
-			}
-		}
-		
-		return encoded;
+	private static synchronized String encodedComment(Music music, Entry entry, boolean upOneLevel) {
+		return com.bolsinga.web.util.Util.convertToParagraphs(com.bolsinga.music.web.Web.embedLinks(music, entry.getComment(), upOneLevel));
 	}
 }
