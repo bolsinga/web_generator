@@ -2,10 +2,10 @@
 
 <project name="shows" default="generateAll" basedir=".">
 
-<!--	This assumes that jwsdp is installed at /usr/local/jwsdp-1.3/ 
+<!--	This assumes that jwsdp is installed at /usr/local/jwsdp-1_3/ 
 		Otherwise can be set with "ant -Djwsdp.home=..." -->
 
-<property name="jwsdp.home" value="/usr/local/jwsdp-1.3" />
+<property name="jwsdp.home" value="/usr/local/jwsdp-1_3" />
 
 <path id="jaxb_classpath">
 	<pathelement path="." />
