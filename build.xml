@@ -420,4 +420,18 @@
     </ftp>
 </target>
 
+<target name="installDiary">
+    <ftp    server="ftp.io.com"
+            userid="bolsinga"
+            password="${ftp.password}"
+            remotedir="public-web"
+            verbose="yes" >
+        <fileset dir="${output.dir}">
+            <include name="index.html" />
+            <include name="archives/*" />
+            <include name="rss/*" />
+        </fileset>
+    </ftp>
+</target>
+
 </project>
