@@ -35,7 +35,7 @@
 <property name="build.lib" value="${build.dir}/lib" />
 <property name="build.gensrc" value="${build.dir}/gensrc" />
 
-<property name="javac.debug" value="no" />
+<property name="javac.debug" value="yes" />
 
 <target name="clean">
 	<delete dir="${build.dir}" />
@@ -321,17 +321,6 @@
 	<pathelement path="${build.lib}/music.jar" />
 </path>
 
-<target name="generateShowsXML" depends="shows_converter, jar">
-	<java classname="com.bolsinga.shows.converter.Music" fork="true">
-		<arg value="${legacy_data.dir}shows.txt" />
-		<arg value="${legacy_data.dir}venuemap.txt" />
-		<arg value="${legacy_data.dir}bandsort.txt" />
-		<arg value="${legacy_data.dir}relations.txt" />
-		<arg value="${data.dir}shows.xml" />
-		<classpath refid="music_classpath" />
-	</java>
-</target>
-
 <target name="generateITunesXML" depends="itunes_converter, shows_converter, jar">
 	<java classname="com.bolsinga.itunes.converter.ITunes" fork="true">
 		<arg value="${itunes.dir}iTunes Music Library.xml" />
@@ -384,7 +373,7 @@
 		<sysproperty key="ical.image.width" value="14" />
 		<sysproperty key="ical.image.height" value="18" />
 		<sysproperty key="ical.image.alt" value="Click here to see an VCalendar representation of the shows." />
-		<arg value="${data.dir}shows.xml" />
+		<arg value="${data.dir}music.xml" />
 		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
 	</java>
@@ -413,7 +402,7 @@
 		<sysproperty key="ical.image.alt" value="Click here to see an VCalendar representation of the shows." />
 		<arg value="3" />
 		<arg value="${data.dir}diary.xml" />
-		<arg value="${data.dir}shows.xml" />
+		<arg value="${data.dir}music.xml" />
 		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
 	</java>
@@ -432,7 +421,7 @@
 		<sysproperty key="music.no_embedded_links" value="true" />
 		<arg value="20" />
 		<arg value="${data.dir}diary.xml" />
-		<arg value="${data.dir}shows.xml" />
+		<arg value="${data.dir}music.xml" />
 		<arg value="${output.dir}/rss/rss.xml" />
 		<classpath refid="generate_web_classpath" />
 	</java>
@@ -441,7 +430,7 @@
 <target name="generateICal" depends="ical, jar">
 	<mkdir dir="${output.dir}/ical/" />
 	<java classname="com.bolsinga.music.ical.ICal" fork="true">
-		<arg value="${data.dir}shows.xml" />
+		<arg value="${data.dir}music.xml" />
 		<arg value="Shows" />
 		<arg value="${output.dir}/ical/" />
 		<classpath refid="music_classpath" />
@@ -460,7 +449,7 @@
 
 <target name="editMusic" depends="music_edit, jar" >
 	<java classname="com.bolsinga.music.ui.UI" fork="true" >
-		<arg value="${data.dir}shows.xml" />
+		<arg value="${data.dir}music.xml" />
 		<classpath refid="music_classpath" />
 	</java>
 </target>
@@ -482,9 +471,9 @@
 	</java>
 </target>
 
-<target name="music" depends="shows_converter, music_web, diary_web, music_rss, diary_rss, rss, ical, jar" />
+<target name="music" depends="music_converter, music_web, diary_web, music_rss, diary_rss, rss, ical, jar" />
 
-<target name="generateXML" depends="music, generateShowsXML, generateDiaryXML" />
+<target name="generateXML" depends="music, generateMusicXML, generateDiaryXML" />
 
 <target name="generateWeb" depends="music, generateMusicWeb, generateDiaryWeb" />
 
