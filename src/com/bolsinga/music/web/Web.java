@@ -57,6 +57,8 @@ public class Web {
 		List artists = music.getArtist();
 		Artist artist = null;
 		
+		Collections.sort(artists, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
+		
 		ListIterator li = artists.listIterator();
 		while (li.hasNext()) {
 			artist = (Artist)li.next();
@@ -68,6 +70,8 @@ public class Web {
 	public static void generateVenuePages(Music music, String outputDir) {
 		List venues = music.getVenue();
 		Venue venue = null;
+
+		Collections.sort(venues, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
 		
 		ListIterator li = venues.listIterator();
 		while (li.hasNext()) {
@@ -80,6 +84,8 @@ public class Web {
 	public static void generateDatePages(Music music, String outputDir) {
 		List shows = music.getShow();
 		Show show = null;
+
+		Collections.sort(shows, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 		
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
