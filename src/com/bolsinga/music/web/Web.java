@@ -206,11 +206,7 @@ class ShowDocumentCreator extends DocumentCreator {
 			fMonthDiv.addElement(new H1().addElement(month));
 		}
 
-		Div showDiv = new Div();
-
-		Web.addItem(music, fLinks, item, showDiv);
-		
-		fMonthDiv.addElement(showDiv);
+		fMonthDiv.addElement(Web.addItem(music, fLinks, item));
 	}
 	
 	public Div getMainDiv(Show show) {
@@ -405,7 +401,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 			
-			addItem(music, links, item, creator.getMainDiv(item));
+			creator.getMainDiv(item).addElement(addItem(music, links, item));
 		}
 		creator.close();
 		
@@ -442,7 +438,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Venue)li.next();
 
-			addItem(music, links, item, creator.getMainDiv(item));
+			creator.getMainDiv(item).addElement(addItem(music, links, item));
 		}
 		creator.close();
 
@@ -576,7 +572,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Album)li.next();
 			
-			addItem(music, links, item, creator.getMainDiv(item));
+			creator.getMainDiv(item).addElement(addItem(music, links, item));
 		}
 		creator.close();
 
@@ -774,7 +770,7 @@ public class Web {
 		return (String)sLinkedData.get(data);
 	}
 	
-	public static void addItem(Music music, Links links, Artist artist, Div div) {
+	public static Div addItem(Music music, Links links, Artist artist) {
 		Div artistDiv = new Div();
 		
 		A a = new A();
@@ -838,10 +834,10 @@ public class Web {
 		    }
 	    }
 		
-		div.addElement(artistDiv);
+		return artistDiv;
 	}
 	
-	public static void addItem(Music music, Links links, Venue venue, Div div) {
+	public static Div addItem(Music music, Links links, Venue venue) {
 		Div venueDiv = new Div();
 		
 		A a = new A();
@@ -893,10 +889,12 @@ public class Web {
 			venueDiv.addElement(showDiv);
 		}
 		
-		div.addElement(venueDiv);
+		return venueDiv;
 	}
 	
-	public static void addItem(Music music, Links links, Show show, Div showDiv) {
+	public static Div addItem(Music music, Links links, Show show) {
+		Div showDiv = new Div();
+		
 		A a = new A();
 		a.setName(show.getId());
 		a.addElement("test", Util.toString(show.getDate()));
@@ -928,9 +926,11 @@ public class Web {
 		if (comment != null) {
 			showDiv.addElement(new Div().addElement(getLinkedData(music, comment, true)));
 		}
+		
+		return showDiv;
 	}
 
-	public static void addItem(Music music, Links links, Album album, Div div) {
+	public static Div addItem(Music music, Links links, Album album) {
 		Div albumDiv = new Div();
 		
 		StringBuffer sb;
@@ -987,7 +987,7 @@ public class Web {
 		
 		albumDiv.addElement(albumListing);
 		
-		div.addElement(albumDiv);
+		return albumDiv;
 	}
 	
 	public static Div addRelations(Music music, Links links, Artist artist) {
