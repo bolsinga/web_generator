@@ -306,7 +306,7 @@
 		<sysproperty key="web.logo.height" value="90" />
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="music.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="music.root" value="../index.html" />
+		<sysproperty key="music.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
 		<sysproperty key="music.rss.url" value="music.xml" />
 		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
@@ -331,9 +331,9 @@
 		<sysproperty key="web.logo.width" value="120" />
 		<sysproperty key="web.logo.height" value="90" />
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
+		<sysproperty key="music.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.title" value="Rock!" />
 		<sysproperty key="music.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="music.link" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.description" value="Recent Rock shows seen by Greg Bolsinga" />
 		<sysproperty key="music.no_embedded_links" value="true" />
 		<arg value="10" />
@@ -352,7 +352,7 @@
 		<sysproperty key="web.logo.height" value="90" />
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="diary.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="diary.root" value="../index.html" />
+		<sysproperty key="diary.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
 		<sysproperty key="diary.rss.url" value="diary.xml" />
 		<sysproperty key="music.rss.url" value="music.xml" />
@@ -381,7 +381,7 @@
 		<sysproperty key="web.logo.height" value="90" />
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="diary.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="diary.link" value="http://www.io.com/~bolsinga/" />
+		<sysproperty key="diary.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="diary.description" value="Random posts from Greg Bolsinga" />
 		<sysproperty key="music.no_embedded_links" value="true" />
 		<arg value="10" />

@@ -33,6 +33,11 @@ public class Links {
 	
 	Links(boolean upOneLevel) {
 		fUpOneLevel = upOneLevel;
+		
+		String root = System.getProperty("music.root");
+		if (root == null) {
+			System.setProperty("music.root", System.getProperty("diary.root"));
+		}
 	}
 	
 	public void addWebNavigator(Music music, Document doc, String program) {
@@ -274,10 +279,8 @@ public class Links {
 		
 		link.append("feed:");
 
-		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
-		}
+		link.append(System.getProperty("music.root"));
+
 		link.append(RSS_DIR);
 		link.append(File.separator);
 		link.append(System.getProperty("music.rss.url"));
@@ -293,12 +296,10 @@ public class Links {
 	public String getICalLink() {
 		StringBuffer link = new StringBuffer();
 		
-		link.append("ical:");
+		link.append("webcal:");
 
-		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
-		}
+		link.append(System.getProperty("music.root"));
+
 		link.append(ICAL_DIR);
 		link.append(File.separator);
 		link.append(System.getProperty("music.ical.url"));

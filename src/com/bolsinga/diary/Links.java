@@ -75,10 +75,8 @@ public class Links {
 		
 		link.append("feed:");
 		
-		if (fUpOneLevel) {
-			link.append("..");
-			link.append(File.separator);
-		}
+		link.append(System.getProperty("diary.root"));
+
 		link.append(RSS_DIR);
 		link.append(File.separator);
 		link.append(System.getProperty("diary.rss.url"));

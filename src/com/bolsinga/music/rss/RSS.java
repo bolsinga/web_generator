@@ -76,14 +76,14 @@ public class RSS {
 			List channelElements = channel.getTitleOrLinkOrDescription();
 			
 			channelElements.add(objFactory.createTRssChannelTitle(System.getProperty("music.title")));
-			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("music.link")));
+			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("music.root")));
 			channelElements.add(objFactory.createTRssChannelDescription(System.getProperty("music.description")));
 			channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
 			channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
 			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("music.contact")));
 			
 			TRssChannel.Image logo = com.bolsinga.rss.util.Util.createLogo(objFactory);
-			logo.setLink(System.getProperty("music.link"));
+			logo.setLink(System.getProperty("music.root"));
 			logo.setDescription(System.getProperty("music.title"));
 			
 			channelElements.add(logo);
@@ -129,7 +129,7 @@ public class RSS {
 			
 			itemElements.add(objFactory.createTRssItemTitle(getTitle(show)));
 			itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.util.Util.getRSSDate(com.bolsinga.music.util.Util.toCalendar(show.getDate()).getTime())));
-			itemElements.add(objFactory.createTRssItemLink(System.getProperty("music.link") + links.getLinkTo(show)));
+			itemElements.add(objFactory.createTRssItemLink(System.getProperty("music.root") + links.getLinkTo(show)));
 			itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.rss.util.Util.createDescription(show.getComment(), Integer.MAX_VALUE)));
 			
 			rssItems.add(item);

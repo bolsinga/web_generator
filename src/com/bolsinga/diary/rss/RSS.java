@@ -77,14 +77,14 @@ public class RSS {
 			List channelElements = channel.getTitleOrLinkOrDescription();
 			
 			channelElements.add(objFactory.createTRssChannelTitle(diary.getTitle()));
-			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("diary.link")));
+			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("diary.root")));
 			channelElements.add(objFactory.createTRssChannelDescription(System.getProperty("diary.description")));
 			channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
 			channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
 			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("diary.contact")));
 
 			TRssChannel.Image logo = com.bolsinga.rss.util.Util.createLogo(objFactory);
-			logo.setLink(System.getProperty("diary.link"));
+			logo.setLink(System.getProperty("diary.root"));
 			logo.setDescription(diary.getTitle());
 			
 			channelElements.add(logo);
@@ -130,7 +130,7 @@ public class RSS {
 			
 			itemElements.add(objFactory.createTRssItemTitle(Util.getTitle(entry)));
 			itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.util.Util.getRSSDate(entry.getTimestamp().getTime())));
-			itemElements.add(objFactory.createTRssItemLink(System.getProperty("diary.link") + links.getLinkTo(entry)));
+			itemElements.add(objFactory.createTRssItemLink(System.getProperty("diary.root") + links.getLinkTo(entry)));
 			itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.rss.util.Util.createDescription(entry.getComment(), Integer.MAX_VALUE)));
 			
 			rssItems.add(item);
