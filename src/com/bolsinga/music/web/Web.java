@@ -720,7 +720,7 @@ public class Web {
 	
 	public static synchronized String getLinkedData(Music music, String data, boolean upOneLevel) {
 		if (!sLinkedData.containsKey(data)) {
-			sLinkedData.put(data, embedLinks(music, data, upOneLevel));
+			sLinkedData.put(data, com.bolsinga.web.util.Util.convertToParagraphs(embedLinks(music, data, upOneLevel)));
 		}
 		
 		return (String)sLinkedData.get(data);

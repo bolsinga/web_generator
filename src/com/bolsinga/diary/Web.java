@@ -376,16 +376,7 @@ public class Web {
 			// Automatically add music links to the comments.
 			String result = com.bolsinga.music.web.Web.embedLinks(music, comment, upOneLevel);
 			
-			StringBuffer tagged = new StringBuffer();
-			
-			// Convert each line to <p> tags
-			String[] lines = result.split("\\n");
-			for (int i = 0; i < lines.length; i++) {
-				tagged.append(new P());
-				tagged.append(lines[i]);
-			}
-			
-			sLinkedData.put(comment, tagged.toString());
+			sLinkedData.put(comment, com.bolsinga.web.util.Util.convertToParagraphs(result));
 		}
 		
 		return (String)sLinkedData.get(comment);
