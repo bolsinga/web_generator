@@ -187,6 +187,7 @@ class ShowDocumentCreator extends DocumentCreator {
 	
 	protected Document createDocument() {
 		fDocShow = fShow;
+		fDate = null;
 		return Web.createHTMLDocument(Util.getPageFileName(fDocShow), "Dates");
 	}
 	
