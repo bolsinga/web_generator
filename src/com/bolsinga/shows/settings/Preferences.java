@@ -42,14 +42,14 @@ public class Preferences {
             image.setWidth(new java.math.BigInteger(System.getProperty("ical.image.width")));
             image.setHeight(new java.math.BigInteger(System.getProperty("ical.image.height")));
             image.setAlt(System.getProperty("ical.image.alt"));
-            settings.setRssImage(image);
+            settings.setIcalImage(image);
 
             image = objFactory.createImage();
             image.setLocation(System.getProperty("rss.image.url"));
             image.setWidth(new java.math.BigInteger(System.getProperty("rss.image.width")));
             image.setHeight(new java.math.BigInteger(System.getProperty("rss.image.height")));
             image.setAlt(System.getProperty("rss.image.alt"));
-            settings.setIcalImage(image);
+            settings.setRssImage(image);
 
             settings.setCssFile(System.getProperty("web.layout.css"));
             settings.setRssFile(System.getProperty("rss.url"));
