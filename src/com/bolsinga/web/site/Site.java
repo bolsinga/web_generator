@@ -16,7 +16,7 @@ public class Site {
   }
     
   public static void generate(String diaryFile, String musicFile, String outputDir, String variant) {
-    Diary diary = com.bolsinga.diary.util.Util.createDiary(diaryFile);
+    Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
         
     boolean musicOnly = variant.equals("music");

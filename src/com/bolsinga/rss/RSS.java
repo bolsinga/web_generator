@@ -27,7 +27,7 @@ public class RSS {
   }
 
   public static void generate(String diaryFile, String musicFile, String outputDir) {
-    Diary diary = com.bolsinga.diary.util.Util.createDiary(diaryFile);
+    Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
                 
     generate(diary, music, outputDir);
@@ -115,7 +115,7 @@ public class RSS {
     TRssItem item = objFactory.createTRssItem();
     List itemElements = item.getTitleOrDescriptionOrLink();
                 
-    itemElements.add(objFactory.createTRssItemTitle(com.bolsinga.diary.util.Util.getTitle(entry)));
+    itemElements.add(objFactory.createTRssItemTitle(com.bolsinga.diary.Util.getTitle(entry)));
     itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(entry.getTimestamp().getTime())));
     itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.util.Util.getSettings().getRssRoot() + links.getLinkTo(entry)));
     itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.util.Util.convertToParagraphs(entry.getComment())));
@@ -149,7 +149,7 @@ public class RSS {
       Collections.reverse(shows);
 
       List entries = diary.getEntry();
-      Collections.sort(entries, com.bolsinga.diary.util.Util.ENTRY_COMPARATOR);
+      Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
       Collections.reverse(entries);
                         
       com.bolsinga.music.util.Links musicLinks = com.bolsinga.music.util.Links.getLinks(false);
