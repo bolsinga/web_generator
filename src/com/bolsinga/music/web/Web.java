@@ -175,7 +175,7 @@ class ShowDocumentCreator extends DocumentCreator {
 			Body b = doc.getBody();
 
 			b.addElement(new HR());
-			b.addElement(new Div().addElement(new Big().addElement(Util.toMonth(d))));
+			b.addElement(new Div().addElement(Util.toMonth(d)));
 			
 			fDate = d;
 		}
@@ -738,7 +738,7 @@ public class Web {
 		A a = new A();
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
-		b.addElement(new Div().addElement(new Big().addElement(a)));
+		b.addElement(new Div().addElement(a));
 				
 		addTracks(music, links, artist, doc);
 		
@@ -799,7 +799,7 @@ public class Web {
 		A a = new A();
 		a.setName(venue.getId());
 		a.addElement("test", venue.getName());
-		b.addElement(new Div().addElement(new Big().addElement(a)));
+		b.addElement(new Div().addElement(a));
 		
 		addRelations(music, links, venue, doc);
 
@@ -910,7 +910,7 @@ public class Web {
 			sb.append(")");
 		}
 		
-		b.addElement(new Div().addElement(new Big().addElement(sb.toString())));
+		b.addElement(new Div().addElement(sb.toString()));
 		
 		OL albumListing = new OL();
 
