@@ -16,6 +16,7 @@ public class Util {
 	public static Calendar toCalendar(com.bolsinga.music.data.Date date) {
 		Calendar d = Calendar.getInstance();
 		if (!date.isUnknown()) {
+			d.clear();
 			d.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue());
 		} else {
 			System.err.println("Can't convert Unknown com.bolsinga.music.data.Date");
