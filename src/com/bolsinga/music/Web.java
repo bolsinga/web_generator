@@ -12,7 +12,7 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
-abstract class MusicDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
+abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   Music  fMusic   = null;
   Links  fLinks   = null;
   String fProgram = null;

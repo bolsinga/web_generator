@@ -12,7 +12,7 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
-class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
+class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   Diary  fDiary     = null;
   Music  fMusic     = null;
   Links  fLinks     = null;

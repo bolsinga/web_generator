@@ -1,6 +1,4 @@
-package com.bolsinga.web.util;
-
-import com.bolsinga.web.*;
+package com.bolsinga.web;
 
 import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;

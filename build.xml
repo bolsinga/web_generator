@@ -226,7 +226,7 @@
         </javac>
 </target>
 
-<target name="diary" depends="web, diary_binding, settings_binding, music_binding">
+<target name="diary" depends="music, web, diary_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
