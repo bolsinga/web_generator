@@ -25,41 +25,14 @@ public class Music {
 	}
 	
 	public static void convert(String showsFile, String venueFile, String bandFile, String relationFile, String outputFile) {
-		List shows = null;
-		List venues = null;
-		List bands = null;
-		List relations = null;
-		
-		try {
-			shows = Convert.shows(showsFile);
-		
-			venues = Convert.venuemap(venueFile);
-
-			bands = Convert.bandsort(bandFile);
-
-			relations = Convert.relation(relationFile);
-		} catch (IOException e) {
-			System.err.println(e);
-			System.exit(1);
-		}
 		
 		ObjectFactory objFactory = new ObjectFactory();
 		
 		try {
-			com.bolsinga.music.data.Music music = objFactory.createMusic();
-		
-			createVenues(objFactory, music, venues);
-			
-			createBandSort(objFactory, music, bands);
-		
-			convert(objFactory, music, shows);
-
-			Collections.sort(music.getArtist(), com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
-
-			createRelations(objFactory, music, relations);
+			com.bolsinga.music.data.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile);
 
 			music.setTimestamp(Calendar.getInstance());
-
+			
 			// Write out to the output file.
 			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
 			Marshaller m = jc.createMarshaller();
@@ -80,6 +53,40 @@ public class Music {
 			e.printStackTrace();
 			System.exit(1);
 		}
+	}
+	
+	public static com.bolsinga.music.data.Music createMusic(ObjectFactory objFactory, String showsFile, String venueFile, String bandFile, String relationFile)  throws JAXBException {
+		List shows = null;
+		List venues = null;
+		List bands = null;
+		List relations = null;
+		
+		try {
+			shows = Convert.shows(showsFile);
+		
+			venues = Convert.venuemap(venueFile);
+
+			bands = Convert.bandsort(bandFile);
+
+			relations = Convert.relation(relationFile);
+		} catch (IOException e) {
+			System.err.println(e);
+			System.exit(1);
+		}
+
+		com.bolsinga.music.data.Music music = objFactory.createMusic();
+	
+		createVenues(objFactory, music, venues);
+		
+		createBandSort(objFactory, music, bands);
+	
+		convert(objFactory, music, shows);
+
+		Collections.sort(music.getArtist(), com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
+
+		createRelations(objFactory, music, relations);
+		
+		return music;
 	}
 	
 	private static void createVenues(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List venues) throws JAXBException {
@@ -208,7 +215,7 @@ public class Music {
 		return result;
 	}
 	
-	private static com.bolsinga.music.data.Artist addArtist(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name) throws JAXBException {
+	public static com.bolsinga.music.data.Artist addArtist(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name) throws JAXBException {
 		com.bolsinga.music.data.Artist result = null;
 		if (!sArtists.containsKey(name)) {
 			result = objFactory.createArtist();

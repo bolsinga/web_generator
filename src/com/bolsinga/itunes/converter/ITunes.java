@@ -52,7 +52,6 @@ public class ITunes {
 	private static final String FORMAT_CD = "CD";
 	private static final String FORMAT_DIGITAL_FILE = "Digital File";
 
-	private static HashMap sArtists = new HashMap();
 	private static HashMap sAlbums = new HashMap();
 
 	private static HashSet sITunesKeys = new HashSet();
@@ -67,9 +66,8 @@ public class ITunes {
 	}
 	
 	public static void convert(String itunesFile, String outputFile) {
-	    com.bolsinga.plist.data.Plist plist = Util.createPlist(itunesFile);
 
-	    com.bolsinga.music.data.Music music = ITunes.convert(plist);
+	    com.bolsinga.music.data.Music music = ITunes.convert(itunesFile);
 	    
 	    try {
 			music.setTimestamp(Calendar.getInstance());
@@ -95,7 +93,8 @@ public class ITunes {
 	    }
 	}
 	
-	public static com.bolsinga.music.data.Music convert(com.bolsinga.plist.data.Plist plist) {
+	public static com.bolsinga.music.data.Music convert(String itunesFile) {
+
 	    ObjectFactory objFactory = new ObjectFactory();
 	    com.bolsinga.music.data.Music music = null;
 	    
@@ -107,7 +106,7 @@ public class ITunes {
 			System.exit(1);
 	    }
 	    
-	    ITunes.add(objFactory, music, plist);
+	    ITunes.addMusic(objFactory, music, itunesFile);
 	    
 	    return music;
 	}
@@ -145,12 +144,12 @@ public class ITunes {
 	    sITunesKeys.add(TK_YEAR);
 	}
 	
-	public static void add(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Plist plist) {
+	public static void addMusic(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String itunesFile) {
 	
-	    // Cache data from the given com.bolsinga.music.data.Music object here.
-	    
 	    // Create a list of all known iTunes keys. This way if a new one shows up, the program will let us know.
 	    createKnownKeys();
+
+	    com.bolsinga.plist.data.Plist plist = Util.createPlist(itunesFile);
 	    
 	    ListIterator li = (plist.getDict().getKeyAndArrayOrData()).listIterator();
 	    while (li.hasNext()) {
@@ -238,7 +237,7 @@ public class ITunes {
 	public static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, boolean compilation) {
 	    try {
 			// Get or create the artist
-			Artist artist = ITunes.addArtist(objFactory, music, artistName);
+			Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
 			
 			// Get or create the album.
 			Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
@@ -250,22 +249,6 @@ public class ITunes {
 			e.printStackTrace();
 			System.exit(1);
 	    }
-	}
-	
-	public static Artist addArtist(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name) throws JAXBException {
-	    Artist result = null;
-	    if (!sArtists.containsKey(name)) {
-			result = objFactory.createArtist();
-			
-			result.setName(name);
-			result.setId("ar" + sArtists.size());
-			
-			music.getArtist().add(result);
-			sArtists.put(name, result);
-	    } else {
-			result = (Artist)sArtists.get(name);
-	    }
-	    return result;
 	}
 	
 	public static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {

@@ -180,7 +180,7 @@
 	</javac>
 </target>
 
-<target name="converter" depends="music_utilities, diary_binding">
+<target name="shows_converter" depends="music_utilities, diary_binding">
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -196,6 +196,16 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/itunes/converter/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+</target>
+
+<target name="music_converter" depends="shows_converter, itunes_converter">
+	<javac	destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/music/converter/**" />
 		<classpath refid="jaxb_classpath" />
 	</javac>
 </target>
@@ -311,7 +321,7 @@
 	<pathelement path="${build.lib}/music.jar" />
 </path>
 
-<target name="generateShowsXML" depends="converter, jar">
+<target name="generateShowsXML" depends="shows_converter, jar">
 	<java classname="com.bolsinga.shows.converter.Music" fork="true">
 		<arg value="${legacy_data.dir}shows.txt" />
 		<arg value="${legacy_data.dir}venuemap.txt" />
@@ -322,7 +332,7 @@
 	</java>
 </target>
 
-<target name="generateITunesXML" depends="itunes_converter, jar">
+<target name="generateITunesXML" depends="itunes_converter, shows_converter, jar">
 	<java classname="com.bolsinga.itunes.converter.ITunes" fork="true">
 		<arg value="${itunes.dir}iTunes Music Library.xml" />
 		<arg value="${data.dir}itunes.xml" />
@@ -330,7 +340,19 @@
 	</java>
 </target>
 
-<target name="generateDiaryXML" depends="converter, jar">
+<target name="generateMusicXML" depends="music_converter, jar">
+	<java classname="com.bolsinga.music.converter.Music" fork="true">
+		<arg value="${legacy_data.dir}shows.txt" />
+		<arg value="${legacy_data.dir}venuemap.txt" />
+		<arg value="${legacy_data.dir}bandsort.txt" />
+		<arg value="${legacy_data.dir}relations.txt" />
+		<arg value="${itunes.dir}iTunes Music Library.xml" />
+		<arg value="${data.dir}music.xml" />
+		<classpath refid="music_classpath" />
+	</java>
+</target>
+
+<target name="generateDiaryXML" depends="shows_converter, jar">
 	<java classname="com.bolsinga.shows.converter.Diary" fork="true">
 		<sysproperty key="diary.title" value="En Vogue Webmaster" />
 		<arg value="${legacy_data.dir}comments.txt" />
@@ -460,7 +482,7 @@
 	</java>
 </target>
 
-<target name="music" depends="converter, music_web, diary_web, music_rss, diary_rss, rss, ical, jar" />
+<target name="music" depends="shows_converter, music_web, diary_web, music_rss, diary_rss, rss, ical, jar" />
 
 <target name="generateXML" depends="music, generateShowsXML, generateDiaryXML" />
 
