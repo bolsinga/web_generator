@@ -142,3 +142,52 @@ There will also be an "Add" button
 The Title will be displayed in a TextField (immediately modifying)
 The Header will be displayed in a TextArea (immediately modifying)
 The statis will be displayed in a TextArea (immediately modifying)
+
+package com.bolsinga.diary
+ DONE rss/RSS.java - contents moved to com.bolsinga.rss.RSS
+ DONE ui/UI.java
+ DONE util/Links.java
+ DONE util/Util.java
+ DONE web/Web.java
+
+package com.bolsinga.ical
+ OK
+
+package com.bolsinga.itunes
+ OK
+
+package com.bolsinga.music
+ DONE converter/Music.java - contents/behavior moved to com.bolsinga.shows.converter.Music
+ DONE ical/ICal.java
+ DONE rss/RSS.java - contents moved to com.bolsinga.rss.RSS
+ DONE ui/UI.java
+ DONE util/Compare.java
+ DONE util/Encode.java
+ DONE util/Links.java
+ DONE util/Lookup.java
+ DONE util/Util.java
+ DONE web/Web.java
+
+package com.bolsinga.plist
+ DONE util/Util.java
+
+package com.bolsinga.rss
+ DONE util/Util.java
+
+package com.bolsinga.shows
+ OK
+
+package com.bolsinga.web
+ DONE site/Site.java
+ DONE util/CSS.java
+ DONE util/DocumentCreator.java
+ DONE util/MultiDocumentCreator.java
+ DONE util/Util.java
+
+-----
+
+Removing CVS tags:
+
+cvs log <file>
+<copy the tag names>
+pbpaste | cut -f1 -d':' | sed -e"s|.*S|S|g" | xargs -t -n1 -J % cvs tag -d % <file>
