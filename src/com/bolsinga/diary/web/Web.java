@@ -145,31 +145,29 @@ public class Web {
 		}
 
         Settings settings = com.bolsinga.web.util.Util.createSettings(args[2]);
-        
-        int mainPageEntryCount = settings.getDiaryCount().intValue();
-        
-		Web.generate(mainPageEntryCount, args[0], args[1], args[3]);
+                
+		Web.generate(args[0], args[1], args[3]);
 	}
 
-	public static void generate(int mainPageEntryCount, String sourceFile, String musicFile, String outputDir) {
+	public static void generate(String sourceFile, String musicFile, String outputDir) {
 		Diary diary = Util.createDiary(sourceFile);
 		
-		generate(mainPageEntryCount, diary, musicFile, outputDir);
+		generate(diary, musicFile, outputDir);
 	}
 	
-	public static void generate(int mainPageEntryCount, Diary diary, String musicFile, String outputDir) {
+	public static void generate(Diary diary, String musicFile, String outputDir) {
 		Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
 		
-		generate(mainPageEntryCount, diary, music, outputDir);
+		generate(diary, music, outputDir);
 	}
 	
-	public static void generate(int mainPageEntryCount, Diary diary, Music music, String outputDir) {
-		generateMainPage(music, mainPageEntryCount, diary, outputDir);
+	public static void generate(Diary diary, Music music, String outputDir) {
+		generateMainPage(music, diary, outputDir);
 		
 		generateArchivePages(music, diary, outputDir);
 	}
 	
-	public static void generateMainPage(Music music, int mainPageEntryCount, Diary diary, String outputDir) {
+	public static void generateMainPage(Music music, Diary diary, String outputDir) {
 		Links links = Links.getLinks(false);
 
 		XhtmlDocument doc = createDocument(diary.getTitle(), links);
@@ -180,7 +178,7 @@ public class Web {
 		div header = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_HEADER);
 		header.addElement(com.bolsinga.web.util.Util.convertToUnOrderedList(diary.getHeader()));
 		main.addElement(header);
-		main.addElement(generateDiary(music, diary, links, mainPageEntryCount));
+		main.addElement(generateDiary(music, diary, links));
 		doc.getBody().addElement(main);
 		
 		div mainCol2 = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_COL2);
@@ -288,7 +286,7 @@ public class Web {
 		return d;
 	}
 	
-	private static Element generateDiary(Music music, Diary diary, Links links, int mainPageEntryCount) {
+	private static Element generateDiary(Music music, Diary diary, Links links) {
 		List items = diary.getEntry();
 		Entry item = null;
 
@@ -304,6 +302,8 @@ public class Web {
 				
 		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		Collections.reverse(items);
+
+        int mainPageEntryCount = com.bolsinga.web.util.Util.getSettings().getDiaryCount().intValue();
 		
 		for (int i = 0; i < mainPageEntryCount; i++) {
 			item = (Entry)items.get(i);
