@@ -25,13 +25,7 @@ public class RSS {
 		
 		RSS.generate(Integer.parseInt(args[0]), args[1], args[2]);
 	}
-	
-	static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyy HH:mm:ss z");
-	
-	private static String getRSSDate(java.util.Date date) {
-		return sRSSDateFormat.format(date);
-	}
-	
+		
 	public static void generate(int entryCount, String sourceFile, String outputFile) {
 		Diary diary = Util.createDiary(sourceFile);
 
@@ -46,7 +40,7 @@ public class RSS {
 			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("diary.link")));
 			channelElements.add(objFactory.createTRssChannelDescription(System.getProperty("diary.description")));
 			channelElements.add(objFactory.createTRssChannelGenerator(sResource.getString("program")));
-			channelElements.add(objFactory.createTRssChannelPubDate(getRSSDate(Calendar.getInstance().getTime())));
+			channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
 			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("diary.contact")));
 			
 			generate(entryCount, diary, objFactory, channel);
@@ -97,16 +91,11 @@ public class RSS {
 			itemElements = item.getTitleOrDescriptionOrLink();
 			
 			itemElements.add(objFactory.createTRssItemTitle(Util.getTitle(entry)));
-			itemElements.add(objFactory.createTRssItemPubDate(getRSSDate(entry.getTimestamp().getTime())));
+			itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.util.Util.getRSSDate(entry.getTimestamp().getTime())));
 			itemElements.add(objFactory.createTRssItemLink(System.getProperty("diary.link") + links.getLinkTo(entry)));
-			itemElements.add(objFactory.createTRssItemDescription(getDescription(entry)));
+			itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.rss.util.Util.createDescription(entry.getComment(), 100)));
 			
 			rssItems.add(item);
 		}
-	}
-	
-	private static String getDescription(Entry entry) {
-		String comment = entry.getComment();
-		return (comment.length() > 100) ? comment.substring(0, 100) : comment;
 	}
 }

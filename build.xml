@@ -130,6 +130,16 @@
 	</javac>
 </target>
 
+<target name="rss_utilities" depends="rss_binding">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/rss/util/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+</target>
+
 <target name="converter" depends="music_utilities, diary_binding">
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
@@ -178,7 +188,7 @@
 	</copy>
 </target>
 
-<target name="diary_rss" depends="rss_binding, diary_utilities">
+<target name="diary_rss" depends="rss_utilities, diary_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
