@@ -11,6 +11,7 @@ import javax.xml.bind.Unmarshaller;
 
 public class Util {
 	public static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
+	private static DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
 
 	public static final Comparator ENTRY_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
@@ -25,6 +26,10 @@ public class Util {
 		return sWebFormat.format(entry.getTimestamp().getTime());
 	}
 	
+    public static String getMonth(Entry entry) {
+        return sMonthFormat.format(entry.getTimestamp().getTime());
+    }
+    
 	public static com.bolsinga.diary.data.Diary createDiary(String sourceFile) {
 		com.bolsinga.diary.data.Diary diary = null;
 		try {
