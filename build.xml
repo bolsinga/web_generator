@@ -86,6 +86,25 @@
 	</copy>
 </target>
 
+<target name="rss_binding" depends="prepare">
+	<xjc schema="xml/rss-2_0.xsd" target="${build.gensrc}" package="com.bolsinga.rss.data" removeOldOutput="yes" extension="true">
+		<depends dir="xml" includes="rss-2_0.xsd" />
+		<produces dir="${build.gensrc}/com/bolsinga/rss/data" includes="*impl/*" />
+	</xjc>
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${build.gensrc}" />
+		<include name="com/bolsinga/rss/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+	<copy todir="${build.classes}">
+		<fileset dir="${build.gensrc}" >
+			<exclude name="**/*.java" />
+		</fileset>
+	</copy>
+</target>
+
 <path id="web_classpath">
 	<path refid="jaxb_classpath" />
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
@@ -155,6 +174,25 @@
 		<filterset>
 			<filter token="builddate" value="${diary.builddate}" />
 			<filter token="program" value="DiaryWeb" />
+		</filterset>
+	</copy>
+</target>
+
+<target name="diary_rss" depends="rss_binding, diary_utilities">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/diary/rss/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+	<tstamp>
+		<format property="diary.rss.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+	</tstamp>
+	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/diary/rss/rss.properties">
+		<filterset>
+			<filter token="builddate" value="${diary.rss.builddate}" />
+			<filter token="program" value="DiaryRSS" />
 		</filterset>
 	</copy>
 </target>
@@ -242,6 +280,18 @@
 	</java>
 </target>
 
+<target name="generateDiaryRSS" depends="diary_rss, jar" >
+	<mkdir dir="${output.dir}/rss/" />
+	<java classname="com.bolsinga.diary.rss.RSS" fork="true" >
+		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
+		<sysproperty key="music.no_embedded_links" value="true" />
+		<arg value="5" />
+		<arg value="${data.dir}diary.xml" />
+		<arg value="${output.dir}/rss/rss.xml" />
+		<classpath refid="music_classpath" />
+	</java>
+</target>
+
 <target name="generateICal" depends="ical, jar">
 	<mkdir dir="${output.dir}/ical/" />
 	<java classname="com.bolsinga.music.ical.ICal" fork="true">
@@ -268,12 +318,14 @@
 	</java>
 </target>
 
-<target name="music" depends="converter, music_web, diary_web, ical, jar" />
+<target name="music" depends="converter, music_web, diary_web, diary_rss, ical, jar" />
 
 <target name="generateXML" depends="music, generateMusicXML, generateDiaryXML" />
 
 <target name="generateWeb" depends="music, generateMusicWeb, generateDiaryWeb" />
 
-<target name="generateAll" depends="generateXML, generateWeb, generateICal" />
+<target name="generateRSS" depends="music, generateDiaryRSS" />
+
+<target name="generateAll" depends="generateXML, generateWeb, generateRSS, generateICal" />
 
 </project>
