@@ -813,15 +813,47 @@ public class Web {
 	}
 
 	public static void addItem(Music music, Links links, Album album, Document doc) {
+		StringBuffer sb;
+		Artist artist = null;
+		Song song;
+		
 		Body b = doc.getBody();
 
+		boolean isCompilation = album.isCompilation();
+		
 		b.addElement(new HR());
 		A a = new A();
 		a.setName(album.getId());
 		a.addElement("test", album.getTitle());
-		b.addElement(new Center().addElement(new Big().addElement(a)));
+		
+		sb = new StringBuffer();
+		sb.append(a);
+		if (!isCompilation) {
+			artist = (Artist)album.getPerformer().get(0);
+			sb.append(" - ");
+			sb.append(new A(links.getLinkTo(artist), artist.getName()));
+		}
+		
+		b.addElement(new Center().addElement(new Big().addElement(sb.toString())));
+		
+		OL albumListing = new OL();
 
-//		List songs = Lookup.getLookup(music).getSongs(album);
+		ListIterator li = album.getSong().listIterator();
+		while (li.hasNext()) {
+			song = (Song)li.next();
+			sb = new StringBuffer();
+			if (isCompilation) {
+				artist = (Artist)song.getPerformer().get(0);
+				sb.append(new A(links.getLinkTo(artist), artist.getName()));
+				sb.append(" - ");
+			}
+			
+			sb.append(song.getTitle());
+			
+			albumListing.addElement(new LI(sb.toString()));
+		}
+		
+		b.addElement(albumListing);
 	}
 	
 	public static void addRelations(Music music, Links links, Artist artist, Document doc) {
