@@ -12,7 +12,6 @@ public class CSS {
 	public static final String DIARY_ENTRY		= "diary_entry";
 	public static final String DIARY_HEADER		= "diary_header";
 	public static final String DIARY_INDEX		= "diary_index";
-	public static final String DIARY_MAIN		= "diary_main";
 	public static final String DIARY_MENU		= "diary_menu";
 
 	public static final String INTERNAL			= "internal";
@@ -25,9 +24,10 @@ public class CSS {
 	public static final String MAIN_STATIC		= "main_static";
 	public static final String MAIN_LINKS		= "main_links";
 
+	public static final String DOC_MAIN         = "doc_main";
+	public static final String DOC_SUB          = "doc_sub";
+
 	public static final String MUSIC_HEADER		= "music_header";
-	public static final String MUSIC_MAIN		= "music_main";
-	public static final String MUSIC_SUB		= "music_sub";
 	public static final String MUSIC_MENU		= "music_menu";
 
 	public static final String PREVIEW_MAIN		= "preview_main";
@@ -90,7 +90,6 @@ public class CSS {
 		writeCSSDeclaration(pw, DIARY_ENTRY);
 		writeCSSDeclaration(pw, DIARY_HEADER);
 		writeCSSDeclaration(pw, DIARY_INDEX);
-		writeCSSDeclaration(pw, DIARY_MAIN);
 		writeCSSDeclaration(pw, DIARY_MENU);
 		writeCSSDeclaration(pw, INTERNAL);
 		writeCSSDeclaration(pw, MAIN_COL1);
@@ -100,9 +99,9 @@ public class CSS {
 		writeCSSDeclaration(pw, MAIN_MAIN);
 		writeCSSDeclaration(pw, MAIN_STATIC);
 		writeCSSDeclaration(pw, MAIN_LINKS);
+		writeCSSDeclaration(pw, DOC_MAIN);
+		writeCSSDeclaration(pw, DOC_SUB);
 		writeCSSDeclaration(pw, MUSIC_HEADER);
-		writeCSSDeclaration(pw, MUSIC_MAIN);
-		writeCSSDeclaration(pw, MUSIC_SUB);
 		writeCSSDeclaration(pw, MUSIC_MENU);
 		writeCSSDeclaration(pw, PREVIEW_MAIN);
 		writeCSSDeclaration(pw, PREVIEW_MENU);

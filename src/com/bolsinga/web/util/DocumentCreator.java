@@ -42,7 +42,7 @@ public abstract class DocumentCreator {
 			fDocument = createDocument();
 			fDocument.getBody().addElement(getHeaderDiv());
 			
-			fMainDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MAIN);
+			fMainDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_MAIN);
 		}
 		return fMainDiv;
 	}
@@ -54,7 +54,7 @@ public abstract class DocumentCreator {
                 mainDiv.addElement(fSubsection);
             }
             
-            fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_SUB);
+            fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_SUB);
             fSubsection.addElement(getSubsectionTitle());
         }
         return fSubsection;
