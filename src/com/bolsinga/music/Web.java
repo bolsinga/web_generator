@@ -344,6 +344,9 @@ public class Web {
 		CityStatisticsCreator creator = new CityStatisticsCreator(music, outputDir);
 		Body b = creator.getDocument().getBody();
 		
+		// Make a generic table method
+		// makeTable(Document doc, String[] names, int[] values, String caption, String header)
+		
 		Table table = new Table();
 		Caption caption = new Caption();
 		caption.addElement("Shows by City");
@@ -372,6 +375,7 @@ public class Web {
 				td = new TD((String)j.next());
 				td.setAlign("left");
 				tr.addElement(td);
+				// use DecimalFormat...
 				tr.addElement(new TD(val.toString())).addElement(new TD(Double.toString((double)val.intValue() / totalShows * 100.0)));
 				
 				table.addElement(tr);
