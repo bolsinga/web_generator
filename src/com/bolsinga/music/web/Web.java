@@ -82,11 +82,7 @@ abstract class DocumentCreator {
 	}
 	
 	private void addHeader() {
-		IMG img = new IMG("http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif");
-		img.setHeight(90);
-		img.setWidth(120);
-		img.setAlt("[Busy computing... for you!]");
-		fDocument.getBody().addElement(new Center(img));
+		fDocument.getBody().addElement(new Center(Web.getImage()));
 	}
 	
 	protected void addWebNavigator() {
@@ -462,8 +458,70 @@ public class Web {
 	
 	public static String generatePreview(String sourceFile) {
 		Music music = createMusic(sourceFile);
+
+		List items = music.getShow();
+		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 		
-		return "ROCK!";
+		int lastShowsCount = 5;
+		
+		TBody tbody = null;
+		TR tr = null;
+		StringBuffer sb = null;
+		
+		Table navigation = null;
+		Table recent = null;
+		
+		tbody = new TBody();
+		tr = new TR().setAlign("right");
+		tr.addElement(new TD(Web.getImage()));
+		tbody.addElement(tr);
+		
+		sb = new StringBuffer();
+		sb.append("Generated ");
+		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
+		tr = new TR().setAlign("right");
+		tr.addElement(new TD(sb.toString()));
+		tbody.addElement(tr);
+		
+		tr = new TR().setAlign("right");
+		tr.addElement(new TD(Util.getArtistLink(false)));
+		tbody.addElement(tr);
+
+		tr = new TR().setAlign("right");
+		tr.addElement(new TD(Util.getShowLink(false)));
+		tbody.addElement(tr);
+		
+		tr = new TR().setAlign("right");
+		tr.addElement(new TD(Util.getVenueLink(false)));
+		tbody.addElement(tr);
+		
+		tr = new TR().setAlign("right");
+		tr.addElement(new TD(Util.getCityLink(false)));
+		tbody.addElement(tr);
+		
+		navigation = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0).addElement(tbody);
+
+		tbody = new TBody();
+		sb = new StringBuffer();
+		sb.append("Last ");
+		sb.append(Integer.toString(lastShowsCount));
+		sb.append(" shows:");
+		tr = new TR().setAlign("center");
+		tr.addElement(new TD(sb.toString()));
+		tbody.addElement(tr);
+		
+		for (int i = 0; i < lastShowsCount; i++) {
+		
+		}
+		
+		recent = new Table().setBorder(0).setWidth("100%").setCellSpacing(5).setCellPadding(0).addElement(tbody);
+		
+		sb = new StringBuffer();
+		sb.append(navigation.toString());
+		sb.append(new HR().toString());
+		sb.append(recent.toString());
+		
+		return sb.toString();
 	}
 	
 	public static void addItem(Music music, Artist artist, Document doc) {
@@ -829,5 +887,13 @@ public class Web {
 		h.addElement(new Meta().setContent(Web.getCopyright()).setName("Copyright"));
 
 		return d;
+	}
+	
+	static IMG getImage() {
+		IMG img = new IMG("http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif");
+		img.setHeight(90);
+		img.setWidth(120);
+		img.setAlt("[Busy computing... for you!]");
+		return img;
 	}
 }

@@ -26,7 +26,7 @@ public class Util {
 	private static final String HASH = "#";
 
 	private static DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
-	private static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
+	public static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
 	private static DecimalFormat sPercentFormat = new DecimalFormat("##.##");
 	
 	public static Calendar toCalendar(com.bolsinga.music.data.Date date) {
@@ -102,48 +102,16 @@ public class Util {
 		sb.append(a.toString());
 		sb.append(" ");
 		
-		link = new StringBuffer();
-		link.append("..");
-		link.append(SEPARATOR);
-		link.append(ARTIST_DIR);
-		link.append(SEPARATOR);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		a = new A(link.toString(), "Bands");
-		sb.append(a.toString());
+		sb.append(Util.getArtistLink(true));
 		sb.append(" ");
 		
-		link = new StringBuffer();
-		link.append("..");
-		link.append(SEPARATOR);
-		link.append(SHOW_DIR);
-		link.append(SEPARATOR);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		a = new A(link.toString(), "Dates");
-		sb.append(a.toString());
+		sb.append(Util.getShowLink(true));
 		sb.append(" ");
 
-		link = new StringBuffer();
-		link.append("..");
-		link.append(SEPARATOR);
-		link.append(VENUE_DIR);
-		link.append(SEPARATOR);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		a = new A(link.toString(), "Venues");
-		sb.append(a.toString());
+		sb.append(Util.getVenueLink(true));
 		sb.append(" ");
 
-		link = new StringBuffer();
-		link.append("..");
-		link.append(SEPARATOR);
-		link.append(CITIES_DIR);
-		link.append(SEPARATOR);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		a = new A(link.toString(), "Cities");
-		sb.append(a.toString());
+		sb.append(Util.getCityLink(true));
 		sb.append(" ");
 
 		c.addElement(sb.toString());
@@ -275,5 +243,61 @@ public class Util {
 		link.append(show.getId());
 		
 		return link.toString();
+	}
+	
+	public static String getArtistLink(boolean upDir) {
+		StringBuffer link = new StringBuffer();
+		if (upDir) {
+			link.append("..");
+			link.append(SEPARATOR);
+		}
+		link.append(ARTIST_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		A a = new A(link.toString(), "Bands");
+		return a.toString();
+	}
+		
+	public static String getShowLink(boolean upDir) {
+		StringBuffer link = new StringBuffer();
+		if (upDir) {
+			link.append("..");
+			link.append(SEPARATOR);
+		}
+		link.append(SHOW_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		A a = new A(link.toString(), "Dates");
+		return a.toString();
+	}
+	
+	public static String getVenueLink(boolean upDir) {
+		StringBuffer link = new StringBuffer();
+		if (upDir) {
+			link.append("..");
+			link.append(SEPARATOR);
+		}
+		link.append(VENUE_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		A a = new A(link.toString(), "Venues");
+		return a.toString();
+	}
+	
+	public static String getCityLink(boolean upDir) {
+		StringBuffer link = new StringBuffer();
+		if (upDir) {
+			link.append("..");
+			link.append(SEPARATOR);
+		}
+		link.append(CITIES_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		A a = new A(link.toString(), "Cities");
+		return a.toString();
 	}
 }
