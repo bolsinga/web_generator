@@ -76,7 +76,9 @@ public class ICal {
 	public static void addItem(Show show, VCalendar calendar) {
 		com.bolsinga.music.data.Date d = show.getDate();
 		Calendar date = Calendar.getInstance();
-		date.set(d.getYear().intValue(), d.getMonth().intValue() - 1, d.getDay().intValue());
+		date.set(Calendar.MONTH, d.getMonth().intValue() - 1);
+		date.set(Calendar.DAY_OF_MONTH, d.getDay().intValue());
+		
 		StringBuffer summary = new StringBuffer();
 		String url = null;
 
