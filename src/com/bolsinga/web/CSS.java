@@ -10,7 +10,6 @@ public class CSS {
 	public static final String ARTIST_TRACKS	= "artist_tracks";
 
 	public static final String DIARY_ENTRY		= "diary_entry";
-	public static final String DIARY_FOOTER		= "diary_footer";
 	public static final String DIARY_HEADER		= "diary_header";
 	public static final String DIARY_INDEX		= "diary_index";
 	public static final String DIARY_MAIN		= "diary_main";
@@ -82,7 +81,6 @@ public class CSS {
 		writeCSSDeclaration(pw, ARTIST_SHOW);
 		writeCSSDeclaration(pw, ARTIST_TRACKS);
 		writeCSSDeclaration(pw, DIARY_ENTRY);
-		writeCSSDeclaration(pw, DIARY_FOOTER);
 		writeCSSDeclaration(pw, DIARY_HEADER);
 		writeCSSDeclaration(pw, DIARY_INDEX);
 		writeCSSDeclaration(pw, DIARY_MAIN);

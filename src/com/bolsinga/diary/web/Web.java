@@ -74,11 +74,6 @@ class DiaryDocumentCreator {
 	private void writeDocument() {
 		fDocument.getBody().addElement(fMainDiv);
 		
-		Div footerDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_FOOTER);
-		footerDiv.addElement(addIndexNavigator());
-		footerDiv.addElement(addWebNavigator(fProgram, fLinks));
-		fDocument.getBody().addElement(footerDiv);
-		
 		try {
 			File f = new File(fOutputDir, fLinks.getPagePath(fEntry));
 			File parent = new File(f.getParent());
