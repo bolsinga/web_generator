@@ -11,7 +11,9 @@ import org.apache.ecs.filter.*;
 
 public class Encode {
 
-	private static final String MORE_INFO = "More Information About ";
+	private static final String MORE_ARTIST_INFO = "Artist: ";
+	private static final String MORE_VENUE_INFO = "Venue: ";
+	private static final String MORE_ALBUM_INFO = "Album: ";
 	
 	private static Encode sEncode = null;
 
@@ -31,7 +33,7 @@ public class Encode {
 			fName = artist.getName();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			StringBuffer sb = new StringBuffer(MORE_INFO);
+			StringBuffer sb = new StringBuffer(MORE_ARTIST_INFO);
 			sb.append(fName);
 			
 			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", sb.toString()).toString();
@@ -42,7 +44,7 @@ public class Encode {
 			fName = venue.getName();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			StringBuffer sb = new StringBuffer(MORE_INFO);
+			StringBuffer sb = new StringBuffer(MORE_VENUE_INFO);
 			sb.append(fName);
 
 			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", sb.toString()).toString();
@@ -53,7 +55,7 @@ public class Encode {
 			fName = album.getTitle();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			StringBuffer sb = new StringBuffer(MORE_INFO);
+			StringBuffer sb = new StringBuffer(MORE_ALBUM_INFO);
 			sb.append(fName);
 
 			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2", sb.toString()).toString();
