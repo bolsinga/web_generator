@@ -15,6 +15,8 @@ public class Encode {
 
 	static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
 
+	static private boolean sEmbedLinks = System.getProperty("music.no_embedded_links", "false").equals("false");
+	
 	private TreeSet fEncodings = new TreeSet(DATA_COMPARATOR);
 
 	class Data {
@@ -128,6 +130,11 @@ public class Encode {
 	private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	
 	public String addLinks(String source, boolean upOneLevel) {
+	
+		if (!sEmbedLinks) {
+			return source;
+		}
+		
 		String result = source;
 		Data data = null;
 		
