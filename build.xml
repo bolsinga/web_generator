@@ -233,7 +233,6 @@
                         deprecation="on">
                 <src path="${src.dir}" />
                 <include name="com/bolsinga/diary/*.java" />
-                <include name="com/bolsinga/diary/web/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
 </target>
@@ -342,7 +341,7 @@
 
 <target name="generateDiaryWeb" depends="diary, jar">
         <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.diary.web.Web" fork="true">
+        <java classname="com.bolsinga.diary.Web" fork="true">
                 <arg value="${data.dir}diary.xml" />
                 <arg value="${data.dir}music.xml" />
                 <arg value="${data.dir}settings.xml" />

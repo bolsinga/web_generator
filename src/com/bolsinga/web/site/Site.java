@@ -24,7 +24,7 @@ public class Site {
     boolean webOnly = variant.equals("web");
         
     if (!musicOnly) {
-      com.bolsinga.diary.web.Web.generate(diary, music, outputDir);
+      com.bolsinga.diary.Web.generate(diary, music, outputDir);
     }
     if (!diaryOnly) {
       com.bolsinga.music.web.Web.generate(music, outputDir);

@@ -1,6 +1,5 @@
-package com.bolsinga.diary.web;
+package com.bolsinga.diary;
 
-import com.bolsinga.diary.*;
 import com.bolsinga.diary.data.*;
 import com.bolsinga.music.data.*;
 import com.bolsinga.settings.data.*;
