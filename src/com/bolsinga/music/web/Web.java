@@ -93,7 +93,7 @@ abstract class DocumentCreator {
 	}
 	
 	protected Element addWebNavigator() {
-		return com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MENU).addElement(fLinks.addWebNavigator(fMusic, fProgram));
+		return fLinks.addWebNavigator(fMusic, fProgram);
 	}
 	
 	protected void finalize() throws Throwable {

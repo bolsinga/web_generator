@@ -38,46 +38,41 @@ public class Links {
 		fUpOneLevel = upOneLevel;
 	}
 	
-	public String addWebNavigator(Music music, String program) {
+	public div addWebNavigator(Music music, String program) {
+		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MENU);
+						
 		StringBuffer sb = new StringBuffer();
-		
 		sb.append("Generated ");
 		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
-		sb.append(" ");
+		d.addElement(new h4(sb.toString()));
 
-		StringBuffer m = new StringBuffer();
-		m.append("mailto:");
-		m.append(System.getProperty("music.contact"));
-		m.append("?Subject=");
-		m.append(program);
-		m.append("%20Message");
-		m.append("&amp;Body=");
-		m.append(program);
-		m.append("%20Message%0A");
-		a an = new a(m.toString(), "Contact"); // mailto: URL
-		sb.append(an.toString());
-		sb.append(" ");
+		ul list = new ul();
 
-		an = getLinkToHome();
-		sb.append(an.toString());
-		sb.append(" ");
+		sb = new StringBuffer();
+		sb.append("mailto:");
+		sb.append(System.getProperty("music.contact"));
+		sb.append("?Subject=");
+		sb.append(program);
+		sb.append("%20Message&amp;Body=");
+		sb.append(program);
+		sb.append("%20Message%0A");
+		list.addElement(new li(new a(sb.toString(), "Contact"))); // mailto: URL
+
+		list.addElement(new li(getLinkToHome()));
 		
-		sb.append(getArtistLink());
-		sb.append(" ");
+		list.addElement(new li(getArtistLink()));
 		
-		sb.append(getTracksLink());
-		sb.append(" ");
+		list.addElement(new li(getTracksLink()));
 
-		sb.append(getShowLink());
-		sb.append(" ");
+		list.addElement(new li(getShowLink()));
 
-		sb.append(getVenueLink());
-		sb.append(" ");
+		list.addElement(new li(getVenueLink()));
 
-		sb.append(getCityLink());
-		sb.append(" ");
+		list.addElement(new li(getCityLink()));
 
-		return sb.toString();
+		d.addElement(list);
+		
+		return d;
 	}
 	
 	public String getPageFileName(String name) {
