@@ -20,11 +20,13 @@ abstract class DocumentCreator {
 	Links fLinks = null;
 	String fOutputDir = null;
 	Document fDocument = null;
+	String fProgram = null;
 	
-	protected DocumentCreator(Music music, Links links, String outputDir) {
+	protected DocumentCreator(Music music, Links links, String outputDir, String program) {
 		fMusic = music;
 		fLinks = links;
 		fOutputDir = outputDir;
+		fProgram = program;
 	}
 	
 	protected abstract boolean needNewDocument();
@@ -88,7 +90,7 @@ abstract class DocumentCreator {
 	}
 	
 	protected void addWebNavigator() {
-		fLinks.addWebNavigator(fMusic, fDocument);
+		fLinks.addWebNavigator(fMusic, fDocument, fProgram);
 	}
 	
 	protected void finalize() throws Throwable {
@@ -101,8 +103,8 @@ class ArtistDocumentCreator extends DocumentCreator {
 	Artist fDocArtist = null;
 	Artist fArtist = null;
 	
-	public ArtistDocumentCreator(Music music, Links links, String outputDir) {
-		super(music, links, outputDir);
+	public ArtistDocumentCreator(Music music, Links links, String outputDir, String program) {
+		super(music, links, outputDir, program);
 	}
 	
 	public Document getDocument(Artist artist) {
@@ -132,8 +134,8 @@ class VenueDocumentCreator extends DocumentCreator {
 	Venue fDocVenue = null;
 	Venue fVenue = null;
 	
-	public VenueDocumentCreator(Music music, Links links, String outputDir) {
-		super(music, links, outputDir);
+	public VenueDocumentCreator(Music music, Links links, String outputDir, String program) {
+		super(music, links, outputDir, program);
 	}
 	
 	public Document getDocument(Venue venue) {
@@ -164,8 +166,8 @@ class ShowDocumentCreator extends DocumentCreator {
 	Show fShow = null;
 	com.bolsinga.music.data.Date fDate = null;
 	
-	public ShowDocumentCreator(Music music, Links links, String outputDir) {
-		super(music, links, outputDir);
+	public ShowDocumentCreator(Music music, Links links, String outputDir, String program) {
+		super(music, links, outputDir, program);
 	}
 	
 	public void add(Music music, Show item) {
@@ -213,8 +215,8 @@ class StatisticsCreator extends DocumentCreator {
 	String fTitle = null;
 	String fDirectory = null;
 	
-	public StatisticsCreator(Music music, Links links, String outputDir) {
-		super(music, links, outputDir);
+	public StatisticsCreator(Music music, Links links, String outputDir, String program) {
+		super(music, links, outputDir, program);
 	}
 
 	public Document getDocument(String title, String directory) {
@@ -295,7 +297,7 @@ public class Web {
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
 		
-		ArtistDocumentCreator creator = new ArtistDocumentCreator(music, links, outputDir);
+		ArtistDocumentCreator creator = new ArtistDocumentCreator(music, links, outputDir, sResource.getString("program"));
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
@@ -319,7 +321,7 @@ public class Web {
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir);
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
 		stats.getDocument("Artist Statistics", Links.ARTIST_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
 		stats.close();
 	}
@@ -331,7 +333,7 @@ public class Web {
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
 
-		VenueDocumentCreator creator = new VenueDocumentCreator(music, links, outputDir);
+		VenueDocumentCreator creator = new VenueDocumentCreator(music, links, outputDir, sResource.getString("program"));
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
@@ -355,7 +357,7 @@ public class Web {
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir);
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
 		stats.getDocument("Venue Statistics", Links.VENUE_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
 		stats.close();
 	}
@@ -368,7 +370,7 @@ public class Web {
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 
-		ShowDocumentCreator creator = new ShowDocumentCreator(music, links, outputDir);
+		ShowDocumentCreator creator = new ShowDocumentCreator(music, links, outputDir, sResource.getString("program"));
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
@@ -401,7 +403,7 @@ public class Web {
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir);
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
 		stats.getDocument("Show Statistics", Links.SHOW_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Year", "Year")));
 		stats.close();
 	}
@@ -452,7 +454,7 @@ public class Web {
 			}
 		}
 		
-		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir);
+		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
 		creator.getDocument("City Statistics", Links.CITIES_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
 	}
