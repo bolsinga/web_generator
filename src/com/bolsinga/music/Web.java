@@ -17,11 +17,13 @@ import javax.xml.bind.Unmarshaller;
 
 abstract class DocumentCreator {
 	Music fMusic = null;
+	Links fLinks = null;
 	String fOutputDir = null;
 	Document fDocument = null;
 	
-	protected DocumentCreator(Music music, String outputDir) {
+	protected DocumentCreator(Music music, Links links, String outputDir) {
 		fMusic = music;
+		fLinks = links;
 		fOutputDir = outputDir;
 	}
 	
@@ -86,7 +88,7 @@ abstract class DocumentCreator {
 	}
 	
 	protected void addWebNavigator() {
-		Util.addWebNavigator(fDocument);
+		fLinks.addWebNavigator(fDocument);
 	}
 	
 	protected void finalize() throws Throwable {
@@ -99,8 +101,8 @@ class ArtistDocumentCreator extends DocumentCreator {
 	Artist fDocArtist = null;
 	Artist fArtist = null;
 	
-	public ArtistDocumentCreator(Music music, String outputDir) {
-		super(music, outputDir);
+	public ArtistDocumentCreator(Music music, Links links, String outputDir) {
+		super(music, links, outputDir);
 	}
 	
 	public Document getDocument(Artist artist) {
@@ -109,20 +111,20 @@ class ArtistDocumentCreator extends DocumentCreator {
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocArtist == null) || (!Util.getPageFileName(fDocArtist).equals(Util.getPageFileName(fArtist)));
+		return (fDocArtist == null) || (!fLinks.getPageFileName(fDocArtist).equals(fLinks.getPageFileName(fArtist)));
 	}
 	
 	protected Document createDocument() {
 		fDocArtist = fArtist;
-		return Web.createHTMLDocument(getTitle(Util.getPageFileName(fDocArtist), "Artists"));
+		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocArtist), "Artists"));
 	}
 	
 	protected String getCurrentPath() {
-		return Util.getPagePath(fDocArtist);
+		return fLinks.getPagePath(fDocArtist);
 	}
 	
 	protected void addIndexNavigator() {
-		Web.addIndexNavigator(fMusic, fDocArtist, fDocument);
+		Web.addIndexNavigator(fMusic, fLinks, fDocArtist, fDocument);
 	}
 }
 
@@ -130,8 +132,8 @@ class VenueDocumentCreator extends DocumentCreator {
 	Venue fDocVenue = null;
 	Venue fVenue = null;
 	
-	public VenueDocumentCreator(Music music, String outputDir) {
-		super(music, outputDir);
+	public VenueDocumentCreator(Music music, Links links, String outputDir) {
+		super(music, links, outputDir);
 	}
 	
 	public Document getDocument(Venue venue) {
@@ -140,20 +142,20 @@ class VenueDocumentCreator extends DocumentCreator {
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocVenue == null) || (!Util.getPageFileName(fDocVenue).equals(Util.getPageFileName(fVenue)));
+		return (fDocVenue == null) || (!fLinks.getPageFileName(fDocVenue).equals(fLinks.getPageFileName(fVenue)));
 	}
 	
 	protected Document createDocument() {
 		fDocVenue = fVenue;
-		return Web.createHTMLDocument(getTitle(Util.getPageFileName(fDocVenue), "Venues"));
+		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocVenue), "Venues"));
 	}
 	
 	protected String getCurrentPath() {
-		return Util.getPagePath(fDocVenue);
+		return fLinks.getPagePath(fDocVenue);
 	}
 	
 	protected void addIndexNavigator() {
-		Web.addIndexNavigator(fMusic, fDocVenue, fDocument);
+		Web.addIndexNavigator(fMusic, fLinks, fDocVenue, fDocument);
 	}
 }
 
@@ -162,8 +164,8 @@ class ShowDocumentCreator extends DocumentCreator {
 	Show fShow = null;
 	com.bolsinga.music.data.Date fDate = null;
 	
-	public ShowDocumentCreator(Music music, String outputDir) {
-		super(music, outputDir);
+	public ShowDocumentCreator(Music music, Links links, String outputDir) {
+		super(music, links, outputDir);
 	}
 	
 	public void add(Music music, Show item) {
@@ -180,7 +182,7 @@ class ShowDocumentCreator extends DocumentCreator {
 			fDate = d;
 		}
 
-		Web.addItem(music, item, doc);
+		Web.addItem(music, fLinks, item, doc);
 	}
 	
 	public Document getDocument(Show show) {
@@ -189,21 +191,21 @@ class ShowDocumentCreator extends DocumentCreator {
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocShow == null) || (!Util.getPageFileName(fDocShow).equals(Util.getPageFileName(fShow)));
+		return (fDocShow == null) || (!fLinks.getPageFileName(fDocShow).equals(fLinks.getPageFileName(fShow)));
 	}
 	
 	protected Document createDocument() {
 		fDocShow = fShow;
 		fDate = null;
-		return Web.createHTMLDocument(getTitle(Util.getPageFileName(fDocShow), "Dates"));
+		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocShow), "Dates"));
 	}
 	
 	protected String getCurrentPath() {
-		return Util.getPagePath(fDocShow);
+		return fLinks.getPagePath(fDocShow);
 	}
 	
 	protected void addIndexNavigator() {
-		Web.addIndexNavigator(fMusic, fDocShow, fDocument);
+		Web.addIndexNavigator(fMusic, fLinks, fDocShow, fDocument);
 	}
 }
 
@@ -211,8 +213,8 @@ class StatisticsCreator extends DocumentCreator {
 	String fTitle = null;
 	String fDirectory = null;
 	
-	public StatisticsCreator(Music music, String outputDir) {
-		super(music, outputDir);
+	public StatisticsCreator(Music music, Links links, String outputDir) {
+		super(music, links, outputDir);
 	}
 
 	public Document getDocument(String title, String directory) {
@@ -232,9 +234,9 @@ class StatisticsCreator extends DocumentCreator {
 	protected String getCurrentPath() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(fDirectory);
-		sb.append(Util.SEPARATOR);
-		sb.append(Util.STATS);
-		sb.append(Util.HTML_EXT);
+		sb.append(File.separator);
+		sb.append(Links.STATS);
+		sb.append(Links.HTML_EXT);
 		return sb.toString();
 	}
 	
@@ -256,14 +258,15 @@ public class Web {
 	
 	public static void generate(String sourceFile, String outputDir) {
 		Music music = createMusic(sourceFile);
+		Links links = Links.getLinks(true);
 		
-		generateArtistPages(music, outputDir);
+		generateArtistPages(music, links, outputDir);
 		
-		generateVenuePages(music, outputDir);
+		generateVenuePages(music, links, outputDir);
 		
-		generateDatePages(music, outputDir);
+		generateDatePages(music, links, outputDir);
 		
-		generateCityPages(music, outputDir);
+		generateCityPages(music, links, outputDir);
 	}
 	
 	private static Music createMusic(String sourceFile) {
@@ -283,20 +286,20 @@ public class Web {
 	
 	// NOTE: Instead of a List of ID's, JAXB returns a List of real items.
 	
-	public static void generateArtistPages(Music music, String outputDir) {
+	public static void generateArtistPages(Music music, Links links, String outputDir) {
 		List items = music.getArtist();
 		Artist item = null;
 		int index = 0;
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
 		
-		ArtistDocumentCreator creator = new ArtistDocumentCreator(music, outputDir);
+		ArtistDocumentCreator creator = new ArtistDocumentCreator(music, links, outputDir);
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 			
-			addItem(music, item, creator.getDocument(item));
+			addItem(music, links, item, creator.getDocument(item));
 		}
 		creator.close();
 		
@@ -308,31 +311,31 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 
-			names[index] = new A(Util.getLinkTo(item), item.getName()).toString();
+			names[index] = new A(links.getLinkTo(item), item.getName()).toString();
 			values[index] = Lookup.getLookup(music).getShows(item).size();
 			
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
-		stats.getDocument("Artist Statistics", Util.ARTIST_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir);
+		stats.getDocument("Artist Statistics", Links.ARTIST_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
 		stats.close();
 	}
 	
-	public static void generateVenuePages(Music music, String outputDir) {
+	public static void generateVenuePages(Music music, Links links, String outputDir) {
 		List items = music.getVenue();
 		Venue item = null;
 		int index = 0;
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
 
-		VenueDocumentCreator creator = new VenueDocumentCreator(music, outputDir);
+		VenueDocumentCreator creator = new VenueDocumentCreator(music, links, outputDir);
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Venue)li.next();
 
-			addItem(music, item, creator.getDocument(item));
+			addItem(music, links, item, creator.getDocument(item));
 		}
 		creator.close();
 
@@ -344,18 +347,18 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Venue)li.next();
 
-			names[index] = new A(Util.getLinkTo(item), item.getName()).toString();
+			names[index] = new A(links.getLinkTo(item), item.getName()).toString();
 			values[index] = Lookup.getLookup(music).getShows(item).size();
 			
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
-		stats.getDocument("Venue Statistics", Util.VENUE_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir);
+		stats.getDocument("Venue Statistics", Links.VENUE_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
 		stats.close();
 	}
 	
-	public static void generateDatePages(Music music, String outputDir) {
+	public static void generateDatePages(Music music, Links links, String outputDir) {
 		List items = music.getShow();
 		Show item = null;
 		Vector list = null;
@@ -363,7 +366,7 @@ public class Web {
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 
-		ShowDocumentCreator creator = new ShowDocumentCreator(music, outputDir);
+		ShowDocumentCreator creator = new ShowDocumentCreator(music, links, outputDir);
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
@@ -390,18 +393,18 @@ public class Web {
 			item = (Show)i.next();
 			
 			BigInteger year = item.getDate().getYear();
-			names[index] = new A(Util.getLinkToPage(item), (year != null) ? year.toString() : "Unknown").toString();
+			names[index] = new A(links.getLinkToPage(item), (year != null) ? year.toString() : "Unknown").toString();
 			values[index] = ((Vector)dates.get(item)).size();
 			
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
-		stats.getDocument("Show Statistics", Util.SHOW_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Year", "Year")));
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir);
+		stats.getDocument("Show Statistics", Links.SHOW_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Year", "Year")));
 		stats.close();
 	}
 	
-	public static void generateCityPages(Music music, String outputDir) {
+	public static void generateCityPages(Music music, Links links, String outputDir) {
 		List items = music.getLocation();
 		Location item = null;
 		HashMap cityCount = new HashMap();
@@ -451,13 +454,14 @@ public class Web {
 			}
 		}
 		
-		StatisticsCreator creator = new StatisticsCreator(music, outputDir);
-		creator.getDocument("City Statistics", Util.CITIES_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
+		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir);
+		creator.getDocument("City Statistics", Links.CITIES_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
 	}
 	
 	public static String generatePreview(String sourceFile) {
 		Music music = createMusic(sourceFile);
+		Links links = Links.getLinks(false);
 
 		List items = music.getShow();
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
@@ -484,19 +488,19 @@ public class Web {
 		tbody.addElement(tr);
 		
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(Util.getArtistLink(false)));
+		tr.addElement(new TD(links.getArtistLink()));
 		tbody.addElement(tr);
 
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(Util.getShowLink(false)));
+		tr.addElement(new TD(links.getShowLink()));
 		tbody.addElement(tr);
 		
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(Util.getVenueLink(false)));
+		tr.addElement(new TD(links.getVenueLink()));
 		tbody.addElement(tr);
 		
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(Util.getCityLink(false)));
+		tr.addElement(new TD(links.getCityLink()));
 		tbody.addElement(tr);
 		
 		navigation = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0).addElement(tbody);
@@ -524,7 +528,7 @@ public class Web {
 		return sb.toString();
 	}
 	
-	public static void addItem(Music music, Artist artist, Document doc) {
+	public static void addItem(Music music, Links links, Artist artist, Document doc) {
 		Body b = doc.getBody();
 
 		List shows = Lookup.getLookup(music).getShows(artist);
@@ -535,7 +539,7 @@ public class Web {
 		a.addElement("test", artist.getName());
 		b.addElement(new Center().addElement(new Big().addElement(a)));
 		
-		addRelations(music, artist, doc);
+		addRelations(music, links, artist, doc);
 		
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
@@ -543,7 +547,7 @@ public class Web {
 			
 			UL showListing = new UL();
 			
-			showListing.addElement(new LI().addElement(new A(Util.getLinkTo(show), Util.toString(show.getDate()))));
+			showListing.addElement(new LI().addElement(new A(links.getLinkTo(show), Util.toString(show.getDate()))));
 			
 			UL showInfo = new UL();
 			
@@ -556,7 +560,7 @@ public class Web {
 				if (artist.equals(performer)) {
 					listItem.addElement(new B(performer.getName()));
 				} else {
-					listItem.addElement(new A(Util.getLinkTo(performer), performer.getName()));
+					listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
 				}
 				
 				if (bi.hasNext()) {
@@ -566,7 +570,7 @@ public class Web {
 			showInfo.addElement(listItem);
 			
 			Venue venue = (Venue)show.getVenue();
-			A venueA = new A(Util.getLinkTo(venue), venue.getName());
+			A venueA = new A(links.getLinkTo(venue), venue.getName());
 			Location l = (Location)venue.getLocation();
 			showInfo.addElement(new LI().addElement(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
 			
@@ -581,7 +585,7 @@ public class Web {
 		}
 	}
 	
-	public static void addItem(Music music, Venue venue, Document doc) {
+	public static void addItem(Music music, Links links, Venue venue, Document doc) {
 		Body b = doc.getBody();
 
 		List shows = Lookup.getLookup(music).getShows(venue);
@@ -592,7 +596,7 @@ public class Web {
 		a.addElement("test", venue.getName());
 		b.addElement(new Center().addElement(new Big().addElement(a)));
 		
-		addRelations(music, venue, doc);
+		addRelations(music, links, venue, doc);
 
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
@@ -600,7 +604,7 @@ public class Web {
 			
 			UL showListing = new UL();
 			
-			showListing.addElement(new LI().addElement(new A(Util.getLinkTo(show), Util.toString(show.getDate()))));
+			showListing.addElement(new LI().addElement(new A(links.getLinkTo(show), Util.toString(show.getDate()))));
 			
 			UL showInfo = new UL();
 			
@@ -610,7 +614,7 @@ public class Web {
 				Performance p = (Performance)bi.next();
 				Artist performer = (Artist)p.getArtist();
 				
-				listItem.addElement(new A(Util.getLinkTo(performer), performer.getName()));
+				listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
 				
 				if (bi.hasNext()) {
 					listItem.addElement(", ");
@@ -633,7 +637,7 @@ public class Web {
 		}
 	}
 	
-	public static void addItem(Music music, Show show, Document doc) {
+	public static void addItem(Music music, Links links, Show show, Document doc) {
 		Body b = doc.getBody();
 
 		UL showListing = new UL();
@@ -650,7 +654,7 @@ public class Web {
 			Performance p = (Performance)bi.next();
 			Artist performer = (Artist)p.getArtist();
 			
-			listItem.addElement(new A(Util.getLinkTo(performer), performer.getName()));
+			listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
 			
 			if (bi.hasNext()) {
 				listItem.addElement(", ");
@@ -659,7 +663,7 @@ public class Web {
 		showInfo.addElement(listItem);
 		
 		Venue venue = (Venue)show.getVenue();
-		A venueA = new A(Util.getLinkTo(venue), venue.getName());
+		A venueA = new A(links.getLinkTo(venue), venue.getName());
 		Location l = (Location)venue.getLocation();
 		showInfo.addElement(new LI(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
 
@@ -673,7 +677,7 @@ public class Web {
 		b.addElement(showListing);
 	}
 	
-	public static void addRelations(Music music, Artist artist, Document doc) {
+	public static void addRelations(Music music, Links links, Artist artist, Document doc) {
 		Collection relations = Lookup.getLookup(music).getRelations(artist);
 		if (relations != null) {
 			Body b = doc.getBody();
@@ -688,7 +692,7 @@ public class Web {
 				if (a.equals(artist)) {
 					related.addElement(new LI().addElement(a.getName()));
 				} else {
-					related.addElement(new LI().addElement(new A(Util.getLinkTo(a), a.getName())));
+					related.addElement(new LI().addElement(new A(links.getLinkTo(a), a.getName())));
 				}
 			}
 			ul.addElement(related);
@@ -697,7 +701,7 @@ public class Web {
 		}
 	}
 	
-	public static void addRelations(Music music, Venue venue, Document doc) {
+	public static void addRelations(Music music, Links links, Venue venue, Document doc) {
 		Collection relations = Lookup.getLookup(music).getRelations(venue);
 		if (relations != null) {
 			Body b = doc.getBody();
@@ -711,7 +715,7 @@ public class Web {
 				if (v.equals(venue)) {
 					ul.addElement(new LI().addElement(v.getName()));
 				} else {
-					ul.addElement(new LI().addElement(new A(Util.getLinkTo(v), v.getName())));
+					ul.addElement(new LI().addElement(new A(links.getLinkTo(v), v.getName())));
 				}
 			}
 			
@@ -719,23 +723,23 @@ public class Web {
 		}
 	}
 	
-	public static void addIndexNavigator(Music music, Artist artist, Document doc) {
+	public static void addIndexNavigator(Music music, Links links, Artist artist, Document doc) {
 		Center c = new Center();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getArtist().iterator();
 		while (li.hasNext()) {
 			Artist a = (Artist)li.next();
-			String letter = Util.getPageFileName(a);
+			String letter = links.getPageFileName(a);
 			if (!m.containsKey(letter)) {
-				m.put(letter, Util.getLinkToPage(a));
+				m.put(letter, links.getLinkToPage(a));
 			}
 		}
 
 		li = m.keySet().iterator();
 		while (li.hasNext()) {
 			String a = (String)li.next();
-			if (a.equals(Util.getPageFileName(artist))) {
+			if (a.equals(links.getPageFileName(artist))) {
 				c.addElement(a + " ");
 			} else {
 				c.addElement(new A((String)m.get(a), a).toString() + " ");
@@ -745,16 +749,16 @@ public class Web {
 		doc.getBody().addElement(c);
 	}
 	
-	public static void addIndexNavigator(Music music, Venue venue, Document doc) {
+	public static void addIndexNavigator(Music music, Links links, Venue venue, Document doc) {
 		Center c = new Center();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getVenue().iterator();
 		while (li.hasNext()) {
 			Venue v = (Venue)li.next();
-			String letter = Util.getPageFileName(v);
+			String letter = links.getPageFileName(v);
 			if (!m.containsKey(letter)) {
-				m.put(letter, Util.getLinkToPage(v));
+				m.put(letter, links.getLinkToPage(v));
 			}
 		}
 
@@ -762,7 +766,7 @@ public class Web {
 		while (li.hasNext()) {
 			String v = (String)li.next();
 			String l = " " + v + " ";
-			if (v.equals(Util.getPageFileName(venue))) {
+			if (v.equals(links.getPageFileName(venue))) {
 				c.addElement(l);
 			} else {
 				c.addElement(new A((String)m.get(v), l));
@@ -809,16 +813,16 @@ public class Web {
 		return table;
 	}
 	
-	public static void addIndexNavigator(Music music, Show show, Document doc) {
+	public static void addIndexNavigator(Music music, Links links, Show show, Document doc) {
 		Center c = new Center();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getShow().iterator();
 		while (li.hasNext()) {
 			Show s = (Show)li.next();
-			String letter = Util.getPageFileName(s);
+			String letter = links.getPageFileName(s);
 			if (!m.containsKey(letter)) {
-				m.put(letter, Util.getLinkToPage(s));
+				m.put(letter, links.getLinkToPage(s));
 			}
 		}
 
@@ -826,7 +830,7 @@ public class Web {
 		while (li.hasNext()) {
 			String s = (String)li.next();
 			String l = " " + s + " ";
-			if (s.equals(Util.getPageFileName(show))) {
+			if (s.equals(links.getPageFileName(show))) {
 				c.addElement(l);
 			} else {
 				c.addElement(new A((String)m.get(s), l));
