@@ -60,22 +60,22 @@
 	</copy>
 </target>
 
-<target name="converter" depends="jaxb">
-	<javac	destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/shows/converter/**" />
-		<classpath refid="jaxb_classpath" />
-	</javac>
-</target>
-
-<target name="utilities" depends="converter">
+<target name="utilities" depends="jaxb">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/music/util/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+</target>
+
+<target name="converter" depends="utilities">
+	<javac	destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/shows/converter/**" />
 		<classpath refid="jaxb_classpath" />
 	</javac>
 </target>
@@ -95,7 +95,7 @@
 	</javac>
 </target>
 
-<target name="music" depends="web">
+<target name="music">
 	<jar jarfile="${build.lib}/music.jar"
 		basedir="${build.classes}" >
 		<include name="com/bolsinga/**" />
@@ -107,7 +107,7 @@
 	<pathelement path="${build.lib}/music.jar" />
 </path>
 
-<target name="generateXML" depends="music">
+<target name="generateXML" depends="converter, music">
 	<java classname="com.bolsinga.shows.converter.Music" fork="true">
 		<arg value="${data.dir}shows.txt" />
 		<arg value="${data.dir}venuemap.txt" />
@@ -118,7 +118,7 @@
 	</java>
 </target>
 
-<target name="generateWeb" depends="music">
+<target name="generateWeb" depends="web, music">
 	<mkdir dir="/tmp/web/" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
 		<arg value="${data.dir}music.xml" />
