@@ -284,7 +284,8 @@
 	<mkdir dir="${output.dir}/rss/" />
 	<java classname="com.bolsinga.diary.rss.RSS" fork="true" >
 		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
-		<sysproperty key="diary.link" value="http://www.bolsinga.com" />
+		<sysproperty key="diary.link" value="http://www.io.com/~bolsinga/" />
+		<sysproperty key="diary.description" value="Random posts from Greg Bolsinga" />
 		<sysproperty key="music.no_embedded_links" value="true" />
 		<arg value="5" />
 		<arg value="${data.dir}diary.xml" />

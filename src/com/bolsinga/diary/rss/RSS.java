@@ -6,6 +6,7 @@ import com.bolsinga.diary.util.*;
 import com.bolsinga.rss.data.*;
 
 import java.io.*;
+import java.text.*;
 import java.util.*;
 
 import javax.xml.bind.JAXBException;
@@ -25,6 +26,12 @@ public class RSS {
 		RSS.generate(Integer.parseInt(args[0]), args[1], args[2]);
 	}
 	
+	static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyy HH:mm:ss z");
+	
+	private static String getRSSDate(java.util.Date date) {
+		return sRSSDateFormat.format(date);
+	}
+	
 	public static void generate(int entryCount, String sourceFile, String outputFile) {
 		Diary diary = Util.createDiary(sourceFile);
 
@@ -37,9 +44,9 @@ public class RSS {
 			
 			channelElements.add(objFactory.createTRssChannelTitle(diary.getTitle()));
 			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("diary.link")));
-			channelElements.add(objFactory.createTRssChannelDescription("channel descr"));
+			channelElements.add(objFactory.createTRssChannelDescription(System.getProperty("diary.description")));
 			channelElements.add(objFactory.createTRssChannelGenerator(sResource.getString("program")));
-			channelElements.add(objFactory.createTRssChannelPubDate("Sat, 29 May 2004 20:15:10 GMT"));
+			channelElements.add(objFactory.createTRssChannelPubDate(getRSSDate(Calendar.getInstance().getTime())));
 			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("diary.contact")));
 			
 			generate(entryCount, diary, objFactory, channel);
@@ -81,18 +88,25 @@ public class RSS {
 		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		Collections.reverse(items);
 
+		Links links = Links.getLinks(false);
+		
 		for (int i = 0; i < entryCount; i++) {
 			entry = (Entry)items.get(i);
 			
 			item = objFactory.createTRssItem();
 			itemElements = item.getTitleOrDescriptionOrLink();
 			
-			itemElements.add(objFactory.createTRssItemTitle("A title"));
-			itemElements.add(objFactory.createTRssItemPubDate("Sat, 29 May 2004 20:15:10 GMT"));
-			itemElements.add(objFactory.createTRssItemLink(System.getProperty("diary.link")));
-			itemElements.add(objFactory.createTRssItemDescription(entry.getComment().substring(0, 100)));
+			itemElements.add(objFactory.createTRssItemTitle(Util.getTitle(entry)));
+			itemElements.add(objFactory.createTRssItemPubDate(getRSSDate(entry.getTimestamp().getTime())));
+			itemElements.add(objFactory.createTRssItemLink(System.getProperty("diary.link") + links.getLinkTo(entry)));
+			itemElements.add(objFactory.createTRssItemDescription(getDescription(entry)));
 			
 			rssItems.add(item);
 		}
+	}
+	
+	private static String getDescription(Entry entry) {
+		String comment = entry.getComment();
+		return (comment.length() > 100) ? comment.substring(0, 100) : comment;
 	}
 }
