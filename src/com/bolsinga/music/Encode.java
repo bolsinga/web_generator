@@ -43,7 +43,7 @@ public class Encode {
 		
 		String createRegex(String name) {
 			StringBuffer sb = new StringBuffer();
-			sb.append("(\\W)(");
+			sb.append("(\\W*)(");
 			sb.append(name);
 			sb.append(")(\\W)");
 			return sb.toString();
@@ -124,7 +124,7 @@ public class Encode {
 	public String addLinks(String source, boolean upOneLevel) {
 		String result = source;
 		Data data = null;
-		
+
 		Iterator li = fEncodings.iterator();
 		while (li.hasNext()) {
 			data = (Data)li.next();
