@@ -95,7 +95,7 @@ class DiaryDocumentCreator {
 		
 	private void writeDocument() {
 		fDocument.getBody().addElement(new P());
-		fDocument.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0).addElement(fTBody));
+		fDocument.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(fTBody));
 		addIndexNavigator();
 		addWebNavigator();
 		try {
@@ -245,7 +245,7 @@ public class Web {
 		td.addElement(com.bolsinga.music.web.Web.generatePreview(musicFile));
 		tbody.addElement(td);
 		
-		doc.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(5).addElement(tbody));
+		doc.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(tbody));
 		
 		try {
 			File f = new File(outputDir, "index.html");
