@@ -192,7 +192,7 @@ public class Web {
 		
 		div main = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_MAIN);
 		div header = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_HEADER);
-		header.addElement(diary.getHeader());
+		header.addElement(com.bolsinga.web.util.Util.convertToUnOrderedList(diary.getHeader()));
 		main.addElement(header);
 		main.addElement(generateDiary(music, diary, links, mainPageEntryCount));
 		doc.getBody().addElement(main);
