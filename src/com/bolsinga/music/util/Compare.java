@@ -143,4 +143,16 @@ public class Compare {
 			return result;
 		}
 	};
+	
+	public static final Comparator SHOW_STATS_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Show r1 = (Show)o1;
+			Show r2 = (Show)o2;
+			
+			com.bolsinga.music.data.Date d1 = r1.getDate();
+			com.bolsinga.music.data.Date d2 = r2.getDate();
+
+			return ((d1.getYear() != null) ? d1.getYear().intValue() : 0) - ((d2.getYear() != null) ? d2.getYear().intValue() : 0);
+		}
+	};
 }
