@@ -49,6 +49,11 @@ class DiaryDocumentCreator {
 		}
 	}
 
+	protected void finalize() throws Throwable {
+		close();
+		super.finalize();
+	}
+
 	private boolean needNewDocument(Entry entry) {
 		return (fEntry == null) || (!getPageFileName(fEntry).equals(getPageFileName(entry)));
 	}
@@ -98,13 +103,13 @@ class DiaryDocumentCreator {
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
 		h.addElement(new Meta().setContent(getGenerator()).setName("Generator"));
 		h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
-		
+				
 		return d;
 	}
 	
 	private void writeDocument() {
+		fDocument.getBody().addElement(new P());
 		fDocument.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0).addElement(fTBody));
-		fDocument.getBody().addElement(new HR());
 		addIndexNavigator();
 		addWebNavigator();
 		try {
@@ -196,7 +201,28 @@ class DiaryDocumentCreator {
 	}
 	
 	private void addWebNavigator() {
-	
+		Center c = new Center();
+		
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("Generated ");
+		sb.append(Web.sWebFormat.format(Calendar.getInstance().getTime()));
+		sb.append(" ");
+
+		StringBuffer link = new StringBuffer();
+		link.append("mailto:");
+		link.append(System.getProperty("diary.contact"));
+		A a = new A(link.toString(), "Contact");
+		sb.append(a.toString());
+		sb.append(" ");
+
+		a = new A(System.getProperty("diary.root"), "Home");
+		sb.append(a.toString());
+		sb.append(" ");
+
+		c.addElement(sb.toString());
+		
+		fDocument.getBody().addElement(c);
 	}
 }
 
@@ -259,7 +285,7 @@ public class Web {
 		creator.close();
 	}
 
-	private static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
+	static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
 
 	public static void addItem(Diary diary, Entry entry, TBody tb) {
 		Font f = new Font();
