@@ -330,7 +330,6 @@
 	</java>
 </target>
 
-<target name="generateMusicXML"
 <target name="generateDiaryXML" depends="converter, jar">
 	<java classname="com.bolsinga.shows.converter.Diary" fork="true">
 		<sysproperty key="diary.title" value="En Vogue Webmaster" />
