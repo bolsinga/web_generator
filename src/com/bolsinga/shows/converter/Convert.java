@@ -51,7 +51,7 @@ public class Convert {
 		dump(l);
 	}
 
-	private List relation(String filename) throws IOException {
+	public static List relation(String filename) throws IOException {
 		Vector relations = new Vector();
 		
 		LineNumberReader in = new LineNumberReader(new FileReader(filename));
@@ -72,7 +72,7 @@ public class Convert {
 		return relations;
 	}
 	
-	private List bandsort(String filename) throws IOException {
+	public static List bandsort(String filename) throws IOException {
 		Vector bandMaps = new Vector();
 		
 		LineNumberReader in = new LineNumberReader(new FileReader(filename));
@@ -87,7 +87,7 @@ public class Convert {
 		return bandMaps;
 	}
 	
-	private List venuemap(String filename) throws IOException {
+	public static List venuemap(String filename) throws IOException {
 		Vector venues = new Vector();
 		
 		LineNumberReader in = new LineNumberReader(new FileReader(filename));
@@ -112,7 +112,7 @@ public class Convert {
 		return venues;
 	}
 	
-	private List shows(String filename) throws IOException {
+	public static List shows(String filename) throws IOException {
 		final String SHOW_DELIMITER = "^";
 	
 		Vector shows = new Vector();
@@ -162,7 +162,7 @@ public class Convert {
 		return shows;
 	}
 	
-	private List statics(String filename) throws IOException {
+	public static List statics(String filename) throws IOException {
 		final String STATIC_TAG = "static";
 		final String LOCATION_TAG = "location";
 		final String DATA_TAG = "data";
@@ -196,7 +196,7 @@ public class Convert {
 		return statics;
 	}
 
-	private List comments(String filename) throws IOException {
+	public static List comments(String filename) throws IOException {
 		final String COMMENT_TAG = "comment";
 		final String DATE_TAG = "date";
 		final String DATA_TAG = "data";
