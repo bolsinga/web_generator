@@ -1263,7 +1263,6 @@ public class Web {
 		
         d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
 		d.appendTitle(title);
-		d.getHtml().setPrettyPrint(true);
 		
 		Head h = d.getHead();
 		h.addElement(com.bolsinga.web.util.Util.getIconLink());
