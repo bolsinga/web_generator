@@ -222,7 +222,9 @@ public class Music {
 			}
 
 			xShow.setVenue(sVenues.get(oldShow.getVenue()));
-			
+			if (oldShow.getComment() != null) {
+				xShow.setComment(oldShow.getComment());
+			}
 			xShow.setId("show_" + index++);
 			
 			music.getShow().add(xShow);
