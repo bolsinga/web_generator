@@ -36,13 +36,6 @@ public class Links {
 	
 	Links(boolean upOneLevel) {
 		fUpOneLevel = upOneLevel;
-		
-		String root = System.getProperty("music.root");
-		if (root == null) {
-			root = System.getProperty("rss.root");
-
-			System.setProperty("music.root", root);
-		}
 	}
 	
 	public String addWebNavigator(Music music, String program) {
@@ -65,7 +58,7 @@ public class Links {
 		sb.append(a.toString());
 		sb.append(" ");
 
-		a = com.bolsinga.web.util.Util.createInternalA(System.getProperty("music.root"), "Home");
+		a = getLinkToHome();
 		sb.append(a.toString());
 		sb.append(" ");
 		
@@ -344,13 +337,13 @@ public class Links {
 		return a.toString();
 	}
 
-	public String getICalLink() {
+	public A getICalLink() {
 		StringBuffer link = new StringBuffer();
-		
 		link.append("webcal:");
-
-		link.append(System.getProperty("music.root"));
-
+		if (fUpOneLevel) {
+			link.append("..");
+			link.append(File.separator);
+		}
 		link.append(ICAL_DIR);
 		link.append(File.separator);
 		link.append(System.getProperty("music.ical.url"));
@@ -360,7 +353,7 @@ public class Links {
 		img.setWidth(System.getProperty("ical.image.width"));
 		img.setAlt(System.getProperty("ical.image.alt"));
 		
-		return new A(link.toString(), img.toString()).toString(); // ical: URL
+		return new A(link.toString(), img.toString()); // ical: URL
 	}
 	
 	public String getStyleSheetLink() {
@@ -381,5 +374,15 @@ public class Links {
 		result.setType("text/css");
 		result.setHref(getStyleSheetLink());
 		return result;
+	}
+
+	public A getLinkToHome() {
+		StringBuffer url = new StringBuffer();
+		if (fUpOneLevel) {
+			url.append("..");
+			url.append(File.separator);
+		}
+		url.append("index.html");
+		return com.bolsinga.web.util.Util.createInternalA(url.toString(), "Home");
 	}
 }
