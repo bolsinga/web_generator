@@ -139,7 +139,7 @@ public class Web {
   }
         
   public static void generate(Diary diary, String musicFile, String outputDir) {
-    Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
+    Music music = com.bolsinga.music.Util.createMusic(musicFile);
                 
     generate(diary, music, outputDir);
   }

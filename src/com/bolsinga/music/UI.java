@@ -1,7 +1,6 @@
-package com.bolsinga.music.ui;
+package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
-import com.bolsinga.music.util.*;
 
 import java.awt.*;
 import java.io.*;

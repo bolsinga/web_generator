@@ -221,7 +221,6 @@
                         deprecation="on">
                 <src path="${src.dir}" />
                 <include name="com/bolsinga/music/*.java" />
-                <include name="com/bolsinga/music/util/*.java" />
                 <include name="com/bolsinga/music/web/*.java" />
                 <classpath refid="web_classpath" />
         </javac>

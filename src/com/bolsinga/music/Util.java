@@ -1,4 +1,4 @@
-package com.bolsinga.music.util;
+package com.bolsinga.music;
 
 import java.math.*;
 import java.text.*;

@@ -2,7 +2,6 @@ package com.bolsinga.music;
 
 import com.bolsinga.ical.*;
 import com.bolsinga.music.data.*;
-import com.bolsinga.music.util.*;
 import com.bolsinga.settings.data.*;
 
 import java.io.*;

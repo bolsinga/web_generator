@@ -28,7 +28,7 @@ public class RSS {
 
   public static void generate(String diaryFile, String musicFile, String outputDir) {
     Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
-    Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
+    Music music = com.bolsinga.music.Util.createMusic(musicFile);
                 
     generate(diary, music, outputDir);
   }
@@ -81,7 +81,7 @@ public class RSS {
     List itemElements = item.getTitleOrDescriptionOrLink();
                 
     itemElements.add(objFactory.createTRssItemTitle(getTitle(show)));
-    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.music.util.Util.toCalendar(show.getDate()).getTime())));
+    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.music.Util.toCalendar(show.getDate()).getTime())));
     itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.util.Util.getSettings().getRssRoot() + links.getLinkTo(show)));
     itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.util.Util.convertToParagraphs(show.getComment())));
                 
@@ -91,7 +91,7 @@ public class RSS {
   private static String getTitle(Show show) {
     StringBuffer sb = new StringBuffer();
     
-    sb.append(com.bolsinga.music.util.Util.toString(show.getDate()));
+    sb.append(com.bolsinga.music.Util.toString(show.getDate()));
     sb.append(" - ");
                 
     ListIterator i = show.getArtist().listIterator();
@@ -199,13 +199,13 @@ public class RSS {
         Calendar c2 = null;
                         
         if (o1 instanceof com.bolsinga.music.data.Show) {
-          c1 = com.bolsinga.music.util.Util.toCalendar(((Show)o1).getDate());
+          c1 = com.bolsinga.music.Util.toCalendar(((Show)o1).getDate());
         } else if (o1 instanceof com.bolsinga.diary.data.Entry) {
           c1 = ((Entry)o1).getTimestamp();
         }
 
         if (o2 instanceof com.bolsinga.music.data.Show) {
-          c2 = com.bolsinga.music.util.Util.toCalendar(((Show)o2).getDate());
+          c2 = com.bolsinga.music.Util.toCalendar(((Show)o2).getDate());
         } else if (o2 instanceof com.bolsinga.diary.data.Entry) {
           c2 = ((Entry)o2).getTimestamp();
         }
