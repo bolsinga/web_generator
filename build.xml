@@ -126,6 +126,7 @@
 <target name="generateWeb" depends="web, music">
 	<mkdir dir="/tmp/web/" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
+		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
 		<arg value="${data.dir}music.xml" />
 		<arg value="/tmp/web/" />
 		<classpath refid="generate_web_classpath" />
