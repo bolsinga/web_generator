@@ -24,14 +24,6 @@
 	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/xsdlib.jar" />
 </path>
 
-<path id="jaxb_classpath">
-	<pathelement path="." />
-	<!-- for use with bundled ant -->
-	<fileset dir="${jwsdp.home}" includes="jaxb/lib/*.jar" />
-	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/*.jar" />
-	<fileset dir="${jwsdp.home}" includes="jaxp/lib/**/*.jar" />
-</path>
-
 <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
 	<classpath refid="jaxb_xjc_classpath" />
 </taskdef>
@@ -334,7 +326,7 @@
 </target>
 
 <path id="music_classpath">
-	<path refid="jaxb_classpath" />
+	<path refid="jaxb_binder_classpath" />
 	<pathelement path="${build.lib}/music.jar" />
 </path>
 
