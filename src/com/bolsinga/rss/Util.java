@@ -38,4 +38,15 @@ public class Util {
 		}
 		return sb.toString();
 	}
+	
+	public static com.bolsinga.rss.data.TRssChannel.Image createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
+		com.bolsinga.rss.data.TRssChannel.Image logo = objFactory.createTRssChannelImage();
+		
+		logo.setHeight(new java.math.BigInteger(System.getProperty("web.logo.height")));
+		logo.setWidth(new java.math.BigInteger(System.getProperty("web.logo.width")));
+		logo.setUrl(System.getProperty("web.logo.url"));
+		logo.setTitle(System.getProperty("web.logo.alt"));
+		
+		return logo;
+	}
 }

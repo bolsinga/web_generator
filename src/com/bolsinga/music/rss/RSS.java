@@ -82,6 +82,12 @@ public class RSS {
 			channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
 			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("music.contact")));
 			
+			TRssChannel.Image logo = com.bolsinga.rss.util.Util.createLogo(objFactory);
+			logo.setLink(System.getProperty("music.link"));
+			logo.setDescription(System.getProperty("music.title"));
+			
+			channelElements.add(logo);
+			
 			generate(entryCount, music, objFactory, channel);
 
 			TRss rss = objFactory.createRss();

@@ -82,6 +82,12 @@ public class RSS {
 			channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
 			channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
 			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("diary.contact")));
+
+			TRssChannel.Image logo = com.bolsinga.rss.util.Util.createLogo(objFactory);
+			logo.setLink(System.getProperty("diary.link"));
+			logo.setDescription(diary.getTitle());
+			
+			channelElements.add(logo);
 			
 			generate(entryCount, diary, objFactory, channel);
 

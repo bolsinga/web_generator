@@ -327,6 +327,10 @@
 <target name="generateMusicRSS" depends="music_rss, jar" >
 	<mkdir dir="${output.dir}/rss/" />
 	<java classname="com.bolsinga.music.rss.RSS" fork="true" >
+		<sysproperty key="web.logo.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif" />
+		<sysproperty key="web.logo.width" value="120" />
+		<sysproperty key="web.logo.height" value="90" />
+		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="music.title" value="Rock!" />
 		<sysproperty key="music.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="music.link" value="http://www.io.com/~bolsinga/" />
@@ -372,6 +376,10 @@
 <target name="generateDiaryRSS" depends="diary_rss, jar" >
 	<mkdir dir="${output.dir}/rss/" />
 	<java classname="com.bolsinga.diary.rss.RSS" fork="true" >
+		<sysproperty key="web.logo.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif" />
+		<sysproperty key="web.logo.width" value="120" />
+		<sysproperty key="web.logo.height" value="90" />
+		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="diary.link" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="diary.description" value="Random posts from Greg Bolsinga" />
