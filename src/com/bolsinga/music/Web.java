@@ -109,11 +109,11 @@ class ArtistDocumentCreator extends DocumentCreator {
 	public ArtistDocumentCreator(Music music, Links links, String outputDir, String program) {
 		super(music, links, outputDir, program);
 	}
-	
-	public div getMainDiv(Artist artist) {
-		fArtist = artist;
-		return internalGetMainDiv();
-	}
+
+	public void add(Music music, Links links, Artist item) {
+		fArtist = item;
+        internalGetMainDiv().addElement(Web.addItem(music, links, item));
+    }
 	
 	protected boolean needNewDocument() {
 		return (fDocArtist == null) || (!fLinks.getPageFileName(fDocArtist).equals(fLinks.getPageFileName(fArtist)));
@@ -148,11 +148,11 @@ class VenueDocumentCreator extends DocumentCreator {
 	public VenueDocumentCreator(Music music, Links links, String outputDir, String program) {
 		super(music, links, outputDir, program);
 	}
-	
-	public div getMainDiv(Venue venue) {
-		fVenue = venue;
-		return internalGetMainDiv();
-	}
+
+	public void add(Music music, Links links, Venue item) {
+		fVenue = item;
+		internalGetMainDiv().addElement(Web.addItem(music, links, item));
+    }
 	
 	protected boolean needNewDocument() {
 		return (fDocVenue == null) || (!fLinks.getPageFileName(fDocVenue).equals(fLinks.getPageFileName(fVenue)));
@@ -191,7 +191,8 @@ class ShowDocumentCreator extends DocumentCreator {
 	}
 	
 	public void add(Music music, Show item) {
-		div mainDiv = getMainDiv(item);
+		fShow = item;
+		div mainDiv = internalGetMainDiv();
 		
 		com.bolsinga.music.data.Date d = item.getDate();
 		String month = Util.toMonth(d);
@@ -209,11 +210,6 @@ class ShowDocumentCreator extends DocumentCreator {
 		}
 
 		fMonthDiv.addElement(Web.addItem(music, fLinks, item));
-	}
-	
-	public div getMainDiv(Show show) {
-		fShow = show;
-		return internalGetMainDiv();
 	}
 	
 	protected boolean needNewDocument() {
@@ -261,13 +257,13 @@ class StatisticsCreator extends DocumentCreator {
 		fFileName = filename;
 	}
 
-	public div getMainDiv(String title, String directory) {
+    public void add(table t, String title, String directory) {
 		fTitle = title;
 		fDirectory = directory;
-		div mainDiv = internalGetMainDiv();
+
 		// On stats pages, this is the only div containing the table.
-		return mainDiv;
-	}
+		internalGetMainDiv().addElement(t);
+    }
 
 	protected boolean needNewDocument() {
 		return true;
@@ -344,10 +340,10 @@ class TracksDocumentCreator extends DocumentCreator {
 		super(music, links, outputDir, program);
 	}
 	
-	public div getMainDiv(Album album) {
-		fAlbum = album;
-		return internalGetMainDiv();
-	}
+	public void add(Music music, Links links, Album item) {
+		fAlbum = item;
+        internalGetMainDiv().addElement(Web.addItem(music, links, item));
+    }
 	
 	protected boolean needNewDocument() {
 		return (fDocAlbum == null) || (!fLinks.getPageFileName(fDocAlbum).equals(fLinks.getPageFileName(fAlbum)));
@@ -422,7 +418,7 @@ public class Web {
 		while (iterator.hasNext()) {
 			item = (Artist)iterator.next();
 			
-			creator.getMainDiv(item).addElement(addItem(music, links, item));
+            creator.add(music, links, item);
 		}
 		creator.close();
 		
@@ -442,7 +438,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Artist Statistics", Links.ARTIST_DIR).addElement(makeTable(names, values, "Shows by Artist", "Artist"));
+		stats.add(makeTable(names, values, "Shows by Artist", "Artist"), "Artist Statistics", Links.ARTIST_DIR);
 		stats.close();
 	}
 	
@@ -459,7 +455,7 @@ public class Web {
 		while (iterator.hasNext()) {
 			item = (Venue)iterator.next();
 
-			creator.getMainDiv(item).addElement(addItem(music, links, item));
+            creator.add(music, links, item);
 		}
 		creator.close();
 
@@ -478,7 +474,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Venue Statistics", Links.VENUE_DIR).addElement(makeTable(names, values, "Shows by Venue", "Venue"));
+		stats.add(makeTable(names, values, "Shows by Venue", "Venue"), "Venue Statistics", Links.VENUE_DIR);
 		stats.close();
 	}
 	
@@ -524,7 +520,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Show Statistics", Links.SHOW_DIR).addElement(makeTable(names, values, "Shows by Year", "Year"));
+		stats.add(makeTable(names, values, "Shows by Year", "Year"), "Show Statistics", Links.SHOW_DIR);
 		stats.close();
 	}
 	
@@ -575,7 +571,7 @@ public class Web {
 		}
 		
 		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		creator.getMainDiv("City Statistics", Links.CITIES_DIR).addElement(makeTable(names, values, "Shows by City", "City"));
+		creator.add(makeTable(names, values, "Shows by City", "City"), "City Statistics", Links.CITIES_DIR);
 		creator.close();
 	}
 
@@ -593,7 +589,7 @@ public class Web {
 		while (iterator.hasNext()) {
 			item = (Album)iterator.next();
 			
-			creator.getMainDiv(item).addElement(addItem(music, links, item));
+            creator.add(music, links, item);
 		}
 		creator.close();
 
@@ -614,7 +610,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Tracks Statistics", Links.TRACKS_DIR).addElement(makeTable(names, values, "Tracks by Artist", "Artist"));
+		stats.add(makeTable(names, values, "Tracks by Artist", "Artist"), "Tracks Statistics", Links.TRACKS_DIR);
 		stats.close();
 
 		items = music.getArtist();
@@ -634,7 +630,7 @@ public class Web {
 		}
 
 		stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Album Statistics", Links.TRACKS_DIR).addElement(makeTable(names, values, "Albums by Artist", "Artist"));
+		stats.add(makeTable(names, values, "Albums by Artist", "Artist"), "Album Statistics", Links.TRACKS_DIR);
 		stats.close();
 	}
 	
