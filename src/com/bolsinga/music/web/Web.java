@@ -301,7 +301,8 @@ public class Web {
 			item = (Artist)li.next();
 
 			names[index] = new A(links.getLinkTo(item), item.getName()).toString();
-			values[index] = Lookup.getLookup(music).getShows(item).size();
+			List shows = Lookup.getLookup(music).getShows(item);
+			values[index] = (shows != null) ? shows.size() : 0;
 			
 			index++;
 		}
@@ -598,48 +599,50 @@ public class Web {
 		
 		addRelations(music, links, artist, doc);
 		
-		ListIterator li = shows.listIterator();
-		while (li.hasNext()) {
-			Show show = (Show)li.next();
-			
-			UL showListing = new UL();
-			
-			showListing.addElement(new LI().addElement(new A(links.getLinkTo(show), Util.toString(show.getDate()))));
-			
-			UL showInfo = new UL();
-			
-			LI listItem = new LI();
-			ListIterator bi = show.getPerformance().listIterator();
-			while (bi.hasNext()) {
-				Performance p = (Performance)bi.next();
-				Artist performer = (Artist)p.getArtist();
-				
-				if (artist.equals(performer)) {
-					listItem.addElement(new B(performer.getName()));
-				} else {
-					listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
-				}
-				
-				if (bi.hasNext()) {
-					listItem.addElement(", ");
-				}
-			}
-			showInfo.addElement(listItem);
-			
-			Venue venue = (Venue)show.getVenue();
-			A venueA = new A(links.getLinkTo(venue), venue.getName());
-			Location l = (Location)venue.getLocation();
-			showInfo.addElement(new LI().addElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
-			
-			String comment = show.getComment();
-			if (comment != null) {
-				showInfo.addElement(new LI(getLinkedData(music, comment, true)));
-			}
-			
-			showListing.addElement(showInfo);
-			
-			b.addElement(showListing);
-		}
+		if (shows != null) {
+		    ListIterator li = shows.listIterator();
+		    while (li.hasNext()) {
+			    Show show = (Show)li.next();
+			    
+			    UL showListing = new UL();
+			    
+			    showListing.addElement(new LI().addElement(new A(links.getLinkTo(show), Util.toString(show.getDate()))));
+			    
+			    UL showInfo = new UL();
+			    
+			    LI listItem = new LI();
+			    ListIterator bi = show.getPerformance().listIterator();
+			    while (bi.hasNext()) {
+				    Performance p = (Performance)bi.next();
+				    Artist performer = (Artist)p.getArtist();
+				    
+				    if (artist.equals(performer)) {
+					    listItem.addElement(new B(performer.getName()));
+				    } else {
+					    listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
+				    }
+				    
+				    if (bi.hasNext()) {
+					    listItem.addElement(", ");
+				    }
+			    }
+			    showInfo.addElement(listItem);
+			    
+			    Venue venue = (Venue)show.getVenue();
+			    A venueA = new A(links.getLinkTo(venue), venue.getName());
+			    Location l = (Location)venue.getLocation();
+			    showInfo.addElement(new LI().addElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
+			    
+			    String comment = show.getComment();
+			    if (comment != null) {
+				    showInfo.addElement(new LI(getLinkedData(music, comment, true)));
+			    }
+			    
+			    showListing.addElement(showInfo);
+			    
+			    b.addElement(showListing);
+		    }
+	    }
 	}
 	
 	public static void addItem(Music music, Links links, Venue venue, Document doc) {
