@@ -15,7 +15,7 @@
 <xs:element name="settings">
     <xs:complexType>
 		<xs:sequence>
-            <xs:element name="timestamp" type="xs:date" minOccurs="1" maxOccurs="1" />
+            <xs:element name="timestamp" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
             <xs:element name="contact" type="xs:string" minOccurs="1" maxOccurs="1" />
             <xs:element name="ico" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
             <xs:element name="logoImage" type="image" minOccurs="1" maxOccurs="1" />
