@@ -10,6 +10,7 @@ public class Lookup {
 	
 	private HashMap fArtistMap = new HashMap();
 	private HashMap fVenueMap = new HashMap();
+	private HashMap fCityMap = new HashMap();
 	private HashMap fArtistRelationMap = new HashMap();
 	private HashMap fVenueRelationMap = new HashMap();
 	private HashMap fLabelRelationMap = new HashMap();
@@ -41,6 +42,16 @@ public class Lookup {
 				list = new Vector();
 				list.add(show);
 				fVenueMap.put(id, list);
+			}
+			
+			id = ((Location)((Venue)show.getVenue()).getLocation()).getCity();
+			if (fCityMap.containsKey(id)) {
+				list = (List)fCityMap.get(id);
+				list.add(show);
+			} else {
+				list = new Vector();
+				list.add(show);
+				fCityMap.put(id, list);
 			}
 			
 			pi = show.getPerformance().listIterator();
@@ -116,6 +127,10 @@ public class Lookup {
 	
 	public List getShows(Venue venue) {
 		return (List)fVenueMap.get(venue.getId());
+	}
+	
+	public List getShows(Location location) {
+		return (List)fCityMap.get(location.getCity());
 	}
 	
 	public Collection getRelations(Artist artist) {

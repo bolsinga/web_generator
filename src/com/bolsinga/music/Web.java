@@ -201,6 +201,33 @@ class ShowDocumentCreator extends DocumentCreator {
 	}
 }
 
+class CityStatisticsCreator extends DocumentCreator {
+
+	public CityStatisticsCreator(Music music, String outputDir) {
+		super(music, outputDir);
+	}
+
+	public Document getDocument() {
+		return internalGetDocument();
+	}
+
+	protected boolean needNewDocument() {
+		return true;
+	}
+	
+	protected Document createDocument() {
+		return Web.createHTMLDocument("stats.html", "City Statistics");
+	}
+	
+	protected String getCurrentPath() {
+		return "cities/stats.html";
+	}
+	
+	protected void addIndexNavigator() {
+
+	}
+}
+
 public class Web {
 		
 	public static void main(String[] args) {
@@ -230,6 +257,8 @@ public class Web {
 		generateVenuePages(music, outputDir);
 		
 		generateDatePages(music, outputDir);
+		
+		generateCityPages(music, outputDir);
 	}
 	
 	// NOTE: Instead of a List of ID's, JAXB returns a List of real items.
@@ -282,6 +311,79 @@ public class Web {
 			
 			creator.add(music, item);
 		}
+		creator.close();
+	}
+	
+	public static void generateCityPages(Music music, String outputDir) {
+		List items = music.getLocation();
+		Location item = null;
+		HashMap cities = new HashMap();
+		String city = null;
+		Integer val = null;
+		HashSet set = null;
+		int totalShows = music.getShow().size();
+		int cityCount = 0;
+		
+		ListIterator li = items.listIterator();
+		while (li.hasNext()) {
+			item = (Location)li.next();
+			
+			city = item.getCity();
+			
+			val = new Integer(Lookup.getLookup(music).getShows(item).size());
+			if (cities.containsKey(val)) {
+				set = (HashSet)cities.get(val);
+				set.add(city);
+			} else {
+				set = new HashSet();
+				set.add(city);
+				cities.put(val, set);
+			}
+		}
+		
+		CityStatisticsCreator creator = new CityStatisticsCreator(music, outputDir);
+		Body b = creator.getDocument().getBody();
+		
+		Table table = new Table();
+		Caption caption = new Caption();
+		caption.addElement("Shows by City");
+		table.addElement(caption);
+		TR tr = new TR(true).addElement(new TH("City")).addElement(new TH("#")).addElement(new TH("%"));
+		tr.setAlign("center");
+		table.addElement(tr);
+		TD td = null;
+		
+		List keys = new Vector(cities.keySet());
+		Collections.sort(keys);
+		
+		Iterator i = keys.iterator();
+		while (i.hasNext()) {
+			val = (Integer)i.next();
+			
+			keys = new Vector((HashSet)cities.get(val));
+			Collections.sort(keys);
+			
+			Iterator j = keys.iterator();
+			while (j.hasNext()) {
+				cityCount++;
+				
+				tr = new TR(true);
+				tr.setAlign("center");
+				td = new TD((String)j.next());
+				td.setAlign("left");
+				tr.addElement(td);
+				tr.addElement(new TD(val.toString())).addElement(new TD(Double.toString((double)val.intValue() / totalShows * 100.0)));
+				
+				table.addElement(tr);
+			}
+		}
+		tr = new TR(true);
+		tr.setAlign("center");
+		tr.addElement(new TH(Integer.toString(cityCount)));
+		tr.addElement(new TH(Integer.toString(totalShows)));
+		table.addElement(tr);
+		b.addElement(new Center().addElement(table));
+		
 		creator.close();
 	}
 	
