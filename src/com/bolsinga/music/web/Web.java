@@ -814,8 +814,8 @@ public class Web {
 		h.addElement(new Link().setRel("SHORTCUT ICON").setHref("http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico"));
 		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
-		h.addElement(new Meta().setContent(Web.getCopyright()).setName("Copyright"));
 		h.addElement(new Meta().setContent(Web.getGenerator()).setName("Generator"));
+		h.addElement(new Meta().setContent(Web.getCopyright()).setName("Copyright"));
 
 		return d;
 	}
