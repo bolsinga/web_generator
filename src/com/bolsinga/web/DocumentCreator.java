@@ -10,7 +10,7 @@ import org.apache.ecs.filter.*;
 public abstract class DocumentCreator {
 	String fOutputDir = null;
 	private XhtmlDocument fDocument = null;
-	div fMainDiv = null;
+	div fMain = null;
 	div fSubsection = null;
 	
 	protected DocumentCreator(String outputDir) {
@@ -39,26 +39,26 @@ public abstract class DocumentCreator {
     protected div getContainer() {
         div c = getSubsection();
         if (c == null) {
-            c = getMainDiv();
+            c = getMain();
         }
         return c;
     }
     
-	private div getMainDiv() {
+	private div getMain() {
 		if ((fDocument == null) || needNewDocument()) {
             close();
             
 			fDocument = createDocument();
 			fDocument.getBody().addElement(getHeaderDiv());
 			
-			fMainDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_MAIN);
+			fMain = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_MAIN);
 		}
-		return fMainDiv;
+		return fMain;
 	}
     
     private div getSubsection() {
         if ((fSubsection == null) || needNewSubsection()) {
-            div mainDiv = getMainDiv();
+            div mainDiv = getMain();
             fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_SUB);
             Element e = getSubsectionTitle();
             if (e != null) {
@@ -74,7 +74,7 @@ public abstract class DocumentCreator {
             fSubsection = null;
 		}
 		
-		fDocument.getBody().addElement(fMainDiv);
+		fDocument.getBody().addElement(fMain);
 
 		try {
 			File f = new File(fOutputDir, getLastPath());
