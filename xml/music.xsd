@@ -198,11 +198,11 @@
 <xs:element name="music">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="label" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="album" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="venue" maxOccurs="unbounded" />
 			<xs:element ref="artist" maxOccurs="unbounded" />
+			<xs:element ref="label" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="album" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="performance" maxOccurs="unbounded" />
 			<xs:element ref="show" maxOccurs="unbounded" />
 		</xs:sequence>
