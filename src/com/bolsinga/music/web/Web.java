@@ -323,15 +323,9 @@ public class Web {
 		}
 
         Settings settings = com.bolsinga.web.util.Util.createSettings(args[1]);
-        
-        Web.initializeSettings(settings);
 		
 		Web.generate(args[0], args[2]);
 	}
-    
-    private static void initializeSettings(Settings settings) {
-		System.setProperty("music.ical.url", settings.getIcalName() + ".ics");
-    }
 	
 	public static void generate(String sourceFile, String outputDir) {
 		Music music = Util.createMusic(sourceFile);

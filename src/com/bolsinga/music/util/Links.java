@@ -335,7 +335,7 @@ public class Links {
 		}
 		sb.append(ICAL_DIR);
 		sb.append(File.separator);
-		sb.append(System.getProperty("music.ical.url"));
+		sb.append(com.bolsinga.web.util.Util.getSettings().getIcalName() + ".ics");
 
         com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getIcalImage();
 

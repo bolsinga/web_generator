@@ -145,17 +145,11 @@ public class Web {
 		}
 
         Settings settings = com.bolsinga.web.util.Util.createSettings(args[2]);
-		
-        Web.initializeSettings(settings);
         
         int mainPageEntryCount = settings.getDiaryCount().intValue();
         
 		Web.generate(mainPageEntryCount, args[0], args[1], args[3]);
 	}
-    
-    private static void initializeSettings(Settings settings) {
-		System.setProperty("music.ical.url", settings.getIcalName() + ".ics");
-    }
 
 	public static void generate(int mainPageEntryCount, String sourceFile, String musicFile, String outputDir) {
 		Diary diary = Util.createDiary(sourceFile);
