@@ -268,6 +268,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
 	protected void addIndexNavigator() {
 		Center c = new Center();
 		
+		c.addElement("View: ");
 		if (fTracksStats) {
 			c.addElement("Tracks" + " ");
 			c.addElement(fLinks.getAlbumsLink());
