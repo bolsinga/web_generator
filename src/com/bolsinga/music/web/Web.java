@@ -684,81 +684,94 @@ public class Web {
 		StringBuffer sb = null;
 		
 		Table navigation = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0);
+		navigation.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(com.bolsinga.web.util.Util.getLogo()));
+		tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		tr.addElement(new TD(com.bolsinga.web.util.Util.getLogo()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 		
 		sb = new StringBuffer();
 		sb.append("Generated ");
 		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(sb.toString()));
+		tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 		
-		tr = new TR().setAlign("right");
+		tr = new TR();
+		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getArtist().size());
 		sb.append(" ");
 		sb.append(links.getArtistLink());
-		tr.addElement(new TD(sb.toString()));
+		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 
-		tr = new TR().setAlign("right");
+		tr = new TR();
+		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getShow().size());
 		sb.append(" ");
 		sb.append(links.getShowLink());
-		tr.addElement(new TD(sb.toString()));
+		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 		
-		tr = new TR().setAlign("right");
+		tr = new TR();
+		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getVenue().size());
 		sb.append(" ");
 		sb.append(links.getVenueLink());
-		tr.addElement(new TD(sb.toString()));
+		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 		
-		tr = new TR().setAlign("right");
+		tr = new TR();
+		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(Lookup.getLookup(music).getCities().size());
 		sb.append(" ");
 		sb.append(links.getCityLink());
-		tr.addElement(new TD(sb.toString()));
+		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 
-		tr = new TR().setAlign("right");
+		tr = new TR();
+		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getSong().size());
 		sb.append(" ");
 		sb.append(links.getTracksLink());
-		tr.addElement(new TD(sb.toString()));
+		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 
-		tr = new TR().setAlign("right");
+		tr = new TR();
+		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getAlbum().size());
 		sb.append(" ");
 		sb.append(links.getAlbumsLink());
-		tr.addElement(new TD(sb.toString()));
+		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 
-		tr = new TR().setAlign("right");
-		tr.addElement(new TD(links.getICalLink()));
+		tr = new TR();
+		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		tr.addElement(new TD(links.getICalLink()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		navigation.addElement(tr);
 		
 		Table recent = new Table().setBorder(0).setWidth("100%").setCellSpacing(5).setCellPadding(0);
-
+		recent.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		
 		sb = new StringBuffer();
 		sb.append("Last ");
 		sb.append(Integer.toString(lastShowsCount));
 		sb.append(" shows:");
-		tr = new TR().setAlign("center");
-		tr.addElement(new TD(sb.toString()));
+		tr = new TR();
+		tr.setAlign("center").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		recent.addElement(tr);
 		
 		TD td = new TD();
+		td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		for (int i = 0; i < lastShowsCount; i++) {
 			item = (Show)items.get(i);
 			
@@ -790,7 +803,7 @@ public class Web {
 			td.addElement(showListing);
 		}
 		
-		recent.addElement(new TR().addElement(td));
+		recent.addElement(new TR().addElement(td).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 		
 		sb = new StringBuffer();
 		sb.append(navigation.toString());
