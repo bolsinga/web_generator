@@ -20,6 +20,7 @@
 </taskdef>
 
 <property name="legacy_data.dir" value="../data/" />
+<property name="itunes.dir" value="../data/" />
 <property name="data.dir" value="../data/" />
 <property name="output.dir" value="/tmp/web" />
 
@@ -105,6 +106,25 @@
 	</copy>
 </target>
 
+<target name="plist_binding" depends="prepare">
+	<xjc schema="xml/PropertyList-1.0.xsd" target="${build.gensrc}" package="com.bolsinga.plist.data" removeOldOutput="yes" extension="true">
+		<depends dir="xml" includes="PropertyList-1.0.xsd" />
+		<produces dir="${build.gensrc}/com/bolsinga/plist/data" includes="*impl/*" />
+	</xjc>
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${build.gensrc}" />
+		<include name="com/bolsinga/plist/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+	<copy todir="${build.classes}">
+		<fileset dir="${build.gensrc}" >
+			<exclude name="**/*.java" />
+		</fileset>
+	</copy>
+</target>
+
 <path id="web_classpath">
 	<path refid="jaxb_classpath" />
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
@@ -140,6 +160,16 @@
 	</javac>
 </target>
 
+<target name="plist_utilities" depends="plist_binding">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/plist/util/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+</target>
+
 <target name="web_utilities" depends="prepare" >
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
@@ -156,6 +186,16 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/shows/converter/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+</target>
+
+<target name="itunes_converter" depends="music_utilities, plist_utilities">
+	<javac	destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/itunes/converter/**" />
 		<classpath refid="jaxb_classpath" />
 	</javac>
 </target>
@@ -288,6 +328,14 @@
 		<arg value="${legacy_data.dir}comments.txt" />
 		<arg value="${legacy_data.dir}statics.txt" />
 		<arg value="${data.dir}diary.xml" />
+		<classpath refid="music_classpath" />
+	</java>
+</target>
+
+<target name="generateITunesXML" depends="itunes_converter, jar">
+	<java classname="com.bolsinga.itunes.converter.ITunes" fork="true">
+		<arg value="${itunes.dir}iTunes Music Library.xml" />
+		<arg value="${data.dir}itunes.xml" />
 		<classpath refid="music_classpath" />
 	</java>
 </target>
