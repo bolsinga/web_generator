@@ -44,8 +44,9 @@ public class Util {
 		return tagged.toString();
 	}
 	
-	public static Div createDiv() {
+	public static Div createDiv(String className) {
 		Div div = new Div();
+		div.setClass(className);
 		div.setPrettyPrint(Util.getPrettyPrint());
 		return div;
 	}

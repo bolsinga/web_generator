@@ -46,9 +46,7 @@ public class Links {
 		}
 	}
 	
-	public Element addWebNavigator(Music music, String program) {
-		Div div = com.bolsinga.web.util.Util.createDiv();
-		
+	public String addWebNavigator(Music music, String program) {
 		StringBuffer sb = new StringBuffer();
 		
 		sb.append("Generated ");
@@ -87,9 +85,7 @@ public class Links {
 		sb.append(getCityLink());
 		sb.append(" ");
 
-		div.addElement(sb.toString());
-		
-		return div;
+		return sb.toString();
 	}
 	
 	public String getPageFileName(String name) {

@@ -12,6 +12,20 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
+class CSS {
+	public static final String DIARY_HEADER	= "diary_header";
+	public static final String DIARY_MAIN	= "diary_main";
+	public static final String DIARY_FOOTER	= "diary_footer";
+	public static final String DIARY_INDEX	= "diary_index";
+	public static final String DIARY_MENU	= "diary_menu";
+	public static final String DIARY_ENTRY	= "diary_entry";
+	
+	public static final String MAIN_STATICS	= "main_statics";
+	public static final String MAIN_HEADER	= "main_header";
+	public static final String MAIN_DIARY	= "main_diary";
+	public static final String MAIN_PREVIEW	= "main_preview";
+}
+
 class DiaryDocumentCreator {
 	Diary fDiary = null;
 	Links fLinks = null;
@@ -36,14 +50,14 @@ class DiaryDocumentCreator {
 			fDocument = Web.createDocument(title, fLinks);
 			fEntry = entry;
 
-			Div headerDiv = com.bolsinga.web.util.Util.createDiv();
+			Div headerDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_HEADER);
 			headerDiv.addElement(new H1().addElement(title));
 			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
 			headerDiv.addElement(addWebNavigator(fProgram));
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
 			
-			fMainDiv = com.bolsinga.web.util.Util.createDiv();
+			fMainDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_MAIN);
 		}
 		return fMainDiv;
 	}
@@ -74,7 +88,7 @@ class DiaryDocumentCreator {
 	private void writeDocument() {
 		fDocument.getBody().addElement(fMainDiv);
 		
-		Div footerDiv = com.bolsinga.web.util.Util.createDiv();
+		Div footerDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_FOOTER);
 		footerDiv.addElement(addIndexNavigator());
 		footerDiv.addElement(addWebNavigator(fProgram));
 		fDocument.getBody().addElement(footerDiv);
@@ -98,7 +112,7 @@ class DiaryDocumentCreator {
 	}
 
 	private Element addIndexNavigator() {
-		Div div = com.bolsinga.web.util.Util.createDiv();
+		Div div = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_INDEX);
 
 		java.util.Map m = new TreeMap();
 		Iterator li = fDiary.getEntry().iterator();
@@ -126,7 +140,7 @@ class DiaryDocumentCreator {
 	}
 	
 	private Element addWebNavigator(String program) {
-		Div div = com.bolsinga.web.util.Util.createDiv();
+		Div div = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_MENU);
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -200,27 +214,32 @@ public class Web {
 		TD td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
-		td.addElement(diary.getStatic());
+		Div mainStatics = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_STATICS);
+		mainStatics.addElement(diary.getStatic());
+		td.addElement(mainStatics);
 		tr.addElement(td);
 
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("60%");
+		Div mainHeader = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_HEADER);
+		mainHeader.addElement(diary.getHeader());
 		StringBuffer sb = new StringBuffer();
 		sb.append("Updated ");
 		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append("!");
-		td.addElement(com.bolsinga.web.util.Util.createDiv().addElement(diary.getHeader()).addElement(sb.toString()));
-		td.addElement(com.bolsinga.web.util.Util.createDiv().addElement(links.getRSSLink()));
-		
-		generateDiary(music, diary, links, mainPageEntryCount, td);
+		mainHeader.addElement(sb.toString());
+		mainHeader.addElement(links.getRSSLink());
+		mainHeader.addElement(generateDiary(music, diary, links, mainPageEntryCount));
+		td.addElement(mainHeader);
 		tr.addElement(td);
 		
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
-
-		td.addElement(com.bolsinga.music.web.Web.generatePreview(music, 5));
+		Div previewDiv = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_PREVIEW);
+		previewDiv.addElement(com.bolsinga.music.web.Web.generatePreview(music, 5));
+		td.addElement(previewDiv);
 		tr.addElement(td);
 		
 		doc.getBody().addElement(table.addElement(tr));
@@ -310,11 +329,11 @@ public class Web {
 		return d;
 	}
 	
-	private static void generateDiary(Music music, Diary diary, Links links, int mainPageEntryCount, TD td) {
+	private static Div generateDiary(Music music, Diary diary, Links links, int mainPageEntryCount) {
 		List items = diary.getEntry();
 		Entry item = null;
 		
-		Div mainDiv = com.bolsinga.web.util.Util.createDiv();
+		Div mainDiv = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_DIARY);
 		
 		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		Collections.reverse(items);
@@ -332,7 +351,7 @@ public class Web {
 		
 		mainDiv.addElement(new H2().addElement(new A(archivesLink.toString(), "Archives")));
 		
-		td.addElement(mainDiv);
+		return mainDiv;
 	}
 	
 	public static void generateArchivePages(Music music, Diary diary, String outputDir) {
@@ -356,15 +375,14 @@ public class Web {
 	}
 
 	public static void addItem(Music music, Entry entry, Div mainDiv, boolean upOneLevel, boolean cacheEncoding) {
-		Div diaryDiv = com.bolsinga.web.util.Util.createDiv();
+		Div diaryDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_ENTRY);
 		
 		A a = new A();
 		a.setName(entry.getId());
 		a.addElement("test", Util.getTitle(entry));
 		
 		diaryDiv.addElement(new H2().addElement(a));
-		Div commentDiv = com.bolsinga.web.util.Util.createDiv();
-		diaryDiv.addElement(commentDiv.addElement(Web.encodedComment(music, entry, upOneLevel, cacheEncoding)));
+		diaryDiv.addElement(Web.encodedComment(music, entry, upOneLevel, cacheEncoding));
 		
 		mainDiv.addElement(diaryDiv);
 	}
