@@ -15,8 +15,9 @@ abstract class DocumentCreator {
 	Music fMusic = null;
 	Links fLinks = null;
 	String fOutputDir = null;
-	Document fDocument = null;
+	private Document fDocument = null;
 	String fProgram = null;
+	Div fMainDiv = null;
 	
 	protected DocumentCreator(Music music, Links links, String outputDir, String program) {
 		fMusic = music;
@@ -38,7 +39,7 @@ abstract class DocumentCreator {
 		}
 	}
 	
-	protected Document internalGetDocument() {
+	protected Div internalGetMainDiv() {
 		if (needNewDocument()) {
 			if (fDocument != null) {
 				writeDocument();
@@ -50,12 +51,16 @@ abstract class DocumentCreator {
 			headerDiv.addElement(addWebNavigator());
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
+			
+			fMainDiv = new Div();
 		}
-		return fDocument;
+		return fMainDiv;
 	}
 	
 	private void writeDocument() {
 		finishDocument();
+		
+		fDocument.getBody().addElement(fMainDiv);
 		
 		Div footerDiv = new Div();
 		footerDiv.addElement(addIndexNavigator());
@@ -111,9 +116,9 @@ class ArtistDocumentCreator extends DocumentCreator {
 		super(music, links, outputDir, program);
 	}
 	
-	public Document getDocument(Artist artist) {
+	public Div getMainDiv(Artist artist) {
 		fArtist = artist;
-		return internalGetDocument();
+		return internalGetMainDiv();
 	}
 	
 	protected boolean needNewDocument() {
@@ -146,9 +151,9 @@ class VenueDocumentCreator extends DocumentCreator {
 		super(music, links, outputDir, program);
 	}
 	
-	public Document getDocument(Venue venue) {
+	public Div getMainDiv(Venue venue) {
 		fVenue = venue;
-		return internalGetDocument();
+		return internalGetMainDiv();
 	}
 	
 	protected boolean needNewDocument() {
@@ -184,7 +189,7 @@ class ShowDocumentCreator extends DocumentCreator {
 	}
 	
 	public void add(Music music, Show item) {
-		Document doc = getDocument(item);
+		Div mainDiv = getMainDiv(item);
 		
 		com.bolsinga.music.data.Date d = item.getDate();
 		String month = Util.toMonth(d);
@@ -192,7 +197,7 @@ class ShowDocumentCreator extends DocumentCreator {
 		if ((fDate == null) || (!month.equals(Util.toMonth(fDate)))) {
 		
 			if (fMonthDiv != null) {
-				doc.getBody().addElement(fMonthDiv);
+				mainDiv.addElement(fMonthDiv);
 			}
 			
 			fDate = d;
@@ -208,9 +213,9 @@ class ShowDocumentCreator extends DocumentCreator {
 		fMonthDiv.addElement(showDiv);
 	}
 	
-	public Document getDocument(Show show) {
+	public Div getMainDiv(Show show) {
 		fShow = show;
-		return internalGetDocument();
+		return internalGetMainDiv();
 	}
 	
 	protected boolean needNewDocument() {
@@ -227,7 +232,7 @@ class ShowDocumentCreator extends DocumentCreator {
 	protected void finishDocument() {
 		if (fMonthDiv != null) {
 			// Write out the last month's data if necessary
-			fDocument.getBody().addElement(fMonthDiv);
+			fMainDiv.addElement(fMonthDiv);
 		}
 	}
 	
@@ -254,10 +259,10 @@ class StatisticsCreator extends DocumentCreator {
 		fFileName = filename;
 	}
 
-	public Document getDocument(String title, String directory) {
+	public Div getMainDiv(String title, String directory) {
 		fTitle = title;
 		fDirectory = directory;
-		return internalGetDocument();
+		return internalGetMainDiv();
 	}
 
 	protected boolean needNewDocument() {
@@ -326,9 +331,9 @@ class TracksDocumentCreator extends DocumentCreator {
 		super(music, links, outputDir, program);
 	}
 	
-	public Document getDocument(Album album) {
+	public Div getMainDiv(Album album) {
 		fAlbum = album;
-		return internalGetDocument();
+		return internalGetMainDiv();
 	}
 	
 	protected boolean needNewDocument() {
@@ -400,7 +405,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 			
-			addItem(music, links, item, creator.getDocument(item));
+			addItem(music, links, item, creator.getMainDiv(item));
 		}
 		creator.close();
 		
@@ -420,7 +425,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Artist Statistics", Links.ARTIST_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
+		stats.getMainDiv("Artist Statistics", Links.ARTIST_DIR).addElement(new Div().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
 		stats.close();
 	}
 	
@@ -437,7 +442,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Venue)li.next();
 
-			addItem(music, links, item, creator.getDocument(item));
+			addItem(music, links, item, creator.getMainDiv(item));
 		}
 		creator.close();
 
@@ -456,7 +461,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Venue Statistics", Links.VENUE_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
+		stats.getMainDiv("Venue Statistics", Links.VENUE_DIR).addElement(new Div().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
 		stats.close();
 	}
 	
@@ -502,7 +507,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Show Statistics", Links.SHOW_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Shows by Year", "Year")));
+		stats.getMainDiv("Show Statistics", Links.SHOW_DIR).addElement(new Div().addElement(makeTable(names, values, "Shows by Year", "Year")));
 		stats.close();
 	}
 	
@@ -553,7 +558,7 @@ public class Web {
 		}
 		
 		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		creator.getDocument("City Statistics", Links.CITIES_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Shows by City", "City")));
+		creator.getMainDiv("City Statistics", Links.CITIES_DIR).addElement(new Div().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
 	}
 
@@ -571,7 +576,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Album)li.next();
 			
-			addItem(music, links, item, creator.getDocument(item));
+			addItem(music, links, item, creator.getMainDiv(item));
 		}
 		creator.close();
 
@@ -592,7 +597,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Tracks Statistics", Links.TRACKS_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Tracks by Artist", "Artist")));
+		stats.getMainDiv("Tracks Statistics", Links.TRACKS_DIR).addElement(new Div().addElement(makeTable(names, values, "Tracks by Artist", "Artist")));
 		stats.close();
 
 		items = music.getArtist();
@@ -612,7 +617,7 @@ public class Web {
 		}
 
 		stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Album Statistics", Links.TRACKS_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Albums by Artist", "Artist")));
+		stats.getMainDiv("Album Statistics", Links.TRACKS_DIR).addElement(new Div().addElement(makeTable(names, values, "Albums by Artist", "Artist")));
 		stats.close();
 	}
 	
@@ -769,17 +774,15 @@ public class Web {
 		return (String)sLinkedData.get(data);
 	}
 	
-	public static void addItem(Music music, Links links, Artist artist, Document doc) {
-		Body b = doc.getBody();
-
+	public static void addItem(Music music, Links links, Artist artist, Div div) {
 		A a = new A();
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
-		b.addElement(new H1().addElement(a));
+		div.addElement(new H1().addElement(a));
 				
-		addTracks(music, links, artist, doc);
+		addTracks(music, links, artist, div);
 		
-		addRelations(music, links, artist, doc);
+		addRelations(music, links, artist, div);
 
 		List shows = Lookup.getLookup(music).getShows(artist);
 		if (shows != null) {
@@ -824,20 +827,18 @@ public class Web {
 			    
 			    showListing.addElement(showInfo);
 			    
-			    b.addElement(showListing);
+			    div.addElement(showListing);
 		    }
 	    }
 	}
 	
-	public static void addItem(Music music, Links links, Venue venue, Document doc) {
-		Body b = doc.getBody();
-		
+	public static void addItem(Music music, Links links, Venue venue, Div div) {
 		A a = new A();
 		a.setName(venue.getId());
 		a.addElement("test", venue.getName());
-		b.addElement(new H1().addElement(a));
+		div.addElement(new H1().addElement(a));
 		
-		addRelations(music, links, venue, doc);
+		addRelations(music, links, venue, div);
 
 		List shows = Lookup.getLookup(music).getShows(venue);
 		ListIterator li = shows.listIterator();
@@ -875,7 +876,7 @@ public class Web {
 			
 			showListing.addElement(showInfo);
 			
-			b.addElement(showListing);
+			div.addElement(showListing);
 		}
 	}
 	
@@ -913,13 +914,11 @@ public class Web {
 		}
 	}
 
-	public static void addItem(Music music, Links links, Album album, Document doc) {
+	public static void addItem(Music music, Links links, Album album, Div div) {
 		StringBuffer sb;
 		Artist artist = null;
 		Song song;
 		
-		Body b = doc.getBody();
-
 		boolean isCompilation = album.isCompilation();
 		
 		A a = new A();
@@ -940,7 +939,7 @@ public class Web {
 			sb.append(")");
 		}
 		
-		b.addElement(new H1().addElement(sb.toString()));
+		div.addElement(new H1().addElement(sb.toString()));
 		
 		OL albumListing = new OL();
 
@@ -968,14 +967,12 @@ public class Web {
 			albumListing.addElement(new LI(sb.toString()));
 		}
 		
-		b.addElement(albumListing);
+		div.addElement(albumListing);
 	}
 	
-	public static void addRelations(Music music, Links links, Artist artist, Document doc) {
+	public static void addRelations(Music music, Links links, Artist artist, Div div) {
 		Collection relations = Lookup.getLookup(music).getRelations(artist);
 		if (relations != null) {
-			Body b = doc.getBody();
-			
 			UL ul = new UL();
 			ul.addElement(new LI().addElement("See Also"));
 			
@@ -991,15 +988,13 @@ public class Web {
 			}
 			ul.addElement(related);
 			
-			b.addElement(ul);
+			div.addElement(ul);
 		}
 	}
 	
-	public static void addRelations(Music music, Links links, Venue venue, Document doc) {
+	public static void addRelations(Music music, Links links, Venue venue, Div div) {
 		Collection relations = Lookup.getLookup(music).getRelations(venue);
 		if (relations != null) {
-			Body b = doc.getBody();
-			
 			UL ul = new UL();
 			ul.addElement(new LI().addElement("See Also"));
 			
@@ -1015,15 +1010,13 @@ public class Web {
 			}
 			ul.addElement(related);
 			
-			b.addElement(ul);
+			div.addElement(ul);
 		}
 	}
 
-	public static void addTracks(Music music, Links links, Artist artist, Document doc) {
+	public static void addTracks(Music music, Links links, Artist artist, Div div) {
 		List albums = artist.getAlbum();
 		if (albums.size() > 0) {
-			Body b = doc.getBody();
-			
 			UL ul = new UL();
 			ul.addElement(new LI().addElement("Albums"));
 			
@@ -1044,7 +1037,7 @@ public class Web {
 			}
 			ul.addElement(related);
 			
-			b.addElement(ul);
+			div.addElement(ul);
 		}
 	}
 	
