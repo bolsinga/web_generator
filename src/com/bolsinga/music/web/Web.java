@@ -284,8 +284,6 @@ public class Web {
 	public static void generateArtistPages(Music music, String outputDir) {
 		List items = music.getArtist();
 		Artist item = null;
-		String[] names = new String[items.size()];
-		int[] values = new int[items.size()];
 		int index = 0;
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
@@ -295,15 +293,24 @@ public class Web {
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Artist)li.next();
+			
+			addItem(music, item, creator.getDocument(item));
+		}
+		creator.close();
+		
+		Collections.sort(items, com.bolsinga.music.util.Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
+
+		String[] names = new String[items.size()];
+		int[] values = new int[items.size()];
+		li = items.listIterator();
+		while (li.hasNext()) {
+			item = (Artist)li.next();
 
 			names[index] = item.getName();
 			values[index] = Lookup.getLookup(music).getShows(item).size();
 			
-			addItem(music, item, creator.getDocument(item));
-			
 			index++;
 		}
-		creator.close();
 		
 		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
 		stats.getDocument("Artist Statistics", Util.ARTIST_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Artist", "Artist")));

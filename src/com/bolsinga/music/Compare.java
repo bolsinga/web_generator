@@ -5,17 +5,33 @@ import java.util.*;
 import com.bolsinga.music.data.*;
 
 public class Compare {
+
+	private static final String THE = "the ";
+	private static final String THEE = "thee ";
+	private static final String A = "a ";
+	private static final String AN = "an ";
+
+	private static Compare sCompare = null;
+	
+	private Music fMusic = null;
+	
+	public synchronized static Compare getCompare(com.bolsinga.music.data.Music music) {
+		if (sCompare == null) {
+			sCompare = new Compare(music);
+		}
+		return sCompare;
+	}
+	
+	private Compare(Music music) {
+		fMusic = music;
+	}
+	
 	private static int convert(com.bolsinga.music.data.Date d) {
 		return ((d.getYear() != null) ? d.getYear().intValue() * 10000 : 0) +
 				((d.getMonth() != null) ? d.getMonth().intValue() * 100 : 0) +
 				((d.getDay() != null) ? d.getDay().intValue() : 0);
 	}
-	
-	private static final String THE = "the ";
-	private static final String THEE = "thee ";
-	private static final String A = "a ";
-	private static final String AN = "an ";
-	
+		
 	public static String simplify(String s) {
 		String lower = s.toLowerCase();
 		int len = s.length();
@@ -76,6 +92,22 @@ public class Compare {
 			}
 			
 			return LIBRARY_COMPARATOR.compare(n1, n2);
+		}
+	};
+	
+	public final Comparator ARTIST_STATS_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Artist r1 = (Artist)o1;
+			Artist r2 = (Artist)o2;
+			
+			int sets1 = Lookup.getLookup(fMusic).getShows(r1).size();
+			int sets2 = Lookup.getLookup(fMusic).getShows(r2).size();
+			
+			int result = sets2 - sets1;
+			if (result == 0) {
+				result = ARTIST_COMPARATOR.compare(r1, r2);
+			}
+			return result;
 		}
 	};
 	
