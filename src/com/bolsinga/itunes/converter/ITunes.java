@@ -303,7 +303,7 @@ public class ITunes {
 	    
 //	    ITunes.addSongToAlbum(album, song, index, total);
 	    
-//	    ITunes.addAlbumToArtist(artist, album);
+	    ITunes.addAlbumToArtist(artist, album);
 	}
 	
 	static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, String genre, Calendar lastPlayed) throws JAXBException {
@@ -341,6 +341,10 @@ public class ITunes {
 	}
 	
 	static void addAlbumToArtist(Artist artist, Album album) {
-	
+	    List albums = artist.getAlbum();
+	    
+	    if (!albums.contains(album)) {
+		albums.add(album);
+	    }
 	}
 }
