@@ -209,12 +209,16 @@ public class Web {
 		Document doc = createDocument(diary.getTitle(), links);
 
 		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
+		table.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		
 		TR tr = new TR(true);
+		tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		
 		TD td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
+		td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		
 		Div mainStatics = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_STATICS);
 		mainStatics.addElement(diary.getStatic());
 		td.addElement(mainStatics);
@@ -223,6 +227,8 @@ public class Web {
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("60%");
+		td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		
 		Div main = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_MAIN);
 
 		Div header = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_HEADER);
@@ -237,6 +243,8 @@ public class Web {
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
+		td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+
 		Div previewDiv = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_PREVIEW);
 		previewDiv.addElement(com.bolsinga.music.web.Web.generatePreview(music, 5));
 		td.addElement(previewDiv);
@@ -340,6 +348,7 @@ public class Web {
 		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append("!");
 		diaryDiv.addElement(sb.toString());
+		
 		diaryDiv.addElement(links.getRSSLink());
 				
 		Collections.sort(items, Util.ENTRY_COMPARATOR);
