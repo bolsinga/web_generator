@@ -1,6 +1,7 @@
 package com.bolsinga.web.util;
 
 import java.io.*;
+import java.text.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
@@ -83,12 +84,8 @@ public abstract class DocumentCreator {
 	}
 	
 	protected String getTitle(String type) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("'");
-		sb.append(getCurrentLetter());
-		sb.append("' ");
-		sb.append(type);
-		return sb.toString();
+        Object[] args = { getCurrentLetter(), type };
+        return MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("htmltitle"), args);
 	}
 	
 	protected void finalize() throws Throwable {
