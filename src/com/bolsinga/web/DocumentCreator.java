@@ -36,7 +36,15 @@ public abstract class DocumentCreator {
 		}
 	}
 	
-	protected div getMainDiv() {
+    protected div getContainer() {
+        div c = getSubsection();
+        if (c == null) {
+            c = getMainDiv();
+        }
+        return c;
+    }
+    
+	private div getMainDiv() {
 		if ((fDocument == null) || needNewDocument()) {
             close();
             
@@ -48,7 +56,7 @@ public abstract class DocumentCreator {
 		return fMainDiv;
 	}
     
-    protected div getSubsection() {
+    private div getSubsection() {
         if ((fSubsection == null) || needNewSubsection()) {
             div mainDiv = getMainDiv();
             fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_SUB);

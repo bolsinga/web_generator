@@ -39,6 +39,20 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.util.DocumentCreato
     }
 }
 
+abstract class SingleSectionMusicDocumentCreator extends MusicDocumentCreator {
+    protected SingleSectionMusicDocumentCreator(Music music, Links links, String outputDir, String program) {
+        super(music, links, outputDir, program);
+    }
+
+    protected boolean needNewSubsection() {
+        return false;
+    }
+
+    protected Element getSubsectionTitle() {
+        return null;
+    }
+}
+
 class ArtistDocumentCreator extends MusicDocumentCreator {
 	Artist fLastArtist = null;
 	Artist fCurArtist = null;
@@ -49,7 +63,7 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
 
 	public void add(Music music, Links links, Artist item) {
 		fCurArtist = item;
-        getSubsection().addElement(Web.addItem(music, links, fCurArtist));
+        getContainer().addElement(Web.addItem(music, links, fCurArtist));
         fLastArtist = fCurArtist;
     }
 	
@@ -92,7 +106,7 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 
 	public void add(Music music, Links links, Venue item) {
 		fCurVenue = item;
-		getSubsection().addElement(Web.addItem(music, links, fCurVenue));
+		getContainer().addElement(Web.addItem(music, links, fCurVenue));
 		fLastVenue = fCurVenue;
     }
 	
@@ -135,7 +149,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 	
 	public void add(Music music, Show item) {
 		fCurShow = item;
-		getSubsection().addElement(Web.addItem(music, fLinks, fCurShow));
+		getContainer().addElement(Web.addItem(music, fLinks, fCurShow));
 		fLastShow = fCurShow;
 	}
 	
@@ -169,7 +183,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 	}
 }
 
-class StatisticsCreator extends MusicDocumentCreator {
+class StatisticsCreator extends SingleSectionMusicDocumentCreator {
 	String fTitle = null;
 	String fDirectory = null;
 	String fFileName = null;
@@ -188,7 +202,7 @@ class StatisticsCreator extends MusicDocumentCreator {
 		fDirectory = directory;
 
 		// On stats pages, this is the only div containing the table.
-		getMainDiv().addElement(t);
+		getContainer().addElement(t);
     }
 	
 	protected String getTitle() {
@@ -198,14 +212,6 @@ class StatisticsCreator extends MusicDocumentCreator {
 	protected boolean needNewDocument() {
 		return true;
 	}
-
-    protected boolean needNewSubsection() {
-        return false;
-    }
-
-    protected Element getSubsectionTitle() {
-        return null;
-    }
 
 	protected String getLastPath() {
 		StringBuffer sb = new StringBuffer();
@@ -262,7 +268,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
 	}
 }
 
-class TracksDocumentCreator extends MusicDocumentCreator {
+class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
 	Album fLastAlbum = null;
 	Album fCurAlbum = null;
 	
@@ -272,7 +278,7 @@ class TracksDocumentCreator extends MusicDocumentCreator {
 	
 	public void add(Music music, Links links, Album item) {
 		fCurAlbum = item;
-        getMainDiv().addElement(Web.addItem(music, links, fCurAlbum));
+        getContainer().addElement(Web.addItem(music, links, fCurAlbum));
         fLastAlbum = fCurAlbum;
     }
 	
@@ -283,14 +289,6 @@ class TracksDocumentCreator extends MusicDocumentCreator {
 	protected boolean needNewDocument() {
 		return (fLastAlbum == null) || (!fLinks.getPageFileName(fLastAlbum).equals(getCurrentLetter()));
 	}
-
-    protected boolean needNewSubsection() {
-        return false;
-    }
-
-    protected Element getSubsectionTitle() {
-        return com.bolsinga.web.util.Util.createNamedTarget(fCurAlbum.getId(), fCurAlbum.getTitle());
-    }
 
 	protected String getLastPath() {
 		return fLinks.getPagePath(fLastAlbum);
