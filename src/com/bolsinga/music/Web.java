@@ -1156,9 +1156,9 @@ public class Web {
 		
 		trow = new tr();
 		trow.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		trow.addElement(new td());
 		trow.addElement(new th(Integer.toString(names.length)));
 		trow.addElement(new th(Integer.toString(total)));
+		trow.addElement(new td());
 		t.addElement(trow);
 		
 		return t;
