@@ -336,7 +336,7 @@
 		<sysproperty key="music.link" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.description" value="Recent Rock shows seen by Greg Bolsinga" />
 		<sysproperty key="music.no_embedded_links" value="true" />
-		<arg value="5" />
+		<arg value="10" />
 		<arg value="${data.dir}music.xml" />
 		<arg value="${output.dir}/rss/music.xml" />
 		<classpath refid="generate_web_classpath" />
@@ -384,7 +384,7 @@
 		<sysproperty key="diary.link" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="diary.description" value="Random posts from Greg Bolsinga" />
 		<sysproperty key="music.no_embedded_links" value="true" />
-		<arg value="5" />
+		<arg value="10" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${output.dir}/rss/diary.xml" />
 		<classpath refid="generate_web_classpath" />
