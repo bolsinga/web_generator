@@ -159,6 +159,15 @@
 	</java>
 </target>
 
+<target name="generateDiaryXML" depends="converter, music">
+	<java classname="com.bolsinga.shows.converter.Diary" fork="true">
+		<arg value="${data.dir}comments.txt" />
+		<arg value="${data.dir}statics.txt" />
+		<arg value="${data.dir}diary.xml" />
+		<classpath refid="music_classpath" />
+	</java>
+</target>
+
 <path id="generate_web_classpath">
 	<path refid="music_classpath" />
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
