@@ -48,19 +48,19 @@ public class Links {
         ul list = new ul();
 
         Object[] args2 = { com.bolsinga.web.util.Util.getSettings().getContact(), program };
-        list.addElement(new li(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact")))); // mailto: URL
+        com.bolsinga.web.util.Util.addListItem(list, new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
 
-        list.addElement(new li(getLinkToHome()));
-                
-        list.addElement(new li(getArtistLink()));
-                
-        list.addElement(new li(getTracksLink()));
+        com.bolsinga.web.util.Util.addListItem(list, getLinkToHome());
 
-        list.addElement(new li(getShowLink()));
+        com.bolsinga.web.util.Util.addListItem(list, getArtistLink());
 
-        list.addElement(new li(getVenueLink()));
+        com.bolsinga.web.util.Util.addListItem(list, getTracksLink());
 
-        list.addElement(new li(getCityLink()));
+        com.bolsinga.web.util.Util.addListItem(list, getShowLink());
+
+        com.bolsinga.web.util.Util.addListItem(list, getVenueLink());
+
+        com.bolsinga.web.util.Util.addListItem(list, getCityLink());
 
         d.addElement(list);
                 

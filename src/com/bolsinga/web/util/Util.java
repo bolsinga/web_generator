@@ -95,6 +95,12 @@ public class Util {
         return an;
     }
 
+    public static void addListItem(ul list, Element data) {
+        li item = new li(data);
+        item.setPrettyPrint(Util.getPrettyPrint());
+        list.addElement(new li(data));
+    }
+
     public static void createSettings(String sourceFile) {
         if (sSettings == null) {
             try {

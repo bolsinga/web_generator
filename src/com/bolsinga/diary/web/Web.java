@@ -96,13 +96,13 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
         while (i.hasNext()) {
             String s = (String)i.next();
             if (s.equals(getCurrentLetter())) {
-                list.addElement(new li(s));
+                com.bolsinga.web.util.Util.addListItem(list, s);
             } else {
-                list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s)));
+                com.bolsinga.web.util.Util.addListItem(list, com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
             }
         }
-                
-        list.addElement(new li(fLinks.getRSSLink()));
+        
+        com.bolsinga.web.util.Util.addListItem(list, fLinks.getRSSLink());
                 
         d.addElement(list);
                 
@@ -118,9 +118,9 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
         ul list = new ul();
                 
         Object[] args2 = { com.bolsinga.web.util.Util.getSettings().getContact(), program };
-        list.addElement(new li(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact")))); // mailto: URL
+        com.bolsinga.web.util.Util.addListItem(list, new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
 
-        list.addElement(new li(links.getLinkToHome()));
+        com.bolsinga.web.util.Util.addListItem(list, links.getLinkToHome());
 
         d.addElement(list);
                 
@@ -335,13 +335,9 @@ public class Web {
         list.setClass(com.bolsinga.web.util.CSS.DIARY_ENTRY);
         list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 
-        li i = new li(new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
-        i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-        list.addElement(i);
+        com.bolsinga.web.util.Util.addListItem(list, new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
 
-        i = new li(Web.encodedComment(music, entry, upOneLevel));
-        i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-        list.addElement(i);
+        com.bolsinga.web.util.Util.addListItem(list, Web.encodedComment(music, entry, upOneLevel));
 
         return list;
     }
