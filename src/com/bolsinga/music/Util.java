@@ -37,7 +37,7 @@ public class Util {
 			sb.append("/");
 			sb.append((date.getYear() != null) ? date.getYear().intValue() : 0);
 			
-			sb.append(" (Unknown)");
+			sb.append(" (Unknown)"); //+++gdb LOCAL
 			
 			return sb.toString();
 		}
@@ -52,7 +52,7 @@ public class Util {
 				d.set(Calendar.MONTH, date.getMonth().intValue() - 1);
 				return sMonthFormat.format(d.getTime());
 			} else {
-				return "Unknown";
+				return "Unknown"; //+++gdb LOCAL
 			}
 		}
 	}

@@ -42,7 +42,7 @@ public class Links {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MENU);
 						
 		StringBuffer sb = new StringBuffer();
-		sb.append("Generated ");
+		sb.append("Generated "); //+++gdb LOCAL
 		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
 		d.addElement(new h4(sb.toString()));
 
@@ -56,7 +56,7 @@ public class Links {
 		sb.append("%20Message&amp;Body=");
 		sb.append(program);
 		sb.append("%20Message%0A");
-		list.addElement(new li(new a(sb.toString(), "Contact"))); // mailto: URL
+		list.addElement(new li(new a(sb.toString(), "Contact"))); // mailto: URL //+++gdb LOCAL
 
 		list.addElement(new li(getLinkToHome()));
 		
@@ -258,7 +258,7 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Bands");
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Bands"); //+++gdb LOCAL
 	}
 		
 	public a getShowLink() {
@@ -271,7 +271,7 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Dates");
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Dates"); //+++gdb LOCAL
 	}
 	
 	public a getTracksLink() {
@@ -284,7 +284,7 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Tracks");
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Tracks"); //+++gdb LOCAL
 	}
 
 	public a getAlbumsLink() {
@@ -297,7 +297,7 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(ALBUM_STATS);
 		sb.append(HTML_EXT);
-		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Albums");
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Albums"); //+++gdb LOCAL
 	}
 
 	public a getVenueLink() {
@@ -310,7 +310,7 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Venues");
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Venues"); //+++gdb LOCAL
 	}
 	
 	public a getCityLink() {
@@ -323,7 +323,7 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Cities");
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Cities"); //+++gdb LOCAL
 	}
 
 	public a getICalLink() {
@@ -374,6 +374,6 @@ public class Links {
 			url.append(File.separator);
 		}
 		url.append("index.html");
-		return com.bolsinga.web.util.Util.createInternalA(url.toString(), "Home");
+		return com.bolsinga.web.util.Util.createInternalA(url.toString(), "Home"); //+++gdb LOCAL
 	}
 }

@@ -11,9 +11,9 @@ import org.apache.ecs.filter.*;
 
 public class Encode {
 
-	private static final String MORE_ARTIST_INFO = "Artist: ";
-	private static final String MORE_VENUE_INFO = "Venue: ";
-	private static final String MORE_ALBUM_INFO = "Album: ";
+	private static final String MORE_ARTIST_INFO = "Artist: "; //+++gdb LOCAL
+	private static final String MORE_VENUE_INFO = "Venue: "; //+++gdb LOCAL
+	private static final String MORE_ALBUM_INFO = "Album: "; //+++gdb LOCAL
 	
 	private static Encode sEncode = null;
 

@@ -15,8 +15,6 @@ import javax.xml.bind.Marshaller;
 
 public class RSS {
 
-	private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.rss.rss");
-
 	public static void main(String[] args) {
 		if (args.length != 4) {
 			System.out.println("Usage: RSS [diary.xml] [music.xml] [settings.xml] [output.dir]");
@@ -58,10 +56,10 @@ public class RSS {
 	private static String getGenerator() {
 		StringBuffer sb = new StringBuffer();
 
-		sb.append(sResource.getString("program"));
+		sb.append(com.bolsinga.web.util.Util.getResourceString("program"));
 
 		sb.append(" (built: ");
-		sb.append(sResource.getString("builddate"));
+		sb.append(com.bolsinga.web.util.Util.getResourceString("builddate"));
 		sb.append(" running on jdk ");
 		sb.append(System.getProperty("java.runtime.version"));
 		sb.append(" - ");
@@ -70,7 +68,7 @@ public class RSS {
 		sb.append(System.getProperty("os.version"));
 
 		sb.append(" [");
-		sb.append(sResource.getString("copyright"));
+		sb.append(com.bolsinga.web.util.Util.getResourceString("copyright"));
 		sb.append("]");
 
 		sb.append(")");

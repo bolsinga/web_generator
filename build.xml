@@ -203,6 +203,16 @@
 		<include name="com/bolsinga/web/util/**" />
 		<classpath refid="web_classpath" />
 	</javac>
+	<tstamp>
+		<format property="web.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+	</tstamp>
+	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/util/web.properties">
+		<filterset>
+			<filter token="builddate" value="${web.builddate}" />
+			<filter token="program" value="com.bolsinga.web.site" />
+			<filter token="copyright" value="Program Copyright (c) 2004, 2005 Greg Bolsinga" />
+		</filterset>
+	</copy>
 </target>
 
 <target name="shows_converter" depends="music_utilities, diary_binding">
@@ -243,16 +253,6 @@
 		<include name="com/bolsinga/music/web/**" />
 		<classpath refid="web_classpath" />
 	</javac>
-	<tstamp>
-		<format property="music.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
-	</tstamp>
-	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/music/web/web.properties">
-		<filterset>
-			<filter token="builddate" value="${music.builddate}" />
-			<filter token="program" value="MusicWeb" />
-			<filter token="copyright" value="Program Copyright (c) 2004, 2005 Greg Bolsinga" />
-		</filterset>
-	</copy>
 </target>
 
 <target name="music_rss" depends="rss_utilities, music_utilities">
@@ -273,16 +273,6 @@
 		<include name="com/bolsinga/diary/web/**" />
 		<classpath refid="web_classpath" />
 	</javac>
-	<tstamp>
-		<format property="diary.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
-	</tstamp>
-	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/diary/web/web.properties">
-		<filterset>
-			<filter token="builddate" value="${diary.builddate}" />
-			<filter token="program" value="DiaryWeb" />
-			<filter token="copyright" value="Program Copyright (c) 2004, 2005 Greg Bolsinga" />
-		</filterset>
-	</copy>
 </target>
 
 <target name="diary_rss" depends="rss_utilities, diary_utilities">
@@ -303,16 +293,6 @@
 		<include name="com/bolsinga/rss/**" />
 		<classpath refid="jaxb_binder_classpath" />
 	</javac>
-	<tstamp>
-		<format property="rss.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
-	</tstamp>
-	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/rss/rss.properties">
-		<filterset>
-			<filter token="builddate" value="${rss.builddate}" />
-			<filter token="program" value="RSS" />
-			<filter token="copyright" value="Program Copyright (c) 2004, 2005 Greg Bolsinga" />
-		</filterset>
-	</copy>
 </target>
 
 <target name="ical-gen" depends="prepare">

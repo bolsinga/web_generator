@@ -1,5 +1,7 @@
 package com.bolsinga.web.util;
 
+import java.util.*;
+
 import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
@@ -9,6 +11,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 public class Util {
+
+	private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.util.web");
 
     private static com.bolsinga.settings.data.Settings sSettings = null;
 	private static boolean sPrettyPrint = false;
@@ -100,5 +104,9 @@ public class Util {
 
     public synchronized static com.bolsinga.settings.data.Settings getSettings() {
         return sSettings;
+    }
+    
+    public static String getResourceString(String key) {
+        return sResource.getString(key); 
     }
 }
