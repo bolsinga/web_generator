@@ -307,7 +307,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 
-			names[index] = item.getName();
+			names[index] = new A(Util.getLinkTo(item), item.getName()).toString();
 			values[index] = Lookup.getLookup(music).getShows(item).size();
 			
 			index++;
@@ -343,7 +343,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Venue)li.next();
 
-			names[index] = item.getName();
+			names[index] = new A(Util.getLinkTo(item), item.getName()).toString();
 			values[index] = Lookup.getLookup(music).getShows(item).size();
 			
 			index++;
