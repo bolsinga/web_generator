@@ -243,6 +243,37 @@ class StatisticsCreator extends DocumentCreator {
 	}
 }
 
+class TracksDocumentCreator extends DocumentCreator {
+	Album fDocAlbum = null;
+	Album fAlbum = null;
+	
+	public TracksDocumentCreator(Music music, Links links, String outputDir, String program) {
+		super(music, links, outputDir, program);
+	}
+	
+	public Document getDocument(Album album) {
+		fAlbum = album;
+		return internalGetDocument();
+	}
+	
+	protected boolean needNewDocument() {
+		return (fDocAlbum == null) || (!fLinks.getPageFileName(fDocAlbum).equals(fLinks.getPageFileName(fAlbum)));
+	}
+	
+	protected Document createDocument() {
+		fDocAlbum = fAlbum;
+		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocAlbum), "Tracks"));
+	}
+	
+	protected String getCurrentPath() {
+		return fLinks.getPagePath(fDocAlbum);
+	}
+	
+	protected void addIndexNavigator() {
+		Web.addIndexNavigator(fMusic, fLinks, fDocAlbum, fDocument);
+	}
+}
+
 public class Web {
 	
 	private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.music.web.web");
@@ -271,6 +302,8 @@ public class Web {
 		generateDatePages(music, links, outputDir);
 		
 		generateCityPages(music, links, outputDir);
+		
+		generateTracksPages(music, links, outputDir);
 	}
 
 	// NOTE: Instead of a List of ID's, JAXB returns a List of real items.
@@ -443,6 +476,46 @@ public class Web {
 		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
 		creator.getDocument("City Statistics", Links.CITIES_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
+	}
+
+	public static void generateTracksPages(Music music, Links links, String outputDir) {
+		List items = music.getAlbum();
+
+		Album item = null;
+		int index = 0;
+		
+		Collections.sort(items, com.bolsinga.music.util.Compare.ALBUM_COMPARATOR);
+		
+		TracksDocumentCreator creator = new TracksDocumentCreator(music, links, outputDir, sResource.getString("program"));
+		
+		ListIterator li = items.listIterator();
+		while (li.hasNext()) {
+			item = (Album)li.next();
+			
+			addItem(music, links, item, creator.getDocument(item));
+		}
+		creator.close();
+		
+/*
+		Collections.sort(items, com.bolsinga.music.util.Compare.getCompare(music).ALBUM_STATS_COMPARATOR);
+
+		String[] names = new String[items.size()];
+		int[] values = new int[items.size()];
+		li = items.listIterator();
+		while (li.hasNext()) {
+			item = (Album)li.next();
+
+			names[index] = new A(links.getLinkTo(item), item.getName()).toString();
+			List shows = Lookup.getLookup(music).getShows(item);
+			values[index] = (shows != null) ? shows.size() : 0;
+			
+			index++;
+		}
+		
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
+		stats.getDocument("Tracks Statistics", Links.TRACKS_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Tracks by Artist", "Artist")));
+		stats.close();
+*/
 	}
 	
 	public static String generatePreview(String sourceFile, int lastShowsCount) {
@@ -736,6 +809,18 @@ public class Web {
 		
 		b.addElement(showListing);
 	}
+
+	public static void addItem(Music music, Links links, Album album, Document doc) {
+		Body b = doc.getBody();
+
+		b.addElement(new HR());
+		A a = new A();
+		a.setName(album.getId());
+		a.addElement("test", album.getTitle());
+		b.addElement(new Center().addElement(new Big().addElement(a)));
+
+//		List songs = Lookup.getLookup(music).getSongs(album);
+	}
 	
 	public static void addRelations(Music music, Links links, Artist artist, Document doc) {
 		Collection relations = Lookup.getLookup(music).getRelations(artist);
@@ -830,6 +915,33 @@ public class Web {
 				c.addElement(l);
 			} else {
 				c.addElement(new A((String)m.get(v), l));
+			}
+		}
+		
+		doc.getBody().addElement(c);
+	}
+
+	public static void addIndexNavigator(Music music, Links links, Album album, Document doc) {
+		Center c = new Center();
+		
+		java.util.Map m = new TreeMap();
+		Iterator li = music.getAlbum().iterator();
+		while (li.hasNext()) {
+			Album a = (Album)li.next();
+			String letter = links.getPageFileName(a);
+			if (!m.containsKey(letter)) {
+				m.put(letter, links.getLinkToPage(a));
+			}
+		}
+
+		li = m.keySet().iterator();
+		while (li.hasNext()) {
+			String a = (String)li.next();
+			String l = " " + a + " ";
+			if (a.equals(links.getPageFileName(album))) {
+				c.addElement(l);
+			} else {
+				c.addElement(new A((String)m.get(a), l));
 			}
 		}
 		

@@ -110,6 +110,15 @@ public class Compare {
 			return LIBRARY_COMPARATOR.compare(n1, n2);
 		}
 	};
+
+	public static final Comparator ALBUM_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Album r1 = (Album)o1;
+			Album r2 = (Album)o2;
+			
+			return LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
+		}
+	};
 	
 	public final Comparator ARTIST_STATS_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {

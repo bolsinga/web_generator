@@ -20,6 +20,7 @@ public class Links {
 	public static final String CITIES_DIR = "cities";
 	public static final String RSS_DIR = "rss";
 	public static final String ICAL_DIR = "ical";
+	public static final String TRACKS_DIR = "tracks";
 	
 	private static final String OTHER = "other";
 	public static final String STATS = "stats";
@@ -73,6 +74,9 @@ public class Links {
 		sb.append(getArtistLink());
 		sb.append(" ");
 		
+		sb.append(getTracksLink());
+		sb.append(" ");
+
 		sb.append(getShowLink());
 		sb.append(" ");
 
@@ -119,6 +123,10 @@ public class Links {
 		BigInteger current = show.getDate().getYear();
 		return getPageFileName(current);
 	}
+
+	public String getPageFileName(Album album) {
+		return getPageFileName(album.getTitle());
+	}
 	
 	public String getPagePath(Artist artist) {
 		StringBuffer sb = new StringBuffer();
@@ -143,6 +151,15 @@ public class Links {
 		sb.append(SHOW_DIR);
 		sb.append(File.separator);
 		sb.append(getPageFileName(show));
+		sb.append(HTML_EXT);
+		return sb.toString();
+	}
+
+	public String getPagePath(Album album) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(TRACKS_DIR);
+		sb.append(File.separator);
+		sb.append(getPageFileName(album));
 		sb.append(HTML_EXT);
 		return sb.toString();
 	}
@@ -192,6 +209,21 @@ public class Links {
 		return link.toString();
 	}
 	
+	public String getLinkToPage(Album album) {
+		StringBuffer link = new StringBuffer();
+		
+		if (fUpOneLevel) {
+			link.append("..");
+			link.append(File.separator);
+		}
+		link.append(TRACKS_DIR);
+		link.append(File.separator);
+		link.append(getPageFileName(album));
+		link.append(HTML_EXT);
+
+		return link.toString();
+	}
+
 	public String getLinkTo(Artist artist) {
 		StringBuffer link = new StringBuffer();
 		
@@ -222,6 +254,16 @@ public class Links {
 		return link.toString();
 	}
 	
+	public String getLinkTo(Album album) {
+		StringBuffer link = new StringBuffer();
+		
+		link.append(getLinkToPage(album));
+		link.append(HASH);
+		link.append(album.getId());
+		
+		return link.toString();
+	}
+
 	public String getArtistLink() {
 		StringBuffer link = new StringBuffer();
 		if (fUpOneLevel) {
@@ -250,6 +292,20 @@ public class Links {
 		return a.toString();
 	}
 	
+	public String getTracksLink() {
+		StringBuffer link = new StringBuffer();
+		if (fUpOneLevel) {
+			link.append("..");
+			link.append(File.separator);
+		}
+		link.append(TRACKS_DIR);
+		link.append(File.separator);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		A a = new A(link.toString(), "Tracks");
+		return a.toString();
+	}
+
 	public String getVenueLink() {
 		StringBuffer link = new StringBuffer();
 		if (fUpOneLevel) {
