@@ -169,6 +169,22 @@ public class Compare {
 		}
 	};
 	
+	public static final Comparator ARTIST_ALBUMS_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Artist r1 = (Artist)o1;
+			Artist r2 = (Artist)o2;
+			
+			int albums1 = (r1.getAlbum() != null) ? r1.getAlbum().size() : 0;
+			int albums2 = (r2.getAlbum() != null) ? r2.getAlbum().size() : 0;
+			
+			int result = albums2 - albums1;
+			if (result == 0) {
+				result = ARTIST_COMPARATOR.compare(r1, r2);
+			}
+			return result;
+		}
+	};
+	
 	public final Comparator ARTIST_STATS_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
 			Artist r1 = (Artist)o1;

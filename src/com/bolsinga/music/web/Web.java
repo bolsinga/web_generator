@@ -210,9 +210,15 @@ class ShowDocumentCreator extends DocumentCreator {
 class StatisticsCreator extends DocumentCreator {
 	String fTitle = null;
 	String fDirectory = null;
+	String fFileName = null;
 	
 	public StatisticsCreator(Music music, Links links, String outputDir, String program) {
+		this(music, links, outputDir, program, Links.STATS);
+	}
+
+	public StatisticsCreator(Music music, Links links, String outputDir, String program, String filename) {
 		super(music, links, outputDir, program);
+		fFileName = filename;
 	}
 
 	public Document getDocument(String title, String directory) {
@@ -233,13 +239,44 @@ class StatisticsCreator extends DocumentCreator {
 		StringBuffer sb = new StringBuffer();
 		sb.append(fDirectory);
 		sb.append(File.separator);
-		sb.append(Links.STATS);
+		sb.append(fFileName);
 		sb.append(Links.HTML_EXT);
 		return sb.toString();
 	}
 	
 	protected void addIndexNavigator() {
 
+	}
+}
+
+class TracksStatisticsCreator extends StatisticsCreator {
+	private boolean fTracksStats;
+	
+	public static TracksStatisticsCreator createTracksStats(Music music, Links links, String outputDir, String program) {
+		return new TracksStatisticsCreator(music, links, outputDir, program, Links.STATS, true);
+	}
+
+	public static TracksStatisticsCreator createAlbumStats(Music music, Links links, String outputDir, String program) {
+		return new TracksStatisticsCreator(music, links, outputDir, program, Links.ALBUM_STATS, false);
+	}
+
+	private TracksStatisticsCreator(Music music, Links links, String outputDir, String program, String filename, boolean isTracksStats) {
+		super(music, links, outputDir, program, filename);
+		fTracksStats = isTracksStats;
+	}
+
+	protected void addIndexNavigator() {
+		Center c = new Center();
+		
+		if (fTracksStats) {
+			c.addElement("Tracks" + " ");
+			c.addElement(fLinks.getAlbumsLink());
+		} else {
+			c.addElement(fLinks.getTracksLink() + " ");
+			c.addElement("Albums");
+		}
+		
+		fDocument.getBody().addElement(c);
 	}
 }
 
@@ -512,8 +549,28 @@ public class Web {
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
+		StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, sResource.getString("program"));
 		stats.getDocument("Tracks Statistics", Links.TRACKS_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Tracks by Artist", "Artist")));
+		stats.close();
+
+		items = music.getArtist();
+		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_ALBUMS_COMPARATOR);
+
+		names = new String[items.size()];
+		values = new int[items.size()];
+		li = items.listIterator();
+		index = 0;
+		while (li.hasNext()) {
+			artist = (Artist)li.next();
+
+			names[index] = new A(links.getLinkTo(artist), artist.getName()).toString();
+			values[index] = (artist.getAlbum() != null) ? artist.getAlbum().size() : 0;
+			
+			index++;
+		}
+
+		stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, sResource.getString("program"));
+		stats.getDocument("Album Statistics", Links.TRACKS_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Albums by Artist", "Artist")));
 		stats.close();
 	}
 	
@@ -584,6 +641,14 @@ public class Web {
 		sb.append(music.getSong().size());
 		sb.append(" ");
 		sb.append(links.getTracksLink());
+		tr.addElement(new TD(sb.toString()));
+		navigation.addElement(tr);
+
+		tr = new TR().setAlign("right");
+		sb = new StringBuffer();
+		sb.append(music.getAlbum().size());
+		sb.append(" ");
+		sb.append(links.getAlbumsLink());
 		tr.addElement(new TD(sb.toString()));
 		navigation.addElement(tr);
 

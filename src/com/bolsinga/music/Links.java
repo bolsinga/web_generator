@@ -24,6 +24,7 @@ public class Links {
 	
 	private static final String OTHER = "other";
 	public static final String STATS = "stats";
+	public static final String ALBUM_STATS = "albumstats";
 	private static final String HASH = "#";
 
 	private boolean fUpOneLevel;
@@ -303,6 +304,20 @@ public class Links {
 		link.append(STATS);
 		link.append(HTML_EXT);
 		A a = new A(link.toString(), "Tracks");
+		return a.toString();
+	}
+
+	public String getAlbumsLink() {
+		StringBuffer link = new StringBuffer();
+		if (fUpOneLevel) {
+			link.append("..");
+			link.append(File.separator);
+		}
+		link.append(TRACKS_DIR);
+		link.append(File.separator);
+		link.append(ALBUM_STATS);
+		link.append(HTML_EXT);
+		A a = new A(link.toString(), "Albums");
 		return a.toString();
 	}
 
