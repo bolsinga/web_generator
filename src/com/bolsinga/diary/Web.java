@@ -17,7 +17,7 @@ class DiaryDocumentCreator {
 	Links fLinks = null;
 	String fOutputDir = null;
 	Document fDocument = null;
-	Table fTable = null;
+	Div fMainDiv = null;
 	Entry fEntry = null;
 	String fProgram = null;
 	
@@ -28,7 +28,7 @@ class DiaryDocumentCreator {
 		fProgram = program;
 	}
 	
-	public Table getTable(Entry entry) {
+	public Div getMainDiv(Entry entry) {
 		if (needNewDocument(entry)) {
 			close();
 			
@@ -39,9 +39,9 @@ class DiaryDocumentCreator {
 			addWebNavigator(fProgram);
 			addIndexNavigator();
 			
-			fTable = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
+			fMainDiv = new Div();
 		}
-		return fTable;
+		return fMainDiv;
 	}
 	
 	public void close() {
@@ -68,7 +68,7 @@ class DiaryDocumentCreator {
 	}
 		
 	private void writeDocument() {
-		fDocument.getBody().addElement(fTable);
+		fDocument.getBody().addElement(fMainDiv);
 		addIndexNavigator();
 		addWebNavigator(fProgram);
 		try {
@@ -305,7 +305,8 @@ public class Web {
 	private static void generateDiary(Music music, Diary diary, Links links, int mainPageEntryCount, TD td) {
 		List items = diary.getEntry();
 		Entry item = null;
-		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
+		
+		Div mainDiv = new Div();
 		
 		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		Collections.reverse(items);
@@ -313,7 +314,7 @@ public class Web {
 		for (int i = 0; i < mainPageEntryCount; i++) {
 			item = (Entry)items.get(i);
 			
-			addItem(music, item, table, false);
+			addItem(music, item, mainDiv, false);
 		}
 		
 		StringBuffer archivesLink = new StringBuffer();
@@ -321,11 +322,9 @@ public class Web {
 		archivesLink.append(Calendar.getInstance().get(Calendar.YEAR));
 		archivesLink.append(".html");
 		
-		StringBuffer sb = new StringBuffer();
-		sb.append(new A(archivesLink.toString(), "Archives").toString());
-		addBanner(sb.toString(), table);
+		mainDiv.addElement(new H1().addElement(new A(archivesLink.toString(), "Archives")));
 		
-		td.addElement(table);
+		td.addElement(mainDiv);
 	}
 	
 	public static void generateArchivePages(Music music, Diary diary, String outputDir) {
@@ -342,29 +341,24 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Entry)li.next();
 			
-			addItem(music, item, creator.getTable(item), true);
+			addItem(music, item, creator.getMainDiv(item), true);
 		}
 		
 		creator.close();
 	}
 
-	public static void addBanner(String item, Table table) {
-		Div div = new Div();
-		div.addElement(item);
+	public static void addItem(Music music, Entry entry, Div mainDiv, boolean upOneLevel) {
+		Div diaryDiv = new Div();
 		
-		TR tr = new TR();
-		tr.addElement(new TD(div));
-		
-		table.addElement(tr);
-	}
-	
-	public static void addItem(Music music, Entry entry, Table table, boolean upOneLevel) {
 		A a = new A();
 		a.setName(entry.getId());
 		a.addElement("test", Util.getTitle(entry));
-		addBanner(a.toString(), table);
 		
-		table.addElement(new TR().addElement(new TD(Web.encodedComment(music, entry, upOneLevel))));
+		diaryDiv.addElement(new H1().addElement(a));
+		Div commentDiv = new Div();
+		diaryDiv.addElement(commentDiv.addElement(Web.encodedComment(music, entry, upOneLevel)));
+		
+		mainDiv.addElement(diaryDiv);
 	}
 	
 	private static HashMap sLinkedData = new HashMap();
