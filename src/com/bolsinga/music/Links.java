@@ -13,22 +13,22 @@ import org.apache.ecs.filter.*;
 
 public class Links {
 
-    public static final String HTML_EXT = ".html";
-
-    public static final String ARTIST_DIR = "bands";
-    public static final String VENUE_DIR = "venues";
-    public static final String SHOW_DIR = "dates";
-    public static final String CITIES_DIR = "cities";
-    public static final String RSS_DIR = "rss";
-    public static final String ICAL_DIR = "ical";
-    public static final String TRACKS_DIR = "tracks";
-    public static final String STYLES_DIR = "styles";
+    public  static final String HTML_EXT    = ".html";
         
-    private static final String OTHER = "other";
-    public static final String STATS = "stats";
-    public static final String ALBUM_STATS = "albumstats";
-    private static final String HASH = "#";
-
+    public  static final String ARTIST_DIR  = "bands";
+    public  static final String VENUE_DIR   = "venues";
+    public  static final String SHOW_DIR    = "dates";
+    public  static final String CITIES_DIR  = "cities";
+    public  static final String RSS_DIR     = "rss";
+    public  static final String ICAL_DIR    = "ical";
+    public  static final String TRACKS_DIR  = "tracks";
+    public  static final String STYLES_DIR  = "styles";
+        
+    private static final String OTHER       = "other";
+    public  static final String STATS       = "stats";
+    public  static final String ALBUM_STATS = "albumstats";
+    private static final String HASH        = "#";
+        
     private boolean fUpOneLevel;
         
     public static Links getLinks(boolean upOneLevel) {

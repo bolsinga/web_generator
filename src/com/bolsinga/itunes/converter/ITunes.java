@@ -12,46 +12,46 @@ import com.bolsinga.music.data.*;
 
 public class ITunes {
 
-    private static final String TK_ALBUM = "Album";
-    private static final String TK_ARTIST = "Artist";
-    private static final String TK_ARTWORK_COUNT = "Artwork Count";
-    private static final String TK_BIT_RATE = "Bit Rate";
-    private static final String TK_COMMENTS = "Comments";
-    private static final String TK_COMPILATION = "Compilation";
-    private static final String TK_COMPOSER = "Composer";
-    private static final String TK_DATE_ADDED = "Date Added";
-    private static final String TK_DATE_MODIFIED = "Date Modified";
-    private static final String TK_DISC_COUNT = "Disc Count";
-    private static final String TK_DISC_NUMBER = "Disc Number";
-    private static final String TK_FILE_CREATOR = "File Creator";
-    private static final String TK_FILE_FOLDER_COUNT = "File Folder Count";
-    private static final String TK_FILE_TYPE = "File Type";
-    private static final String TK_GENRE = "Genre";
-    private static final String TK_KIND = "Kind";
+    private static final String TK_ALBUM                = "Album";
+    private static final String TK_ARTIST               = "Artist";
+    private static final String TK_ARTWORK_COUNT        = "Artwork Count";
+    private static final String TK_BIT_RATE             = "Bit Rate";
+    private static final String TK_COMMENTS             = "Comments";
+    private static final String TK_COMPILATION          = "Compilation";
+    private static final String TK_COMPOSER             = "Composer";
+    private static final String TK_DATE_ADDED           = "Date Added";
+    private static final String TK_DATE_MODIFIED        = "Date Modified";
+    private static final String TK_DISC_COUNT           = "Disc Count";
+    private static final String TK_DISC_NUMBER          = "Disc Number";
+    private static final String TK_FILE_CREATOR         = "File Creator";
+    private static final String TK_FILE_FOLDER_COUNT    = "File Folder Count";
+    private static final String TK_FILE_TYPE            = "File Type";
+    private static final String TK_GENRE                = "Genre";
+    private static final String TK_KIND                 = "Kind";
     private static final String TK_LIBRARY_FOLDER_COUNT = "Library Folder Count";
-    private static final String TK_LOCATION = "Location";
-    private static final String TK_NAME = "Name";
-    private static final String TK_PLAY_COUNT = "Play Count";
-    private static final String TK_PLAY_DATE = "Play Date";
-    private static final String TK_PLAY_DATE_UTC = "Play Date UTC";
-    private static final String TK_SAMPLE_RATE = "Sample Rate";
-    private static final String TK_SIZE = "Size";
-    private static final String TK_TOTAL_TIME = "Total Time";
-    private static final String TK_TRACK_COUNT = "Track Count";
-    private static final String TK_TRACK_ID = "Track ID";
-    private static final String TK_TRACK_NUMBER = "Track Number";
-    private static final String TK_TRACK_TYPE = "Track Type";
-    private static final String TK_YEAR = "Year";
-
-    private static final String FORMAT_12_INCH_LP = "12 Inch LP";
-    private static final String FORMAT_12_INCH_EP = "12 Inch EP";
-    private static final String FORMAT_12_INCH_SINGLE = "12 Inch Single";
-    private static final String FORMAT_10_INCH_EP = "10 Inch EP";
-    private static final String FORMAT_7_INCH_SINGLE = "7 Inch Single";
-    private static final String FORMAT_CASSETTE = "Cassette";
-    private static final String FORMAT_CD = "CD";
-    private static final String FORMAT_DIGITAL_FILE = "Digital File";
-
+    private static final String TK_LOCATION             = "Location";
+    private static final String TK_NAME                 = "Name";
+    private static final String TK_PLAY_COUNT           = "Play Count";
+    private static final String TK_PLAY_DATE            = "Play Date";
+    private static final String TK_PLAY_DATE_UTC        = "Play Date UTC";
+    private static final String TK_SAMPLE_RATE          = "Sample Rate";
+    private static final String TK_SIZE                 = "Size";
+    private static final String TK_TOTAL_TIME           = "Total Time";
+    private static final String TK_TRACK_COUNT          = "Track Count";
+    private static final String TK_TRACK_ID             = "Track ID";
+    private static final String TK_TRACK_NUMBER         = "Track Number";
+    private static final String TK_TRACK_TYPE           = "Track Type";
+    private static final String TK_YEAR                 = "Year";
+    
+    private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
+    private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
+    private static final String FORMAT_12_INCH_SINGLE   = "12 Inch Single";
+    private static final String FORMAT_10_INCH_EP       = "10 Inch EP";
+    private static final String FORMAT_7_INCH_SINGLE    = "7 Inch Single";
+    private static final String FORMAT_CASSETTE         = "Cassette";
+    private static final String FORMAT_CD               = "CD";
+    private static final String FORMAT_DIGITAL_FILE     = "Digital File";
+    
     private static HashMap sAlbums = new HashMap();
 
     private static HashSet sITunesKeys = new HashSet();

@@ -7,11 +7,11 @@ import com.bolsinga.music.data.*;
 
 public class Compare {
 
-    private static final String THE = "the ";
+    private static final String THE  = "the ";
     private static final String THEE = "thee ";
-    private static final String A = "a ";
-    private static final String AN = "an ";
-
+    private static final String A    = "a ";
+    private static final String AN   = "an ";
+    
     private static Pattern sChomp = Pattern.compile("\\W*");
         
     private static Compare sCompare = null;

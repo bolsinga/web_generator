@@ -12,12 +12,12 @@ import org.apache.ecs.filter.*;
 
 public class Links {
 
-    public static final String HTML_EXT = ".html";
-    public static final String ARCHIVES_DIR = "archives";
-    public static final String STYLES_DIR = "styles";
-    public static final String RSS_DIR = "rss";
-    private static final String HASH = "#";
-
+    public  static final String HTML_EXT     = ".html";
+    public  static final String ARCHIVES_DIR = "archives";
+    public  static final String STYLES_DIR   = "styles";
+    public  static final String RSS_DIR      = "rss";
+    private static final String HASH         = "#";
+    
     static DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
 
     private boolean fUpOneLevel;
