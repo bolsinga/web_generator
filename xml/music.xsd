@@ -2,6 +2,11 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 <!-- Define location -->
+<xs:simpleType name="locationID">
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="w.*" />
+	</xs:restriction>
+</xs:simpleType>
 <xs:simpleType name="zipcode">
 	<xs:restriction base="xs:positiveInteger" >
 		<xs:totalDigits value="5" />
@@ -21,6 +26,7 @@
 			<xs:element ref="zip" minOccurs="0" />
 			<xs:element ref="web" minOccurs="0" />
 		</xs:sequence>
+		<xs:attribute name="id" type="locationID" />
 	</xs:complexType>
 </xs:element>
 
@@ -126,7 +132,7 @@
 		<xs:sequence>
 			<xs:element name="name" type="xs:token" />
 			<xs:element name="sortname" type="xs:token" minOccurs="0" />
-			<xs:element ref="location" minOccurs="0" />
+			<xs:element name="location" type="xs:IDREF" minOccurs="0" />
 			<xs:element name="album" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
@@ -145,7 +151,7 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="name" type="xs:token" />
-			<xs:element ref="location" minOccurs="0" />
+			<xs:element name="location" type="xs:IDREF" minOccurs="0" />
 			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="labelID" />
@@ -163,7 +169,7 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="name" type="xs:token" />
-			<xs:element ref="location" minOccurs="0" />
+			<xs:element name="location" type="xs:IDREF" minOccurs="0" />
 			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="venueID" />
@@ -234,6 +240,7 @@
 <xs:element name="music">
 	<xs:complexType>
 		<xs:sequence>
+			<xs:element ref="location" maxOccurs="unbounded" />
 			<xs:element ref="venue" maxOccurs="unbounded" />
 			<xs:element ref="artist" maxOccurs="unbounded" />
 			<xs:element ref="label" minOccurs="0" maxOccurs="unbounded" />

@@ -11,6 +11,7 @@ import com.bolsinga.music.data.*;
 
 public class Music {
 
+	private static HashMap sLocations = new HashMap();
 	private static HashMap sVenues = new HashMap();
 	private static HashMap sBandSorts = new HashMap();
 	private static HashMap sArtists = new HashMap();
@@ -87,7 +88,7 @@ public class Music {
 
 		Venue oldVenue = null;
 		com.bolsinga.music.data.Venue xVenue = null;
-		Location xLocation = null;
+		com.bolsinga.music.data.Location xLocation = null;
 		String name = null;
 		int index = 0;
 		
@@ -98,12 +99,8 @@ public class Music {
 			oldVenue = (Venue)li.next();
 			
 			name = oldVenue.getName();
-			
-			xLocation = objFactory.createLocation();
-			xLocation.setState(oldVenue.getState());
-			xLocation.setWeb(oldVenue.getURL());
-			xLocation.setCity(oldVenue.getCity());
-			xLocation.setStreet(oldVenue.getAddress());
+
+			xLocation = addLocation(objFactory, music, oldVenue);
 			
 			xVenue = objFactory.createVenue();
 			xVenue.setName(name);
@@ -203,6 +200,24 @@ public class Music {
 			result.setYear(new java.math.BigInteger(yearString));
 		}
 		
+		return result;
+	}
+	
+	private static com.bolsinga.music.data.Location addLocation(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Venue venue) throws JAXBException {
+		com.bolsinga.music.data.Location result = null;
+		String key = venue.getName();
+		if (!sLocations.containsKey(key)) {
+			result = objFactory.createLocation();
+			result.setState(venue.getState());
+			result.setWeb(venue.getURL());
+			result.setCity(venue.getCity());
+			result.setStreet(venue.getAddress());
+			result.setId("w" + sLocations.size());
+			music.getLocation().add(result);
+			sLocations.put(key, result);
+		} else {
+			result = (com.bolsinga.music.data.Location)sLocations.get(key);
+		}
 		return result;
 	}
 	
