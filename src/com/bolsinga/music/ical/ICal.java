@@ -3,6 +3,7 @@ package com.bolsinga.music.ical;
 import com.bolsinga.ical.*;
 import com.bolsinga.music.data.*;
 import com.bolsinga.music.util.*;
+import com.bolsinga.settings.data.*;
 
 import java.io.*;
 import java.text.*;
@@ -12,11 +13,15 @@ public class ICal {
 
 	public static void main(String[] args) {
 		if (args.length != 3) {
-			System.out.println("Usage: ICal [source.xml] [calendar.name] [output.dir]");
+			System.out.println("Usage: ICal [source.xml] [settings.xml] [output.dir]");
 			System.exit(0);
 		}
+
+        Settings settings = com.bolsinga.web.util.Util.createSettings(args[1]);
 		
-		ICal.generate(args[0], args[1], args[2]);
+        String name = settings.getIcalName();
+        
+		ICal.generate(args[0], name, args[2]);
 	}
 
 	public static void generate(String sourceFile, String name, String outputDir) {
