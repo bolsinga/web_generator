@@ -13,7 +13,7 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
-abstract class MusicDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
+abstract class MusicDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
 	Music fMusic = null;
 	Links fLinks = null;
 	String fProgram = null;
@@ -39,17 +39,29 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.util.DocumentCreato
     }
 }
 
-abstract class SingleSectionMusicDocumentCreator extends MusicDocumentCreator {
+abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
+	Music fMusic = null;
+	Links fLinks = null;
+	String fProgram = null;
+
     protected SingleSectionMusicDocumentCreator(Music music, Links links, String outputDir, String program) {
-        super(music, links, outputDir, program);
+        super(outputDir);
+		fMusic = music;
+		fLinks = links;
+		fProgram = program;
     }
 
-    protected boolean needNewSubsection() {
-        return false;
+    protected XhtmlDocument createDocument() {
+        return Web.createHTMLDocument(fLinks, getTitle());
     }
 
-    protected Element getSubsectionTitle() {
-        return null;
+    protected div getHeaderDiv() {
+        div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_HEADER);
+        headerDiv.addElement(new h1().addElement(getTitle()));
+        headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
+        headerDiv.addElement(fLinks.addWebNavigator(fMusic, fProgram));
+        headerDiv.addElement(addIndexNavigator());
+        return headerDiv;
     }
 }
 

@@ -11,7 +11,6 @@ public abstract class DocumentCreator {
 	String fOutputDir = null;
 	private XhtmlDocument fDocument = null;
 	div fMain = null;
-	div fSubsection = null;
 	
 	protected DocumentCreator(String outputDir) {
 		fOutputDir = outputDir;
@@ -22,8 +21,6 @@ public abstract class DocumentCreator {
 	protected abstract boolean needNewDocument();
     protected abstract XhtmlDocument createDocument();
     protected abstract div getHeaderDiv();
-    protected abstract boolean needNewSubsection();
-    protected abstract Element getSubsectionTitle();
     
 	protected abstract String getLastPath();
 	protected abstract String getCurrentLetter();
@@ -37,14 +34,10 @@ public abstract class DocumentCreator {
 	}
 	
     protected div getContainer() {
-        div c = getSubsection();
-        if (c == null) {
-            c = getMain();
-        }
-        return c;
+        return getMain();
     }
     
-	private div getMain() {
+	protected div getMain() {
 		if ((fDocument == null) || needNewDocument()) {
             close();
             
@@ -55,25 +48,8 @@ public abstract class DocumentCreator {
 		}
 		return fMain;
 	}
-    
-    private div getSubsection() {
-        if ((fSubsection == null) || needNewSubsection()) {
-            div mainDiv = getMain();
-            fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_SUB);
-            Element e = getSubsectionTitle();
-            if (e != null) {
-                fSubsection.addElement(new h2().addElement(e));
-            }
-            mainDiv.addElement(fSubsection);
-        }
-        return fSubsection;
-    }
 	
-	private void writeDocument() {
-		if (fSubsection != null) {
-            fSubsection = null;
-		}
-		
+	protected void writeDocument() {
 		fDocument.getBody().addElement(fMain);
 
 		try {
