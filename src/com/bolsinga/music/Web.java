@@ -318,14 +318,19 @@ class TracksStatisticsCreator extends StatisticsCreator {
 	protected Element addIndexNavigator() {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.TRACKS_MENU);
 		
-		d.addElement("View: ");
+		d.addElement(new h4("View: "));
+		
+		ul list = new ul();
+		
 		if (fTracksStats) {
-			d.addElement("Tracks" + " ");
-			d.addElement(fLinks.getAlbumsLink());
+			list.addElement(new li("Tracks"));
+			list.addElement(new li(fLinks.getAlbumsLink()));
 		} else {
-			d.addElement(fLinks.getTracksLink() + " ");
-			d.addElement("Albums");
+			list.addElement(new li(fLinks.getTracksLink()));
+			list.addElement(new li("Albums"));
 		}
+		
+		d.addElement(list);
 		
 		return d;
 	}
