@@ -386,6 +386,7 @@
 		<sysproperty key="web.logo.width" value="120" />
 		<sysproperty key="web.logo.height" value="90" />
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
+		<sysproperty key="web.layout.css" value="layout.css" />
 		<sysproperty key="music.contact" value="bolsinga@gmail.com" />
 		<sysproperty key="music.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
@@ -409,6 +410,7 @@
 		<sysproperty key="web.logo.width" value="120" />
 		<sysproperty key="web.logo.height" value="90" />
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
+		<sysproperty key="web.layout.css" value="layout.css" />
 		<sysproperty key="diary.contact" value="bolsinga@gmail.com" />
 		<sysproperty key="diary.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />

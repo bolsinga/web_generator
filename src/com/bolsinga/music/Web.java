@@ -125,7 +125,7 @@ class ArtistDocumentCreator extends DocumentCreator {
 
 	protected Document createDocument(String title) {
 		fDocArtist = fArtist;
-		return Web.createHTMLDocument(title);
+		return Web.createHTMLDocument(fLinks, title);
 	}
 
 	protected void finishDocument() {
@@ -164,7 +164,7 @@ class VenueDocumentCreator extends DocumentCreator {
 
 	protected Document createDocument(String title) {
 		fDocVenue = fVenue;
-		return Web.createHTMLDocument(title);
+		return Web.createHTMLDocument(fLinks, title);
 	}
 	
 	protected void finishDocument() {
@@ -228,7 +228,7 @@ class ShowDocumentCreator extends DocumentCreator {
 		fDocShow = fShow;
 		fDate = null;
 		fMonthDiv = null;
-		return Web.createHTMLDocument(title);
+		return Web.createHTMLDocument(fLinks, title);
 	}
 
 	protected void finishDocument() {
@@ -278,7 +278,7 @@ class StatisticsCreator extends DocumentCreator {
 	}
 
 	protected Document createDocument(String title) {
-		return Web.createHTMLDocument(title);
+		return Web.createHTMLDocument(fLinks, title);
 	}
 
 	protected void finishDocument() {
@@ -354,7 +354,7 @@ class TracksDocumentCreator extends DocumentCreator {
 
 	protected Document createDocument(String title) {
 		fDocAlbum = fAlbum;
-		return Web.createHTMLDocument(title);
+		return Web.createHTMLDocument(fLinks, title);
 	}
 	
 	protected void finishDocument() {
@@ -1223,7 +1223,7 @@ public class Web {
 		return sb.toString();
 	}
 	
-	static Document createHTMLDocument(String title) {
+	static Document createHTMLDocument(Links links, String title) {
 		Document d = new Document(ECSDefaults.getDefaultCodeset());
 
 		d.getHtml().setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
@@ -1234,6 +1234,8 @@ public class Web {
 		Head h = d.getHead();
 		h.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		h.addElement(com.bolsinga.web.util.Util.getIconLink());
+		h.addElement(links.getLinkToStyleSheet());
+
 		h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
 		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));

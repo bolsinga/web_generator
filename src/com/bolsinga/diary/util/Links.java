@@ -14,6 +14,7 @@ public class Links {
 
 	public static final String HTML_EXT = ".html";
 	public static final String ARCHIVES_DIR = "archives";
+	public static final String STYLES_DIR = "styles";
 	public static final String RSS_DIR = "rss";
 	private static final String HASH = "#";
 
@@ -101,6 +102,26 @@ public class Links {
 
 		result.setHref(sb.toString());
 		
+		return result;
+	}
+
+	public String getStyleSheetLink() {
+		StringBuffer url = new StringBuffer();
+		if (fUpOneLevel) {
+			url.append("..");
+			url.append(File.separator);
+		}
+		url.append(STYLES_DIR);
+		url.append(File.separator);
+		url.append(System.getProperty("web.layout.css"));
+		return url.toString();
+	}
+
+	public Link getLinkToStyleSheet() {
+		Link result = new Link();
+		result.setRel("stylesheet");
+		result.setType("text/css");
+		result.setHref(getStyleSheetLink());
 		return result;
 	}
 }

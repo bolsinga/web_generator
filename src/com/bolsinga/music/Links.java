@@ -21,6 +21,7 @@ public class Links {
 	public static final String RSS_DIR = "rss";
 	public static final String ICAL_DIR = "ical";
 	public static final String TRACKS_DIR = "tracks";
+	public static final String STYLES_DIR = "styles";
 	
 	private static final String OTHER = "other";
 	public static final String STATS = "stats";
@@ -362,5 +363,25 @@ public class Links {
 		img.setAlt(System.getProperty("ical.image.alt"));
 		
 		return new A(link.toString(), img.toString()).toString(); // ical: URL
+	}
+	
+	public String getStyleSheetLink() {
+		StringBuffer url = new StringBuffer();
+		if (fUpOneLevel) {
+			url.append("..");
+			url.append(File.separator);
+		}
+		url.append(STYLES_DIR);
+		url.append(File.separator);
+		url.append(System.getProperty("web.layout.css"));
+		return url.toString();
+	}
+
+	public Link getLinkToStyleSheet() {
+		Link result = new Link();
+		result.setRel("stylesheet");
+		result.setType("text/css");
+		result.setHref(getStyleSheetLink());
+		return result;
 	}
 }
