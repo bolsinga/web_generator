@@ -30,14 +30,8 @@ abstract class DocumentCreator {
 	protected abstract String getTitle();
 
 	protected abstract boolean needNewDocument();
-    
-    protected boolean needNewSubsection() {
-        return false;
-    }
-    
-    protected div createSubsection() {
-        return null;
-    }
+    protected abstract boolean needNewSubsection();
+    protected abstract Element getSubsectionTitle();
     
 	protected abstract String getLastPath();
 	protected abstract String getCurrentLetter();
@@ -75,7 +69,9 @@ abstract class DocumentCreator {
             if (fSubsection != null) {
                 mainDiv.addElement(fSubsection);
             }
-            fSubsection = createSubsection();
+            
+            fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_SUB);
+            fSubsection.addElement(getSubsectionTitle());
         }
         return fSubsection;
     }
@@ -148,15 +144,11 @@ class ArtistDocumentCreator extends DocumentCreator {
         return ((fLastArtist == null) || !fLastArtist.getName().equals(fCurArtist.getName()));
     }
 
-    protected div createSubsection() {
+    protected Element getSubsectionTitle() {
         a an = new a(); // named target
         an.setName(fCurArtist.getId());
         an.addElement("t", fCurArtist.getName());
-
-        div subDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_SUB);
-        subDiv.addElement(new h2().addElement(an));
-        
-        return subDiv;
+        return new h2().addElement(an);
     }
 
 	protected String getLastPath() {
@@ -198,15 +190,11 @@ class VenueDocumentCreator extends DocumentCreator {
         return (fLastVenue == null) || (!fLastVenue.getName().equals(fCurVenue.getName()));
     }
 
-    protected div createSubsection() {
+    protected Element getSubsectionTitle() {
         a an = new a(); // named target
         an.setName(fCurVenue.getId());
         an.addElement("t", fCurVenue.getName());
-
-        div subDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_SUB);
-        subDiv.addElement(new h2().addElement(an));
-        
-        return subDiv;
+        return new h2().addElement(an);
     }
 
 	protected String getLastPath() {
@@ -248,11 +236,8 @@ class ShowDocumentCreator extends DocumentCreator {
         return (fLastShow == null) || (!Util.toMonth(fLastShow.getDate()).equals(Util.toMonth(fCurShow.getDate())));
     }
     
-    protected div createSubsection() {
-        div subDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_SUB);
-        subDiv.addElement(new h2().addElement(Util.toMonth(fCurShow.getDate())));
-        
-        return subDiv;
+    protected Element getSubsectionTitle() {
+        return new h2().addElement(Util.toMonth(fCurShow.getDate()));
     }
 
 	protected String getLastPath() {
@@ -297,6 +282,14 @@ class StatisticsCreator extends DocumentCreator {
 	protected boolean needNewDocument() {
 		return true;
 	}
+
+    protected boolean needNewSubsection() {
+        return false;
+    }
+
+    protected Element getSubsectionTitle() {
+        return null;
+    }
 
 	protected String getLastPath() {
 		StringBuffer sb = new StringBuffer();
@@ -374,6 +367,17 @@ class TracksDocumentCreator extends DocumentCreator {
 	protected boolean needNewDocument() {
 		return (fLastAlbum == null) || (!fLinks.getPageFileName(fLastAlbum).equals(getCurrentLetter()));
 	}
+
+    protected boolean needNewSubsection() {
+        return false;
+    }
+
+    protected Element getSubsectionTitle() {
+        a an = new a(); // named target
+        an.setName(fCurAlbum.getId());
+        an.addElement("t", fCurAlbum.getTitle());
+        return an;
+    }
 
 	protected String getLastPath() {
 		return fLinks.getPagePath(fLastAlbum);
