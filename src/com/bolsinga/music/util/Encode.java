@@ -23,7 +23,7 @@ public class Encode {
 		
 		Data(Artist artist, Links standardLinks, Links upLinks) {
 			fName = artist.getName();
-			fPattern = Pattern.compile(createRegex(fName), Pattern.DOTALL);
+			fPattern = Pattern.compile(createRegex(fName), Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
 			fStandardLink = new A(standardLinks.getLinkTo(artist), fName).toString();
 			fUpLink = new A(upLinks.getLinkTo(artist), fName).toString();
@@ -43,7 +43,7 @@ public class Encode {
 		
 		String createRegex(String name) {
 			StringBuffer sb = new StringBuffer();
-			sb.append("(\\W*)(");
+			sb.append("(^|\\W)(");
 			sb.append(name);
 			sb.append(")(\\W)");
 			return sb.toString();
@@ -121,15 +121,28 @@ public class Encode {
 		}
 	}
 	
+	private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)", Pattern.CASE_INSENSITIVE);
+	
 	public String addLinks(String source, boolean upOneLevel) {
 		String result = source;
 		Data data = null;
-
+		
+		StringBuffer sb = new StringBuffer();
+/*		
+		Matcher html = sHTMLTag.matcher(result);
+		while (html.find()) {
+			sb.append(addLinks(html.group(1), upOneLevel));
+			sb.append(html.group(2));
+		}
+		html.appendTail(sb);
+		
+		result = sb.toString();
+*/		
 		Iterator li = fEncodings.iterator();
 		while (li.hasNext()) {
 			data = (Data)li.next();
 			
-			StringBuffer sb = new StringBuffer();
+			sb = new StringBuffer();
 			Matcher m = data.getPattern().matcher(result);
 			while (m.find()) {
 				m.appendReplacement(sb, data.getLink(upOneLevel));
