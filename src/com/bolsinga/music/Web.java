@@ -764,7 +764,7 @@ public class Web {
 				    Artist performer = (Artist)bi.next();
 				    
 				    if (artist.equals(performer)) {
-					    listItem.addElement(new B(performer.getName()));
+					    listItem.addElement(performer.getName());
 				    } else {
 					    listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
 				    }
@@ -829,9 +829,8 @@ public class Web {
 			}
 			showInfo.addElement(listItem);
 			
-			B venueB = new B(venue.getName());
 			Location l = (Location)venue.getLocation();
-			showInfo.addElement(new LI().addElement(venueB.toString() + ", " + l.getCity() + ", " + l.getState()));
+			showInfo.addElement(new LI().addElement(venue.getName() + ", " + l.getCity() + ", " + l.getState()));
 			
 			String comment = show.getComment();
 			if (comment != null) {
@@ -851,7 +850,7 @@ public class Web {
 		A a = new A();
 		a.setName(show.getId());
 		a.addElement("test", Util.toString(show.getDate()));
-		showListing.addElement(new LI(new B(a)));
+		showListing.addElement(new LI(a));
 		
 		UL showInfo = new UL();
 		

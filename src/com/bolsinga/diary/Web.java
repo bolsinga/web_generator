@@ -352,7 +352,7 @@ public class Web {
 
 	public static void addBanner(String item, Table table) {
 		Div div = new Div();
-		div.addElement(new B(item));
+		div.addElement(item);
 		
 		TR tr = new TR();
 		tr.addElement(new TD(div));
