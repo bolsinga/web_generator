@@ -1,5 +1,0 @@
-<?xml version="1.0">
-
-<xml-java-binding-schema version="1.0-ea">
-	<element name="artists" type="class" root="true"/>
-</xml-java-binding-schema>

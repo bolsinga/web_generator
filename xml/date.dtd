@@ -1,4 +1,0 @@
-<!ELEMENT date EMPTY>
-<!ATTLIST date day CDATA #REQUIRED>
-<!ATTLIST date month CDATA #REQUIRED>
-<!ATTLIST date year CDATA #REQUIRED>
