@@ -110,14 +110,14 @@ public class RSS {
 
             int entryCount = com.bolsinga.web.util.Util.getSettings().getRssCount().intValue();
 
-			Vector items = new Vector(entryCount);
-			items.addAll(shows.subList(0, entryCount / 2));
-			items.addAll(entries.subList(0, entryCount / 2));
+			Vector items = new Vector(entryCount * 2);
+			items.addAll(shows.subList(0, entryCount));
+			items.addAll(entries.subList(0, entryCount));
 
 			Collections.sort(items, CHANNEL_ITEM_COMPARATOR);
 			Collections.reverse(items);
-			
-			Iterator i = items.iterator();
+            
+			Iterator i = items.subList(0, entryCount).iterator();
 			while (i.hasNext()) {
 				Object o = i.next();
 				
