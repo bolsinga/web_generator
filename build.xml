@@ -335,7 +335,7 @@
 		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
 		<sysproperty key="rss.image.width" value="36" />
 		<sysproperty key="rss.image.height" value="14" />
-		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the diary." />
+		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the latest from this web site." />
 		<sysproperty key="music.ical.url" value="Shows.ics" />
 		<sysproperty key="ical.image.url" value="http://icalshare.com/layout/iCalShare/theme-images/subscribe.gif" />
 		<sysproperty key="ical.image.width" value="14" />
