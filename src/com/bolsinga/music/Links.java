@@ -48,9 +48,6 @@ public class Links {
 		link.append("?Subject=");
 		link.append(program);
 		link.append("%20Message");
-		link.append("&Body=");
-		link.append(program);
-		link.append("%20Message%0A");
 		A a = new A(link.toString(), "Contact");
 		sb.append(a.toString());
 		sb.append(" ");
