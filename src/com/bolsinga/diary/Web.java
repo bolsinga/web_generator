@@ -351,16 +351,10 @@ public class Web {
 	}
 
 	public static void addBanner(String item, Table table) {
-		Font f = new Font();
-		f.addAttribute("color", "white");
-		f.addElement(new B(item));
-		
 		Div div = new Div();
-		div.addAttribute("align", "center");
-		div.addElement(f);
+		div.addElement(new B(item));
 		
 		TR tr = new TR();
-		tr.addAttribute("bgcolor", "black");
 		tr.addElement(new TD(div));
 		
 		table.addElement(tr);
