@@ -29,7 +29,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 
     public void add(Music music, Entry entry) {
         fCurEntry = entry;
-		getSubsection().addElement(Web.addItem(music, entry, true));
+		getContainer().addElement(Web.addItem(music, entry, true));
         fLastEntry = fCurEntry;
     }
     
