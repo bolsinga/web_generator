@@ -191,7 +191,7 @@
 		<sysproperty key="music.program" value="MusicWeb" />
 		<sysproperty key="music.builddate" value="BUILD" />
 		<sysproperty key="music.contact" value="bolsinga@hotmail.com" />
-		<sysproperty key="music.root" value="http://www.io.com/~bolsinga" />
+		<sysproperty key="music.root" value="../index.html" />
 		<arg value="${data.dir}music.xml" />
 		<arg value="/tmp/web/" />
 		<classpath refid="generate_web_classpath" />
@@ -206,7 +206,7 @@
 		<sysproperty key="diary.program" value="DiaryWeb" />
 		<sysproperty key="diary.builddate" value="BUILD" />
 		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
-		<sysproperty key="diary.root" value="http://www.io.com/~bolsinga" />
+		<sysproperty key="diary.root" value="../index.html" />
 		<arg value="3" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${data.dir}music.xml" />
