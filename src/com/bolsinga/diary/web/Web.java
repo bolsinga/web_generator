@@ -7,7 +7,6 @@ import com.bolsinga.music.data.*;
 import java.io.*;
 import java.text.*;
 import java.util.*;
-import java.util.regex.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
@@ -368,8 +367,6 @@ public class Web {
 		table.addElement(new TR().addElement(new TD(Web.encodedComment(music, entry, upOneLevel))));
 	}
 	
-	private static Pattern sCommentEncoding = Pattern.compile("\n", Pattern.DOTALL);
-	
 	private static HashMap sLinkedData = new HashMap();
 	
 	private static synchronized String encodedComment(Music music, Entry entry, boolean upOneLevel) {
@@ -379,10 +376,16 @@ public class Web {
 			// Automatically add music links to the comments.
 			String result = com.bolsinga.music.web.Web.embedLinks(music, comment, upOneLevel);
 			
-			// Convert new lines to <p>
-			result = sCommentEncoding.matcher(result).replaceAll("<p>");
+			StringBuffer tagged = new StringBuffer();
 			
-			sLinkedData.put(comment, result);
+			// Convert each line to <p> tags
+			String[] lines = result.split("\\n");
+			for (int i = 0; i < lines.length; i++) {
+				tagged.append(new P());
+				tagged.append(lines[i]);
+			}
+			
+			sLinkedData.put(comment, tagged.toString());
 		}
 		
 		return (String)sLinkedData.get(comment);

@@ -164,7 +164,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/rss/util/**" />
-		<classpath refid="jaxb_binder_classpath" />
+		<classpath refid="web_classpath" />
 	</javac>
 </target>
 

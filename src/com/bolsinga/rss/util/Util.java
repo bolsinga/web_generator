@@ -1,7 +1,8 @@
 package com.bolsinga.rss.util;
 
 import java.text.*;
-import java.util.regex.*;
+
+import org.apache.ecs.html.*;
 
 public class Util {
 	private static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
@@ -9,15 +10,16 @@ public class Util {
 	public static String getRSSDate(java.util.Date date) {
 		return sRSSDateFormat.format(date);
 	}
-
-	private static Pattern sNewlineEncoding = Pattern.compile("\n", Pattern.DOTALL);
-	
-	private static String encodeNewlines(String data) {
-		return sNewlineEncoding.matcher(data).replaceAll("<p>");
-	}
 	
 	public static String createDescription(String data) {
-		return encodeNewlines(data);
+		// Convert each line to <p> tags
+		StringBuffer tagged = new StringBuffer();
+		String[] lines = data.split("\\n");
+		for (int i = 0; i < lines.length; i++) {
+			tagged.append(new P());
+			tagged.append(lines[i]);
+		}
+		return tagged.toString();
 	}
 	
 	public static com.bolsinga.rss.data.TRssChannel.Image createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
