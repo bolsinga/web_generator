@@ -68,10 +68,12 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="title" type="xs:token" />
-			<xs:element name="performer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="performer" type="xs:IDREF" minOccurs="1" maxOccurs="unbounded" />
 			<xs:element name="composer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="producer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="releaseDate" type="date" minOccurs="0" />
+			<xs:element name="lastPlayed" type="xs:dateTime" minOccurs="0" />
+			<xs:element name="genre" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="songID" />
 		<xs:attribute name="digitized" type="xs:boolean" />
@@ -235,14 +237,14 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="timestamp" type="xs:date" minOccurs="1" maxOccurs="1" />
-			<xs:element ref="venue" maxOccurs="unbounded" />
+			<xs:element ref="venue" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="artist" maxOccurs="unbounded" />
 			<xs:element ref="label" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="relation" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="album" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="performance" maxOccurs="unbounded" />
-			<xs:element ref="show" maxOccurs="unbounded" />
+			<xs:element ref="performance" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="show" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
