@@ -3,6 +3,7 @@ package com.bolsinga.rss;
 import com.bolsinga.diary.data.*;
 import com.bolsinga.music.data.*;
 import com.bolsinga.rss.data.*;
+import com.bolsinga.settings.data.*;
 
 import java.io.*;
 import java.text.*;
@@ -18,12 +19,32 @@ public class RSS {
 
 	public static void main(String[] args) {
 		if (args.length != 4) {
-			System.out.println("Usage: RSS [# entries in RSS file] [diary.xml] [music.xml] [output.file]");
+			System.out.println("Usage: RSS [diary.xml] [music.xml] [settings.xml] [output.file]");
 			System.exit(0);
 		}
+
+        Settings settings = RSS.initializeSettings(args[2]);
 		
-		RSS.generate(Integer.parseInt(args[0]), args[1], args[2], args[3]);
+        int entryCount = settings.getRssCount().intValue();
+        
+		RSS.generate(entryCount, args[0], args[1], args[3]);
 	}
+
+    private static Settings initializeSettings(String settingsFile) {
+        Settings settings = com.bolsinga.web.util.Util.createSettings(settingsFile);
+
+        com.bolsinga.settings.data.Image image = settings.getLogoImage();
+		System.setProperty("web.logo.url", image.getLocation());
+		System.setProperty("web.logo.width", image.getWidth().toString());
+		System.setProperty("web.logo.height", image.getHeight().toString());
+		System.setProperty("web.logo.alt", image.getAlt());
+        
+		System.setProperty("rss.contact", settings.getContact());
+		System.setProperty("rss.root", settings.getRssRoot());
+		System.setProperty("rss.description", settings.getRssDescription());
+        
+        return settings;
+    }
 
 	public static void generate(int entryCount, String diaryFile, String musicFile, String outputFile) {
 		Diary diary = com.bolsinga.diary.util.Util.createDiary(diaryFile);

@@ -460,16 +460,9 @@
 <target name="generateRSS" depends="rss, jar" >
 	<mkdir dir="${output.dir}/rss/" />
 	<java classname="com.bolsinga.rss.RSS" fork="true" >
-		<sysproperty key="web.logo.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif" />
-		<sysproperty key="web.logo.width" value="120" />
-		<sysproperty key="web.logo.height" value="90" />
-		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
-		<sysproperty key="rss.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="rss.root" value="http://www.io.com/~bolsinga/" />
-		<sysproperty key="rss.description" value="Random posts and rock shows from Greg Bolsinga" />
-		<arg value="20" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${data.dir}music.xml" />
+		<arg value="${data.dir}settings.xml" />
 		<arg value="${output.dir}/rss/rss.xml" />
 		<classpath refid="generate_web_classpath" />
 	</java>
