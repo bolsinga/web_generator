@@ -34,7 +34,7 @@ public class ICal {
         String name = com.bolsinga.web.util.Util.getSettings().getIcalName();
 		
 		try {
-			File f = new File(outputDir, name + ".ics");
+			File f = new File(outputDir, "ical/" + name + ".ics");
 			File parent = new File(f.getParent());
 			if (!parent.exists()) {
 				if (!parent.mkdirs()) {

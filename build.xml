@@ -422,11 +422,11 @@
 </target>
 
 <target name="generateICal" depends="ical, jar">
-	<mkdir dir="${output.dir}/ical/" />
+	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.music.ical.ICal" fork="true">
 		<arg value="${data.dir}music.xml" />
 		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}/ical/" />
+		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
 	</java>
 </target>
