@@ -27,8 +27,9 @@ abstract class DocumentCreator {
 		fProgram = program;
 	}
 	
-	protected abstract boolean needNewDocument();
 	protected abstract String getTitle();
+
+	protected abstract boolean needNewDocument();
 	protected abstract XhtmlDocument createDocument(String title);
     
     protected boolean needNewSubsection() {
@@ -49,7 +50,7 @@ abstract class DocumentCreator {
 		}
 	}
 	
-	protected div internalGetMainDiv() {
+	protected div getMainDiv() {
 		if (needNewDocument()) {
             close();
             
@@ -59,7 +60,7 @@ abstract class DocumentCreator {
 			div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_HEADER);
 			headerDiv.addElement(new h1().addElement(title));
 			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
-			headerDiv.addElement(addWebNavigator());
+			headerDiv.addElement(fLinks.addWebNavigator(fMusic, fProgram));
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
 			
@@ -68,10 +69,10 @@ abstract class DocumentCreator {
 		return fMainDiv;
 	}
 
-    protected div internalGetSubsection() {
+    protected div getSubsection() {
         if (needNewSubsection()) {
             if (fSubsection != null) {
-                internalGetMainDiv().addElement(fSubsection);
+                getMainDiv().addElement(fSubsection);
             }
 
             fSubsection = createSubsection();
@@ -105,17 +106,13 @@ abstract class DocumentCreator {
 		}
 	}
 	
-	public String getTitle(String letter, String type) {
+	protected String getTitle(String letter, String type) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("'");
 		sb.append(letter);
 		sb.append("' ");
 		sb.append(type);
 		return sb.toString();
-	}
-	
-	protected Element addWebNavigator() {
-		return fLinks.addWebNavigator(fMusic, fProgram);
 	}
 	
 	protected void finalize() throws Throwable {
@@ -135,15 +132,15 @@ class ArtistDocumentCreator extends DocumentCreator {
 
 	public void add(Music music, Links links, Artist item) {
 		fArtist = item;
-        internalGetSubsection().addElement(Web.addItem(music, links, item));
+        getSubsection().addElement(Web.addItem(music, links, item));
     }
-	
-	protected boolean needNewDocument() {
-		return (fDocArtist == null) || (!fLinks.getPageFileName(fDocArtist).equals(fLinks.getPageFileName(fArtist)));
-	}
 	
 	protected String getTitle() {
 		return getTitle(fLinks.getPageFileName(fArtist), "Artists");
+	}
+	
+	protected boolean needNewDocument() {
+		return (fDocArtist == null) || (!fLinks.getPageFileName(fDocArtist).equals(fLinks.getPageFileName(fArtist)));
 	}
 
 	protected XhtmlDocument createDocument(String title) {
@@ -188,15 +185,15 @@ class VenueDocumentCreator extends DocumentCreator {
 
 	public void add(Music music, Links links, Venue item) {
 		fVenue = item;
-		internalGetSubsection().addElement(Web.addItem(music, links, item));
+		getSubsection().addElement(Web.addItem(music, links, item));
     }
-	
-	protected boolean needNewDocument() {
-		return (fDocVenue == null) || (!fLinks.getPageFileName(fDocVenue).equals(fLinks.getPageFileName(fVenue)));
-	}
 	
 	protected String getTitle() {
 		return getTitle(fLinks.getPageFileName(fVenue), "Venues");
+	}
+	
+	protected boolean needNewDocument() {
+		return (fDocVenue == null) || (!fLinks.getPageFileName(fDocVenue).equals(fLinks.getPageFileName(fVenue)));
 	}
 
 	protected XhtmlDocument createDocument(String title) {
@@ -241,15 +238,15 @@ class ShowDocumentCreator extends DocumentCreator {
 	
 	public void add(Music music, Show item) {
 		fShow = item;
-		internalGetSubsection().addElement(Web.addItem(music, fLinks, fShow));
-	}
-    
-	protected boolean needNewDocument() {
-		return (fDocShow == null) || (!fLinks.getPageFileName(fDocShow).equals(fLinks.getPageFileName(fShow)));
+		getSubsection().addElement(Web.addItem(music, fLinks, fShow));
 	}
 	
 	protected String getTitle() {
 		return getTitle(fLinks.getPageFileName(fShow), "Dates");
+	}
+    
+	protected boolean needNewDocument() {
+		return (fDocShow == null) || (!fLinks.getPageFileName(fDocShow).equals(fLinks.getPageFileName(fShow)));
 	}
 
 	protected XhtmlDocument createDocument(String title) {
@@ -300,15 +297,15 @@ class StatisticsCreator extends DocumentCreator {
 		fDirectory = directory;
 
 		// On stats pages, this is the only div containing the table.
-		internalGetMainDiv().addElement(t);
+		getMainDiv().addElement(t);
     }
-
-	protected boolean needNewDocument() {
-		return true;
-	}
 	
 	protected String getTitle() {
 		return fTitle;
+	}
+
+	protected boolean needNewDocument() {
+		return true;
 	}
 
 	protected XhtmlDocument createDocument(String title) {
@@ -376,15 +373,15 @@ class TracksDocumentCreator extends DocumentCreator {
 	
 	public void add(Music music, Links links, Album item) {
 		fAlbum = item;
-        internalGetMainDiv().addElement(Web.addItem(music, links, item));
+        getMainDiv().addElement(Web.addItem(music, links, item));
     }
-	
-	protected boolean needNewDocument() {
-		return (fDocAlbum == null) || (!fLinks.getPageFileName(fDocAlbum).equals(fLinks.getPageFileName(fAlbum)));
-	}
 	
 	protected String getTitle() {
 		return getTitle(fLinks.getPageFileName(fAlbum), "Tracks");
+	}
+	
+	protected boolean needNewDocument() {
+		return (fDocAlbum == null) || (!fLinks.getPageFileName(fDocAlbum).equals(fLinks.getPageFileName(fAlbum)));
 	}
 
 	protected XhtmlDocument createDocument(String title) {
