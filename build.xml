@@ -420,4 +420,6 @@
 
 <target name="generateAll" depends="generateXML, generateWeb, generateRSS, generateICal" />
 
+<target name="generateDiary" depends="music, generateDiaryXML, generateDiaryWeb, generateRSS" />
+
 </project>
