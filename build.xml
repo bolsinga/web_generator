@@ -370,7 +370,7 @@
 
 <target name="generateWeb" depends="music, generateMusicWeb, generateDiaryWeb" />
 
-<target name="generateRSS" depends="music, generateDiaryRSS" />
+<target name="generateRSS" depends="music, generateMusicRSS, generateDiaryRSS" />
 
 <target name="generateAll" depends="generateXML, generateWeb, generateRSS, generateICal" />
 
