@@ -190,7 +190,7 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com/bolsinga/plist/util/**" />
+                <include name="com/bolsinga/plist/**" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>

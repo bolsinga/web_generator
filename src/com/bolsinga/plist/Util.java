@@ -1,4 +1,4 @@
-package com.bolsinga.plist.util;
+package com.bolsinga.plist;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

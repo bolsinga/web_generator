@@ -7,7 +7,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import com.bolsinga.plist.util.*;
+import com.bolsinga.plist.*;
 import com.bolsinga.music.data.*;
 
 public class ITunes {
