@@ -19,7 +19,7 @@
 
 <xs:element name="static" type="xs:string" />
 <xs:element name="header" type="xs:string" />
-<xs:element name="links" type="xs:string" />
+<xs:element name="friends" type="xs:string" />
 <xs:element name="title" type="xs:string" />
 
 <!-- Define Diary -->
@@ -29,7 +29,7 @@
 			<xs:element ref="title" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="static" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="header" minOccurs="1" maxOccurs="1" />
-			<xs:element ref="links" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="friends" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="entry" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>

@@ -48,14 +48,14 @@ abstract class DocumentCreator {
 			String title = getTitle();
 			fDocument = createDocument(title);
 			
-			Div headerDiv = com.bolsinga.web.util.Util.createDiv(CSS.MUSIC_HEADER);
+			Div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_HEADER);
 			headerDiv.addElement(new H1().addElement(title));
 			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
 			headerDiv.addElement(addWebNavigator());
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
 			
-			fMainDiv = com.bolsinga.web.util.Util.createDiv(CSS.MUSIC_MAIN);
+			fMainDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MAIN);
 		}
 		return fMainDiv;
 	}
@@ -93,7 +93,7 @@ abstract class DocumentCreator {
 	}
 	
 	protected Element addWebNavigator() {
-		return com.bolsinga.web.util.Util.createDiv(CSS.MUSIC_MENU).addElement(fLinks.addWebNavigator(fMusic, fProgram));
+		return com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MENU).addElement(fLinks.addWebNavigator(fMusic, fProgram));
 	}
 	
 	protected void finalize() throws Throwable {
@@ -203,7 +203,7 @@ class ShowDocumentCreator extends DocumentCreator {
 			}
 			
 			fDate = d;
-			fMonthDiv = com.bolsinga.web.util.Util.createDiv(CSS.SHOW_MONTH);
+			fMonthDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_MONTH);
 			
 			fMonthDiv.addElement(new H2().addElement(month));
 		}
@@ -316,7 +316,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
 	}
 
 	protected Element addIndexNavigator() {
-		Div div = com.bolsinga.web.util.Util.createDiv(CSS.TRACKS_MENU);
+		Div div = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.TRACKS_MENU);
 		
 		div.addElement("View: ");
 		if (fTracksStats) {
@@ -647,9 +647,9 @@ public class Web {
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 		Collections.reverse(items);
 		
-		Div previewDiv = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_MAIN);
+		Div previewDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.PREVIEW_MAIN);
 		
-		Div previewMenu = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_MENU);
+		Div previewMenu = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.PREVIEW_MENU);
 		previewMenu.addElement(com.bolsinga.web.util.Util.getLogo());
 				
 		StringBuffer sb = new StringBuffer();
@@ -701,7 +701,7 @@ public class Web {
 		
 		previewDiv.addElement(previewMenu);
 		
-		Div previewRecent = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_RECENT);
+		Div previewRecent = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.PREVIEW_RECENT);
 		
 		sb = new StringBuffer();
 		sb.append("Last ");
@@ -712,7 +712,7 @@ public class Web {
 		for (int i = 0; i < lastShowsCount; i++) {
 			item = (Show)items.get(i);
 			
-			Div previewShow = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_SHOW);
+			Div previewShow = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.PREVIEW_SHOW);
 			
 			previewShow.addElement(new H4(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(item), Util.toString(item.getDate()))));
 			previewShow.addElement(getShowListing(links, item));
@@ -741,7 +741,7 @@ public class Web {
 	}
 	
 	public static Div addItem(Music music, Links links, Artist artist) {
-		Div artistDiv = com.bolsinga.web.util.Util.createDiv(CSS.ARTIST_ITEM);
+		Div artistDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_ITEM);
 		
 		A a = new A(); // named target
 		a.setName(artist.getId());
@@ -765,7 +765,7 @@ public class Web {
 
 				String showLink = links.getLinkTo(show);
 			    
-				Div showDiv = com.bolsinga.web.util.Util.createDiv(CSS.ARTIST_SHOW);
+				Div showDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_SHOW);
 				
 			    showDiv.addElement(new H3().addElement(com.bolsinga.web.util.Util.createInternalA(showLink, Util.toString(show.getDate()))));
 			    
@@ -808,7 +808,7 @@ public class Web {
 	}
 	
 	public static Div addItem(Music music, Links links, Venue venue) {
-		Div venueDiv = com.bolsinga.web.util.Util.createDiv(CSS.VENUE_ITEM);
+		Div venueDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_ITEM);
 		
 		A a = new A(); // named target
 		a.setName(venue.getId());
@@ -827,7 +827,7 @@ public class Web {
 			
 			String showLink = links.getLinkTo(show);
 			
-			Div showDiv = com.bolsinga.web.util.Util.createDiv(CSS.VENUE_SHOW);
+			Div showDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_SHOW);
 			
 			showDiv.addElement(new H3().addElement(com.bolsinga.web.util.Util.createInternalA(showLink, Util.toString(show.getDate()))));
 			
@@ -887,7 +887,7 @@ public class Web {
 	}
 	
 	public static Div addItem(Music music, Links links, Show show) {
-		Div showDiv = com.bolsinga.web.util.Util.createDiv(CSS.SHOW_ITEM);
+		Div showDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_ITEM);
 		
 		A a = new A(); // named target
 		a.setName(show.getId());
@@ -898,14 +898,14 @@ public class Web {
 
 		String comment = show.getComment();
 		if (comment != null) {
-			showDiv.addElement(com.bolsinga.web.util.Util.createDiv(CSS.SHOW_COMMENT).addElement(getLinkedData(music, comment, true)));
+			showDiv.addElement(com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_COMMENT).addElement(getLinkedData(music, comment, true)));
 		}
 		
 		return showDiv;
 	}
 
 	public static Div addItem(Music music, Links links, Album album) {
-		Div albumDiv = com.bolsinga.web.util.Util.createDiv(CSS.TRACKS_ITEM);
+		Div albumDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.TRACKS_ITEM);
 		
 		StringBuffer sb;
 		Artist artist = null;
@@ -965,7 +965,7 @@ public class Web {
 	}
 	
 	public static Div addRelations(Music music, Links links, Artist artist) {
-		Div relDiv = com.bolsinga.web.util.Util.createDiv(CSS.ARTIST_RELATION);
+		Div relDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_RELATION);
 			
 		relDiv.addElement(new H3().addElement("See Also"));
 		
@@ -985,7 +985,7 @@ public class Web {
 	}
 	
 	public static Div addRelations(Music music, Links links, Venue venue) {
-		Div relDiv = com.bolsinga.web.util.Util.createDiv(CSS.VENUE_RELATION);
+		Div relDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_RELATION);
 
 		relDiv.addElement(new H3().addElement("See Also"));
 		
@@ -1005,7 +1005,7 @@ public class Web {
 	}
 
 	public static Div addTracks(Music music, Links links, Artist artist) {
-		Div albumsDiv = com.bolsinga.web.util.Util.createDiv(CSS.ARTIST_TRACKS);
+		Div albumsDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_TRACKS);
 			
 		albumsDiv.addElement(new H3().addElement("Albums"));
 		
@@ -1030,7 +1030,7 @@ public class Web {
 	}
 	
 	public static Element addIndexNavigator(Music music, Links links, Artist artist) {
-		Div div = com.bolsinga.web.util.Util.createDiv(CSS.ARTIST_INDEX);
+		Div div = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_INDEX);
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getArtist().iterator();
@@ -1056,7 +1056,7 @@ public class Web {
 	}
 	
 	public static Element addIndexNavigator(Music music, Links links, Venue venue) {
-		Div div = com.bolsinga.web.util.Util.createDiv(CSS.VENUE_INDEX);
+		Div div = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_INDEX);
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getVenue().iterator();
@@ -1083,7 +1083,7 @@ public class Web {
 	}
 
 	public static Element addIndexNavigator(Music music, Links links, Album album) {
-		Div div = com.bolsinga.web.util.Util.createDiv(CSS.TRACKS_INDEX);
+		Div div = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.TRACKS_INDEX);
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getAlbum().iterator();
@@ -1153,7 +1153,7 @@ public class Web {
 	}
 	
 	public static Element addIndexNavigator(Music music, Links links, Show show) {
-		Div div = com.bolsinga.web.util.Util.createDiv(CSS.SHOW_INDEX);
+		Div div = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_INDEX);
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getShow().iterator();

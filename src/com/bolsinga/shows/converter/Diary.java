@@ -81,7 +81,7 @@ public class Diary {
 			} else if (oldStatic.getLocation().equalsIgnoreCase("header")) {
 				diary.setHeader(oldStatic.getData());
 			} else if (oldStatic.getLocation().equalsIgnoreCase("links")) {
-				diary.setLinks(oldStatic.getData());
+				diary.setFriends(oldStatic.getData());
 			}
 		}
 	}

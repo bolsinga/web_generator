@@ -36,14 +36,14 @@ class DiaryDocumentCreator {
 			fDocument = Web.createDocument(title, fLinks);
 			fEntry = entry;
 
-			Div headerDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_HEADER);
+			Div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_HEADER);
 			headerDiv.addElement(new H1().addElement(title));
 			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
 			headerDiv.addElement(addWebNavigator(fProgram, fLinks));
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
 			
-			fMainDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_MAIN);
+			fMainDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_MAIN);
 		}
 		return fMainDiv;
 	}
@@ -93,7 +93,7 @@ class DiaryDocumentCreator {
 	}
 
 	private Element addIndexNavigator() {
-		Div div = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_INDEX);
+		Div div = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_INDEX);
 
 		java.util.Map m = new TreeMap();
 		Iterator li = fDiary.getEntry().iterator();
@@ -121,7 +121,7 @@ class DiaryDocumentCreator {
 	}
 	
 	private Element addWebNavigator(String program, Links links) {
-		Div div = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_MENU);
+		Div div = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_MENU);
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -187,18 +187,16 @@ public class Web {
 
 		Document doc = createDocument(diary.getTitle(), links);
 
-		Div mainCol1 = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_COL1);
-		mainCol1.addElement(diary.getStatic());
-		doc.getBody().addElement(mainCol1);
+		doc.getBody().addElement(generateColumn1(diary));
 		
-		Div main = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_MAIN);
-		Div header = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_HEADER);
+		Div main = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_MAIN);
+		Div header = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_HEADER);
 		header.addElement(diary.getHeader());
 		main.addElement(header);
 		main.addElement(generateDiary(music, diary, links, mainPageEntryCount));
 		doc.getBody().addElement(main);
 		
-		Div mainCol2 = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_COL2);
+		Div mainCol2 = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_COL2);
 		mainCol2.addElement(com.bolsinga.music.web.Web.generatePreview(music, 5));
 		doc.getBody().addElement(mainCol2);
 		
@@ -220,6 +218,13 @@ public class Web {
 		}
 	}
 
+	private static Div generateColumn1(Diary diary) {
+		Div mainCol1 = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_COL1);
+		mainCol1.addElement(diary.getStatic());
+		mainCol1.addElement(diary.getFriends());
+		return mainCol1;
+	}
+	
 	private static String getCopyright() {
 		StringBuffer cp = new StringBuffer();
 		
@@ -291,7 +296,7 @@ public class Web {
 		List items = diary.getEntry();
 		Entry item = null;
 
-		Div diaryDiv = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_DIARY);
+		Div diaryDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_DIARY);
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("Updated ");
@@ -341,7 +346,7 @@ public class Web {
 	}
 
 	public static void addItem(Music music, Entry entry, Div mainDiv, boolean upOneLevel, boolean cacheEncoding) {
-		Div diaryDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_ENTRY);
+		Div diaryDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_ENTRY);
 		
 		A a = new A(); // named target
 		a.setName(entry.getId());
