@@ -10,8 +10,6 @@
 <property name="data.dir" value="../data/" />
 <property name="output.dir" value="/tmp/web" />
 
-<property name="music.no_embedded_links" value="false" />
-
 <property name="src.dir" value="src" />
 <property name="lib.dir" value="lib" />
 <property name="dist.dir" value="dist" />
@@ -446,7 +444,6 @@
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="web.layout.css" value="layout.css" />
 		<sysproperty key="music.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
 		<sysproperty key="rss.url" value="rss.xml" />
 		<sysproperty key="music.ical.url" value="Shows.ics" />
 		<sysproperty key="ical.image.url" value="http://icalshare.com/layout/iCalShare/theme-images/subscribe.gif" />
@@ -469,7 +466,6 @@
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="web.layout.css" value="layout.css" />
 		<sysproperty key="diary.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
 		<sysproperty key="rss.url" value="rss.xml" />
 		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
 		<sysproperty key="rss.image.width" value="36" />
@@ -498,7 +494,6 @@
 		<sysproperty key="rss.contact" value="bolsinga@gmail.com" />
 		<sysproperty key="rss.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="rss.description" value="Random posts and rock shows from Greg Bolsinga" />
-		<sysproperty key="music.no_embedded_links" value="true" />
 		<arg value="20" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${data.dir}music.xml" />
