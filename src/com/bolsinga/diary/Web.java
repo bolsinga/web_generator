@@ -30,7 +30,7 @@ class DiaryDocumentCreator {
 		if (needNewDocument(entry)) {
 			close();
 			
-			fDocument = createDocument(entry);
+			fDocument = Web.createDocument(getTitle(entry));
 			fEntry = entry;
 
 			addHeader();
@@ -91,22 +91,7 @@ class DiaryDocumentCreator {
 		sb.append(" Archives");
 		return sb.toString();
 	}
-	
-	private Document createDocument(Entry entry) {
-		Document d = new Document();
-		d.appendTitle(getTitle(entry));
-		d.getHtml().setPrettyPrint(true);
 		
-		Head h = d.getHead();
-		h.addElement(new Link().setRel("SHORTCUT ICON").setHref("http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico"));
-		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
-		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
-		h.addElement(new Meta().setContent(getGenerator()).setName("Generator"));
-		h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
-				
-		return d;
-	}
-	
 	private void writeDocument() {
 		fDocument.getBody().addElement(new P());
 		fDocument.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0).addElement(fTBody));
@@ -128,42 +113,6 @@ class DiaryDocumentCreator {
 			ioe.printStackTrace();
 			System.exit(1);
 		}
-	}
-
-	private static String getCopyright() {
-		StringBuffer cp = new StringBuffer();
-		
-		int year = 2003; // This is the first year of this data.
-		int cur_year = Calendar.getInstance().get(Calendar.YEAR);
-		
-		cp.append("Copyright (c) ");
-		cp.append(year++);
-		for ( ; year <= cur_year; ++year) {
-			cp.append(", ");
-			cp.append(year);
-		}
-		
-		cp.append(" Greg Bolsinga");
-		
-		return cp.toString();
-	}
-	
-	private static String getGenerator() {
-		StringBuffer sb = new StringBuffer();
-		
-		sb.append(System.getProperty("diary.program"));
-		
-		sb.append(" (built: ");
-		sb.append(System.getProperty("diary.builddate"));
-		sb.append(" running on jdk ");
-		sb.append(System.getProperty("java.runtime.version"));
-		sb.append(" - ");
-		sb.append(System.getProperty("os.name"));
-		sb.append(" ");
-		sb.append(System.getProperty("os.version"));
-		sb.append(")");
-		
-		return sb.toString();
 	}
 	
 	private void addHeader() {
@@ -264,6 +213,98 @@ public class Web {
 	};
 	
 	public static void generateMainPage(int mainPageEntryCount, Diary diary, String outputDir) {
+		Document doc = createDocument("title");
+		
+		generateLeft(diary, doc);
+		
+		generateHeader(diary, doc);
+		
+		generateDiary(diary, mainPageEntryCount, doc);
+		
+		generateMusic(diary, doc);
+		
+		try {
+			File f = new File(outputDir, "index.html");
+			File parent = new File(f.getParent());
+			if (!parent.exists()) {
+				if (!parent.mkdirs()) {
+					System.out.println("Can't: " + parent.getAbsolutePath());
+				}
+			}
+			OutputStream os = new FileOutputStream(f);
+			doc.output(os);
+			os.close();
+		} catch (IOException ioe) {
+			System.err.println("Exception: " + ioe);
+			ioe.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+	private static String getCopyright() {
+		StringBuffer cp = new StringBuffer();
+		
+		int year = 2003; // This is the first year of this data.
+		int cur_year = Calendar.getInstance().get(Calendar.YEAR);
+		
+		cp.append("Copyright (c) ");
+		cp.append(year++);
+		for ( ; year <= cur_year; ++year) {
+			cp.append(", ");
+			cp.append(year);
+		}
+		
+		cp.append(" Greg Bolsinga");
+		
+		return cp.toString();
+	}
+	
+	private static String getGenerator() {
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append(System.getProperty("diary.program"));
+		
+		sb.append(" (built: ");
+		sb.append(System.getProperty("diary.builddate"));
+		sb.append(" running on jdk ");
+		sb.append(System.getProperty("java.runtime.version"));
+		sb.append(" - ");
+		sb.append(System.getProperty("os.name"));
+		sb.append(" ");
+		sb.append(System.getProperty("os.version"));
+		sb.append(")");
+		
+		return sb.toString();
+	}
+	
+	public static Document createDocument(String title) {
+		Document d = new Document();
+		d.appendTitle(title);
+		d.getHtml().setPrettyPrint(true);
+		
+		Head h = d.getHead();
+		h.addElement(new Link().setRel("SHORTCUT ICON").setHref("http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico"));
+		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
+		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
+		h.addElement(new Meta().setContent(getGenerator()).setName("Generator"));
+		h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
+				
+		return d;
+	}
+	
+	private static void generateLeft(Diary diary, Document doc) {
+
+	}
+	
+	private static void generateHeader(Diary diary, Document doc) {
+	
+	}
+	
+	private static void generateDiary(Diary diary, int mainPageEntryCount, Document doc) {
+	
+	}
+	
+	private static void generateMusic(Diary diary, Document doc) {
 	
 	}
 	
