@@ -311,13 +311,14 @@ public class Web {
 	}
 	
 	public static Document createDocument(String title) {
-		Document d = new Document();
+		Document d = new Document(ECSDefaults.getDefaultCodeset());
 
-        d.setDoctype(new org.apache.ecs.Doctype.Html40Transitional());
+        d.setDoctype(new org.apache.ecs.Doctype.Html401Transitional());
 		d.appendTitle(title);
 		d.getHtml().setPrettyPrint(true);
 		
 		Head h = d.getHead();
+		h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
 		h.addElement(new Link().setRel("SHORTCUT ICON").setHref("http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico"));
 		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
