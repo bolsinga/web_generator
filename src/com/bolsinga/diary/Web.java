@@ -92,11 +92,11 @@ class DiaryDocumentCreator {
 	}
 	
 	private void addHeader() {
-		fDocument.getBody().addElement(new Center(com.bolsinga.web.util.Util.getLogo()));
+		fDocument.getBody().addElement(new Div().addElement(com.bolsinga.web.util.Util.getLogo()));
 	}
 
 	private void addIndexNavigator() {
-		Center c = new Center();
+		Div div = new Div();
 
 		java.util.Map m = new TreeMap();
 		Iterator li = fDiary.getEntry().iterator();
@@ -112,19 +112,19 @@ class DiaryDocumentCreator {
 		while (li.hasNext()) {
 			String a = (String)li.next();
 			if (a.equals(fLinks.getPageFileName(fEntry))) {
-				c.addElement(a + " ");
+				div.addElement(a + " ");
 			} else {
-				c.addElement(new A((String)m.get(a), a).toString() + " ");
+				div.addElement(new A((String)m.get(a), a).toString() + " ");
 			}
 		}
 		
-		c.addElement(fLinks.getRSSLink());
+		div.addElement(fLinks.getRSSLink());
 		
-		fDocument.getBody().addElement(c);
+		fDocument.getBody().addElement(div);
 	}
 	
 	private void addWebNavigator(String program) {
-		Center c = new Center();
+		Div div = new Div();
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -149,9 +149,9 @@ class DiaryDocumentCreator {
 		sb.append(a.toString());
 		sb.append(" ");
 
-		c.addElement(sb.toString());
+		div.addElement(sb.toString());
 		
-		fDocument.getBody().addElement(c);
+		fDocument.getBody().addElement(div);
 	}
 }
 
@@ -208,8 +208,8 @@ public class Web {
 		sb.append("Updated ");
 		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append("!");
-		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
-		td.addElement(new Center(links.getRSSLink()).addElement(new P()));
+		td.addElement(new Div().addElement(diary.getHeader()).addElement(sb.toString()));
+		td.addElement(new Div().addElement(links.getRSSLink()).addElement(new P()));
 		
 		generateDiary(music, diary, links, mainPageEntryCount, td);
 		tr.addElement(td);

@@ -82,7 +82,7 @@ abstract class DocumentCreator {
 	}
 	
 	private void addHeader() {
-		fDocument.getBody().addElement(new Center(com.bolsinga.web.util.Util.getLogo()));
+		fDocument.getBody().addElement(new Div().addElement(com.bolsinga.web.util.Util.getLogo()));
 	}
 	
 	protected void addWebNavigator() {
@@ -175,7 +175,7 @@ class ShowDocumentCreator extends DocumentCreator {
 			Body b = doc.getBody();
 
 			b.addElement(new HR());
-			b.addElement(new Center().addElement(new Big().addElement(Util.toMonth(d))));
+			b.addElement(new Div().addElement(new Big().addElement(Util.toMonth(d))));
 			
 			fDate = d;
 		}
@@ -266,18 +266,18 @@ class TracksStatisticsCreator extends StatisticsCreator {
 	}
 
 	protected void addIndexNavigator() {
-		Center c = new Center();
+		Div div = new Div();
 		
-		c.addElement("View: ");
+		div.addElement("View: ");
 		if (fTracksStats) {
-			c.addElement("Tracks" + " ");
-			c.addElement(fLinks.getAlbumsLink());
+			div.addElement("Tracks" + " ");
+			div.addElement(fLinks.getAlbumsLink());
 		} else {
-			c.addElement(fLinks.getTracksLink() + " ");
-			c.addElement("Albums");
+			div.addElement(fLinks.getTracksLink() + " ");
+			div.addElement("Albums");
 		}
 		
-		fDocument.getBody().addElement(c);
+		fDocument.getBody().addElement(div);
 	}
 }
 
@@ -379,7 +379,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Artist Statistics", Links.ARTIST_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
+		stats.getDocument("Artist Statistics", Links.ARTIST_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
 		stats.close();
 	}
 	
@@ -415,7 +415,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Venue Statistics", Links.VENUE_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
+		stats.getDocument("Venue Statistics", Links.VENUE_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
 		stats.close();
 	}
 	
@@ -461,7 +461,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Show Statistics", Links.SHOW_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Year", "Year")));
+		stats.getDocument("Show Statistics", Links.SHOW_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Shows by Year", "Year")));
 		stats.close();
 	}
 	
@@ -512,7 +512,7 @@ public class Web {
 		}
 		
 		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		creator.getDocument("City Statistics", Links.CITIES_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
+		creator.getDocument("City Statistics", Links.CITIES_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
 	}
 
@@ -551,7 +551,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Tracks Statistics", Links.TRACKS_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Tracks by Artist", "Artist")));
+		stats.getDocument("Tracks Statistics", Links.TRACKS_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Tracks by Artist", "Artist")));
 		stats.close();
 
 		items = music.getArtist();
@@ -571,7 +571,7 @@ public class Web {
 		}
 
 		stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, sResource.getString("program"));
-		stats.getDocument("Album Statistics", Links.TRACKS_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Albums by Artist", "Artist")));
+		stats.getDocument("Album Statistics", Links.TRACKS_DIR).getBody().addElement(new Div().addElement(makeTable(names, values, "Albums by Artist", "Artist")));
 		stats.close();
 	}
 	
@@ -738,7 +738,7 @@ public class Web {
 		A a = new A();
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
-		b.addElement(new Center().addElement(new Big().addElement(a)));
+		b.addElement(new Div().addElement(new Big().addElement(a)));
 				
 		addTracks(music, links, artist, doc);
 		
@@ -799,7 +799,7 @@ public class Web {
 		A a = new A();
 		a.setName(venue.getId());
 		a.addElement("test", venue.getName());
-		b.addElement(new Center().addElement(new Big().addElement(a)));
+		b.addElement(new Div().addElement(new Big().addElement(a)));
 		
 		addRelations(music, links, venue, doc);
 
@@ -911,7 +911,7 @@ public class Web {
 			sb.append(")");
 		}
 		
-		b.addElement(new Center().addElement(new Big().addElement(sb.toString())));
+		b.addElement(new Div().addElement(new Big().addElement(sb.toString())));
 		
 		OL albumListing = new OL();
 
@@ -1020,7 +1020,7 @@ public class Web {
 	}
 	
 	public static void addIndexNavigator(Music music, Links links, Artist artist, Document doc) {
-		Center c = new Center();
+		Div div = new Div();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getArtist().iterator();
@@ -1036,17 +1036,17 @@ public class Web {
 		while (li.hasNext()) {
 			String a = (String)li.next();
 			if (a.equals(links.getPageFileName(artist))) {
-				c.addElement(a + " ");
+				div.addElement(a + " ");
 			} else {
-				c.addElement(new A((String)m.get(a), a).toString() + " ");
+				div.addElement(new A((String)m.get(a), a).toString() + " ");
 			}
 		}
 		
-		doc.getBody().addElement(c);
+		doc.getBody().addElement(div);
 	}
 	
 	public static void addIndexNavigator(Music music, Links links, Venue venue, Document doc) {
-		Center c = new Center();
+		Div div = new Div();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getVenue().iterator();
@@ -1063,17 +1063,17 @@ public class Web {
 			String v = (String)li.next();
 			String l = " " + v + " ";
 			if (v.equals(links.getPageFileName(venue))) {
-				c.addElement(l);
+				div.addElement(l);
 			} else {
-				c.addElement(new A((String)m.get(v), l));
+				div.addElement(new A((String)m.get(v), l));
 			}
 		}
 		
-		doc.getBody().addElement(c);
+		doc.getBody().addElement(div);
 	}
 
 	public static void addIndexNavigator(Music music, Links links, Album album, Document doc) {
-		Center c = new Center();
+		Div div = new Div();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getAlbum().iterator();
@@ -1090,13 +1090,13 @@ public class Web {
 			String a = (String)li.next();
 			String l = " " + a + " ";
 			if (a.equals(links.getPageFileName(album))) {
-				c.addElement(l);
+				div.addElement(l);
 			} else {
-				c.addElement(new A((String)m.get(a), l));
+				div.addElement(new A((String)m.get(a), l));
 			}
 		}
 		
-		doc.getBody().addElement(c);
+		doc.getBody().addElement(div);
 	}
 	
 	public static Table makeTable(String[] names, int[] values, String caption, String header) {
@@ -1137,7 +1137,7 @@ public class Web {
 	}
 	
 	public static void addIndexNavigator(Music music, Links links, Show show, Document doc) {
-		Center c = new Center();
+		Div div = new Div();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getShow().iterator();
@@ -1154,15 +1154,15 @@ public class Web {
 			String s = (String)li.next();
 			String l = " " + s + " ";
 			if (s.equals(links.getPageFileName(show))) {
-				c.addElement(l);
+				div.addElement(l);
 			} else {
-				c.addElement(new A((String)m.get(s), l));
+				div.addElement(new A((String)m.get(s), l));
 			}
 		}
 		
-		c.addElement(links.getICalLink());
+		div.addElement(links.getICalLink());
 		
-		doc.getBody().addElement(c);
+		doc.getBody().addElement(div);
 	}
 
 	private static String getCopyright() {
