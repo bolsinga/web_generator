@@ -26,6 +26,27 @@ public class ICal {
 	}
 	
 	public static void generateICal(Music music, String outputDir) {
+		OutputStreamWriter w = null;
+		
+		try {
+			File f = new File(outputDir, "Shows.ics");
+			File parent = new File(f.getParent());
+			if (!parent.exists()) {
+				if (!parent.mkdirs()) {
+					System.out.println("Can't: " + parent.getAbsolutePath());
+				}
+			}
+			w = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+		} catch (IOException ioe) {
+			System.err.println("Exception: " + ioe);
+			ioe.printStackTrace();
+			System.exit(1);
+		}
+		
+		generateICal(music, w);
+	}
+	
+	public static void generateICal(Music music, Writer w) {
 		List items = music.getShow();
 		Show item = null;
 		
@@ -42,23 +63,7 @@ public class ICal {
 			}
 		}
 		
-		try {
-			File f = new File(outputDir, "Shows.ics");
-			File parent = new File(f.getParent());
-			if (!parent.exists()) {
-				if (!parent.mkdirs()) {
-					System.out.println("Can't: " + parent.getAbsolutePath());
-				}
-			}
-			OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
-			cal.output(os);
-			os.flush();
-			os.close();
-		} catch (IOException ioe) {
-			System.err.println("Exception: " + ioe);
-			ioe.printStackTrace();
-			System.exit(1);
-		}
+		cal.output(w);
 	}
 	
 	public static void addItem(Show show, VCalendar calendar) {
