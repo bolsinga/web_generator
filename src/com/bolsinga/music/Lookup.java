@@ -8,12 +8,12 @@ public class Lookup {
 
     private static Lookup sLookup = null;
         
-    private HashMap fArtistMap = new HashMap();
-    private HashMap fVenueMap = new HashMap();
-    private HashMap fCityMap = new HashMap();
+    private HashMap fArtistMap         = new HashMap();
+    private HashMap fVenueMap          = new HashMap();
+    private HashMap fCityMap           = new HashMap();
     private HashMap fArtistRelationMap = new HashMap();
-    private HashMap fVenueRelationMap = new HashMap();
-    private HashMap fLabelRelationMap = new HashMap();
+    private HashMap fVenueRelationMap  = new HashMap();
+    private HashMap fLabelRelationMap  = new HashMap();
         
     public synchronized static Lookup getLookup(Music music) {
         if (sLookup == null) {

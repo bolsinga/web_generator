@@ -14,8 +14,8 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 abstract class MusicDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
-    Music fMusic = null;
-    Links fLinks = null;
+    Music  fMusic   = null;
+    Links  fLinks   = null;
     String fProgram = null;
     
     protected MusicDocumentCreator(Music music, Links links, String outputDir, String program) {
@@ -40,8 +40,8 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.util.MultiDocumentC
 }
 
 abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
-    Music fMusic = null;
-    Links fLinks = null;
+    Music  fMusic   = null;
+    Links  fLinks   = null;
     String fProgram = null;
 
     protected SingleSectionMusicDocumentCreator(Music music, Links links, String outputDir, String program) {
@@ -67,7 +67,7 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.util.D
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
     Artist fLastArtist = null;
-    Artist fCurArtist = null;
+    Artist fCurArtist  = null;
         
     public ArtistDocumentCreator(Music music, Links links, String outputDir, String program) {
         super(music, links, outputDir, program);
@@ -114,7 +114,7 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
 
 class VenueDocumentCreator extends MusicDocumentCreator {
     Venue fLastVenue = null;
-    Venue fCurVenue = null;
+    Venue fCurVenue  = null;
         
     public VenueDocumentCreator(Music music, Links links, String outputDir, String program) {
         super(music, links, outputDir, program);
@@ -161,7 +161,7 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 
 class ShowDocumentCreator extends MusicDocumentCreator {
     Show fLastShow = null;
-    Show fCurShow = null;
+    Show fCurShow  = null;
     
     public ShowDocumentCreator(Music music, Links links, String outputDir, String program) {
         super(music, links, outputDir, program);
@@ -208,11 +208,10 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 }
 
 class StatisticsCreator extends SingleSectionMusicDocumentCreator {
-    String fFileName = null;
-    String fTitle = null;
+    String fFileName  = null;
+    String fTitle     = null;
     String fDirectory = null;
-    
-    table fCurTable = null;
+    table  fCurTable  = null;
 
     public StatisticsCreator(Music music, Links links, String outputDir, String program, String filename, String title, String directory) {
         super(music, links, outputDir, program);
@@ -294,7 +293,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
 
 class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
     Album fLastAlbum = null;
-    Album fCurAlbum = null;
+    Album fCurAlbum  = null;
         
     public TracksDocumentCreator(Music music, Links links, String outputDir, String program) {
         super(music, links, outputDir, program);

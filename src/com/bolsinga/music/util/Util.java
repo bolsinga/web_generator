@@ -10,8 +10,8 @@ import javax.xml.bind.Unmarshaller;
 
 public class Util {
 
-    private static DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
-    public static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
+    private static DateFormat sMonthFormat      = new SimpleDateFormat("MMMM");
+    public  static DateFormat sWebFormat        = new SimpleDateFormat("M/d/yyyy");
     private static DecimalFormat sPercentFormat = new DecimalFormat("##.##");
         
     public static Calendar toCalendar(com.bolsinga.music.data.Date date) {

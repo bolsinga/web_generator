@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 public class Util {
-    public static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
+    public  static DateFormat sWebFormat   = new SimpleDateFormat("M/d/yyyy");
     private static DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
 
     public static final Comparator ENTRY_COMPARATOR = new Comparator() {

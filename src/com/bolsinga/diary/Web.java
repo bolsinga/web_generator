@@ -14,12 +14,12 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
-    Diary fDiary = null;
-    Music fMusic = null;
-    Links fLinks = null;
-    String fProgram = null;
-    Entry fCurEntry = null;
-    Entry fLastEntry = null;
+    Diary  fDiary     = null;
+    Music  fMusic     = null;
+    Links  fLinks     = null;
+    String fProgram   = null;
+    Entry  fCurEntry  = null;
+    Entry  fLastEntry = null;
         
     public DiaryDocumentCreator(Diary diary, Music music, Links links, String outputDir, String program) {
         super(outputDir);
