@@ -96,7 +96,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 			}
 		}
 		
-		list.addElement(fLinks.getRSSLink());
+		list.addElement(new li(fLinks.getRSSLink()));
 		
 		d.addElement(list);
 		
