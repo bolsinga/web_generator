@@ -1,6 +1,7 @@
 package com.bolsinga.music.web;
 
 import com.bolsinga.music.data.*;
+import com.bolsinga.music.util.*;
 
 import java.io.*;
 import java.math.*;
@@ -103,9 +104,13 @@ public class Web {
 			name = artist.getName();
 		}
 		
+		String file = Compare.simplify(name).substring(0, 1).toUpperCase();
+		if (file.matches("\\W")) {
+			file = "other";
+		}
 		link.append(Web.ARTIST_DIR);
 		link.append("/");
-		link.append(name.substring(0, 1).toUpperCase());
+		link.append(file);
 		link.append(Web.HTML_EXT);
 		link.append("#");
 		link.append(artist.getId());
@@ -116,7 +121,7 @@ public class Web {
 	public static String getLinkTo(Venue venue) {
 		StringBuffer link = new StringBuffer();
 		
-		String name = venue.getName();
+		String name = Compare.simplify(venue.getName());
 		
 		link.append(Web.VENUE_DIR);
 		link.append("/");
