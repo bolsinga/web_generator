@@ -25,10 +25,9 @@ public class RSS {
 	private static String getTitle(Show show) {
 		StringBuffer sb = new StringBuffer();
 		
-		ListIterator li = show.getPerformance().listIterator();
+		ListIterator li = show.getArtist().listIterator();
 		while (li.hasNext()) {
-			Performance p = (Performance)li.next();
-			Artist performer = (Artist)p.getArtist();
+			Artist performer = (Artist)li.next();
 			
 			sb.append(performer.getName());
 			

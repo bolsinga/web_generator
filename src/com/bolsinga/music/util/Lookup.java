@@ -26,8 +26,8 @@ public class Lookup {
 		Show show = null;
 		String id = null;
 		List list = null;
-		ListIterator pi = null;
-		Performance perf = null;
+		ListIterator ai = null;
+		Artist artist = null;
 		Set set = null;
 		
 		ListIterator li = music.getShow().listIterator();
@@ -54,11 +54,11 @@ public class Lookup {
 				fCityMap.put(id, list);
 			}
 			
-			pi = show.getPerformance().listIterator();
-			while (pi.hasNext()) {
-				perf = (Performance)pi.next();
+			ai = show.getArtist().listIterator();
+			while (ai.hasNext()) {
+				artist = (Artist)ai.next();
 				
-				id = ((Artist)perf.getArtist()).getId();
+				id = artist.getId();
 				if (fArtistMap.containsKey(id)) {
 					list = (List)fArtistMap.get(id);
 					list.add(show);
@@ -88,7 +88,7 @@ public class Lookup {
 					}
 					ListIterator nri = rel.getMember().listIterator();
 					while (nri.hasNext()) {
-						Artist artist = (Artist)nri.next();
+						artist = (Artist)nri.next();
 						set = (Set)fArtistRelationMap.get(id);
 						set.add(artist);
 					}

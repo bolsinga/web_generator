@@ -75,10 +75,9 @@ public class ICal {
 		StringBuffer summary = new StringBuffer();
 		String url = null;
 		
-		ListIterator bi = show.getPerformance().listIterator();
+		ListIterator bi = show.getArtist().listIterator();
 		while (bi.hasNext()) {
-			Performance p = (Performance)bi.next();
-			Artist a = (Artist)p.getArtist();
+			Artist a = (Artist)bi.next();
 			
 			summary.append(a.getName());
 			

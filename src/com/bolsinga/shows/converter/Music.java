@@ -231,26 +231,11 @@ public class Music {
 		}
 		return result;
 	}
-	
-	static int sPerformanceID = 0;
-
-	private static com.bolsinga.music.data.Performance createPerformance(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name) throws JAXBException {
-			
-		com.bolsinga.music.data.Artist xArtist = addArtist(objFactory, music, name);
-				
-		com.bolsinga.music.data.Performance perf = objFactory.createPerformance();
-		
-		perf.setArtist(xArtist);
-		perf.setId("p" + sPerformanceID++);
-		
-		return perf;
-	}
 		
 	private static void convert(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List shows) throws JAXBException {
 		// Go through each show.
 		//  Create an Artist for each band in the set, if it doesn't already exist. Use the sort name.
 		//  Create a Date.
-		//  Create a new Performance for each Artist and Date.
 		//  Get the Venue from the hash.
 		//  Create a Comment.
 		//  Create a Show with the above.
@@ -258,7 +243,6 @@ public class Music {
 		Show oldShow = null;
 		com.bolsinga.music.data.Show xShow = null;
 		com.bolsinga.music.data.Artist xArtist = null;
-		com.bolsinga.music.data.Performance xPerf = null;
 		com.bolsinga.music.data.Date xDate = null;
 
 		int index = 0;
@@ -283,10 +267,9 @@ public class Music {
 			while (bi.hasNext()) {
 				oldBand = (String)bi.next();
 								
-				xPerf = createPerformance(objFactory, music, oldBand);
-				music.getPerformance().add(xPerf);
+				xArtist = addArtist(objFactory, music, oldBand);
 				
-				xShow.getPerformance().add(xPerf);
+				xShow.getArtist().add(xArtist);
 			}
 
 			xShow.setVenue(sVenues.get(oldShow.getVenue()));

@@ -677,10 +677,9 @@ public class Web {
 			UL showInfo = new UL();
 			
 			LI listItem = new LI();
-			ListIterator li = item.getPerformance().listIterator();
+			ListIterator li = item.getArtist().listIterator();
 			while (li.hasNext()) {
-				Performance p = (Performance)li.next();
-				Artist performer = (Artist)p.getArtist();
+				Artist performer = (Artist)li.next();
 				
 				listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
 				
@@ -760,10 +759,9 @@ public class Web {
 			    UL showInfo = new UL();
 			    
 			    LI listItem = new LI();
-			    ListIterator bi = show.getPerformance().listIterator();
+			    ListIterator bi = show.getArtist().listIterator();
 			    while (bi.hasNext()) {
-				    Performance p = (Performance)bi.next();
-				    Artist performer = (Artist)p.getArtist();
+				    Artist performer = (Artist)bi.next();
 				    
 				    if (artist.equals(performer)) {
 					    listItem.addElement(new B(performer.getName()));
@@ -819,10 +817,9 @@ public class Web {
 			UL showInfo = new UL();
 			
 			LI listItem = new LI();
-			ListIterator bi = show.getPerformance().listIterator();
+			ListIterator bi = show.getArtist().listIterator();
 			while (bi.hasNext()) {
-				Performance p = (Performance)bi.next();
-				Artist performer = (Artist)p.getArtist();
+				Artist performer = (Artist)bi.next();
 				
 				listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
 				
@@ -859,10 +856,9 @@ public class Web {
 		UL showInfo = new UL();
 		
 		LI listItem = new LI();
-		ListIterator bi = show.getPerformance().listIterator();
+		ListIterator bi = show.getArtist().listIterator();
 		while (bi.hasNext()) {
-			Performance p = (Performance)bi.next();
-			Artist performer = (Artist)p.getArtist();
+			Artist performer = (Artist)bi.next();
 			
 			listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
 			

@@ -212,8 +212,7 @@ public class Compare {
 			if (result == 0) {
 				result = VENUE_COMPARATOR.compare(r1.getVenue(), r2.getVenue());
 				if (result == 0) {
-					result = ARTIST_COMPARATOR.compare( ((Performance)r1.getPerformance().get(0)).getArtist(),
-														((Performance)r2.getPerformance().get(0)).getArtist());
+					result = ARTIST_COMPARATOR.compare(r1.getArtist().get(0), r2.getArtist().get(0));
 				}
 			}
 			return result;

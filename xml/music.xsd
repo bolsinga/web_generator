@@ -198,23 +198,6 @@
 	</xs:complexType>
 </xs:element>
 
-<!-- Define Performace -->
-<xs:simpleType name="performanceID">
-	<xs:restriction base="xs:ID" >
-		<xs:pattern value="p.*" />
-	</xs:restriction>
-</xs:simpleType>
-<xs:element name="performance">
-	<xs:complexType>
-		<xs:sequence>
-			<xs:element name="artist" type="xs:IDREF" />
-			<xs:element name="song" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element name="comment" type="xs:string" minOccurs="0" />
-		</xs:sequence>
-		<xs:attribute name="id" type="performanceID" />
-	</xs:complexType>
-</xs:element>
-
 <!-- Define Show -->
 <xs:simpleType name="showID" >
 	<xs:restriction base="xs:ID" >
@@ -224,7 +207,7 @@
 <xs:element name="show">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element name="performance" type="xs:IDREF" maxOccurs="unbounded" />
+			<xs:element name="artist" type="xs:IDREF" maxOccurs="unbounded" />
 			<xs:element name="date" type="date" />
 			<xs:element name="venue" type="xs:IDREF" minOccurs="0" />
 			<xs:element name="comment" type="xs:string" minOccurs="0" />
@@ -244,7 +227,6 @@
 			<xs:element ref="relation" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="album" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="performance" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="show" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
