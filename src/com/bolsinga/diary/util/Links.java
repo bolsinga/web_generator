@@ -71,37 +71,33 @@ public class Links {
 		return link.toString();
 	}
 	
-	public String getRSSLink() {
-		StringBuffer link = new StringBuffer();
-		
-		link.append(System.getProperty("diary.root"));
-
-		link.append(RSS_DIR);
-		link.append(File.separator);
-		link.append(System.getProperty("rss.url"));
-
+	public A getRSSLink() {
 		IMG img = new IMG(System.getProperty("rss.image.url"));
 		img.setHeight(System.getProperty("rss.image.height"));
 		img.setWidth(System.getProperty("rss.image.width"));
 		img.setAlt(System.getProperty("rss.image.alt"));
 		
-		return new A(link.toString(), img.toString()).toString(); // rss feed URL
+		return new A(getRSSURL(), img.toString()); // rss feed URL
 	}
 
-	public Link getAlternateRSSLink() {
+	public String getRSSURL() {
+		StringBuffer url = new StringBuffer();
+		if (fUpOneLevel) {
+			url.append("..");
+			url.append(File.separator);
+		}
+		url.append(RSS_DIR);
+		url.append(File.separator);
+		url.append(System.getProperty("rss.url"));
+		return url.toString();
+	}
+	
+	public Link getLinkToRSS() {
 		Link result = new Link();
 		result.setRel("alternate");
 		result.setType("application/rss+xml");
 		result.setTitle("RSS");
-		
-		StringBuffer sb = new StringBuffer();
-		sb.append(System.getProperty("diary.root"));
-		sb.append(RSS_DIR);
-		sb.append(File.separator);
-		sb.append(System.getProperty("rss.url"));
-
-		result.setHref(sb.toString());
-		
+		result.setHref(getRSSURL());
 		return result;
 	}
 

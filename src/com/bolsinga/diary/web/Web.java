@@ -279,7 +279,7 @@ public class Web {
 		Head h = d.getHead();
 		h.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		h.addElement(com.bolsinga.web.util.Util.getIconLink());
-		h.addElement(links.getAlternateRSSLink());
+		h.addElement(links.getLinkToRSS());
 		h.addElement(links.getLinkToStyleSheet());
 		
 		h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
