@@ -45,7 +45,10 @@
 </target>
 
 <target name="jaxb" depends="prepare">
-	<xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data"/>
+	<xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data" removeOldOutput="yes">
+		<depends dir="xml" includes="music.xsd" />
+		<produces dir="${build.gensrc}/com/bolsinga/music/data" includes="*impl/*" />
+	</xjc>
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
