@@ -161,6 +161,12 @@ class DiaryDocumentCreator {
 		StringBuffer link = new StringBuffer();
 		link.append("mailto:");
 		link.append(System.getProperty("diary.contact"));
+		link.append("?Subject=");
+		link.append(System.getProperty("diary.program"));
+		link.append("%20Message");
+		link.append("&Body=");
+		link.append(System.getProperty("diary.program"));
+		link.append("%20Message%0A");
 		A a = new A(link.toString(), "Contact");
 		sb.append(a.toString());
 		sb.append(" ");
