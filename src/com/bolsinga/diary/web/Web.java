@@ -35,9 +35,11 @@ class DiaryDocumentCreator {
 			fDocument = Web.createDocument(getTitle(entry), fLinks);
 			fEntry = entry;
 
-			addHeader();
-			addWebNavigator(fProgram);
-			addIndexNavigator();
+			Div headerDiv = new Div();
+			headerDiv.addElement(addHeader());
+			headerDiv.addElement(addWebNavigator(fProgram));
+			headerDiv.addElement(addIndexNavigator());
+			fDocument.getBody().addElement(headerDiv);
 			
 			fMainDiv = new Div();
 		}
@@ -69,8 +71,12 @@ class DiaryDocumentCreator {
 		
 	private void writeDocument() {
 		fDocument.getBody().addElement(fMainDiv);
-		addIndexNavigator();
-		addWebNavigator(fProgram);
+		
+		Div footerDiv = new Div();
+		footerDiv.addElement(addIndexNavigator());
+		footerDiv.addElement(addWebNavigator(fProgram));
+		fDocument.getBody().addElement(footerDiv);
+		
 		try {
 			File f = new File(fOutputDir, fLinks.getPagePath(fEntry));
 			File parent = new File(f.getParent());
@@ -89,11 +95,11 @@ class DiaryDocumentCreator {
 		}
 	}
 	
-	private void addHeader() {
-		fDocument.getBody().addElement(new Div().addElement(com.bolsinga.web.util.Util.getLogo()));
+	private Element addHeader() {
+		return new Div().addElement(com.bolsinga.web.util.Util.getLogo());
 	}
 
-	private void addIndexNavigator() {
+	private Element addIndexNavigator() {
 		Div div = new Div();
 
 		java.util.Map m = new TreeMap();
@@ -118,10 +124,10 @@ class DiaryDocumentCreator {
 		
 		div.addElement(fLinks.getRSSLink());
 		
-		fDocument.getBody().addElement(div);
+		return div;
 	}
 	
-	private void addWebNavigator(String program) {
+	private Element addWebNavigator(String program) {
 		Div div = new Div();
 		
 		StringBuffer sb = new StringBuffer();
@@ -149,7 +155,7 @@ class DiaryDocumentCreator {
 
 		div.addElement(sb.toString());
 		
-		fDocument.getBody().addElement(div);
+		return div;
 	}
 }
 
