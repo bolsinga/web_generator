@@ -23,6 +23,10 @@ public class Web {
 	public static final String VENUE_DIR = "venues";
 	public static final String SHOW_DIR = "shows";
 	
+	public static final String OTHER = "other";
+	public static final String SEPARATOR = "/";
+	public static final String HASH = "#";
+	
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			System.out.println("Usage: Web [source.xml] [output.dir]");
@@ -96,35 +100,47 @@ public class Web {
 		}
 	}
 	
-	public static String getPageFileName(String name) {
+	private static String getPageFileName(String name) {
 		String file = Compare.simplify(name).substring(0, 1).toUpperCase();
 		if (file.matches("\\W")) {
-			file = "other";
+			file = OTHER;
 		}
 		return file;
 	}
 	
-	public static String getPageFileName(BigInteger year) {
-		String file = "other";
-		if (year != null) {
-			file = year.toString();
+	private static String getPageFileName(BigInteger year) {
+		if (year == null) {
+			return OTHER;
+		} else {
+			return year.toString();
 		}
-		return file;
+	}
+	
+	public static String getPageFileName(Artist artist) {
+		String name = artist.getSortname();
+		if (name == null) {
+			name = artist.getName();
+		}
+		return getPageFileName(name);
+	}
+	
+	public static String getPageFileName(Venue venue) {
+		return getPageFileName(venue.getName());
+	}
+	
+	public static String getPageFileName(Show show) {
+		BigInteger current = show.getDate().getYear();
+		return getPageFileName(current);
 	}
 	
 	public static String getLinkTo(Artist artist) {
 		StringBuffer link = new StringBuffer();
 		
-		String name = artist.getSortname();
-		if (name == null) {
-			name = artist.getName();
-		}
-		
 		link.append(Web.ARTIST_DIR);
-		link.append("/");
-		link.append(getPageFileName(name));
+		link.append(SEPARATOR);
+		link.append(getPageFileName(artist));
 		link.append(Web.HTML_EXT);
-		link.append("#");
+		link.append(HASH);
 		link.append(artist.getId());
 		
 		return link.toString();
@@ -134,10 +150,10 @@ public class Web {
 		StringBuffer link = new StringBuffer();
 		
 		link.append(Web.VENUE_DIR);
-		link.append("/");
-		link.append(getPageFileName(venue.getName()));
+		link.append(SEPARATOR);
+		link.append(getPageFileName(venue));
 		link.append(Web.HTML_EXT);
-		link.append("#");
+		link.append(HASH);
 		link.append(venue.getId());
 		
 		return link.toString();
@@ -145,13 +161,12 @@ public class Web {
 	
 	public static String getLinkTo(Show show) {
 		StringBuffer link = new StringBuffer();
-		BigInteger current = show.getDate().getYear();
 		
 		link.append(Web.SHOW_DIR);
-		link.append("/");
-		link.append(getPageFileName(current));
+		link.append(SEPARATOR);
+		link.append(getPageFileName(show));
 		link.append(Web.HTML_EXT);
-		link.append("#");
+		link.append(HASH);
 		link.append(show.getId());
 		
 		return link.toString();
