@@ -76,7 +76,6 @@ public class Diary {
 			xStatic = objFactory.createStatic();
 			xStatic.setLocation(oldStatic.getLocation());
 			xStatic.setData(oldStatic.getData());
-			xStatic.setId("s" + index++);
 			
 			diary.getStatic().add(xStatic);
 		}
@@ -94,7 +93,6 @@ public class Diary {
 			xEntry = objFactory.createEntry();
 			xEntry.setTimestamp(Diary.createTimestamp(oldComment.getDate()));
 			xEntry.setComment(oldComment.getData());
-			xEntry.setId("e" + index++);
 			
 			diary.getEntry().add(xEntry);
 		}
