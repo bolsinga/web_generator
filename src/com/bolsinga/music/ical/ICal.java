@@ -5,6 +5,7 @@ import com.bolsinga.music.data.*;
 import com.bolsinga.music.util.*;
 
 import java.io.*;
+import java.text.*;
 import java.util.*;
 
 import javax.xml.bind.JAXBContext;
@@ -81,7 +82,7 @@ public class ICal {
 		
 		StringBuffer summary = new StringBuffer();
 		String url = null;
-
+		
 		ListIterator bi = show.getPerformance().listIterator();
 		while (bi.hasNext()) {
 			Performance p = (Performance)bi.next();
@@ -102,6 +103,6 @@ public class ICal {
 		summary.append(d.getYear());
 		summary.append(")");
 		
-		calendar.add(new VEvent(date, summary.toString(), url));
+		calendar.add(new VEvent(date, summary.toString(), url, show.getId()));
 	}
 }

@@ -11,11 +11,13 @@ public class VEvent {
 	Calendar fDate;
 	String fSummary;
 	String fURL;
+	String fUID;
 	
-	public VEvent(Calendar date, String summary, String url) {
+	public VEvent(Calendar date, String summary, String url, String uid) {
 		fDate = date;
 		fSummary = summary;
 		fURL = url;
+		fUID = uid;
 	}
 
 	public void output(OutputStream os) {
@@ -28,6 +30,9 @@ public class VEvent {
 		pw.println("BEGIN:VEVENT");
 
 		writeAllDay(pw);
+		
+		pw.print("UID:");
+		pw.println(fUID);
 		
 		pw.print("SUMMARY:");
 		pw.println(fSummary);
