@@ -90,7 +90,7 @@ public class Links {
 		}
 		url.append(RSS_DIR);
 		url.append(File.separator);
-		url.append(System.getProperty("rss.url"));
+		url.append(com.bolsinga.web.util.Util.getSettings().getRssFile());
 		return url.toString();
 	}
 	
