@@ -33,43 +33,6 @@ public class UI {
 	private UI() {
 		Frame f = new Frame("Edit");
 		f.setVisible(true);
-		
-		// Location editor Panel
-		// Multiple fields
-		
-		// Date editor Panel
-		// Multiple fields
-		
-		// Venue editor Panel
-		//  List of Venues
-		//   Add Button
-		//   Edit Button
-		//  Name
-		//  Location Panel
-		
-		// Artist editor Panel
-		//  List of Artists
-		//   Add Button
-		//   Edit Button
-		//  Name
-		//  Sorted Name
-		//  Location Panel
-		
-		// Show editor Panel
-		//  List of Dates
-		//   Add Button
-		//   Edit Button
-		//  Venue Name
-		//   Edit Button
-		//  Comment
-		
-		// Relation editor Panel
-		// List of Types
-		//  Add Button
-		//  Edit Button
-		// List of Members
-		//  Add Button
-		//  Edit Button
 	}
 	
 	private static Music createMusic(String sourceFile) {
