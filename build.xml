@@ -224,4 +224,7 @@
 	</java>
 </target>
 
+<target name="generateAll" depends="converter, music_web, diary_web, ical, music, generateMusicXML, generateDiaryXML, generateMusicWeb, generateDiaryWeb, generateICal">
+</target>
+
 </project>
