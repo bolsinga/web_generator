@@ -760,14 +760,8 @@ public class Web {
 		return Encode.getEncode(music).addLinks(data, upOneLevel);
 	}
 	
-	private static HashMap sLinkedData = new HashMap();
-	
-	public static synchronized String getLinkedData(Music music, String data, boolean upOneLevel) {
-		if (!sLinkedData.containsKey(data)) {
-			sLinkedData.put(data, com.bolsinga.web.util.Util.convertToParagraphs(embedLinks(music, data, upOneLevel)));
-		}
-		
-		return (String)sLinkedData.get(data);
+	public static String getLinkedData(Music music, String data, boolean upOneLevel) {
+		return com.bolsinga.web.util.Util.convertToParagraphs(embedLinks(music, data, upOneLevel));
 	}
 	
 	public static Div addItem(Music music, Links links, Artist artist) {
