@@ -2,8 +2,8 @@
 
 <project name="shows" default="generateAll" basedir=".">
 
-<!--	This assumes that jwsdp is installed at ${lib.dir}/jwsdp-1_3/ 
-		Otherwise can be set with "ant -Djwsdp.home=..." -->
+<!--    This assumes that jwsdp is installed at ${lib.dir}/jwsdp-1_3/ 
+                Otherwise can be set with "ant -Djwsdp.home=..." -->
 
 <property name="legacy_data.dir" value="../data/" />
 <property name="itunes.dir" value="../data/" />
@@ -22,449 +22,449 @@
 <property name="jwsdp.home" value="${lib.dir}/jwsdp-1_3" />
 
 <path id="jaxb_xjc_classpath">
-	<pathelement path="." />
-	<pathelement path="${jwsdp.home}/jaxb/lib/jaxb-xjc.jar" />
+        <pathelement path="." />
+        <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-xjc.jar" />
 </path>
 
 <path id="jaxb_binder_classpath">
-	<pathelement path="." />
-	<pathelement path="${jwsdp.home}/jaxb/lib/jaxb-api.jar" />
-	<pathelement path="${jwsdp.home}/jaxb/lib/jaxb-impl.jar" />
-	<pathelement path="${jwsdp.home}/jaxb/lib/jaxb-libs.jar" />
-	<pathelement path="${jwsdp.home}/jwsdp-shared/lib/jax-qname.jar" />
-	<pathelement path="${jwsdp.home}/jwsdp-shared/lib/namespace.jar" />
-	<pathelement path="${jwsdp.home}/jwsdp-shared/lib/relaxngDatatype.jar" />
-	<pathelement path="${jwsdp.home}/jwsdp-shared/lib/xsdlib.jar" />
+        <pathelement path="." />
+        <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-api.jar" />
+        <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-impl.jar" />
+        <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-libs.jar" />
+        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/jax-qname.jar" />
+        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/namespace.jar" />
+        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/relaxngDatatype.jar" />
+        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/xsdlib.jar" />
 </path>
 
 <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-	<classpath refid="jaxb_xjc_classpath" />
+        <classpath refid="jaxb_xjc_classpath" />
 </taskdef>
 
 <property name="javac.debug" value="no" />
 
 <target name="clean">
-	<delete dir="${build.dir}" />
+        <delete dir="${build.dir}" />
 </target>
 
 <target name="prepare">
-	<tstamp/>
-	<mkdir dir="${build.dir}" />
-	<mkdir dir="${build.classes}" />
-	<mkdir dir="${build.lib}" />
-	<mkdir dir="${build.gensrc}" />
+        <tstamp/>
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${build.classes}" />
+        <mkdir dir="${build.lib}" />
+        <mkdir dir="${build.gensrc}" />
 </target>
 
 <target name="music_binding" depends="prepare">
-	<xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data" removeOldOutput="yes">
-		<depends dir="xml" includes="music.xsd" />
-		<produces dir="${build.gensrc}/com/bolsinga/music/data" includes="*impl/*" />
-	</xjc>
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${build.gensrc}" />
-		<include name="com/bolsinga/music/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
-	<copy todir="${build.classes}">
-		<fileset dir="${build.gensrc}" >
-			<exclude name="**/*.java" />
-		</fileset>
-	</copy>
+        <xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data" removeOldOutput="yes">
+                <depends dir="xml" includes="music.xsd" />
+                <produces dir="${build.gensrc}/com/bolsinga/music/data" includes="*impl/*" />
+        </xjc>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${build.gensrc}" />
+                <include name="com/bolsinga/music/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
+        <copy todir="${build.classes}">
+                <fileset dir="${build.gensrc}" >
+                        <exclude name="**/*.java" />
+                </fileset>
+        </copy>
 </target>
 
 <target name="diary_binding" depends="prepare">
-	<xjc schema="xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data" removeOldOutput="yes">
-		<depends dir="xml" includes="diary.xsd" />
-		<produces dir="${build.gensrc}/com/bolsinga/diary/data" includes="*impl/*" />
-	</xjc>
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${build.gensrc}" />
-		<include name="com/bolsinga/diary/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
-	<copy todir="${build.classes}">
-		<fileset dir="${build.gensrc}" >
-			<exclude name="**/*.java" />
-		</fileset>
-	</copy>
+        <xjc schema="xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data" removeOldOutput="yes">
+                <depends dir="xml" includes="diary.xsd" />
+                <produces dir="${build.gensrc}/com/bolsinga/diary/data" includes="*impl/*" />
+        </xjc>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${build.gensrc}" />
+                <include name="com/bolsinga/diary/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
+        <copy todir="${build.classes}">
+                <fileset dir="${build.gensrc}" >
+                        <exclude name="**/*.java" />
+                </fileset>
+        </copy>
 </target>
 
 <target name="rss_binding" depends="prepare">
-	<xjc schema="xml/rss-2_0.xsd" target="${build.gensrc}" package="com.bolsinga.rss.data" removeOldOutput="yes" extension="true">
-		<depends dir="xml" includes="rss-2_0.xsd" />
-		<produces dir="${build.gensrc}/com/bolsinga/rss/data" includes="*impl/*" />
-	</xjc>
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${build.gensrc}" />
-		<include name="com/bolsinga/rss/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
-	<copy todir="${build.classes}">
-		<fileset dir="${build.gensrc}" >
-			<exclude name="**/*.java" />
-		</fileset>
-	</copy>
+        <xjc schema="xml/rss-2_0.xsd" target="${build.gensrc}" package="com.bolsinga.rss.data" removeOldOutput="yes" extension="true">
+                <depends dir="xml" includes="rss-2_0.xsd" />
+                <produces dir="${build.gensrc}/com/bolsinga/rss/data" includes="*impl/*" />
+        </xjc>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${build.gensrc}" />
+                <include name="com/bolsinga/rss/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
+        <copy todir="${build.classes}">
+                <fileset dir="${build.gensrc}" >
+                        <exclude name="**/*.java" />
+                </fileset>
+        </copy>
 </target>
 
 <target name="plist_binding" depends="prepare">
-	<xjc schema="xml/PropertyList-1.0.xsd" target="${build.gensrc}" package="com.bolsinga.plist.data" removeOldOutput="yes" extension="true">
-		<depends dir="xml" includes="PropertyList-1.0.xsd" />
-		<produces dir="${build.gensrc}/com/bolsinga/plist/data" includes="*impl/*" />
-	</xjc>
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${build.gensrc}" />
-		<include name="com/bolsinga/plist/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
-	<copy todir="${build.classes}">
-		<fileset dir="${build.gensrc}" >
-			<exclude name="**/*.java" />
-		</fileset>
-	</copy>
+        <xjc schema="xml/PropertyList-1.0.xsd" target="${build.gensrc}" package="com.bolsinga.plist.data" removeOldOutput="yes" extension="true">
+                <depends dir="xml" includes="PropertyList-1.0.xsd" />
+                <produces dir="${build.gensrc}/com/bolsinga/plist/data" includes="*impl/*" />
+        </xjc>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${build.gensrc}" />
+                <include name="com/bolsinga/plist/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
+        <copy todir="${build.classes}">
+                <fileset dir="${build.gensrc}" >
+                        <exclude name="**/*.java" />
+                </fileset>
+        </copy>
 </target>
 
 <target name="settings_binding" depends="prepare">
-	<xjc schema="xml/settings.xsd" target="${build.gensrc}" package="com.bolsinga.settings.data" removeOldOutput="yes" extension="true">
-		<depends dir="xml" includes="settings.xsd" />
-		<produces dir="${build.gensrc}/com/bolsinga/settings/data" includes="*impl/*" />
-	</xjc>
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${build.gensrc}" />
-		<include name="com/bolsinga/settings/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
-	<copy todir="${build.classes}">
-		<fileset dir="${build.gensrc}" >
-			<exclude name="**/*.java" />
-		</fileset>
-	</copy>
+        <xjc schema="xml/settings.xsd" target="${build.gensrc}" package="com.bolsinga.settings.data" removeOldOutput="yes" extension="true">
+                <depends dir="xml" includes="settings.xsd" />
+                <produces dir="${build.gensrc}/com/bolsinga/settings/data" includes="*impl/*" />
+        </xjc>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${build.gensrc}" />
+                <include name="com/bolsinga/settings/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
+        <copy todir="${build.classes}">
+                <fileset dir="${build.gensrc}" >
+                        <exclude name="**/*.java" />
+               </fileset>
+        </copy>
 </target>
 
 <path id="web_classpath">
-	<path refid="jaxb_binder_classpath" />
-	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
+        <path refid="jaxb_binder_classpath" />
+        <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
 <target name="music_utilities" depends="music_binding, settings_binding">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/music/util/**" />
-		<classpath refid="web_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/music/util/**" />
+                <classpath refid="web_classpath" />
+        </javac>
 </target>
 
 <target name="diary_utilities" depends="diary_binding, settings_binding">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/diary/util/**" />
-		<classpath refid="web_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/diary/util/**" />
+                <classpath refid="web_classpath" />
+        </javac>
 </target>
 
 <target name="rss_utilities" depends="rss_binding, settings_binding">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/rss/util/**" />
-		<classpath refid="web_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/rss/util/**" />
+                <classpath refid="web_classpath" />
+        </javac>
 </target>
 
 <target name="plist_utilities" depends="plist_binding">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/plist/util/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/plist/util/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
 </target>
 
 <target name="web_utilities" depends="settings_binding">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/web/util/**" />
-		<classpath refid="web_classpath" />
-	</javac>
-	<tstamp>
-		<format property="web.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
-	</tstamp>
-	<copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/util/web.properties">
-		<filterset>
-			<filter token="builddate" value="${web.builddate}" />
-			<filter token="program" value="com.bolsinga.web.site" />
-			<filter token="copyright" value="Program Copyright (c) 2004, 2005 Greg Bolsinga" />
-		</filterset>
-	</copy>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/web/util/**" />
+                <classpath refid="web_classpath" />
+        </javac>
+        <tstamp>
+                <format property="web.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+        </tstamp>
+        <copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/util/web.properties">
+                <filterset>
+                        <filter token="builddate" value="${web.builddate}" />
+                        <filter token="program" value="com.bolsinga.web.site" />
+                        <filter token="copyright" value="Program Copyright (c) 2004, 2005 Greg Bolsinga" />
+                </filterset>
+        </copy>
 </target>
 
 <target name="shows_converter" depends="music_utilities, diary_binding">
-	<javac	destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/shows/converter/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/shows/converter/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
 </target>
 
 <target name="itunes_converter" depends="music_utilities, plist_utilities">
-	<javac	destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/itunes/converter/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/itunes/converter/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
 </target>
 
 <target name="music_converter" depends="shows_converter, itunes_converter">
-	<javac	destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/music/converter/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/music/converter/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
 </target>
 
 <target name="music_web" depends="web_utilities, music_utilities">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/music/web/**" />
-		<classpath refid="web_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/music/web/**" />
+                <classpath refid="web_classpath" />
+        </javac>
 </target>
 
 <target name="music_rss" depends="rss_utilities, music_utilities">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/music/rss/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/music/rss/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
 </target>
 
 <target name="diary_web" depends="web_utilities, diary_utilities, music_binding">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/diary/web/**" />
-		<classpath refid="web_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/diary/web/**" />
+                <classpath refid="web_classpath" />
+        </javac>
 </target>
 
 <target name="diary_rss" depends="rss_utilities, diary_utilities">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/diary/rss/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/diary/rss/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
 </target>
 
 <target name="rss" depends="music_rss, diary_rss">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/rss/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/rss/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
 </target>
 
 <target name="ical_gen" depends="prepare">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/ical/**" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/ical/**" />
+        </javac>
 </target>
 
 <target name="ical" depends="ical_gen, music_utilities">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/music/ical/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/music/ical/**" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
 </target>
 
 <target name="web_site" depends="music_web, diary_web, rss, ical">
-	<javac  destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/web/site/**" />
-		<classpath refid="web_classpath" />
-	</javac>
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/web/site/**" />
+                <classpath refid="web_classpath" />
+        </javac>
 </target>
 
 <target name="jar">
-	<jar jarfile="${build.lib}/music.jar"
-		basedir="${build.classes}" >
-		<include name="com/bolsinga/**" />
-	</jar>
+        <jar jarfile="${build.lib}/music.jar"
+                basedir="${build.classes}" >
+                <include name="com/bolsinga/**" />
+        </jar>
 </target>
 
 <path id="music_classpath">
-	<path refid="jaxb_binder_classpath" />
-	<pathelement path="${build.lib}/music.jar" />
+        <path refid="jaxb_binder_classpath" />
+        <pathelement path="${build.lib}/music.jar" />
 </path>
 
 <target name="generateMusicXML" depends="music_converter, jar">
-	<java classname="com.bolsinga.music.converter.Music" fork="true">
-		<arg value="${legacy_data.dir}shows.txt" />
-		<arg value="${legacy_data.dir}venuemap.txt" />
-		<arg value="${legacy_data.dir}bandsort.txt" />
-		<arg value="${legacy_data.dir}relations.txt" />
-		<arg value="${itunes.dir}iTunes Music Library.xml" />
-		<arg value="${data.dir}music.xml" />
-		<classpath refid="music_classpath" />
-	</java>
+        <java classname="com.bolsinga.music.converter.Music" fork="true">
+                <arg value="${legacy_data.dir}shows.txt" />
+                <arg value="${legacy_data.dir}venuemap.txt" />
+                <arg value="${legacy_data.dir}bandsort.txt" />
+                <arg value="${legacy_data.dir}relations.txt" />
+                <arg value="${itunes.dir}iTunes Music Library.xml" />
+                <arg value="${data.dir}music.xml" />
+                <classpath refid="music_classpath" />
+        </java>
 </target>
 
 <target name="generateDiaryXML" depends="shows_converter, jar">
-	<java classname="com.bolsinga.shows.converter.Diary" fork="true">
-		<sysproperty key="diary.title" value="En Vogue Webmaster" />
-		<arg value="${legacy_data.dir}comments.txt" />
-		<arg value="${legacy_data.dir}statics.txt" />
-		<arg value="${data.dir}diary.xml" />
-		<classpath refid="music_classpath" />
-	</java>
+        <java classname="com.bolsinga.shows.converter.Diary" fork="true">
+                <sysproperty key="diary.title" value="En Vogue Webmaster" />
+                <arg value="${legacy_data.dir}comments.txt" />
+                <arg value="${legacy_data.dir}statics.txt" />
+                <arg value="${data.dir}diary.xml" />
+                <classpath refid="music_classpath" />
+        </java>
 </target>
 
 <path id="generate_web_classpath">
-	<path refid="music_classpath" />
-	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
+        <path refid="music_classpath" />
+        <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
 <target name="generateCSSTemplate" depends="web_utilities, jar">
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.web.util.CSS" fork="true">
-		<arg value="${output.dir}/styles/" />
-		<classpath refid="music_classpath" />
-	</java>
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.web.util.CSS" fork="true">
+                <arg value="${output.dir}/styles/" />
+                <classpath refid="music_classpath" />
+        </java>
 </target>
 
-<!--	Add the following property to any web using code to have the output's
-		container tags be pretty printed. This can assist in debugging the output.
+<!--    Add the following property to any web using code to have the output's
+                container tags be pretty printed. This can assist in debugging the output.
 
-		<sysproperty key="web.pretty_containers" value="true" />
+                <sysproperty key="web.pretty_containers" value="true" />
 -->
 
 <target name="generateMusicWeb" depends="music_web, jar">
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.music.web.Web" fork="true">
-		<arg value="${data.dir}music.xml" />
-		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}" />
-		<classpath refid="generate_web_classpath" />
-	</java>
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.music.web.Web" fork="true">
+                <arg value="${data.dir}music.xml" />
+                <arg value="${data.dir}settings.xml" />
+                <arg value="${output.dir}" />
+                <classpath refid="generate_web_classpath" />
+        </java>
 </target>
 
 <target name="generateDiaryWeb" depends="diary_web, jar">
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.diary.web.Web" fork="true">
-		<arg value="${data.dir}diary.xml" />
-		<arg value="${data.dir}music.xml" />
-		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}" />
-		<classpath refid="generate_web_classpath" />
-	</java>
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.diary.web.Web" fork="true">
+                <arg value="${data.dir}diary.xml" />
+                <arg value="${data.dir}music.xml" />
+                <arg value="${data.dir}settings.xml" />
+                <arg value="${output.dir}" />
+                <classpath refid="generate_web_classpath" />
+        </java>
 </target>
 
 <target name="generateRSS" depends="rss, jar" >
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.rss.RSS" fork="true" >
-		<arg value="${data.dir}diary.xml" />
-		<arg value="${data.dir}music.xml" />
-		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}" />
-		<classpath refid="generate_web_classpath" />
-	</java>
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.rss.RSS" fork="true" >
+                <arg value="${data.dir}diary.xml" />
+                <arg value="${data.dir}music.xml" />
+                <arg value="${data.dir}settings.xml" />
+                <arg value="${output.dir}" />
+                <classpath refid="generate_web_classpath" />
+        </java>
 </target>
 
 <target name="generateICal" depends="ical, jar">
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.music.ical.ICal" fork="true">
-		<arg value="${data.dir}music.xml" />
-		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}" />
-		<classpath refid="generate_web_classpath" />
-	</java>
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.music.ical.ICal" fork="true">
+                <arg value="${data.dir}music.xml" />
+                <arg value="${data.dir}settings.xml" />
+                <arg value="${output.dir}" />
+                <classpath refid="generate_web_classpath" />
+        </java>
 </target>
 
 <target name="Site" depends="web_site, jar">
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.web.site.Site" fork="true">
-		<arg value="${data.dir}diary.xml" />
-		<arg value="${data.dir}music.xml" />
-		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}" />
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.web.site.Site" fork="true">
+                <arg value="${data.dir}diary.xml" />
+                <arg value="${data.dir}music.xml" />
+                <arg value="${data.dir}settings.xml" />
+                <arg value="${output.dir}" />
         <arg value="all" />
-		<classpath refid="generate_web_classpath" />
-	</java>
+                <classpath refid="generate_web_classpath" />
+        </java>
 </target>
 
 <target name="SiteWeb" depends="web_site, jar">
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.web.site.Site" fork="true">
-		<arg value="${data.dir}diary.xml" />
-		<arg value="${data.dir}music.xml" />
-		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}" />
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.web.site.Site" fork="true">
+                <arg value="${data.dir}diary.xml" />
+                <arg value="${data.dir}music.xml" />
+                <arg value="${data.dir}settings.xml" />
+                <arg value="${output.dir}" />
         <arg value="web" />
-		<classpath refid="generate_web_classpath" />
-	</java>
+                <classpath refid="generate_web_classpath" />
+        </java>
 </target>
 
 <target name="SiteMusic" depends="web_site, jar">
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.web.site.Site" fork="true">
-		<arg value="${data.dir}diary.xml" />
-		<arg value="${data.dir}music.xml" />
-		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}" />
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.web.site.Site" fork="true">
+                <arg value="${data.dir}diary.xml" />
+                <arg value="${data.dir}music.xml" />
+                <arg value="${data.dir}settings.xml" />
+                <arg value="${output.dir}" />
         <arg value="music" />
-		<classpath refid="generate_web_classpath" />
-	</java>
+                <classpath refid="generate_web_classpath" />
+        </java>
 </target>
 
 <target name="SiteDiary" depends="web_site, jar">
-	<mkdir dir="${output.dir}" />
-	<java classname="com.bolsinga.web.site.Site" fork="true">
-		<arg value="${data.dir}diary.xml" />
-		<arg value="${data.dir}music.xml" />
-		<arg value="${data.dir}settings.xml" />
-		<arg value="${output.dir}" />
+        <mkdir dir="${output.dir}" />
+        <java classname="com.bolsinga.web.site.Site" fork="true">
+                <arg value="${data.dir}diary.xml" />
+                <arg value="${data.dir}music.xml" />
+                <arg value="${data.dir}settings.xml" />
+                <arg value="${output.dir}" />
         <arg value="diary" />
-		<classpath refid="generate_web_classpath" />
-	</java>
+                <classpath refid="generate_web_classpath" />
+        </java>
 </target>
 
 <target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
