@@ -156,13 +156,8 @@ public class Web {
     private static void initializeSettings(Settings settings) {
 		System.setProperty("web.layout.css", settings.getCssFile());
 		System.setProperty("rss.url", settings.getRssFile());
-        com.bolsinga.settings.data.Image image = settings.getRssImage();
-		System.setProperty("rss.image.url", image.getLocation());
-		System.setProperty("rss.image.width", image.getWidth().toString());
-		System.setProperty("rss.image.height", image.getHeight().toString());
-		System.setProperty("rss.image.alt", image.getAlt());
 		System.setProperty("music.ical.url", settings.getIcalName() + ".ics");
-        image = settings.getIcalImage();
+        com.bolsinga.settings.data.Image image = settings.getIcalImage();
 		System.setProperty("ical.image.url", image.getLocation());
 		System.setProperty("ical.image.width", image.getWidth().toString());
 		System.setProperty("ical.image.height", image.getHeight().toString());

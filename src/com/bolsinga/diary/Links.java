@@ -72,10 +72,12 @@ public class Links {
 	}
 	
 	public a getRSSLink() {
-		img i = new img(System.getProperty("rss.image.url"));
-		i.setHeight(System.getProperty("rss.image.height"));
-		i.setWidth(System.getProperty("rss.image.width"));
-		i.setAlt(System.getProperty("rss.image.alt"));
+        com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getRssImage();
+
+		img i = new img(image.getLocation());
+		i.setHeight(image.getHeight().intValue());
+		i.setWidth(image.getWidth().intValue());
+		i.setAlt(image.getAlt());
 		
 		return new a(getRSSURL(), i.toString()); // rss feed URL
 	}
