@@ -5,7 +5,7 @@
 <xs:element name="entry">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element name="comment" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="comment" type="xs:string" minOccurs="1" maxOccurs="1" />
 			<xs:element name="timestamp" type="xs:date" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
@@ -13,11 +13,13 @@
 
 <xs:element name="static" type="xs:string" />
 <xs:element name="header" type="xs:string" />
+<xs:element name="title" type="xs:string" />
 
 <!-- Define Diary -->
 <xs:element name="diary">
 	<xs:complexType>
 		<xs:sequence>
+			<xs:element ref="title" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="static" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="header" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="entry" maxOccurs="unbounded" />

@@ -190,6 +190,7 @@
 
 <target name="generateDiaryXML" depends="converter, music">
 	<java classname="com.bolsinga.shows.converter.Diary" fork="true">
+		<sysproperty key="diary.title" value="En Vogue Webmaster" />
 		<arg value="${data.dir}comments.txt" />
 		<arg value="${data.dir}statics.txt" />
 		<arg value="${data.dir}diary.xml" />
@@ -218,7 +219,6 @@
 	<mkdir dir="/tmp/web/" />
 	<java classname="com.bolsinga.diary.web.Web" fork="true">
 		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
-		<sysproperty key="diary.title" value="En Vogue Webmaster" />
 		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="diary.root" value="../index.html" />
 		<arg value="3" />

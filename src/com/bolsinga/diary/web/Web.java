@@ -223,7 +223,7 @@ public class Web {
 	};
 	
 	public static void generateMainPage(String musicFile, int mainPageEntryCount, Diary diary, String outputDir) {
-		Document doc = createDocument(System.getProperty("diary.title"));
+		Document doc = createDocument(diary.getTitle());
 
 		TBody tbody = new TBody();
 		

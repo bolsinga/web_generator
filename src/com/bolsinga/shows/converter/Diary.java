@@ -42,6 +42,8 @@ public class Diary {
 			
 			createComments(objFactory, diary, comments);
 			
+			diary.setTitle(System.getProperty("diary.title"));
+			
 			// Write out to the output file.
 			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
 			Marshaller m = jc.createMarshaller();
