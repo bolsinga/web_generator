@@ -781,10 +781,15 @@ public class Web {
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
 		artistDiv.addElement(new H1().addElement(a));
-				
-		addTracks(music, links, artist, artistDiv);
 		
-		addRelations(music, links, artist, artistDiv);
+		if (artist.getAlbum().size() > 0) {
+			artistDiv.addElement(addTracks(music, links, artist));
+		}
+		
+		Collection relations = Lookup.getLookup(music).getRelations(artist);
+		if (relations != null) {
+			artistDiv.addElement(addRelations(music, links, artist));
+		}
 
 		List shows = Lookup.getLookup(music).getShows(artist);
 		if (shows != null) {
@@ -844,7 +849,10 @@ public class Web {
 		a.addElement("test", venue.getName());
 		venueDiv.addElement(new H1().addElement(a));
 		
-		addRelations(music, links, venue, venueDiv);
+		Collection relations = Lookup.getLookup(music).getRelations(venue);
+		if (relations != null) {
+			venueDiv.addElement(addRelations(music, links, venue));
+		}
 
 		List shows = Lookup.getLookup(music).getShows(venue);
 		ListIterator li = shows.listIterator();
@@ -982,78 +990,69 @@ public class Web {
 		div.addElement(albumDiv);
 	}
 	
-	public static void addRelations(Music music, Links links, Artist artist, Div div) {
-		Collection relations = Lookup.getLookup(music).getRelations(artist);
-		if (relations != null) {
-			Div relDiv = new Div();
+	public static Div addRelations(Music music, Links links, Artist artist) {
+		Div relDiv = new Div();
 			
-			relDiv.addElement(new H2().addElement("See Also"));
-			
-			UL related = new UL();
-			Iterator li = relations.iterator();
-			while (li.hasNext()) {
-				Artist a = (Artist)li.next();
-				if (a.equals(artist)) {
-					related.addElement(new LI().addElement(a.getName()));
-				} else {
-					related.addElement(new LI().addElement(new A(links.getLinkTo(a), a.getName())));
-				}
+		relDiv.addElement(new H2().addElement("See Also"));
+		
+		UL related = new UL();
+		Iterator li = Lookup.getLookup(music).getRelations(artist).iterator();
+		while (li.hasNext()) {
+			Artist a = (Artist)li.next();
+			if (a.equals(artist)) {
+				related.addElement(new LI().addElement(a.getName()));
+			} else {
+				related.addElement(new LI().addElement(new A(links.getLinkTo(a), a.getName())));
 			}
-			relDiv.addElement(related);
-			
-			div.addElement(relDiv);
 		}
+		relDiv.addElement(related);
+
+		return relDiv;
 	}
 	
-	public static void addRelations(Music music, Links links, Venue venue, Div div) {
-		Collection relations = Lookup.getLookup(music).getRelations(venue);
-		if (relations != null) {
-			Div relDiv = new Div();
+	public static Div addRelations(Music music, Links links, Venue venue) {
+		Div relDiv = new Div();
 
-			relDiv.addElement(new H2().addElement("See Also"));
-			
-			UL related = new UL();
-			Iterator li = relations.iterator();
-			while (li.hasNext()) {
-				Venue v = (Venue)li.next();
-				if (v.equals(venue)) {
-					related.addElement(new LI().addElement(v.getName()));
-				} else {
-					related.addElement(new LI().addElement(new A(links.getLinkTo(v), v.getName())));
-				}
+		relDiv.addElement(new H2().addElement("See Also"));
+		
+		UL related = new UL();
+		Iterator li = Lookup.getLookup(music).getRelations(venue).iterator();
+		while (li.hasNext()) {
+			Venue v = (Venue)li.next();
+			if (v.equals(venue)) {
+				related.addElement(new LI().addElement(v.getName()));
+			} else {
+				related.addElement(new LI().addElement(new A(links.getLinkTo(v), v.getName())));
 			}
-			relDiv.addElement(related);
-			
-			div.addElement(relDiv);
 		}
+		relDiv.addElement(related);
+
+		return relDiv;
 	}
 
-	public static void addTracks(Music music, Links links, Artist artist, Div div) {
-		List albums = artist.getAlbum();
-		if (albums.size() > 0) {
-			Div albumsDiv = new Div();
+	public static Div addTracks(Music music, Links links, Artist artist) {
+		Div albumsDiv = new Div();
 			
-			albumsDiv.addElement(new H2().addElement("Albums"));
+		albumsDiv.addElement(new H2().addElement("Albums"));
+		
+		UL related = new UL();
+		Iterator li = artist.getAlbum().iterator();
+		while (li.hasNext()) {
+			Album a = (Album)li.next();
 			
-			UL related = new UL();
-			Iterator li = albums.iterator();
-			while (li.hasNext()) {
-				Album a = (Album)li.next();
-				
-				StringBuffer sb = new StringBuffer();
-				sb.append(new A(links.getLinkTo(a), a.getTitle()));
-				com.bolsinga.music.data.Date albumRelease = a.getReleaseDate();
-				if (albumRelease != null) {
-					sb.append(" (");
-					sb.append(albumRelease.getYear());
-					sb.append(")");
-				}
-				related.addElement(new LI().addElement(sb.toString()));
+			StringBuffer sb = new StringBuffer();
+			sb.append(new A(links.getLinkTo(a), a.getTitle()));
+			com.bolsinga.music.data.Date albumRelease = a.getReleaseDate();
+			if (albumRelease != null) {
+				sb.append(" (");
+				sb.append(albumRelease.getYear());
+				sb.append(")");
 			}
-			albumsDiv.addElement(related);
-			
-			div.addElement(albumsDiv);
+			related.addElement(new LI().addElement(sb.toString()));
 		}
+		albumsDiv.addElement(related);
+
+		return albumsDiv;
 	}
 	
 	public static Element addIndexNavigator(Music music, Links links, Artist artist) {
