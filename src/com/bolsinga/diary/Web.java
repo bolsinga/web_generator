@@ -124,28 +124,25 @@ class DiaryDocumentCreator {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_MENU);
 		
 		StringBuffer sb = new StringBuffer();
-		
 		sb.append("Generated ");
 		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
-		sb.append(" ");
+		d.addElement(new h4(sb.toString()));
 
-		StringBuffer link = new StringBuffer();
-		link.append("mailto:");
-		link.append(System.getProperty("diary.contact"));
-		link.append("?Subject=");
-		link.append(program);
-		link.append("%20Message");
-		link.append("&amp;Body=");
-		link.append(program);
-		link.append("%20Message%0A");
-		a an = new a(link.toString(), "Contact"); // mailto: URL
-		sb.append(an.toString());
-		sb.append(" ");
+		ul list = new ul();
+		
+		sb = new StringBuffer();
+		sb.append("mailto:");
+		sb.append(System.getProperty("diary.contact"));
+		sb.append("?Subject=");
+		sb.append(program);
+		sb.append("%20Message&amp;Body=");
+		sb.append(program);
+		sb.append("%20Message%0A");
+		list.addElement(new li(new a(sb.toString(), "Contact"))); // mailto: URL
 
-		an = links.getLinkToHome();
-		sb.append(an.toString());
+		list.addElement(new li(links.getLinkToHome()));
 
-		d.addElement(sb.toString());
+		d.addElement(list);
 		
 		return d;
 	}
