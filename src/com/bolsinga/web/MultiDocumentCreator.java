@@ -5,7 +5,7 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public abstract class MultiDocumentCreator extends DocumentCreator {
-	div fSubsection = null;
+	li fSubsection = null;
     
     protected MultiDocumentCreator(String outputDir) {
         super(outputDir);
@@ -18,15 +18,22 @@ public abstract class MultiDocumentCreator extends DocumentCreator {
         getSubsection().addElement(getCurrentElement());
     }
 
-    private div getSubsection() {
+    private li getSubsection() {
         if ((fSubsection == null) || needNewSubsection()) {
             div mainDiv = getMain();
-            fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_SUB);
+            
+            ul list = new ul();
+            list.setClass(com.bolsinga.web.util.CSS.DOC_SUB);
+            
+            fSubsection = new li();
+            list.addElement(fSubsection);
+            
             Element e = getSubsectionTitle();
             if (e != null) {
                 fSubsection.addElement(new h2().addElement(e));
             }
-            mainDiv.addElement(fSubsection);
+            
+            mainDiv.addElement(list);
         }
         return fSubsection;
     }
