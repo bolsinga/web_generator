@@ -54,6 +54,8 @@ public class Music {
 		
 			convert(objFactory, music, shows);
 
+			Collections.sort(music.getArtist(), com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
+
 			createRelations(objFactory, music, relations);
 
 			// Write out to the output file.
@@ -88,6 +90,8 @@ public class Music {
 		Location xLocation = null;
 		String name = null;
 		int index = 0;
+		
+		Collections.sort(venues, Compare.VENUE_COMPARATOR);
 		
 		ListIterator li = venues.listIterator();
 		while (li.hasNext()) {
@@ -253,6 +257,8 @@ public class Music {
 		List oldBands = null;
 		ListIterator bi = null;
 		String oldBand = null;
+
+		Collections.sort(shows, Compare.SHOW_COMPARATOR);
 		
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
