@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- Define location -->
+<xs:simpleType name="zipcode">
+	<xs:restriction base="xs:positiveInteger" >
+		<xs:totalDigits value="5" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="street" type="xs:token" />
+<xs:element name="city" type="xs:token" />
+<xs:element name="state" type="xs:token" />
+<xs:element name="zip" type="zipcode" />
+<xs:element name="web" type="xs:anyURI" />
+<xs:element name="location">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="street" minOccurs="0" />
+			<xs:element ref="city" minOccurs="0" />
+			<xs:element ref="state" minOccurs="0" />
+			<xs:element ref="zip" minOccurs="0" />
+			<xs:element ref="web" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<!-- Define date -->
+<xs:simpleType name="mYear">
+	<xs:restriction base="xs:positiveInteger" >
+		<xs:totalDigits value="4" />
+		<xs:minInclusive value="1900" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="mMonth">
+	<xs:restriction base="xs:positiveInteger" >
+		<xs:totalDigits value="2" />
+		<xs:minInclusive value="1" />
+		<xs:maxInclusive value="12" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="mDay">
+	<xs:restriction base="xs:positiveInteger" >
+		<xs:totalDigits value="2" />
+		<xs:minInclusive value="1" />
+		<xs:maxInclusive value="31" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="year" type="mYear" />
+<xs:element name="month" type="mMonth" />
+<xs:element name="day" type="mDay" />
+<xs:attribute name="unknown" type="xs:boolean" />
+<xs:complexType name="date">
+	<xs:sequence>
+		<xs:element ref="year" minOccurs="0" />
+		<xs:element ref="month" minOccurs="0" />
+		<xs:element ref="day" minOccurs="0" />
+	</xs:sequence>
+	<xs:attribute ref="unknown" />
+</xs:complexType>
+
+<!-- Define Common -->
+<xs:element name="title" type="xs:token" />
+<xs:element name="performer" type="artistID" />
+<xs:element name="producer" type="artistID" />
+<xs:element name="comment" type="xs:string"  />
+<xs:attribute name="digitized" type="xs:boolean" />
+<xs:attribute name="active" type="xs:boolean" />
+
+<!-- Define Song -->
+<xs:simpleType name="songID">
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="song_.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="composer" type="artistID" />
+<xs:element name="song">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="title" />
+			<xs:element ref="performer" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="composer" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="producer" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="releaseDate" type="date" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="songID" />
+		<xs:attribute ref="digitized" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Album -->
+<xs:simpleType name="albumID">
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="album_.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="imprint" type="labelID" />
+<xs:attribute name="compilation" type="xs:boolean" />
+<xs:element name="album" >
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="title" />
+			<xs:element ref="performer" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="producer" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="releaseDate" type="date" minOccurs="0" />
+			<xs:element name="purchaseDate" type="date" minOccurs="0" />
+			<xs:element ref="label" minOccurs="0" />
+			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="comment" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="albumID" />
+		<xs:attribute ref="compilation" />
+		<xs:attribute ref="digitized" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Artist -->
+<xs:simpleType name="artistID">
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="artist_.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="artist" >
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="name" type="xs:token" />
+			<xs:element name="sortname" type="xs:token" minOccurs="0" />
+			<xs:element ref="location" minOccurs="0" />
+			<xs:element ref="album" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="comment" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="artistID" />
+		<xs:attribute ref="active" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Label -->
+<xs:simpleType name="labelID" >
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="label_.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="label">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="name" type="xs:token" />
+			<xs:element ref="location" minOccurs="0" />
+			<xs:element ref="comment" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="labelID" />
+		<xs:attribute ref="active" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Venue -->
+<xs:simpleType name="venueID" >
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="venue_.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="venue">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="name" type="xs:token" />
+			<xs:element ref="location" minOccurs="0" />
+			<xs:element ref="comment" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="venueID" />
+		<xs:attribute ref="active" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Performace -->
+<xs:simpleType name="performanceID">
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="performance_.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="performance">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="artist" />
+			<xs:element name="date" type="date" />
+			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="comment" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="performanceID" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Show -->
+<xs:simpleType name="showID" >
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="show_.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="show">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="performance" maxOccurs="unbounded" />
+			<xs:element name="date" type="date" />
+			<xs:element ref="venue" minOccurs="0" />
+			<xs:element ref="comment" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="showID" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Music -->
+<xs:element name="music">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="label" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="album" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="venue" maxOccurs="unbounded" />
+			<xs:element ref="artist" maxOccurs="unbounded" />
+			<xs:element ref="performance" maxOccurs="unbounded" />
+			<xs:element ref="show" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+</xs:schema>
