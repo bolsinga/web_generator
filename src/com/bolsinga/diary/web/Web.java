@@ -5,6 +5,7 @@ import com.bolsinga.diary.data.*;
 import java.io.*;
 import java.text.*;
 import java.util.*;
+import java.util.regex.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
@@ -373,6 +374,13 @@ public class Web {
 	public static void addItem(Entry entry, TBody tb) {
 		addBanner(sWebFormat.format(entry.getTimestamp().getTime()), tb);
 		
-		tb.addElementToRegistry(new TR().addElement(new TD(entry.getComment())));
+		tb.addElement(new TR().addElement(new TD(Web.encodedComment(entry))));
+	}
+	
+	private static Pattern sCommentEncoding = Pattern.compile("\n", Pattern.DOTALL);
+	private static String encodedComment(Entry entry) {
+		// Convert new lines to <p>
+		Matcher m = sCommentEncoding.matcher(entry.getComment());
+		return m.replaceAll("<p>");
 	}
 }
