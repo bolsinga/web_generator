@@ -2,12 +2,30 @@
 
 <project name="shows" default="converter" basedir=".">
 
+<!--	This assumes that jwsdp is installed at /usr/local/jwsdp-1.3/ 
+		Otherwise can be set with "ant -Djwsdp.home=..." -->
+
+<property name="jwsdp.home" value="/usr/local/jwsdp-1.3" />
+
+<path id="classpath">
+	<pathelement path="." />
+	<!-- for use with bundled ant -->
+	<fileset dir="${jwsdp.home}" includes="jaxb/lib/*.jar" />
+	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/*.jar" />
+	<fileset dir="${jwsdp.home}" includes="jaxp/lib/**/*.jar" />
+</path>
+
+<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+	<classpath refid="classpath" />
+</taskdef>
+	
 <property name="src.dir" value="src" />
 <property name="dist.dir" value="dist" />
 
 <property name="build.dir" value="build" />
 <property name="build.classes" value="${build.dir}/classes" />
 <property name="build.lib" value="${build.dir}/lib" />
+<property name="build.gensrc" value="${build.dir}/gensrc" />
 
 <property name="javac.debug" value="no" />
 
@@ -36,6 +54,11 @@
 			<attribute name="Main-Class" value="com.bolsinga.shows.converter.Convert" />
 		</manifest>
 	</jar>
+</target>
+
+<target name="jaxb" depends="prepare">
+	<mkdir dir="${build.gensrc}" />
+	<xjc schema="xml/shows.xsd" target="${build.gensrc}" package="com.bolsinga.shows.data."/>
 </target>
 
 </project>
