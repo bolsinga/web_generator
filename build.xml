@@ -22,6 +22,7 @@
 <property name="data.dir" value="../data/" />
 
 <property name="src.dir" value="src" />
+<property name="lib.dir" value="lib" />
 <property name="dist.dir" value="dist" />
 
 <property name="build.dir" value="build" />
@@ -69,13 +70,18 @@
 	</javac>
 </target>
 
+<path id="web_classpath">
+	<path refid="jaxb_classpath" />
+	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
+</path>
+
 <target name="web" depends="converter">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/music/web/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="web_classpath" />
 	</javac>
 </target>
 
