@@ -198,16 +198,18 @@
 	</java>
 </target>
 
-<target name="generateDiaryWeb" depends="diary_web, music">
+<target name="generateDiaryWeb" depends="music_web, diary_web, music">
 	<mkdir dir="/tmp/web/" />
 	<java classname="com.bolsinga.diary.web.Web" fork="true">
 		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
+		<sysproperty key="diary.title" value="En Vogue Webmaster" />
 		<sysproperty key="diary.program" value="DiaryWeb" />
 		<sysproperty key="diary.builddate" value="BUILD" />
 		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="diary.root" value="http://www.io.com/~bolsinga" />
 		<arg value="3" />
 		<arg value="${data.dir}diary.xml" />
+		<arg value="${data.dir}music.xml" />
 		<arg value="/tmp/web/" />
 		<classpath refid="generate_web_classpath" />
 	</java>
