@@ -57,7 +57,21 @@ public class Music {
 
 			createRelations(objFactory, music, relations);
 
-			dump(music);
+			// Write out to the output file.
+			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music");
+			Marshaller m = jc.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			
+			OutputStream os = null;
+			try {
+				os = new FileOutputStream(outputFile);
+			} catch (IOException ioe) {
+				System.err.println(ioe);
+				ioe.printStackTrace();
+				System.exit(1);
+			}
+			m.marshal(music, os);
+			
 		} catch (JAXBException e) {
 			System.err.println(e);
 			e.printStackTrace();
