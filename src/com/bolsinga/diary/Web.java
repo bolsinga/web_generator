@@ -31,8 +31,11 @@ class DiaryDocumentCreator {
 			close();
 			
 			fDocument = createDocument(entry);
-			// headers
 			fEntry = entry;
+
+			addHeader();
+			addWebNavigator();
+			addIndexNavigator();
 			
 			fTBody = new TBody();
 		}
@@ -52,8 +55,20 @@ class DiaryDocumentCreator {
 	
 	static DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
 	
-	private String getPageFileName(Entry entry) {
+	private static String getPageFileName(Entry entry) {
 		return sArchivePageFormat.format(entry.getTimestamp().getTime());
+	}
+	
+	private static String getLinkToPage(Entry entry) {
+		StringBuffer link = new StringBuffer();
+		
+		link.append("../");
+		link.append("archives");
+		link.append(File.separator);
+		link.append(getPageFileName(entry));
+		link.append(".html");
+		
+		return link.toString();
 	}
 	
 	private String getCurrentPath(Entry entry) {
@@ -90,7 +105,8 @@ class DiaryDocumentCreator {
 	private void writeDocument() {
 		fDocument.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0).addElement(fTBody));
 		fDocument.getBody().addElement(new HR());
-		// footer here
+		addIndexNavigator();
+		addWebNavigator();
 		try {
 			File f = new File(fOutputDir, getCurrentPath(fEntry));
 			File parent = new File(f.getParent());
@@ -143,6 +159,44 @@ class DiaryDocumentCreator {
 		sb.append(")");
 		
 		return sb.toString();
+	}
+	
+	private void addHeader() {
+		IMG img = new IMG("http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif");
+		img.setHeight(90);
+		img.setWidth(120);
+		img.setAlt("[Busy computing... for you!]");
+		fDocument.getBody().addElement(new Center(img));
+	}
+
+	private void addIndexNavigator() {
+		Center c = new Center();
+
+		java.util.Map m = new TreeMap();
+		Iterator li = fDiary.getEntry().iterator();
+		while (li.hasNext()) {
+			Entry a = (Entry)li.next();
+			String letter = getPageFileName(a);
+			if (!m.containsKey(letter)) {
+				m.put(letter, getLinkToPage(a));
+			}
+		}
+
+		li = m.keySet().iterator();
+		while (li.hasNext()) {
+			String a = (String)li.next();
+			if (a.equals(getPageFileName(fEntry))) {
+				c.addElement(a + " ");
+			} else {
+				c.addElement(new A((String)m.get(a), a).toString() + " ");
+			}
+		}
+		
+		fDocument.getBody().addElement(c);
+	}
+	
+	private void addWebNavigator() {
+	
 	}
 }
 
