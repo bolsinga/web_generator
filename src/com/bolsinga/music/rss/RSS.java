@@ -24,6 +24,9 @@ public class RSS {
 	
 	private static String getTitle(Show show) {
 		StringBuffer sb = new StringBuffer();
+    
+        sb.append(com.bolsinga.music.util.Util.toString(show.getDate()));
+        sb.append(" - ");
 		
 		ListIterator li = show.getArtist().listIterator();
 		while (li.hasNext()) {
@@ -38,7 +41,7 @@ public class RSS {
 		
 		sb.append(" @ ");
 		sb.append(((Venue)show.getVenue()).getName());
-		
+        		
 		return sb.toString();
 	}
 }
