@@ -62,11 +62,11 @@ public class Links {
 		link.append("&amp;Body=");
 		link.append(program);
 		link.append("%20Message%0A");
-		A a = new A(link.toString(), "Contact");
+		A a = new A(link.toString(), "Contact"); // mailto: URL
 		sb.append(a.toString());
 		sb.append(" ");
 
-		a = new A(System.getProperty("music.root"), "Home");
+		a = com.bolsinga.web.util.Util.createInternalA(System.getProperty("music.root"), "Home");
 		sb.append(a.toString());
 		sb.append(" ");
 		
@@ -271,7 +271,7 @@ public class Links {
 		link.append(File.separator);
 		link.append(STATS);
 		link.append(HTML_EXT);
-		A a = new A(link.toString(), "Bands");
+		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Bands");
 		return a.toString();
 	}
 		
@@ -285,7 +285,7 @@ public class Links {
 		link.append(File.separator);
 		link.append(STATS);
 		link.append(HTML_EXT);
-		A a = new A(link.toString(), "Dates");
+		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Dates");
 		return a.toString();
 	}
 	
@@ -299,7 +299,7 @@ public class Links {
 		link.append(File.separator);
 		link.append(STATS);
 		link.append(HTML_EXT);
-		A a = new A(link.toString(), "Tracks");
+		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Tracks");
 		return a.toString();
 	}
 
@@ -313,7 +313,7 @@ public class Links {
 		link.append(File.separator);
 		link.append(ALBUM_STATS);
 		link.append(HTML_EXT);
-		A a = new A(link.toString(), "Albums");
+		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Albums");
 		return a.toString();
 	}
 
@@ -327,7 +327,7 @@ public class Links {
 		link.append(File.separator);
 		link.append(STATS);
 		link.append(HTML_EXT);
-		A a = new A(link.toString(), "Venues");
+		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Venues");
 		return a.toString();
 	}
 	
@@ -341,7 +341,7 @@ public class Links {
 		link.append(File.separator);
 		link.append(STATS);
 		link.append(HTML_EXT);
-		A a = new A(link.toString(), "Cities");
+		A a = com.bolsinga.web.util.Util.createInternalA(link.toString(), "Cities");
 		return a.toString();
 	}
 
@@ -361,6 +361,6 @@ public class Links {
 		img.setWidth(System.getProperty("ical.image.width"));
 		img.setAlt(System.getProperty("ical.image.alt"));
 		
-		return new A(link.toString(), img.toString()).toString();
+		return new A(link.toString(), img.toString()).toString(); // ical: URL
 	}
 }

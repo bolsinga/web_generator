@@ -131,7 +131,7 @@ class DiaryDocumentCreator {
 			if (a.equals(fLinks.getPageFileName(fEntry))) {
 				div.addElement(a + " ");
 			} else {
-				div.addElement(new A((String)m.get(a), a).toString() + " ");
+				div.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(a), a).toString() + " ");
 			}
 		}
 		
@@ -158,11 +158,11 @@ class DiaryDocumentCreator {
 		link.append("&amp;Body=");
 		link.append(program);
 		link.append("%20Message%0A");
-		A a = new A(link.toString(), "Contact");
+		A a = new A(link.toString(), "Contact"); // mailto: URL
 		sb.append(a.toString());
 		sb.append(" ");
 
-		a = new A(System.getProperty("diary.root"), "Home");
+		a = com.bolsinga.web.util.Util.createInternalA(System.getProperty("diary.root"), "Home");
 		sb.append(a.toString());
 		sb.append(" ");
 
@@ -336,7 +336,7 @@ public class Web {
 		sb.append(Calendar.getInstance().get(Calendar.YEAR));
 		sb.append(".html");
 		
-		diaryDiv.addElement(new H2().addElement(new A(sb.toString(), "Archives")));
+		diaryDiv.addElement(new H2().addElement(com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Archives")));
 		
 		return diaryDiv;
 	}
@@ -364,7 +364,7 @@ public class Web {
 	public static void addItem(Music music, Entry entry, Div mainDiv, boolean upOneLevel, boolean cacheEncoding) {
 		Div diaryDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_ENTRY);
 		
-		A a = new A();
+		A a = new A(); // named target
 		a.setName(entry.getId());
 		a.addElement("test", Util.getTitle(entry));
 		

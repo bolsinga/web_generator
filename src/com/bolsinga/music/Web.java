@@ -467,7 +467,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 
-			names[index] = new A(links.getLinkTo(item), item.getName()).toString();
+			names[index] = com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
 			List shows = Lookup.getLookup(music).getShows(item);
 			values[index] = (shows != null) ? shows.size() : 0;
 			
@@ -504,7 +504,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Venue)li.next();
 
-			names[index] = new A(links.getLinkTo(item), item.getName()).toString();
+			names[index] = com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
 			values[index] = Lookup.getLookup(music).getShows(item).size();
 			
 			index++;
@@ -550,7 +550,7 @@ public class Web {
 			item = (Show)i.next();
 			
 			BigInteger year = item.getDate().getYear();
-			names[index] = new A(links.getLinkToPage(item), (year != null) ? year.toString() : "Unknown").toString();
+			names[index] = com.bolsinga.web.util.Util.createInternalA(links.getLinkToPage(item), (year != null) ? year.toString() : "Unknown").toString();
 			values[index] = ((Vector)dates.get(item)).size();
 			
 			index++;
@@ -640,7 +640,7 @@ public class Web {
 		while (li.hasNext()) {
 			artist = (Artist)li.next();
 
-			names[index] = new A(links.getLinkTo(artist), artist.getName()).toString();
+			names[index] = com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(artist), artist.getName()).toString();
 			values[index] = Util.trackCount(artist);
 			
 			index++;
@@ -660,7 +660,7 @@ public class Web {
 		while (li.hasNext()) {
 			artist = (Artist)li.next();
 
-			names[index] = new A(links.getLinkTo(artist), artist.getName()).toString();
+			names[index] = com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(artist), artist.getName()).toString();
 			values[index] = (artist.getAlbum() != null) ? artist.getAlbum().size() : 0;
 			
 			index++;
@@ -752,7 +752,7 @@ public class Web {
 			
 			Div previewShow = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_SHOW);
 			
-			previewShow.addElement(new H4(new A(links.getLinkTo(item), Util.toString(item.getDate()))));
+			previewShow.addElement(new H4(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(item), Util.toString(item.getDate()))));
 			previewShow.addElement(getShowListing(links, item));
 			
 			previewRecent.addElement(previewShow);
@@ -781,7 +781,7 @@ public class Web {
 	public static Div addItem(Music music, Links links, Artist artist) {
 		Div artistDiv = com.bolsinga.web.util.Util.createDiv(CSS.ARTIST_ITEM);
 		
-		A a = new A();
+		A a = new A(); // named target
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
 		artistDiv.addElement(new H2().addElement(a));
@@ -805,7 +805,7 @@ public class Web {
 			    
 				Div showDiv = com.bolsinga.web.util.Util.createDiv(CSS.ARTIST_SHOW);
 				
-			    showDiv.addElement(new H3().addElement(new A(showLink, Util.toString(show.getDate()))));
+			    showDiv.addElement(new H3().addElement(com.bolsinga.web.util.Util.createInternalA(showLink, Util.toString(show.getDate()))));
 			    
 			    UL showInfo = new UL();
 			    
@@ -817,7 +817,7 @@ public class Web {
 				    if (artist.equals(performer)) {
 					    listItem.addElement(performer.getName());
 				    } else {
-					    listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
+					    listItem.addElement(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
 				    }
 				    
 				    if (bi.hasNext()) {
@@ -827,13 +827,13 @@ public class Web {
 			    showInfo.addElement(listItem);
 			    
 			    Venue venue = (Venue)show.getVenue();
-			    A venueA = new A(links.getLinkTo(venue), venue.getName());
+			    A venueA = com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(venue), venue.getName());
 			    Location l = (Location)venue.getLocation();
 			    showInfo.addElement(new LI().addElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
 			    
 			    String comment = show.getComment();
 			    if (comment != null) {
-				    showInfo.addElement(new LI(new A(showLink, "Show Summary")));
+				    showInfo.addElement(new LI(com.bolsinga.web.util.Util.createInternalA(showLink, "Show Summary")));
 			    }
 			    
 			    showDiv.addElement(showInfo);
@@ -848,7 +848,7 @@ public class Web {
 	public static Div addItem(Music music, Links links, Venue venue) {
 		Div venueDiv = com.bolsinga.web.util.Util.createDiv(CSS.VENUE_ITEM);
 		
-		A a = new A();
+		A a = new A(); // named target
 		a.setName(venue.getId());
 		a.addElement("test", venue.getName());
 		venueDiv.addElement(new H2().addElement(a));
@@ -867,7 +867,7 @@ public class Web {
 			
 			Div showDiv = com.bolsinga.web.util.Util.createDiv(CSS.VENUE_SHOW);
 			
-			showDiv.addElement(new H3().addElement(new A(showLink, Util.toString(show.getDate()))));
+			showDiv.addElement(new H3().addElement(com.bolsinga.web.util.Util.createInternalA(showLink, Util.toString(show.getDate()))));
 			
 			UL showInfo = new UL();
 			
@@ -876,7 +876,7 @@ public class Web {
 			while (bi.hasNext()) {
 				Artist performer = (Artist)bi.next();
 				
-				listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
+				listItem.addElement(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
 				
 				if (bi.hasNext()) {
 					listItem.addElement(", ");
@@ -889,7 +889,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new LI(new A(showLink, "Show Summary")));
+				showInfo.addElement(new LI(com.bolsinga.web.util.Util.createInternalA(showLink, "Show Summary")));
 			}
 			
 			showDiv.addElement(showInfo);
@@ -908,7 +908,7 @@ public class Web {
 		while (bi.hasNext()) {
 			Artist performer = (Artist)bi.next();
 			
-			listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
+			listItem.addElement(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
 			
 			if (bi.hasNext()) {
 				listItem.addElement(", ");
@@ -917,7 +917,7 @@ public class Web {
 		showInfo.addElement(listItem);
 		
 		Venue venue = (Venue)show.getVenue();
-		A venueA = new A(links.getLinkTo(venue), venue.getName());
+		A venueA = com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(venue), venue.getName());
 		Location l = (Location)venue.getLocation();
 		showInfo.addElement(new LI(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
 		
@@ -927,7 +927,7 @@ public class Web {
 	public static Div addItem(Music music, Links links, Show show) {
 		Div showDiv = com.bolsinga.web.util.Util.createDiv(CSS.SHOW_ITEM);
 		
-		A a = new A();
+		A a = new A(); // named target
 		a.setName(show.getId());
 		a.addElement("test", Util.toString(show.getDate()));
 		showDiv.addElement(new H3().addElement(a));
@@ -951,7 +951,7 @@ public class Web {
 		
 		boolean isCompilation = album.isCompilation();
 		
-		A a = new A();
+		A a = new A(); // named target
 		a.setName(album.getId());
 		a.addElement("test", album.getTitle());
 		
@@ -960,7 +960,7 @@ public class Web {
 		if (!isCompilation) {
 			artist = (Artist)album.getPerformer();
 			sb.append(" - ");
-			sb.append(new A(links.getLinkTo(artist), artist.getName()));
+			sb.append(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(artist), artist.getName()));
 		}
 		com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
 		if (albumRelease != null) {
@@ -979,7 +979,7 @@ public class Web {
 			sb = new StringBuffer();
 			if (isCompilation) {
 				artist = (Artist)song.getPerformer();
-				sb.append(new A(links.getLinkTo(artist), artist.getName()));
+				sb.append(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(artist), artist.getName()));
 				sb.append(" - ");
 			}
 			
@@ -1014,7 +1014,7 @@ public class Web {
 			if (a.equals(artist)) {
 				related.addElement(new LI().addElement(a.getName()));
 			} else {
-				related.addElement(new LI().addElement(new A(links.getLinkTo(a), a.getName())));
+				related.addElement(new LI().addElement(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(a), a.getName())));
 			}
 		}
 		relDiv.addElement(related);
@@ -1034,7 +1034,7 @@ public class Web {
 			if (v.equals(venue)) {
 				related.addElement(new LI().addElement(v.getName()));
 			} else {
-				related.addElement(new LI().addElement(new A(links.getLinkTo(v), v.getName())));
+				related.addElement(new LI().addElement(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(v), v.getName())));
 			}
 		}
 		relDiv.addElement(related);
@@ -1053,7 +1053,7 @@ public class Web {
 			Album a = (Album)li.next();
 			
 			StringBuffer sb = new StringBuffer();
-			sb.append(new A(links.getLinkTo(a), a.getTitle()));
+			sb.append(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(a), a.getTitle()));
 			com.bolsinga.music.data.Date albumRelease = a.getReleaseDate();
 			if (albumRelease != null) {
 				sb.append(" (");
@@ -1086,7 +1086,7 @@ public class Web {
 			if (a.equals(links.getPageFileName(artist))) {
 				div.addElement(a + " ");
 			} else {
-				div.addElement(new A((String)m.get(a), a).toString() + " ");
+				div.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(a), a).toString() + " ");
 			}
 		}
 		
@@ -1113,7 +1113,7 @@ public class Web {
 			if (v.equals(links.getPageFileName(venue))) {
 				div.addElement(l);
 			} else {
-				div.addElement(new A((String)m.get(v), l));
+				div.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(v), l));
 			}
 		}
 		
@@ -1140,7 +1140,7 @@ public class Web {
 			if (a.equals(links.getPageFileName(album))) {
 				div.addElement(l);
 			} else {
-				div.addElement(new A((String)m.get(a), l));
+				div.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(a), l));
 			}
 		}
 		
@@ -1210,7 +1210,7 @@ public class Web {
 			if (s.equals(links.getPageFileName(show))) {
 				div.addElement(l);
 			} else {
-				div.addElement(new A((String)m.get(s), l));
+				div.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), l));
 			}
 		}
 		

@@ -84,7 +84,7 @@ public class Links {
 		img.setWidth(System.getProperty("rss.image.width"));
 		img.setAlt(System.getProperty("rss.image.alt"));
 		
-		return new A(link.toString(), img.toString()).toString();
+		return new A(link.toString(), img.toString()).toString(); // rss feed URL
 	}
 
 	public Link getAlternateRSSLink() {

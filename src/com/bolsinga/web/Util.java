@@ -50,4 +50,10 @@ public class Util {
 		div.setPrettyPrint(Util.getPrettyPrint());
 		return div;
 	}
+	
+	public static A createInternalA(String url, String value) {
+		A a = new A(url, value);
+		a.setClass("internal");
+		return a;
+	}
 }

@@ -29,24 +29,24 @@ public class Encode {
 			fName = artist.getName();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			fStandardLink = new A(standardLinks.getLinkTo(artist), "$2").toString();
-			fUpLink = new A(upLinks.getLinkTo(artist), "$2").toString();
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2").toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(artist), "$2").toString();
 		}
 		
 		Data(Venue venue, Links standardLinks, Links upLinks) {
 			fName = venue.getName();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			fStandardLink = new A(standardLinks.getLinkTo(venue), "$2").toString();
-			fUpLink = new A(upLinks.getLinkTo(venue), "$2").toString();
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2").toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(venue), "$2").toString();
 		}
 
 		Data(Album album, Links standardLinks, Links upLinks) {
 			fName = album.getTitle();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			fStandardLink = new A(standardLinks.getLinkTo(album), "$2").toString();
-			fUpLink = new A(upLinks.getLinkTo(album), "$2").toString();
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2").toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(album), "$2").toString();
 		}
 		
 		String getName() {
