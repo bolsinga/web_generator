@@ -27,7 +27,7 @@ public class Site {
       com.bolsinga.diary.Web.generate(diary, music, outputDir);
     }
     if (!diaryOnly) {
-      com.bolsinga.music.web.Web.generate(music, outputDir);
+      com.bolsinga.music.Web.generate(music, outputDir);
       if (!webOnly) {
         com.bolsinga.music.ICal.generate(music, outputDir);
       }
