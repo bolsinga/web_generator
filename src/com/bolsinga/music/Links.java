@@ -36,7 +36,11 @@ public class Links {
 		
 		String root = System.getProperty("music.root");
 		if (root == null) {
-			System.setProperty("music.root", System.getProperty("diary.root"));
+			root = System.getProperty("diary.root");
+			if (root == null) {
+				root = System.getProperty("rss.root");
+			}
+			System.setProperty("music.root", root);
 		}
 	}
 	
