@@ -27,7 +27,7 @@ abstract class DocumentCreator {
 	protected abstract boolean needNewDocument();
 	protected abstract Document createDocument();
 	protected abstract String getCurrentPath();
-	protected abstract void addNavigator();
+	protected abstract void addIndexNavigator();
 	
 	public void close() {
 		if (fDocument != null) {
@@ -43,13 +43,15 @@ abstract class DocumentCreator {
 			}
 			fDocument = createDocument();
 			addHeader();
-			addNavigator();
+			addWebNavigator();
+			addIndexNavigator();
 		}
 		return fDocument;
 	}
 	
 	private void writeDocument() {
-		addNavigator();
+		addIndexNavigator();
+		addWebNavigator();
 		try {
 			File f = new File(fOutputDir, getCurrentPath());
 			File parent = new File(f.getParent());
@@ -74,6 +76,10 @@ abstract class DocumentCreator {
 		img.setWidth(120);
 		img.setAlt("[Busy computing... for you!]");
 		fDocument.getBody().addElement(new Center(img));
+	}
+	
+	protected void addWebNavigator() {
+		Util.addWebNavigator(fDocument);
 	}
 	
 	protected void finalize() throws Throwable {
@@ -108,8 +114,8 @@ class ArtistDocumentCreator extends DocumentCreator {
 		return Util.getPagePath(fDocArtist);
 	}
 	
-	protected void addNavigator() {
-		Web.addNavigator(fMusic, fDocArtist, fDocument);
+	protected void addIndexNavigator() {
+		Web.addIndexNavigator(fMusic, fDocArtist, fDocument);
 	}
 }
 
@@ -139,8 +145,8 @@ class VenueDocumentCreator extends DocumentCreator {
 		return Util.getPagePath(fDocVenue);
 	}
 	
-	protected void addNavigator() {
-		Web.addNavigator(fMusic, fDocVenue, fDocument);
+	protected void addIndexNavigator() {
+		Web.addIndexNavigator(fMusic, fDocVenue, fDocument);
 	}
 }
 
@@ -170,8 +176,8 @@ class ShowDocumentCreator extends DocumentCreator {
 		return Util.getPagePath(fDocShow);
 	}
 	
-	protected void addNavigator() {
-		Web.addNavigator(fMusic, fDocShow, fDocument);
+	protected void addIndexNavigator() {
+		Web.addIndexNavigator(fMusic, fDocShow, fDocument);
 	}
 }
 
@@ -465,7 +471,7 @@ public class Web {
 		}
 	}
 	
-	public static void addNavigator(Music music, Artist artist, Document doc) {
+	public static void addIndexNavigator(Music music, Artist artist, Document doc) {
 		Center c = new Center();
 		
 		java.util.Map m = new TreeMap();
@@ -481,18 +487,17 @@ public class Web {
 		li = m.keySet().iterator();
 		while (li.hasNext()) {
 			String a = (String)li.next();
-			String l = " " + a + " ";
 			if (a.equals(Util.getPageFileName(artist))) {
-				c.addElement(l);
+				c.addElement(a + " ");
 			} else {
-				c.addElement(new A((String)m.get(a), l));
+				c.addElement(new A((String)m.get(a), a).toString() + " ");
 			}
 		}
 		
 		doc.getBody().addElement(c);
 	}
 	
-	public static void addNavigator(Music music, Venue venue, Document doc) {
+	public static void addIndexNavigator(Music music, Venue venue, Document doc) {
 		Center c = new Center();
 		
 		java.util.Map m = new TreeMap();
@@ -519,7 +524,7 @@ public class Web {
 		doc.getBody().addElement(c);
 	}
 	
-	public static void addNavigator(Music music, Show show, Document doc) {
+	public static void addIndexNavigator(Music music, Show show, Document doc) {
 		Center c = new Center();
 		
 		java.util.Map m = new TreeMap();
@@ -545,7 +550,7 @@ public class Web {
 		
 		doc.getBody().addElement(c);
 	}
-	
+
 	private static String getCopyright() {
 		StringBuffer cp = new StringBuffer();
 		
@@ -567,10 +572,10 @@ public class Web {
 	private static String getGenerator() {
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append("My Program"); // Get this class name programmatically
+		sb.append(System.getProperty("music.program"));
 		
 		sb.append(" (built: ");
-		sb.append("BUILD_DATE"); // Replace this at build time with ant facilities.
+		sb.append(System.getProperty("music.builddate"));
 		sb.append(" running on jdk ");
 		sb.append(System.getProperty("java.runtime.version"));
 		sb.append(" - ");
