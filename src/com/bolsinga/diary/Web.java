@@ -17,9 +17,9 @@ class DiaryDocumentCreator {
 	Links fLinks = null;
 	String fOutputDir = null;
 	XhtmlDocument fDocument = null;
+	String fProgram = null;
 	div fMainDiv = null;
 	Entry fEntry = null;
-	String fProgram = null;
 	
 	public DiaryDocumentCreator(Diary diary, Links links, String outputDir, String program) {
 		fDiary = diary;

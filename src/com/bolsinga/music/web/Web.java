@@ -48,20 +48,26 @@ abstract class DocumentCreator {
 		if ((fDocument == null) || needNewDocument()) {
             close();
             
-			String title = getTitle();
-			fDocument = Web.createHTMLDocument(fLinks, title);
-			
-			div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_HEADER);
-			headerDiv.addElement(new h1().addElement(title));
-			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
-			headerDiv.addElement(fLinks.addWebNavigator(fMusic, fProgram));
-			headerDiv.addElement(addIndexNavigator());
-			fDocument.getBody().addElement(headerDiv);
+			fDocument = createDocument();
+			fDocument.getBody().addElement(getHeaderDiv());
 			
 			fMainDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MAIN);
 		}
 		return fMainDiv;
 	}
+    
+    protected XhtmlDocument createDocument() {
+        return Web.createHTMLDocument(fLinks, getTitle());
+    }
+    
+    protected div getHeaderDiv() {
+        div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_HEADER);
+        headerDiv.addElement(new h1().addElement(getTitle()));
+        headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
+        headerDiv.addElement(fLinks.addWebNavigator(fMusic, fProgram));
+        headerDiv.addElement(addIndexNavigator());
+        return headerDiv;
+    }
 
     protected div getSubsection() {
         div mainDiv = getMainDiv();
