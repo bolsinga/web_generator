@@ -16,20 +16,22 @@ public class Music {
   private static HashMap sArtists = new HashMap();
         
   public static void main(String[] args) {
-    if (args.length != 5) {
-      System.out.println("Usage: Music [shows] [venuemap] [bandsort] [relations] [output]");
+    if (args.length != 6) {
+      System.out.println("Usage: Music [shows] [venuemap] [bandsort] [relations] [itunes] [output]");
       System.exit(0);
     }
                 
-    Music.convert(args[0], args[1], args[2], args[3], args[4]);
+    Music.convert(args[0], args[1], args[2], args[3], args[4], args[5]);
   }
         
-  public static void convert(String showsFile, String venueFile, String bandFile, String relationFile, String outputFile) {
+  public static void convert(String showsFile, String venueFile, String bandFile, String relationFile, String iTunesFile, String outputFile) {
                 
     ObjectFactory objFactory = new ObjectFactory();
                 
     try {
       com.bolsinga.music.data.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile);
+
+      com.bolsinga.itunes.converter.ITunes.addMusic(objFactory, music, iTunesFile);
 
       music.setTimestamp(Calendar.getInstance());
                         
@@ -55,6 +57,23 @@ public class Music {
     }
   }
         
+  private static void dumpSimilarArtists(com.bolsinga.music.data.Music music) {
+    String s;
+    HashSet bands = new HashSet();
+                
+    ListIterator i = music.getArtist().listIterator();
+    while (i.hasNext()) {
+      s = ((Artist)i.next()).getName().toLowerCase();
+      if (bands.contains(s)) {
+        System.out.println(s);
+      } else {
+        bands.add(s);
+      }
+    }
+                
+    System.exit(0);
+  }
+
   public static com.bolsinga.music.data.Music createMusic(ObjectFactory objFactory, String showsFile, String venueFile, String bandFile, String relationFile)  throws JAXBException {
     List shows = null;
     List venues = null;

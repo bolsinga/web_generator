@@ -185,7 +185,7 @@
         </copy>
 </target>
 
-<target name="shows_converter" depends="music, diary_binding">
+<target name="music_converter" depends="music, itunes_converter, diary_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -201,16 +201,6 @@
                         deprecation="on">
                 <src path="${src.dir}" />
                 <include name="com/bolsinga/itunes/converter/*.java" />
-                <classpath refid="jaxb_binder_classpath" />
-        </javac>
-</target>
-
-<target name="music_converter" depends="shows_converter, itunes_converter">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/music/converter/*.java" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
@@ -277,7 +267,7 @@
 </path>
 
 <target name="generateMusicXML" depends="music_converter, jar">
-        <java classname="com.bolsinga.music.converter.Music" fork="true">
+        <java classname="com.bolsinga.shows.converter.Music" fork="true">
                 <arg value="${legacy_data.dir}shows.txt" />
                 <arg value="${legacy_data.dir}venuemap.txt" />
                 <arg value="${legacy_data.dir}bandsort.txt" />
@@ -288,7 +278,7 @@
         </java>
 </target>
 
-<target name="generateDiaryXML" depends="shows_converter, jar">
+<target name="generateDiaryXML" depends="music_converter, jar">
         <java classname="com.bolsinga.shows.converter.Diary" fork="true">
                 <sysproperty key="diary.title" value="En Vogue Webmaster" />
                 <arg value="${legacy_data.dir}comments.txt" />
