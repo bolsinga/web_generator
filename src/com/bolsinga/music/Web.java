@@ -376,7 +376,8 @@ public class Web {
 				td.setAlign("left");
 				tr.addElement(td);
 				// use DecimalFormat...
-				tr.addElement(new TD(val.toString())).addElement(new TD(Double.toString((double)val.intValue() / totalShows * 100.0)));
+				tr.addElement(new TD(val.toString()));
+				tr.addElement(new TD(Util.toString((double)val.intValue() / totalShows * 100.0)));
 				
 				table.addElement(tr);
 			}

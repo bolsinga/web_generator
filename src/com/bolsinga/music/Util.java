@@ -28,6 +28,7 @@ public class Util {
 
 	private static DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
 	private static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
+	private static DecimalFormat sPercentFormat = new DecimalFormat("##.##");
 	
 	public static Calendar toCalendar(com.bolsinga.music.data.Date date) {
 		Calendar d = Calendar.getInstance();
@@ -70,6 +71,10 @@ public class Util {
 				return "Unknown";
 			}
 		}
+	}
+	
+	public static String toString(double value) {
+		return sPercentFormat.format(value);
 	}
 	
 	public static void addWebNavigator(Document doc) {
