@@ -11,25 +11,25 @@ import java.util.*;
 public class ICal {
 
 	public static void main(String[] args) {
-		if (args.length != 2) {
-			System.out.println("Usage: ICal [source.xml] [output.dir]");
+		if (args.length != 3) {
+			System.out.println("Usage: ICal [source.xml] [calendar.name] [output.dir]");
 			System.exit(0);
 		}
 		
-		ICal.generate(args[0], args[1]);
+		ICal.generate(args[0], args[1], args[2]);
 	}
 
-	public static void generate(String sourceFile, String outputDir) {
+	public static void generate(String sourceFile, String name, String outputDir) {
 		Music music = Util.createMusic(sourceFile);
 		
-		generateICal(music, outputDir);
+		generateICal(music, name, outputDir);
 	}
 	
-	public static void generateICal(Music music, String outputDir) {
+	public static void generateICal(Music music, String name, String outputDir) {
 		OutputStreamWriter w = null;
 		
 		try {
-			File f = new File(outputDir, "Shows.ics");
+			File f = new File(outputDir, name + ".ics");
 			File parent = new File(f.getParent());
 			if (!parent.exists()) {
 				if (!parent.mkdirs()) {
@@ -43,16 +43,16 @@ public class ICal {
 			System.exit(1);
 		}
 		
-		generateICal(music, w);
+		generateICal(music, name, w);
 	}
 	
-	public static void generateICal(Music music, Writer w) {
+	public static void generateICal(Music music, String name, Writer w) {
 		List items = music.getShow();
 		Show item = null;
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 		
-		VCalendar cal = new VCalendar("Shows");
+		VCalendar cal = new VCalendar(name);
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {

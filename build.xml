@@ -363,6 +363,7 @@
 	<mkdir dir="${output.dir}/ical/" />
 	<java classname="com.bolsinga.music.ical.ICal" fork="true">
 		<arg value="${data.dir}music.xml" />
+		<arg value="Shows" />
 		<arg value="${output.dir}/ical/" />
 		<classpath refid="music_classpath" />
 	</java>
