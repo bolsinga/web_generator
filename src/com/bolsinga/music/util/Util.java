@@ -19,7 +19,6 @@ public class Util {
 	public static final String VENUE_DIR = "venues";
 	public static final String SHOW_DIR = "shows";
 	public static final String CITIES_DIR = "cities";
-	private static final String DATA_DIR = "data";
 	
 	private static final String OTHER = "other";
 	public static final String STATS = "stats";
@@ -138,17 +137,6 @@ public class Util {
 		link.append(STATS);
 		link.append(HTML_EXT);
 		a = new A(link.toString(), "Cities");
-		sb.append(a.toString());
-		sb.append(" ");
-
-		link = new StringBuffer();
-		link.append("..");
-		link.append(SEPARATOR);
-		link.append(DATA_DIR);
-		link.append(SEPARATOR);
-		link.append(STATS);
-		link.append(HTML_EXT);
-		a = new A(link.toString(), "Data");
 		sb.append(a.toString());
 		sb.append(" ");
 
