@@ -84,6 +84,18 @@
 		<xs:pattern value="album_.*" />
 	</xs:restriction>
 </xs:simpleType>
+<xs:simpleType name="format">
+	<xs:restriction base="xs:token" >
+		<xs:enumeration value="12 Inch LP" />
+		<xs:enumeration value="12 Inch EP" />
+		<xs:enumeration value="12 Inch Single" />
+		<xs:enumeration value="10 Inch EP" />
+		<xs:enumeration value="7 Inch Single" />
+		<xs:enumeration value="Cassette" />
+		<xs:enumeration value="CD" />
+		<xs:enumeration value="Digital File" />
+	</xs:restriction>
+</xs:simpleType>
 <xs:element name="album" >
 	<xs:complexType>
 		<xs:sequence>
@@ -93,6 +105,7 @@
 			<xs:element name="releaseDate" type="date" minOccurs="0" />
 			<xs:element name="purchaseDate" type="date" minOccurs="0" />
 			<xs:element name="label" type="xs:IDREF" minOccurs="0" />
+			<xs:element name="format" type="format" maxOccurs="unbounded" />
 			<xs:element name="song" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
@@ -165,7 +178,7 @@
 	</xs:restriction>
 </xs:simpleType>
 <xs:simpleType name="relationType" >
-	<xs:restriction base="xs:string" >
+	<xs:restriction base="xs:token" >
 		<xs:enumeration value="artist" />
 		<xs:enumeration value="venue" />
 		<xs:enumeration value="label" />
