@@ -65,11 +65,10 @@ public class ITunes {
 	    ITunes.convert(args[0], args[1]);
 	}
 	
-	public static void convert(String itunesFile, String outputFile) {
-
-	    com.bolsinga.music.data.Music music = ITunes.convert(itunesFile);
-	    
+	public static void convert(String itunesFile, String outputFile) {	    
 	    try {
+			com.bolsinga.music.data.Music music = ITunes.convert(itunesFile);
+
 			music.setTimestamp(Calendar.getInstance());
 				
 			// Write out to the output file.
@@ -93,21 +92,14 @@ public class ITunes {
 	    }
 	}
 	
-	public static com.bolsinga.music.data.Music convert(String itunesFile) {
+	public static com.bolsinga.music.data.Music convert(String itunesFile) throws JAXBException {
 
 	    ObjectFactory objFactory = new ObjectFactory();
-	    com.bolsinga.music.data.Music music = null;
-	    
-	    try {
-			music = objFactory.createMusic();
-	    } catch (JAXBException e) {
-			System.err.println(e);
-			e.printStackTrace();
-			System.exit(1);
-	    }
-	    
-	    ITunes.addMusic(objFactory, music, itunesFile);
-	    
+		
+	    com.bolsinga.music.data.Music music = objFactory.createMusic();
+
+		ITunes.addMusic(objFactory, music, itunesFile);
+	    	    
 	    return music;
 	}
 	
@@ -144,7 +136,7 @@ public class ITunes {
 	    sITunesKeys.add(TK_YEAR);
 	}
 	
-	public static void addMusic(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String itunesFile) {
+	public static void addMusic(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String itunesFile) throws JAXBException {
 	
 	    // Create a list of all known iTunes keys. This way if a new one shows up, the program will let us know.
 	    createKnownKeys();
@@ -165,7 +157,7 @@ public class ITunes {
 	    }
 	}
 	
-	private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List tracks) {
+	private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List tracks) throws JAXBException {
 	    ListIterator li = tracks.listIterator();
 	    while (li.hasNext()) {
 			com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)li.next();
@@ -175,9 +167,11 @@ public class ITunes {
 	    }
 		
 		sortAlbumsSongOrder(music);
+		
+		setAlbumYears(objFactory, music);
 	}
 	
-	private static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) {
+	private static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) throws JAXBException {
 	    ListIterator li = track.getKeyAndArrayOrData().listIterator();
 	    
 	    String songTitle = null;
@@ -236,21 +230,15 @@ public class ITunes {
 	    ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, compilation);
 	}
 	
-	private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, boolean compilation) {
-	    try {
-			// Get or create the artist
-			Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
-			
-			// Get or create the album.
-			Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
-			
-			// The song is always the new item. The artist and album may already be known.
-			ITunes.addAlbumTrack(objFactory, music, artist, album, songTitle, year, index, genre, lastPlayed);
-	    } catch (JAXBException e) {
-			System.err.println(e);
-			e.printStackTrace();
-			System.exit(1);
-	    }
+	private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, boolean compilation) throws JAXBException {
+		// Get or create the artist
+		Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
+		
+		// Get or create the album.
+		Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
+		
+		// The song is always the new item. The artist and album may already be known.
+		ITunes.addAlbumTrack(objFactory, music, artist, album, songTitle, year, index, genre, lastPlayed);
 	}
 	
 	private static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {
@@ -304,10 +292,9 @@ public class ITunes {
 	    result.setLastPlayed(lastPlayed);
 	    result.setGenre(genre);
 	    
-	    com.bolsinga.music.data.Date release = objFactory.createDate();
-	    release.setUnknown(true);
-	    release.setYear(java.math.BigInteger.valueOf(year));
-	    result.setReleaseDate(release);
+		if (year != -1) {
+			result.setReleaseDate(releaseYear(objFactory, year));
+		}
 	    
 		if (index != -1) {
 			result.setTrack(java.math.BigInteger.valueOf(index));
@@ -321,11 +308,49 @@ public class ITunes {
 	    return result;
 	}
 
+	private static com.bolsinga.music.data.Date releaseYear(ObjectFactory objFactory, int year) throws JAXBException {
+	    com.bolsinga.music.data.Date release = objFactory.createDate();
+	    release.setUnknown(true);
+	    release.setYear(java.math.BigInteger.valueOf(year));
+		return release;
+	}
+	
 	private static void sortAlbumsSongOrder(com.bolsinga.music.data.Music music) {
 		ListIterator li = music.getAlbum().listIterator();
 		while (li.hasNext()) {
 			Album a = (Album)li.next();
 			Collections.sort(a.getSong(), com.bolsinga.music.util.Compare.SONG_ORDER_COMPARATOR);
+		}
+	}
+	
+	private static void setAlbumYears(ObjectFactory objFactory, com.bolsinga.music.data.Music music) throws JAXBException {
+		ListIterator li = music.getAlbum().listIterator();
+		int albumYear, songYear;
+		com.bolsinga.music.data.Date date;
+		while (li.hasNext()) {
+			albumYear = -1;
+			
+			Album a = (Album)li.next();
+			
+			ListIterator si = a.getSong().listIterator();
+			while (si.hasNext()) {
+				date = ((Song)si.next()).getReleaseDate();
+				if (date != null) {
+					songYear = date.getYear().intValue();
+					if (albumYear == -1) {
+						albumYear = songYear;
+					} else {
+						if (songYear != albumYear) {
+							albumYear = -1;
+							break;
+						}
+					}
+				}
+			}
+			
+			if (albumYear != -1) {
+				a.setReleaseDate(releaseYear(objFactory, albumYear));
+			}
 		}
 	}
 }
