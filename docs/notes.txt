@@ -93,7 +93,7 @@ END:VCALENDAR
  setURL(URL)
  output(OutputStream)
 
-User Interface:
+User Interface (music):
 
 Location editor Panel
 Multiple fields
@@ -131,3 +131,14 @@ List of Types
 List of Members
  Add Button
  Edit Button
+
+User Interface (diary):
+
+Table of entries (date & comment columns)
+Selecting one line will display:
+	the Date in a date control (immediately modifying, with warning for older items)
+	the Comment in a TextArea (immediately modifying, with warning for older items)
+There will also be an "Add" button
+The Title will be displayed in a TextField (immediately modifying)
+The Header will be displayed in a TextArea (immediately modifying)
+The statis will be displayed in a TextArea (immediately modifying)
