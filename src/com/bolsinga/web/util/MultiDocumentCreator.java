@@ -14,12 +14,8 @@ public abstract class MultiDocumentCreator extends DocumentCreator {
     protected abstract boolean needNewSubsection();
     protected abstract Element getSubsectionTitle();
 
-    protected div getContainer() {
-        div c = getSubsection();
-        if (c == null) {
-            c = getMain();
-        }
-        return c;
+    protected void add() {
+        getSubsection().addElement(getCurrentElement());
     }
 
     private div getSubsection() {

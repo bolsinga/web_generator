@@ -35,11 +35,7 @@ public abstract class DocumentCreator {
 	}
 	
     protected void add() {
-        getContainer().addElement(getCurrentElement());
-    }
-    
-    protected div getContainer() {
-        return getMain();
+        getMain().addElement(getCurrentElement());
     }
     
 	protected div getMain() {
