@@ -211,8 +211,6 @@ class ShowDocumentCreator extends DocumentCreator {
 }
 
 class StatisticsCreator extends DocumentCreator {
-	static final String FILE_NAME = "stats.html";
-	
 	String fTitle = null;
 	String fDirectory = null;
 	
@@ -235,7 +233,12 @@ class StatisticsCreator extends DocumentCreator {
 	}
 	
 	protected String getCurrentPath() {
-		return fDirectory + "/" + FILE_NAME;
+		StringBuffer sb = new StringBuffer();
+		sb.append(fDirectory);
+		sb.append(Util.SEPARATOR);
+		sb.append(Util.STATS);
+		sb.append(Util.HTML_EXT);
+		return sb.toString();
 	}
 	
 	protected void addIndexNavigator() {
@@ -281,6 +284,9 @@ public class Web {
 	public static void generateArtistPages(Music music, String outputDir) {
 		List items = music.getArtist();
 		Artist item = null;
+		String[] names = new String[items.size()];
+		int[] values = new int[items.size()];
+		int index = 0;
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
 		
@@ -290,15 +296,27 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 
+			names[index] = item.getName();
+			values[index] = Lookup.getLookup(music).getShows(item).size();
+			
 			addItem(music, item, creator.getDocument(item));
+			
+			index++;
 		}
 		creator.close();
+		
+		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
+		stats.getDocument("Artist Statistics", Util.ARTIST_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
+		stats.close();
 	}
 	
 	public static void generateVenuePages(Music music, String outputDir) {
 		List items = music.getVenue();
+		String[] names = new String[items.size()];
+		int[] values = new int[items.size()];
 		Venue item = null;
-
+		int index = 0;
+		
 		Collections.sort(items, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
 
 		VenueDocumentCreator creator = new VenueDocumentCreator(music, outputDir);
@@ -306,15 +324,27 @@ public class Web {
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Venue)li.next();
+
+			names[index] = item.getName();
+			values[index] = Lookup.getLookup(music).getShows(item).size();
 			
 			addItem(music, item, creator.getDocument(item));
+			
+			index++;
 		}
 		creator.close();
+		
+		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
+		stats.getDocument("Venue Statistics", Util.VENUE_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
+		stats.close();
 	}
 	
 	public static void generateDatePages(Music music, String outputDir) {
 		List items = music.getShow();
+		String[] names = new String[items.size()];
+		int[] values = new int[items.size()];
 		Show item = null;
+		int index = 0;
 
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 
@@ -323,10 +353,19 @@ public class Web {
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Show)li.next();
+
+//			names[index] = item.getName();
+//			values[index] = Lookup.getLookup(music).getShows(item).size();
 			
 			creator.add(music, item);
+			
+			index++;
 		}
 		creator.close();
+		
+		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
+		stats.getDocument("Show Statistics", Util.ARTIST_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Year", "Year")));
+		stats.close();
 	}
 	
 	public static void generateCityPages(Music music, String outputDir) {
@@ -380,7 +419,7 @@ public class Web {
 		}
 		
 		StatisticsCreator creator = new StatisticsCreator(music, outputDir);
-		creator.getDocument("City Statistics", "cities").getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
+		creator.getDocument("City Statistics", Util.CITIES_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
 	}
 	

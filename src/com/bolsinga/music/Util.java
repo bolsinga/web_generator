@@ -13,17 +13,17 @@ import org.apache.ecs.filter.*;
 
 public class Util {
 
-	private static final String HTML_EXT = ".html";
+	public static final String HTML_EXT = ".html";
 
-	private static final String ARTIST_DIR = "artists";
-	private static final String VENUE_DIR = "venues";
-	private static final String SHOW_DIR = "shows";
-	private static final String CITIES_DIR = "cities";
+	public static final String ARTIST_DIR = "artists";
+	public static final String VENUE_DIR = "venues";
+	public static final String SHOW_DIR = "shows";
+	public static final String CITIES_DIR = "cities";
 	private static final String DATA_DIR = "data";
 	
 	private static final String OTHER = "other";
-	private static final String STATS = "stats";
-	private static final String SEPARATOR = "/";
+	public static final String STATS = "stats";
+	public static final String SEPARATOR = "/";
 	private static final String HASH = "#";
 
 	private static DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
