@@ -25,7 +25,7 @@ public class Compare {
         Venue r1 = (Venue)o1;
         Venue r2 = (Venue)o2;
                         
-        return com.bolsinga.music.util.Compare.LIBRARY_COMPARATOR.compare(r1.getName(), r2.getName());
+        return com.bolsinga.music.Compare.LIBRARY_COMPARATOR.compare(r1.getName(), r2.getName());
       }
     };
         
@@ -36,7 +36,7 @@ public class Compare {
                         
         int result = convert(r1.getDate()) - convert(r2.getDate());
         if (result == 0) {
-          result = com.bolsinga.music.util.Compare.LIBRARY_COMPARATOR.compare(r1.getVenue(), r2.getVenue());
+          result = com.bolsinga.music.Compare.LIBRARY_COMPARATOR.compare(r1.getVenue(), r2.getVenue());
           if (result == 0) {
             result = ((String)r1.getBands().get(0)).compareToIgnoreCase(((String)r2.getBands().get(0)));
           }

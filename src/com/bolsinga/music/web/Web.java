@@ -1,5 +1,6 @@
 package com.bolsinga.music.web;
 
+import com.bolsinga.music.*;
 import com.bolsinga.music.data.*;
 import com.bolsinga.music.util.*;
 import com.bolsinga.settings.data.*;
@@ -366,7 +367,7 @@ public class Web {
     Artist item = null;
     int index = 0;
                 
-    Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.ARTIST_COMPARATOR);
                 
     ArtistDocumentCreator creator = new ArtistDocumentCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
                 
@@ -378,7 +379,7 @@ public class Web {
     }
     creator.close();
                 
-    Collections.sort(items, com.bolsinga.music.util.Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
 
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
@@ -408,7 +409,7 @@ public class Web {
     Venue item = null;
     int index = 0;
                 
-    Collections.sort(items, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.VENUE_COMPARATOR);
 
     VenueDocumentCreator creator = new VenueDocumentCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
                 
@@ -420,7 +421,7 @@ public class Web {
     }
     creator.close();
 
-    Collections.sort(items, com.bolsinga.music.util.Compare.getCompare(music).VENUE_STATS_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.getCompare(music).VENUE_STATS_COMPARATOR);
 
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
@@ -448,9 +449,9 @@ public class Web {
     List items = music.getShow();
     Show item = null;
     Vector list = null;
-    TreeMap dates = new TreeMap(com.bolsinga.music.util.Compare.SHOW_STATS_COMPARATOR);
+    TreeMap dates = new TreeMap(com.bolsinga.music.Compare.SHOW_STATS_COMPARATOR);
                 
-    Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
     ShowDocumentCreator creator = new ShowDocumentCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
                 
@@ -557,7 +558,7 @@ public class Web {
     Album item = null;
     int index = 0;
                 
-    Collections.sort(items, com.bolsinga.music.util.Compare.ALBUM_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.ALBUM_COMPARATOR);
                 
     TracksDocumentCreator creator = new TracksDocumentCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
                 
@@ -570,7 +571,7 @@ public class Web {
     creator.close();
 
     items = music.getArtist();
-    Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_TRACKS_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.ARTIST_TRACKS_COMPARATOR);
 
     Artist artist = null;
     String[] names = new String[items.size()];
@@ -598,7 +599,7 @@ public class Web {
     }
 
     items = music.getArtist();
-    Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_ALBUMS_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.ARTIST_ALBUMS_COMPARATOR);
 
     names = new String[items.size()];
     values = new int[items.size()];
@@ -690,7 +691,7 @@ public class Web {
 
     List items = music.getShow();
     Show item = null;
-    Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(items);
     for (int i = 0; i < lastShowsCount; i++) {
       item = (Show)items.get(i);

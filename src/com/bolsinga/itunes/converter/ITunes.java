@@ -327,7 +327,7 @@ public class ITunes {
     ListIterator i = music.getArtist().listIterator();
     while (i.hasNext()) {
       Artist a = (Artist)i.next();
-      Collections.sort(a.getAlbum(), com.bolsinga.music.util.Compare.ALBUM_ORDER_COMPARATOR);
+      Collections.sort(a.getAlbum(), com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
     }
   }
 
@@ -335,7 +335,7 @@ public class ITunes {
     ListIterator i = music.getAlbum().listIterator();
     while (i.hasNext()) {
       Album a = (Album)i.next();
-      Collections.sort(a.getSong(), com.bolsinga.music.util.Compare.SONG_ORDER_COMPARATOR);
+      Collections.sort(a.getSong(), com.bolsinga.music.Compare.SONG_ORDER_COMPARATOR);
     }
   }
         

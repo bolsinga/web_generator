@@ -55,7 +55,7 @@ public class ICal {
     List items = music.getShow();
     Show item = null;
                 
-    Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
+    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
                 
     VCalendar cal = new VCalendar(name);
                 

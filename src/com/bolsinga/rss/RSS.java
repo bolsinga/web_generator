@@ -145,7 +145,7 @@ public class RSS {
       channelElements.add(logo);
 
       List shows = music.getShow();
-      Collections.sort(shows, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
+      Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
       Collections.reverse(shows);
 
       List entries = diary.getEntry();

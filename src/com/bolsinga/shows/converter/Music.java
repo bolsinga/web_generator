@@ -82,7 +82,7 @@ public class Music {
         
     convert(objFactory, music, shows);
 
-    Collections.sort(music.getArtist(), com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
+    Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR);
 
     createRelations(objFactory, music, relations);
                 
