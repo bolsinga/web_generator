@@ -21,40 +21,50 @@ public class VEvent {
 	}
 
 	public void output(Writer w) {
-		PrintWriter pw = new PrintWriter(w, true);
-		output(pw);
-		pw.close();
-	}
-	
-	public void output(PrintWriter pw) {
-		pw.println("BEGIN:VEVENT");
+		try {
+			w.write("BEGIN:VEVENT");
+			w.write("\r\n");
 
-		writeAllDay(pw);
-		
-		pw.print("UID:");
-		pw.println(fUID);
-		
-		pw.print("SUMMARY:");
-		pw.println(fSummary);
-		
-		if (fURL != null) {
-			pw.print("URL;VALUE=URI:");
-			pw.println(fURL);
+			writeAllDay(w);
+			
+			w.write("UID:");
+			w.write(fUID);
+			w.write("\r\n");
+			
+			w.write("SUMMARY:");
+			w.write(fSummary);
+			w.write("\r\n");
+			
+			if (fURL != null) {
+				w.write("URL;VALUE=URI:");
+				w.write(fURL);
+				w.write("\r\n");
+			}
+
+			w.write("RRULE:FREQ=YEARLY;INTERVAL=1");
+			w.write("\r\n");
+
+			w.write("END:VEVENT");
+			w.write("\r\n");
+
+			w.flush();
+		} catch (IOException ioe) {
+			System.err.println("Exception: " + ioe);
+			ioe.printStackTrace();
+			System.exit(1);
 		}
-
-		pw.println("RRULE:FREQ=YEARLY;INTERVAL=1");
-
-		pw.println("END:VEVENT");
 	}
 	
-	private void writeAllDay(PrintWriter pw) {
+	private void writeAllDay(Writer w) throws IOException {
 		Calendar end = (Calendar)fDate.clone();
 		end.add(Calendar.DATE, 1);
 
-		pw.print("DTSTART;VALUE=DATE:");
-		pw.println(sFormatter.format(fDate.getTime()));
+		w.write("DTSTART;VALUE=DATE:");
+		w.write(sFormatter.format(fDate.getTime()));
+		w.write("\r\n");
 		
-		pw.print("DTEND;VALUE=DATE:");
-		pw.println(sFormatter.format(end.getTime()));
+		w.write("DTEND;VALUE=DATE:");
+		w.write(sFormatter.format(end.getTime()));
+		w.write("\r\n");
 	}
 }

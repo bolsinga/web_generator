@@ -66,6 +66,7 @@ public class ICal {
 			}
 			OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
 			cal.output(os);
+			os.flush();
 			os.close();
 		} catch (IOException ioe) {
 			System.err.println("Exception: " + ioe);

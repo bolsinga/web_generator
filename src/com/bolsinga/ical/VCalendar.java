@@ -16,26 +16,33 @@ public class VCalendar {
 	}
 	
 	public void output(Writer w) {
-		PrintWriter pw = new PrintWriter(w, true);
-		output(pw);
-		pw.close();
-	}
-	
-	public void output(PrintWriter pw) {
-		pw.println("BEGIN:VCALENDAR");
-		pw.print("X-WR-CALNAME:");
-		pw.println(fName);
-		pw.println("CALSCALE:GREGORIAN");
-		pw.println("VERSION:2.0");
-		
-		VEvent event = null;
-		ListIterator li = fEvents.listIterator();
-		while (li.hasNext()) {
-			event = (VEvent)li.next();
+		try {
+			w.write("BEGIN:VCALENDAR");
+			w.write("\r\n");
+			w.write("X-WR-CALNAME:");
+			w.write(fName);
+			w.write("\r\n");
+			w.write("CALSCALE:GREGORIAN");
+			w.write("\r\n");
+			w.write("VERSION:2.0");
+			w.write("\r\n");
 			
-			event.output(pw);
+			VEvent event = null;
+			ListIterator li = fEvents.listIterator();
+			while (li.hasNext()) {
+				event = (VEvent)li.next();
+				
+				event.output(w);
+			}
+			
+			w.write("END:VCALENDAR");
+			w.write("\r\n");
+			
+			w.flush();
+		} catch (IOException ioe) {
+			System.err.println("Exception: " + ioe);
+			ioe.printStackTrace();
+			System.exit(1);
 		}
-		
-		pw.println("END:VCALENDAR");
 	}
 }
