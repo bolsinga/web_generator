@@ -339,7 +339,7 @@ public class Web {
         return diaryDiv;
 	}
 	
-	private static synchronized String encodedComment(Music music, Entry entry, boolean upOneLevel) {
+	private static String encodedComment(Music music, Entry entry, boolean upOneLevel) {
 		return com.bolsinga.web.util.Util.convertToParagraphs(com.bolsinga.music.web.Web.embedLinks(music, entry.getComment(), upOneLevel));
 	}
 }
