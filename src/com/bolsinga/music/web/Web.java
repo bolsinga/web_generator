@@ -37,6 +37,11 @@ class CSS {
 	public static final String ARTIST_RELATION	= "artist_relation";
 	public static final String ARTIST_TRACKS	= "artist_tracks";
 	public static final String VENUE_RELATION	= "venue_relation";
+	
+	public static final String PREVIEW_MAIN		= "preview_main";
+	public static final String PREVIEW_MENU		= "preview_menu";
+	public static final String PREVIEW_RECENT	= "preview_recent";
+	public static final String PREVIEW_SHOW		= "preview_show";
 }
 
 abstract class DocumentCreator {
@@ -666,12 +671,12 @@ public class Web {
 		stats.close();
 	}
 	
-	public static String generatePreview(String sourceFile, int lastShowsCount) {
+	public static Element generatePreview(String sourceFile, int lastShowsCount) {
 		Music music = Util.createMusic(sourceFile);
 		return generatePreview(music, lastShowsCount);
 	}
 	
-	public static String generatePreview(Music music, int lastShowsCount) {
+	public static Element generatePreview(Music music, int lastShowsCount) {
 		Links links = Links.getLinks(false);
 
 		List items = music.getShow();
@@ -680,136 +685,83 @@ public class Web {
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 		Collections.reverse(items);
 		
-		TR tr = null;
-		StringBuffer sb = null;
+		Div previewDiv = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_MAIN);
 		
-		Table navigation = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0);
-		navigation.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		
-		tr = new TR().setAlign("right");
-		tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		tr.addElement(new TD(com.bolsinga.web.util.Util.getLogo()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
-		
-		sb = new StringBuffer();
+		Div previewMenu = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_MENU);
+		previewMenu.addElement(com.bolsinga.web.util.Util.getLogo());
+				
+		StringBuffer sb = new StringBuffer();
 		sb.append("Generated ");
 		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
-		tr = new TR().setAlign("right");
-		tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
+		previewMenu.addElement(new H3(sb.toString()));
+
+		UL ul = new UL();
 		
-		tr = new TR();
-		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getArtist().size());
 		sb.append(" ");
 		sb.append(links.getArtistLink());
-		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
+		ul.addElement(new LI(sb.toString()));
 
-		tr = new TR();
-		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getShow().size());
 		sb.append(" ");
 		sb.append(links.getShowLink());
-		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
-		
-		tr = new TR();
-		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		ul.addElement(new LI(sb.toString()));
+
 		sb = new StringBuffer();
 		sb.append(music.getVenue().size());
 		sb.append(" ");
 		sb.append(links.getVenueLink());
-		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
-		
-		tr = new TR();
-		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		ul.addElement(new LI(sb.toString()));
+
 		sb = new StringBuffer();
 		sb.append(Lookup.getLookup(music).getCities().size());
 		sb.append(" ");
 		sb.append(links.getCityLink());
-		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
+		ul.addElement(new LI(sb.toString()));
 
-		tr = new TR();
-		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getSong().size());
 		sb.append(" ");
 		sb.append(links.getTracksLink());
-		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
+		ul.addElement(new LI(sb.toString()));
 
-		tr = new TR();
-		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		sb = new StringBuffer();
 		sb.append(music.getAlbum().size());
 		sb.append(" ");
 		sb.append(links.getAlbumsLink());
-		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
+		ul.addElement(new LI(sb.toString()));
 
-		tr = new TR();
-		tr.setAlign("right").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		tr.addElement(new TD(links.getICalLink()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		navigation.addElement(tr);
+		previewMenu.addElement(ul);
 		
-		Table recent = new Table().setBorder(0).setWidth("100%").setCellSpacing(5).setCellPadding(0);
-		recent.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		previewMenu.addElement(links.getICalLink());
+		
+		previewDiv.addElement(previewMenu);
+		
+		Div previewRecent = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_RECENT);
 		
 		sb = new StringBuffer();
 		sb.append("Last ");
 		sb.append(Integer.toString(lastShowsCount));
 		sb.append(" shows:");
-		tr = new TR();
-		tr.setAlign("center").setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		tr.addElement(new TD(sb.toString()).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
-		recent.addElement(tr);
+		previewRecent.addElement(new H3(sb.toString()));
 		
-		TD td = new TD();
-		td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		for (int i = 0; i < lastShowsCount; i++) {
 			item = (Show)items.get(i);
 			
-			UL showListing = new UL();
-			showListing.addElement(new LI().addElement(new A(links.getLinkTo(item), Util.toString(item.getDate()))));
+			Div previewShow = com.bolsinga.web.util.Util.createDiv(CSS.PREVIEW_SHOW);
 			
-			UL showInfo = new UL();
+			previewShow.addElement(new H4(new A(links.getLinkTo(item), Util.toString(item.getDate()))));
+			previewShow.addElement(getShowListing(links, item));
 			
-			LI listItem = new LI();
-			ListIterator li = item.getArtist().listIterator();
-			while (li.hasNext()) {
-				Artist performer = (Artist)li.next();
-				
-				listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
-				
-				if (li.hasNext()) {
-					listItem.addElement(", ");
-				}
-			}
-			showInfo.addElement(listItem);
-			
-			Venue venue = (Venue)item.getVenue();
-			A venueA = new A(links.getLinkTo(venue), venue.getName());
-			Location l = (Location)venue.getLocation();
-			showInfo.addElement(new LI().addElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
-			
-			showListing.addElement(showInfo);
-			
-			td.addElement(showListing);
+			previewRecent.addElement(previewShow);
 		}
 		
-		recent.addElement(new TR().addElement(td).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
+
+		previewDiv.addElement(previewRecent);
 		
-		sb = new StringBuffer();
-		sb.append(navigation.toString());
-		sb.append(recent.toString());
-		
-		return sb.toString();
+		return previewDiv;
 	}
 	
 	public static String embedLinks(String sourceFile, String data, boolean upOneLevel) {
@@ -948,14 +900,7 @@ public class Web {
 		return venueDiv;
 	}
 	
-	public static Div addItem(Music music, Links links, Show show) {
-		Div showDiv = com.bolsinga.web.util.Util.createDiv(CSS.SHOW_ITEM);
-		
-		A a = new A();
-		a.setName(show.getId());
-		a.addElement("test", Util.toString(show.getDate()));
-		showDiv.addElement(new H3().addElement(a));
-		
+	private static UL getShowListing(Links links, Show show) {
 		UL showInfo = new UL();
 		
 		LI listItem = new LI();
@@ -975,8 +920,19 @@ public class Web {
 		A venueA = new A(links.getLinkTo(venue), venue.getName());
 		Location l = (Location)venue.getLocation();
 		showInfo.addElement(new LI(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
-
-		showDiv.addElement(showInfo);
+		
+		return showInfo;
+	}
+	
+	public static Div addItem(Music music, Links links, Show show) {
+		Div showDiv = com.bolsinga.web.util.Util.createDiv(CSS.SHOW_ITEM);
+		
+		A a = new A();
+		a.setName(show.getId());
+		a.addElement("test", Util.toString(show.getDate()));
+		showDiv.addElement(new H3().addElement(a));
+		
+		showDiv.addElement(getShowListing(links, show));
 
 		String comment = show.getComment();
 		if (comment != null) {

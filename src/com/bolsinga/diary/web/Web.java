@@ -20,11 +20,11 @@ class CSS {
 	public static final String DIARY_MENU	= "diary_menu";
 	public static final String DIARY_ENTRY	= "diary_entry";
 	
-	public static final String MAIN_STATICS	= "main_statics";
+	public static final String MAIN_COL1	= "main_col1";
+	public static final String MAIN_COL2	= "main_col2";
 	public static final String MAIN_MAIN	= "main_main";
 	public static final String MAIN_HEADER	= "main_header";
 	public static final String MAIN_DIARY	= "main_diary";
-	public static final String MAIN_PREVIEW	= "main_preview";
 }
 
 class DiaryDocumentCreator {
@@ -208,23 +208,20 @@ public class Web {
 
 		Document doc = createDocument(diary.getTitle(), links);
 
-		Div mainStatics = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_STATICS);
-		mainStatics.addElement(diary.getStatic());
-		doc.getBody().addElement(mainStatics);
+		Div mainCol1 = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_COL1);
+		mainCol1.addElement(diary.getStatic());
+		doc.getBody().addElement(mainCol1);
 		
 		Div main = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_MAIN);
-
 		Div header = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_HEADER);
 		header.addElement(diary.getHeader());
 		main.addElement(header);
 		main.addElement(generateDiary(music, diary, links, mainPageEntryCount));
-		
 		doc.getBody().addElement(main);
 		
-		Div previewDiv = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_PREVIEW);
-		previewDiv.addElement(com.bolsinga.music.web.Web.generatePreview(music, 5));
-		
-		doc.getBody().addElement(previewDiv);
+		Div mainCol2 = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_COL2);
+		mainCol2.addElement(com.bolsinga.music.web.Web.generatePreview(music, 5));
+		doc.getBody().addElement(mainCol2);
 		
 		try {
 			File f = new File(outputDir, "index.html");
