@@ -70,12 +70,22 @@
 	</javac>
 </target>
 
+<target name="utilities" depends="converter">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/music/util/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+</target>
+
 <path id="web_classpath">
 	<path refid="jaxb_classpath" />
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="web" depends="converter">
+<target name="web" depends="utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
