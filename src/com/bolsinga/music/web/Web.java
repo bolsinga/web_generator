@@ -775,14 +775,16 @@ public class Web {
 	}
 	
 	public static void addItem(Music music, Links links, Artist artist, Div div) {
+		Div artistDiv = new Div();
+		
 		A a = new A();
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
-		div.addElement(new H1().addElement(a));
+		artistDiv.addElement(new H1().addElement(a));
 				
-		addTracks(music, links, artist, div);
+		addTracks(music, links, artist, artistDiv);
 		
-		addRelations(music, links, artist, div);
+		addRelations(music, links, artist, artistDiv);
 
 		List shows = Lookup.getLookup(music).getShows(artist);
 		if (shows != null) {
@@ -792,9 +794,9 @@ public class Web {
 
 				String showLink = links.getLinkTo(show);
 			    
-			    UL showListing = new UL();
-			    
-			    showListing.addElement(new LI().addElement(new A(showLink, Util.toString(show.getDate()))));
+				Div showDiv = new Div();
+				
+			    showDiv.addElement(new H2().addElement(new A(showLink, Util.toString(show.getDate()))));
 			    
 			    UL showInfo = new UL();
 			    
@@ -825,11 +827,13 @@ public class Web {
 				    showInfo.addElement(new LI(new A(showLink, "Show Summary")));
 			    }
 			    
-			    showListing.addElement(showInfo);
+			    showDiv.addElement(showInfo);
 			    
-			    div.addElement(showListing);
+			    artistDiv.addElement(showDiv);
 		    }
 	    }
+		
+		div.addElement(artistDiv);
 	}
 	
 	public static void addItem(Music music, Links links, Venue venue, Div div) {
@@ -1023,8 +1027,9 @@ public class Web {
 	public static void addTracks(Music music, Links links, Artist artist, Div div) {
 		List albums = artist.getAlbum();
 		if (albums.size() > 0) {
-			UL ul = new UL();
-			ul.addElement(new LI().addElement("Albums"));
+			Div albumsDiv = new Div();
+			
+			albumsDiv.addElement(new H2().addElement("Albums"));
 			
 			UL related = new UL();
 			Iterator li = albums.iterator();
@@ -1041,9 +1046,9 @@ public class Web {
 				}
 				related.addElement(new LI().addElement(sb.toString()));
 			}
-			ul.addElement(related);
+			albumsDiv.addElement(related);
 			
-			div.addElement(ul);
+			div.addElement(albumsDiv);
 		}
 	}
 	
