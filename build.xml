@@ -7,7 +7,7 @@
 
 <property name="jwsdp.home" value="/usr/local/jwsdp-1.3" />
 
-<path id="classpath">
+<path id="jaxb_classpath">
 	<pathelement path="." />
 	<!-- for use with bundled ant -->
 	<fileset dir="${jwsdp.home}" includes="jaxb/lib/*.jar" />
@@ -16,9 +16,11 @@
 </path>
 
 <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-	<classpath refid="classpath" />
+	<classpath refid="jaxb_classpath" />
 </taskdef>
-	
+
+<property name="data.dir" value="../data/" />
+
 <property name="src.dir" value="src" />
 <property name="dist.dir" value="dist" />
 
@@ -48,7 +50,7 @@
 			deprecation="on">
 		<src path="${build.gensrc}" />
 		<include name="com/bolsinga/music/**" />
-		<classpath refid="classpath" />
+		<classpath refid="jaxb_classpath" />
 	</javac>
 	<copy todir="${build.classes}">
 		<fileset dir="${build.gensrc}" >
@@ -63,7 +65,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/shows/converter/**" />
-		<classpath refid="classpath" />
+		<classpath refid="jaxb_classpath" />
 	</javac>
 </target>
 
@@ -71,10 +73,23 @@
 	<jar jarfile="${build.lib}/music.jar"
 		basedir="${build.classes}" >
 		<include name="com/bolsinga/**" />
-		<manifest>
-			<attribute name="Main-Class" value="com.bolsinga.shows.converter.Music" />
-		</manifest>
 	</jar>
+</target>
+
+<path id="music_classpath">
+	<path refid="jaxb_classpath" />
+	<pathelement path="${build.lib}/music.jar" />
+</path>
+
+<target name="generateXML" depends="music">
+	<java classname="com.bolsinga.shows.converter.Music" fork="true">
+		<arg value="${data.dir}shows.txt" />
+		<arg value="${data.dir}venuemap.txt" />
+		<arg value="${data.dir}bandsort.txt" />
+		<arg value="${data.dir}relations.txt" />
+		<arg value="${data.dir}music.xml" />
+		<classpath refid="music_classpath" />
+	</java>
 </target>
 
 </project>
