@@ -32,10 +32,12 @@ class DiaryDocumentCreator {
 		if (needNewDocument(entry)) {
 			close();
 			
-			fDocument = Web.createDocument(getTitle(entry), fLinks);
+			String title = getTitle(entry);
+			fDocument = Web.createDocument(title, fLinks);
 			fEntry = entry;
 
 			Div headerDiv = new Div();
+			headerDiv.addElement(new H1().addElement(title));
 			headerDiv.addElement(addHeader());
 			headerDiv.addElement(addWebNavigator(fProgram));
 			headerDiv.addElement(addIndexNavigator());

@@ -27,7 +27,8 @@ abstract class DocumentCreator {
 	}
 	
 	protected abstract boolean needNewDocument();
-	protected abstract Document createDocument();
+	protected abstract String getTitle();
+	protected abstract Document createDocument(String title);
 	protected abstract void finishDocument();
 	protected abstract String getCurrentPath();
 	protected abstract Element addIndexNavigator();
@@ -44,9 +45,11 @@ abstract class DocumentCreator {
 			if (fDocument != null) {
 				writeDocument();
 			}
-			fDocument = createDocument();
+			String title = getTitle();
+			fDocument = createDocument(title);
 			
 			Div headerDiv = new Div();
+			headerDiv.addElement(new H1().addElement(title));
 			headerDiv.addElement(addHeader());
 			headerDiv.addElement(addWebNavigator());
 			headerDiv.addElement(addIndexNavigator());
@@ -125,9 +128,13 @@ class ArtistDocumentCreator extends DocumentCreator {
 		return (fDocArtist == null) || (!fLinks.getPageFileName(fDocArtist).equals(fLinks.getPageFileName(fArtist)));
 	}
 	
-	protected Document createDocument() {
+	protected String getTitle() {
+		return getTitle(fLinks.getPageFileName(fArtist), "Artists");
+	}
+
+	protected Document createDocument(String title) {
 		fDocArtist = fArtist;
-		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocArtist), "Artists"));
+		return Web.createHTMLDocument(title);
 	}
 
 	protected void finishDocument() {
@@ -160,9 +167,13 @@ class VenueDocumentCreator extends DocumentCreator {
 		return (fDocVenue == null) || (!fLinks.getPageFileName(fDocVenue).equals(fLinks.getPageFileName(fVenue)));
 	}
 	
-	protected Document createDocument() {
+	protected String getTitle() {
+		return getTitle(fLinks.getPageFileName(fVenue), "Venues");
+	}
+
+	protected Document createDocument(String title) {
 		fDocVenue = fVenue;
-		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocVenue), "Venues"));
+		return Web.createHTMLDocument(title);
 	}
 	
 	protected void finishDocument() {
@@ -218,11 +229,15 @@ class ShowDocumentCreator extends DocumentCreator {
 		return (fDocShow == null) || (!fLinks.getPageFileName(fDocShow).equals(fLinks.getPageFileName(fShow)));
 	}
 	
-	protected Document createDocument() {
+	protected String getTitle() {
+		return getTitle(fLinks.getPageFileName(fShow), "Dates");
+	}
+
+	protected Document createDocument(String title) {
 		fDocShow = fShow;
 		fDate = null;
 		fMonthDiv = null;
-		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocShow), "Dates"));
+		return Web.createHTMLDocument(title);
 	}
 
 	protected void finishDocument() {
@@ -265,8 +280,12 @@ class StatisticsCreator extends DocumentCreator {
 		return true;
 	}
 	
-	protected Document createDocument() {
-		return Web.createHTMLDocument(fTitle);
+	protected String getTitle() {
+		return fTitle;
+	}
+
+	protected Document createDocument(String title) {
+		return Web.createHTMLDocument(title);
 	}
 
 	protected void finishDocument() {
@@ -336,9 +355,13 @@ class TracksDocumentCreator extends DocumentCreator {
 		return (fDocAlbum == null) || (!fLinks.getPageFileName(fDocAlbum).equals(fLinks.getPageFileName(fAlbum)));
 	}
 	
-	protected Document createDocument() {
+	protected String getTitle() {
+		return getTitle(fLinks.getPageFileName(fAlbum), "Tracks");
+	}
+
+	protected Document createDocument(String title) {
 		fDocAlbum = fAlbum;
-		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocAlbum), "Tracks"));
+		return Web.createHTMLDocument(title);
 	}
 	
 	protected void finishDocument() {
