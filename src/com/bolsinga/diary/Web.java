@@ -330,13 +330,20 @@ public class Web {
         creator.close();
     }
 
-    public static div addItem(Music music, Entry entry, boolean upOneLevel) {
-        div diaryDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_ENTRY);
-                
-        diaryDiv.addElement(new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
-        diaryDiv.addElement(Web.encodedComment(music, entry, upOneLevel));
-                
-        return diaryDiv;
+    public static ul addItem(Music music, Entry entry, boolean upOneLevel) {
+        ul list = new ul();
+        list.setClass(com.bolsinga.web.util.CSS.DIARY_ENTRY);
+        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+
+        li i = new li(new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
+        i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+        list.addElement(i);
+
+        i = new li(Web.encodedComment(music, entry, upOneLevel));
+        i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+        list.addElement(i);
+
+        return list;
     }
         
     private static String encodedComment(Music music, Entry entry, boolean upOneLevel) {
