@@ -26,15 +26,25 @@ class DocumentCreator {
 		fType = type;
 	}
 	
-	public Document getDocument(String path) {
+	public Document getDocument(Artist artist) {
+		return getDocument(Web.getPageFileName(artist), Web.getPagePath(artist));
+	}
+
+	public Document getDocument(Venue venue) {
+		return getDocument(Web.getPageFileName(venue), Web.getPagePath(venue));
+	}
+
+	public Document getDocument(Show show) {
+		return getDocument(Web.getPageFileName(show), Web.getPagePath(show));
+	}
+	
+	private Document getDocument(String letter, String path) {
 		if ((fCurPath == null) || (!fCurPath.equals(path))) {
 			if (fDocument != null) {
 				writeDocument();
 			}
 
 			fCurPath = path;
-			
-			String letter = fCurPath;
 			fDocument = Web.createHTMLDocument(letter, fType);
 		}
 		
@@ -128,7 +138,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 			
-			addItem(music, item, creator.getDocument(getPagePath(item)));
+			addItem(music, item, creator.getDocument(item));
 		}
 		creator.close();
 	}
@@ -145,7 +155,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Venue)li.next();
 			
-			addItem(music, item, creator.getDocument(getPagePath(item)));
+			addItem(music, item, creator.getDocument(item));
 		}
 		creator.close();
 	}
@@ -162,7 +172,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Show)li.next();
 			
-			addItem(music, item, creator.getDocument(getPagePath(item)));
+			addItem(music, item, creator.getDocument(item));
 		}
 		creator.close();
 	}
