@@ -11,6 +11,43 @@ public class Compare {
 				((d.getDay() != null) ? d.getDay().intValue() : 0);
 	}
 	
+	private static final String THE = "the ";
+	private static final String THEE = "thee ";
+	private static final String A = "a ";
+	private static final String AN = "an ";
+	
+	private static String simplify(String s) {
+		String lower = s.toLowerCase();
+		int len = s.length();
+		if (lower.startsWith(THE)) {
+			return s.substring(THE.length(), len);
+		}
+		if (lower.startsWith(A)) {
+			return s.substring(A.length(), len);
+		}
+		if (lower.startsWith(AN)) {
+			return s.substring(AN.length(), len);
+		}
+		if (lower.startsWith(THEE)) {
+			return s.substring(THEE.length(), len);
+		}
+		return s;
+	}
+	
+	public static final Comparator LIBRARY_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			String s1 = (String)o1;
+			String s2 = (String)o2;
+			
+			String n1 = simplify(s1);
+			String n2 = simplify(s2);
+			
+			System.out.println(n1 + " " + n2);
+			
+			return n1.compareToIgnoreCase(n2);
+		}
+	};
+	
 	public static final Comparator DATE_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
 			com.bolsinga.music.data.Date r1 = (com.bolsinga.music.data.Date)o1;
@@ -41,7 +78,7 @@ public class Compare {
 			Venue r1 = (Venue)o1;
 			Venue r2 = (Venue)o2;
 			
-			return r1.getName().compareToIgnoreCase(r2.getName());
+			return LIBRARY_COMPARATOR.compare(r1.getName(), r2.getName());
 		}
 	};
 	
@@ -59,7 +96,7 @@ public class Compare {
 				n2 = r2.getName();
 			}
 			
-			return n1.compareToIgnoreCase(n2);
+			return LIBRARY_COMPARATOR.compare(n1, n2);
 		}
 	};
 	
