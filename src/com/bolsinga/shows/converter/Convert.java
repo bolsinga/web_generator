@@ -1,7 +1,11 @@
 package com.bolsinga.shows.converter;
 
 import java.io.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.nio.charset.*;
 import java.util.*;
+import java.util.regex.*;
 
 public class Convert {
 	private String fType;
@@ -162,68 +166,51 @@ public class Convert {
 		return shows;
 	}
 	
+	private static Pattern sStaticPattern =		Pattern.compile("<static>(.*?)</static>", Pattern.DOTALL);
+	private static Pattern sLocationPattern =   Pattern.compile("<location>(.*?)</location>", Pattern.DOTALL);
+	private static Pattern sDataPattern =		Pattern.compile("<data>(.*?)</data>", Pattern.DOTALL);
+	
 	public static List statics(String filename) throws IOException {
-		final String STATIC_TAG = "static";
-		final String LOCATION_TAG = "location";
-		final String DATA_TAG = "data";
-		
 		Vector statics = new Vector();
+
+		FileChannel fc = new FileInputStream(new File(filename)).getChannel();
+		ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+		CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
 		
-		Tagged t = Tagged.fromFile(filename);
-		
-		while (t.hasMoreElements()) {
-			if (t.tag().equals(STATIC_TAG)) {
-				Tagged info = Tagged.fromString(t.data());
-				
-				String location = null;
-				String data = null;
-				
-				while (info.hasMoreElements()) {
-					if (info.tag().equals(LOCATION_TAG)) {
-						location = info.data();
-					} else if (info.tag().equals(DATA_TAG)) {
-						data = info.data();
-					} else {
-						System.err.println("Unknown Statics tag: " + info.tag());
-						System.exit(1);
-					}
+		Matcher staticMatcher = sStaticPattern.matcher(cb);
+		while (staticMatcher.find()) {
+			String entry = staticMatcher.group(1);
+			Matcher locationMatcher = sLocationPattern.matcher(entry);
+			if (locationMatcher.find()) {
+				Matcher dataMatcher = sDataPattern.matcher(entry);
+				if (dataMatcher.find()) {
+					statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
 				}
-				
-				statics.add(new Statics(location, data));
 			}
 		}
 
 		return statics;
 	}
 
-	public static List comments(String filename) throws IOException {
-		final String COMMENT_TAG = "comment";
-		final String DATE_TAG = "date";
-		final String DATA_TAG = "data";
+	private static Pattern sCommentPattern =	Pattern.compile("<comment>(.*?)</comment>", Pattern.DOTALL);
+	private static Pattern sDatePattern =		Pattern.compile("<date>(.*?)</date>", Pattern.DOTALL);
 
+	public static List comments(String filename) throws IOException {
 		Vector comments = new Vector();
-		
-		Tagged t = Tagged.fromFile(filename);
-		
-		while (t.hasMoreElements()) {
-			if (t.tag().equals(COMMENT_TAG)) {
-				Tagged info = Tagged.fromString(t.data());
-				
-				String date = null;
-				String data = null;
-				
-				while (info.hasMoreElements()) {
-					if (info.tag().equals(DATE_TAG)) {
-						date = info.data();
-					} else if (info.tag().equals(DATA_TAG)) {
-						data = info.data();
-					} else {
-						System.err.println("Unknown Comments tag: " + info.tag());
-						System.exit(1);
-					}
+
+		FileChannel fc = new FileInputStream(new File(filename)).getChannel();
+		ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+		CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
+
+		Matcher commentMatcher = sCommentPattern.matcher(cb);
+		while (commentMatcher.find()) {
+			String entry = commentMatcher.group(1);
+			Matcher dateMatcher = sDatePattern.matcher(entry);
+			if (dateMatcher.find()) {
+				Matcher dataMatcher = sDataPattern.matcher(entry);
+				if (dataMatcher.find()) {
+					comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
 				}
-				
-				comments.add(new Comments(date, data));
 			}
 		}
 		
