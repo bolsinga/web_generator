@@ -78,6 +78,7 @@
 		</xs:sequence>
 		<xs:attribute name="id" type="songID" />
 		<xs:attribute name="digitized" type="xs:boolean" />
+		<xs:attribute name="live" type="xs:boolean" />
 	</xs:complexType>
 </xs:element>
 
