@@ -7,6 +7,10 @@ import java.math.*;
 import java.text.*;
 import java.util.*;
 
+import org.apache.ecs.*;
+import org.apache.ecs.html.*;
+import org.apache.ecs.filter.*;
+
 public class Util {
 
 	private static final String HTML_EXT = ".html";
@@ -14,8 +18,11 @@ public class Util {
 	private static final String ARTIST_DIR = "artists";
 	private static final String VENUE_DIR = "venues";
 	private static final String SHOW_DIR = "shows";
+	private static final String CITIES_DIR = "cities";
+	private static final String DATA_DIR = "data";
 	
 	private static final String OTHER = "other";
+	private static final String STATS = "stats";
 	private static final String SEPARATOR = "/";
 	private static final String HASH = "#";
 
@@ -63,6 +70,86 @@ public class Util {
 				return "Unknown";
 			}
 		}
+	}
+	
+	public static void addWebNavigator(Document doc) {
+		Center c = new Center();
+		
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("Generated ");
+		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
+		sb.append(" ");
+
+		StringBuffer link = new StringBuffer();
+		link.append("mailto:");
+		link.append(System.getProperty("music.contact"));
+		A a = new A(link.toString(), "Contact");
+		sb.append(a.toString());
+		sb.append(" ");
+
+		a = new A(System.getProperty("music.root"), "Home");
+		sb.append(a.toString());
+		sb.append(" ");
+		
+		link = new StringBuffer();
+		link.append("..");
+		link.append(SEPARATOR);
+		link.append(ARTIST_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		a = new A(link.toString(), "Bands");
+		sb.append(a.toString());
+		sb.append(" ");
+		
+		link = new StringBuffer();
+		link.append("..");
+		link.append(SEPARATOR);
+		link.append(SHOW_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		a = new A(link.toString(), "Dates");
+		sb.append(a.toString());
+		sb.append(" ");
+
+		link = new StringBuffer();
+		link.append("..");
+		link.append(SEPARATOR);
+		link.append(VENUE_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		a = new A(link.toString(), "Venues");
+		sb.append(a.toString());
+		sb.append(" ");
+
+		link = new StringBuffer();
+		link.append("..");
+		link.append(SEPARATOR);
+		link.append(CITIES_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		a = new A(link.toString(), "Cities");
+		sb.append(a.toString());
+		sb.append(" ");
+
+		link = new StringBuffer();
+		link.append("..");
+		link.append(SEPARATOR);
+		link.append(DATA_DIR);
+		link.append(SEPARATOR);
+		link.append(STATS);
+		link.append(HTML_EXT);
+		a = new A(link.toString(), "Data");
+		sb.append(a.toString());
+		sb.append(" ");
+
+		c.addElement(sb.toString());
+		
+		doc.getBody().addElement(c);
 	}
 	
 	public static String getPageFileName(String name) {
