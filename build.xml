@@ -38,18 +38,23 @@
 	<mkdir dir="${build.dir}" />
 	<mkdir dir="${build.classes}" />
 	<mkdir dir="${build.lib}" />
+	<mkdir dir="${build.gensrc}" />
 </target>
 
 <target name="jaxb" depends="prepare">
-	<mkdir dir="${build.gensrc}" />
-	<xjc schema="xml/music.xsd" target="${build.classes}" package="com.bolsinga.music"/>
+	<xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music"/>
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
-		<src path="${build.classes}" />
+		<src path="${build.gensrc}" />
 		<include name="com/bolsinga/music/**" />
 		<classpath refid="classpath" />
 	</javac>
+	<copy todir="${build.classes}">
+		<fileset dir="${build.gensrc}" >
+			<exclude name="**/*.java" />
+		</fileset>
+	</copy>
 </target>
 
 <target name="converter" depends="jaxb">
