@@ -19,7 +19,7 @@ class DiaryDocumentCreator {
 	Diary fDiary = null;
 	String fOutputDir = null;
 	Document fDocument = null;
-	TBody fTBody = null;
+	Table fTable = null;
 	Entry fEntry = null;
 	String fProgram = null;
 	
@@ -29,7 +29,7 @@ class DiaryDocumentCreator {
 		fProgram = program;
 	}
 	
-	public TBody getTableBody(Entry entry) {
+	public Table getTable(Entry entry) {
 		if (needNewDocument(entry)) {
 			close();
 			
@@ -40,9 +40,9 @@ class DiaryDocumentCreator {
 			addWebNavigator(fProgram);
 			addIndexNavigator();
 			
-			fTBody = new TBody();
+			fTable = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
 		}
-		return fTBody;
+		return fTable;
 	}
 	
 	public void close() {
@@ -97,7 +97,7 @@ class DiaryDocumentCreator {
 		
 	private void writeDocument() {
 		fDocument.getBody().addElement(new P());
-		fDocument.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(fTBody));
+		fDocument.getBody().addElement(fTable);
 		addIndexNavigator();
 		addWebNavigator(fProgram);
 		try {
@@ -227,13 +227,13 @@ public class Web {
 	public static void generateMainPage(String musicFile, int mainPageEntryCount, Diary diary, String outputDir) {
 		Document doc = createDocument(diary.getTitle());
 
-		TBody tbody = new TBody();
+		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
 		
 		TD td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
 		td.addElement(diary.getStatic());
-		tbody.addElement(td);
+		table.addElement(td);
 
 		td = new TD();
 		td.setVAlign("top");
@@ -245,16 +245,16 @@ public class Web {
 		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
 		
 		generateDiary(musicFile, diary, mainPageEntryCount, td);
-		tbody.addElement(td);
+		table.addElement(td);
 		
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
 
 		td.addElement(com.bolsinga.music.web.Web.generatePreview(musicFile, 5));
-		tbody.addElement(td);
+		table.addElement(td);
 		
-		doc.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(tbody));
+		doc.getBody().addElement(table);
 		
 		try {
 			File f = new File(outputDir, "index.html");
@@ -331,7 +331,7 @@ public class Web {
 	private static void generateDiary(String musicFile, Diary diary, int mainPageEntryCount, TD td) {
 		List items = diary.getEntry();
 		Entry item = null;
-		TBody tbody = new TBody();
+		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
 		
 		Collections.sort(items, ENTRY_COMPARATOR);
 		Collections.reverse(items);
@@ -339,7 +339,7 @@ public class Web {
 		for (int i = 0; i < mainPageEntryCount; i++) {
 			item = (Entry)items.get(i);
 			
-			addItem(musicFile, item, tbody, false);
+			addItem(musicFile, item, table, false);
 		}
 		
 		StringBuffer archivesLink = new StringBuffer();
@@ -347,9 +347,9 @@ public class Web {
 		archivesLink.append(Calendar.getInstance().get(Calendar.YEAR));
 		archivesLink.append(".html");
 		
-		addBanner(new A(archivesLink.toString(), "Archives").toString(), tbody);
+		addBanner(new A(archivesLink.toString(), "Archives").toString(), table);
 
-		td.addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(tbody));
+		td.addElement(table);
 	}
 	
 	public static void generateArchivePages(String musicFile, Diary diary, String outputDir) {
@@ -364,7 +364,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Entry)li.next();
 			
-			addItem(musicFile, item, creator.getTableBody(item), true);
+			addItem(musicFile, item, creator.getTable(item), true);
 		}
 		
 		creator.close();
@@ -372,7 +372,7 @@ public class Web {
 
 	static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
 
-	public static void addBanner(String text, TBody tb) {
+	public static void addBanner(String text, Table table) {
 		Font f = new Font();
 		f.addAttribute("color", "white");
 		f.addElement(new B(text));
@@ -385,13 +385,13 @@ public class Web {
 		tr.addAttribute("bgcolor", "black");
 		tr.addElement(new TD(div));
 		
-		tb.addElement(tr);
+		table.addElement(tr);
 	}
 	
-	public static void addItem(String musicFile, Entry entry, TBody tb, boolean upOneLevel) {
-		addBanner(sWebFormat.format(entry.getTimestamp().getTime()), tb);
+	public static void addItem(String musicFile, Entry entry, Table table, boolean upOneLevel) {
+		addBanner(sWebFormat.format(entry.getTimestamp().getTime()), table);
 		
-		tb.addElement(new TR().addElement(new TD(Web.encodedComment(musicFile, entry, upOneLevel))));
+		table.addElement(new TR().addElement(new TD(Web.encodedComment(musicFile, entry, upOneLevel))));
 	}
 	
 	private static Pattern sCommentEncoding = Pattern.compile("\n", Pattern.DOTALL);
