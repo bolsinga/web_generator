@@ -44,7 +44,7 @@
 	<mkdir dir="${build.gensrc}" />
 </target>
 
-<target name="jaxb" depends="prepare">
+<target name="music_binding" depends="prepare">
 	<xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data" removeOldOutput="yes">
 		<depends dir="xml" includes="music.xsd" />
 		<produces dir="${build.gensrc}/com/bolsinga/music/data" includes="*impl/*" />
@@ -63,12 +63,31 @@
 	</copy>
 </target>
 
+<target name="diary_binding" depends="prepare">
+	<xjc schema="xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data" removeOldOutput="yes">
+		<depends dir="xml" includes="diary.xsd" />
+		<produces dir="${build.gensrc}/com/bolsinga/diary/data" includes="*impl/*" />
+	</xjc>
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${build.gensrc}" />
+		<include name="com/bolsinga/diary/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+	<copy todir="${build.classes}">
+		<fileset dir="${build.gensrc}" >
+			<exclude name="**/*.java" />
+		</fileset>
+	</copy>
+</target>
+
 <path id="web_classpath">
 	<path refid="jaxb_classpath" />
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="utilities" depends="jaxb">
+<target name="utilities" depends="music_binding">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -78,7 +97,7 @@
 	</javac>
 </target>
 
-<target name="converter" depends="utilities">
+<target name="converter" depends="utilities, diary_binding">
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -129,7 +148,7 @@
 	<pathelement path="${build.lib}/music.jar" />
 </path>
 
-<target name="generateXML" depends="converter, music">
+<target name="generateMusicXML" depends="converter, music">
 	<java classname="com.bolsinga.shows.converter.Music" fork="true">
 		<arg value="${data.dir}shows.txt" />
 		<arg value="${data.dir}venuemap.txt" />
@@ -145,7 +164,7 @@
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="generateWeb" depends="web, music">
+<target name="generateMusicWeb" depends="web, music">
 	<mkdir dir="/tmp/web/" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
 		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
