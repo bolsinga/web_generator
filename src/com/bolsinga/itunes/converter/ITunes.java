@@ -59,8 +59,8 @@ public class ITunes {
 	
 	public static void main(String[] args) {
 	    if (args.length != 2) {
-		System.out.println("Usage: ITunes [itunes] [output]");
-		System.exit(0);
+			System.out.println("Usage: ITunes [itunes] [output]");
+			System.exit(0);
 	    }
 		
 	    ITunes.convert(args[0], args[1]);
@@ -72,26 +72,26 @@ public class ITunes {
 	    com.bolsinga.music.data.Music music = ITunes.convert(plist);
 	    
 	    try {
-		music.setTimestamp(Calendar.getInstance());
-		    
-		// Write out to the output file.
-		JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
-		Marshaller m = jc.createMarshaller();
-		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		
-		OutputStream os = null;
-		try {
-		    os = new FileOutputStream(outputFile);
-		} catch (IOException ioe) {
-		    System.err.println(ioe);
-		    ioe.printStackTrace();
-		    System.exit(1);
-		}
-		m.marshal(music, os);
+			music.setTimestamp(Calendar.getInstance());
+				
+			// Write out to the output file.
+			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
+			Marshaller m = jc.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			
+			OutputStream os = null;
+			try {
+				os = new FileOutputStream(outputFile);
+			} catch (IOException ioe) {
+				System.err.println(ioe);
+				ioe.printStackTrace();
+				System.exit(1);
+			}
+			m.marshal(music, os);
 	    } catch (JAXBException e) {
-		System.err.println(e);
-		e.printStackTrace();
-		System.exit(1);
+			System.err.println(e);
+			e.printStackTrace();
+			System.exit(1);
 	    }
 	}
 	
@@ -100,11 +100,11 @@ public class ITunes {
 	    com.bolsinga.music.data.Music music = null;
 	    
 	    try {
-		music = objFactory.createMusic();
+			music = objFactory.createMusic();
 	    } catch (JAXBException e) {
-		System.err.println(e);
-		e.printStackTrace();
-		System.exit(1);
+			System.err.println(e);
+			e.printStackTrace();
+			System.exit(1);
 	    }
 	    
 	    ITunes.add(objFactory, music, plist);
@@ -154,25 +154,25 @@ public class ITunes {
 	    
 	    ListIterator li = (plist.getDict().getKeyAndArrayOrData()).listIterator();
 	    while (li.hasNext()) {
-		com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)li.next();
-		if (key.getValue().equals("Tracks")) {
-		    com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)li.next();
-		    
-		    List tracks = dict.getKeyAndArrayOrData();
-		    ITunes.add(objFactory, music, tracks);
-		} else {
-		    Object o = li.next();
-		}
+			com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)li.next();
+			if (key.getValue().equals("Tracks")) {
+				com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)li.next();
+				
+				List tracks = dict.getKeyAndArrayOrData();
+				ITunes.add(objFactory, music, tracks);
+			} else {
+				Object o = li.next();
+			}
 	    }
 	}
 	
 	public static void add(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List tracks) {
 	    ListIterator li = tracks.listIterator();
 	    while (li.hasNext()) {
-		com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)li.next();
+			com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)li.next();
 
-		com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)li.next();
-		ITunes.add(objFactory, music, track);
+			com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)li.next();
+			ITunes.add(objFactory, music, track);
 	    }
 	}
 	
@@ -188,48 +188,48 @@ public class ITunes {
 	    boolean compilation = false;
 	    
 	    while (li.hasNext()) {
-		String key = ((com.bolsinga.plist.data.Key)li.next()).getValue();
-				
-		if (key.equals(TK_NAME)) {
-		    songTitle = ((com.bolsinga.plist.data.String)li.next()).getValue();
-		    continue;
-		}
-		if (key.equals(TK_ARTIST)) {
-		    artist = ((com.bolsinga.plist.data.String)li.next()).getValue();
-		    continue;
-		}
-		if (key.equals(TK_ALBUM)) {
-		    albumTitle = ((com.bolsinga.plist.data.String)li.next()).getValue();
-		    continue;
-		}
-		if (key.equals(TK_GENRE)) {
-		    genre = ((com.bolsinga.plist.data.String)li.next()).getValue();
-		    continue;
-		}
-		if (key.equals(TK_TRACK_NUMBER)) {
-		    index = ((com.bolsinga.plist.data.Integer)li.next()).getValue().intValue();
-		    continue;
-		}
-		if (key.equals(TK_YEAR)) {
-		    year = ((com.bolsinga.plist.data.Integer)li.next()).getValue().intValue();
-		    continue;
-		}
-		if (key.equals(TK_PLAY_DATE_UTC)) {
-		    lastPlayed = ((com.bolsinga.plist.data.Date)li.next()).getValue();
-		    continue;
-		}
-		if (key.equals(TK_COMPILATION)) {
-		    // Ignore the value, but it needs to be pulled.
-		    compilation = (li.next() != null);
-		    continue;
-		}
+			String key = ((com.bolsinga.plist.data.Key)li.next()).getValue();
+					
+			if (key.equals(TK_NAME)) {
+				songTitle = ((com.bolsinga.plist.data.String)li.next()).getValue();
+				continue;
+			}
+			if (key.equals(TK_ARTIST)) {
+				artist = ((com.bolsinga.plist.data.String)li.next()).getValue();
+				continue;
+			}
+			if (key.equals(TK_ALBUM)) {
+				albumTitle = ((com.bolsinga.plist.data.String)li.next()).getValue();
+				continue;
+			}
+			if (key.equals(TK_GENRE)) {
+				genre = ((com.bolsinga.plist.data.String)li.next()).getValue();
+				continue;
+			}
+			if (key.equals(TK_TRACK_NUMBER)) {
+				index = ((com.bolsinga.plist.data.Integer)li.next()).getValue().intValue();
+				continue;
+			}
+			if (key.equals(TK_YEAR)) {
+				year = ((com.bolsinga.plist.data.Integer)li.next()).getValue().intValue();
+				continue;
+			}
+			if (key.equals(TK_PLAY_DATE_UTC)) {
+				lastPlayed = ((com.bolsinga.plist.data.Date)li.next()).getValue();
+				continue;
+			}
+			if (key.equals(TK_COMPILATION)) {
+				// Ignore the value, but it needs to be pulled.
+				compilation = (li.next() != null);
+				continue;
+			}
 
-		// This key isn't used, so pass over its value.
-		Object o = li.next();
+			// This key isn't used, so pass over its value.
+			Object o = li.next();
 
-		if (!sITunesKeys.contains(key)) {
-		    System.out.println("iTunes added a new key: " + key);
-		}
+			if (!sITunesKeys.contains(key)) {
+				System.out.println("iTunes added a new key: " + key);
+			}
 	    }
 	    
 	    ITunes.addTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, compilation);
@@ -237,33 +237,33 @@ public class ITunes {
 	
 	public static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, boolean compilation) {
 	    try {
-		// Get or create the artist
-		Artist artist = ITunes.addArtist(objFactory, music, artistName);
-		
-		// Get or create the album.
-		Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
-		
-		// The song is always the new item. The artist and album may already be known.
-		ITunes.addAlbumTrack(objFactory, music, artist, album, songTitle, year, index, genre, lastPlayed);
+			// Get or create the artist
+			Artist artist = ITunes.addArtist(objFactory, music, artistName);
+			
+			// Get or create the album.
+			Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
+			
+			// The song is always the new item. The artist and album may already be known.
+			ITunes.addAlbumTrack(objFactory, music, artist, album, songTitle, year, index, genre, lastPlayed);
 	    } catch (JAXBException e) {
-		System.err.println(e);
-		e.printStackTrace();
-		System.exit(1);
+			System.err.println(e);
+			e.printStackTrace();
+			System.exit(1);
 	    }
 	}
 	
 	public static Artist addArtist(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name) throws JAXBException {
 	    Artist result = null;
 	    if (!sArtists.containsKey(name)) {
-		result = objFactory.createArtist();
-		
-		result.setName(name);
-		result.setId("ar" + sArtists.size());
-		
-		music.getArtist().add(result);
-		sArtists.put(name, result);
+			result = objFactory.createArtist();
+			
+			result.setName(name);
+			result.setId("ar" + sArtists.size());
+			
+			music.getArtist().add(result);
+			sArtists.put(name, result);
 	    } else {
-		result = (Artist)sArtists.get(name);
+			result = (Artist)sArtists.get(name);
 	    }
 	    return result;
 	}
@@ -271,24 +271,24 @@ public class ITunes {
 	public static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {
 	    Album result = null;
 	    if (name == null) {
-		name = "Unknown";
+			name = "Unknown";
 	    }
 	    if (!sAlbums.containsKey(name)) {
-		result = objFactory.createAlbum();
-		
-		result.setTitle(name);
-		if (artist != null) {
-		    result.getPerformer().add(artist);
-		} else {
-		    result.setCompilation(true);
-		}
-		result.getFormat().add(FORMAT_DIGITAL_FILE);
-		result.setId("a" + sAlbums.size());
-		
-		music.getAlbum().add(result);
-		sAlbums.put(name, result);
+			result = objFactory.createAlbum();
+			
+			result.setTitle(name);
+			if (artist != null) {
+				result.getPerformer().add(artist);
+			} else {
+				result.setCompilation(true);
+			}
+			result.getFormat().add(FORMAT_DIGITAL_FILE);
+			result.setId("a" + sAlbums.size());
+			
+			music.getAlbum().add(result);
+			sAlbums.put(name, result);
 	    } else {
-		result = (Album)sAlbums.get(name);
+			result = (Album)sAlbums.get(name);
 	    }
 	    return result;
 	}
@@ -304,7 +304,7 @@ public class ITunes {
 	    // Add the album to the artist if it isn't there already.
 	    List albums = artist.getAlbum();
 	    if (!albums.contains(album)) {
-		albums.add(album);
+			albums.add(album);
 	    }
 	}
 	
