@@ -45,7 +45,7 @@ public abstract class DocumentCreator {
       fDocument = createDocument();
       fDocument.getBody().addElement(getHeaderDiv());
                         
-      fMain = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_MAIN);
+      fMain = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.DOC_MAIN);
     }
     return fMain;
   }

@@ -165,11 +165,12 @@
         </javac>
 </target>
 
-<target name="web_utilities" depends="settings_binding">
+<target name="web" depends="settings_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
+                <include name="com.bolsinga.web/*.java" />
                 <include name="com/bolsinga/web/util/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
@@ -215,7 +216,7 @@
         </javac>
 </target>
 
-<target name="music" depends="web_utilities, music_binding, settings_binding, ical_gen">
+<target name="music" depends="web, music_binding, settings_binding, ical_gen">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -225,7 +226,7 @@
         </javac>
 </target>
 
-<target name="diary" depends="web_utilities, diary_binding, settings_binding, music_binding">
+<target name="diary" depends="web, diary_binding, settings_binding, music_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -303,7 +304,7 @@
         <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="generateCSSTemplate" depends="web_utilities, jar">
+<target name="generateCSSTemplate" depends="web, jar">
         <mkdir dir="${output.dir}" />
         <java classname="com.bolsinga.web.util.CSS" fork="true">
                 <arg value="${output.dir}/styles/" />

@@ -47,7 +47,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
   }
 
   protected div getHeaderDiv() {
-    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_HEADER);
+    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.DIARY_HEADER);
     d.addElement(new h1().addElement(getTitle()));
     d.addElement(com.bolsinga.web.util.Util.getLogo());
     d.addElement(addWebNavigator(fProgram, fLinks));
@@ -99,7 +99,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
     }
     e.add(fLinks.getRSSLink());
 
-    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_INDEX);
+    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.DIARY_INDEX);
     d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
     return d;
   }
@@ -111,7 +111,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
     e.add(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
     e.add(links.getLinkToHome());
 
-    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_MENU);
+    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.DIARY_MENU);
     Object[] args = { Calendar.getInstance().getTime() };
     d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
     d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
@@ -157,14 +157,14 @@ public class Web {
 
     doc.getBody().addElement(generateColumn1(diary));
                 
-    div main = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_MAIN);
-    div header = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_HEADER);
+    div main = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
+    div header = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.MAIN_HEADER);
     header.addElement(com.bolsinga.web.util.Util.convertToUnOrderedList(diary.getHeader()));
     main.addElement(header);
     main.addElement(generateDiary(music, diary, links));
     doc.getBody().addElement(main);
                 
-    div mainCol2 = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_COL2);
+    div mainCol2 = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL2);
     mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music, 5));
     doc.getBody().addElement(mainCol2);
                 
@@ -187,21 +187,21 @@ public class Web {
   }
 
   private static div createMainStatics(Diary diary) {
-    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_STATIC);
+    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.MAIN_STATIC);
     d.addElement(new h4(com.bolsinga.web.util.Util.getResourceString("mainlinks")));
     d.addElement(com.bolsinga.web.util.Util.convertToUnOrderedList(diary.getStatic()));
     return d;
   }
 
   private static div createMainLinks(Diary diary) {
-    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_LINKS);
+    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.MAIN_LINKS);
     d.addElement(new h4(com.bolsinga.web.util.Util.getResourceString("mainfriends")));
     d.addElement(com.bolsinga.web.util.Util.convertToUnOrderedList(diary.getFriends()));
     return d;
   }
 
   private static div generateColumn1(Diary diary) {
-    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_COL1);
+    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL1);
     d.addElement(Web.createMainStatics(diary));
     d.addElement(Web.createMainLinks(diary));
     return d;
@@ -278,7 +278,7 @@ public class Web {
     List items = diary.getEntry();
     Entry item = null;
 
-    div diaryDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_DIARY);
+    div diaryDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
                 
     Object[] args = { Calendar.getInstance().getTime() };
     diaryDiv.addElement(new h3(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("updated"), args)));
