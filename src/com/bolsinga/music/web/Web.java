@@ -509,6 +509,10 @@ public class Web {
 		tr = new TR().setAlign("right");
 		tr.addElement(new TD(links.getRSSLink()));
 		navigation.addElement(tr);
+
+		tr = new TR().setAlign("right");
+		tr.addElement(new TD(links.getICalLink()));
+		navigation.addElement(tr);
 		
 		Table recent = new Table().setBorder(0).setWidth("100%").setCellSpacing(5).setCellPadding(0);
 
@@ -895,6 +899,7 @@ public class Web {
 		}
 		
 		c.addElement(links.getRSSLink());
+		c.addElement(links.getICalLink());
 		
 		doc.getBody().addElement(c);
 	}

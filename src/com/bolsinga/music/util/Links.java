@@ -19,6 +19,7 @@ public class Links {
 	public static final String SHOW_DIR = "dates";
 	public static final String CITIES_DIR = "cities";
 	public static final String RSS_DIR = "rss";
+	public static final String ICAL_DIR = "ical";
 	
 	private static final String OTHER = "other";
 	public static final String STATS = "stats";
@@ -283,6 +284,25 @@ public class Links {
 		img.setHeight(System.getProperty("rss.image.height"));
 		img.setWidth(System.getProperty("rss.image.width"));
 		img.setAlt(System.getProperty("rss.image.alt"));
+		
+		return new A(link.toString(), img.toString()).toString();
+	}
+
+	public String getICalLink() {
+		StringBuffer link = new StringBuffer();
+		
+		if (fUpOneLevel) {
+			link.append("..");
+			link.append(File.separator);
+		}
+		link.append(ICAL_DIR);
+		link.append(File.separator);
+		link.append(System.getProperty("music.ical.url"));
+
+		IMG img = new IMG(System.getProperty("ical.image.url"));
+		img.setHeight(System.getProperty("ical.image.height"));
+		img.setWidth(System.getProperty("ical.image.width"));
+		img.setAlt(System.getProperty("ical.image.alt"));
 		
 		return new A(link.toString(), img.toString()).toString();
 	}

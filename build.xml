@@ -294,6 +294,11 @@
 		<sysproperty key="rss.image.width" value="36" />
 		<sysproperty key="rss.image.height" value="14" />
 		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the shows." />
+		<sysproperty key="music.ical.url" value="Shows.ics" />
+		<sysproperty key="ical.image.url" value="http://icalshare.com/layout/iCalShare/theme-images/subscribe.gif" />
+		<sysproperty key="ical.image.width" value="14" />
+		<sysproperty key="ical.image.height" value="18" />
+		<sysproperty key="ical.image.alt" value="Click here to see an VCalendar representation of the shows." />
 		<arg value="${data.dir}music.xml" />
 		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
@@ -327,6 +332,11 @@
 		<sysproperty key="rss.image.width" value="36" />
 		<sysproperty key="rss.image.height" value="14" />
 		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the diary." />
+		<sysproperty key="music.ical.url" value="Shows.ics" />
+		<sysproperty key="ical.image.url" value="http://icalshare.com/layout/iCalShare/theme-images/subscribe.gif" />
+		<sysproperty key="ical.image.width" value="14" />
+		<sysproperty key="ical.image.height" value="18" />
+		<sysproperty key="ical.image.alt" value="Click here to see an VCalendar representation of the shows." />
 		<arg value="3" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${data.dir}music.xml" />
