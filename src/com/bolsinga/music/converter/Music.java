@@ -49,5 +49,22 @@ public class Music {
 			System.exit(1);
 		}
 	}
+	
+	private static void dumpSimilarArtists(com.bolsinga.music.data.Music music) {
+		String s;
+		HashSet bands = new HashSet();
+		
+		ListIterator li = music.getArtist().listIterator();
+		while (li.hasNext()) {
+			s = ((Artist)li.next()).getName().toLowerCase();
+			if (bands.contains(s)) {
+				System.out.println(s);
+			} else {
+				bands.add(s);
+			}
+		}
+		
+		System.exit(0);
+	}
 }
 
