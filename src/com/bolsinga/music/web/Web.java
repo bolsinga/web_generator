@@ -28,7 +28,7 @@ abstract class DocumentCreator {
 	protected abstract boolean needNewDocument();
 	protected abstract Document createDocument();
 	protected abstract String getCurrentPath();
-	protected abstract void addIndexNavigator();
+	protected abstract Element addIndexNavigator();
 	
 	public void close() {
 		if (fDocument != null) {
@@ -43,16 +43,22 @@ abstract class DocumentCreator {
 				writeDocument();
 			}
 			fDocument = createDocument();
-			addHeader();
-			addWebNavigator();
-			addIndexNavigator();
+			
+			Div headerDiv = new Div();
+			headerDiv.addElement(addHeader());
+			headerDiv.addElement(addWebNavigator());
+			headerDiv.addElement(addIndexNavigator());
+			fDocument.getBody().addElement(headerDiv);
 		}
 		return fDocument;
 	}
 	
 	private void writeDocument() {
-		addIndexNavigator();
-		addWebNavigator();
+		Div footerDiv = new Div();
+		footerDiv.addElement(addIndexNavigator());
+		footerDiv.addElement(addWebNavigator());
+		fDocument.getBody().addElement(footerDiv);
+
 		try {
 			File f = new File(fOutputDir, getCurrentPath());
 			File parent = new File(f.getParent());
@@ -80,12 +86,12 @@ abstract class DocumentCreator {
 		return sb.toString();
 	}
 	
-	private void addHeader() {
-		fDocument.getBody().addElement(new Div().addElement(com.bolsinga.web.util.Util.getLogo()));
+	private Element addHeader() {
+		return new Div().addElement(com.bolsinga.web.util.Util.getLogo());
 	}
 	
-	protected void addWebNavigator() {
-		fLinks.addWebNavigator(fMusic, fDocument, fProgram);
+	protected Element addWebNavigator() {
+		return fLinks.addWebNavigator(fMusic, fProgram);
 	}
 	
 	protected void finalize() throws Throwable {
@@ -120,8 +126,8 @@ class ArtistDocumentCreator extends DocumentCreator {
 		return fLinks.getPagePath(fDocArtist);
 	}
 	
-	protected void addIndexNavigator() {
-		Web.addIndexNavigator(fMusic, fLinks, fDocArtist, fDocument);
+	protected Element addIndexNavigator() {
+		return Web.addIndexNavigator(fMusic, fLinks, fDocArtist);
 	}
 }
 
@@ -151,8 +157,8 @@ class VenueDocumentCreator extends DocumentCreator {
 		return fLinks.getPagePath(fDocVenue);
 	}
 	
-	protected void addIndexNavigator() {
-		Web.addIndexNavigator(fMusic, fLinks, fDocVenue, fDocument);
+	protected Element addIndexNavigator() {
+		return Web.addIndexNavigator(fMusic, fLinks, fDocVenue);
 	}
 }
 
@@ -200,8 +206,8 @@ class ShowDocumentCreator extends DocumentCreator {
 		return fLinks.getPagePath(fDocShow);
 	}
 	
-	protected void addIndexNavigator() {
-		Web.addIndexNavigator(fMusic, fLinks, fDocShow, fDocument);
+	protected Element addIndexNavigator() {
+		return Web.addIndexNavigator(fMusic, fLinks, fDocShow);
 	}
 }
 
@@ -242,8 +248,8 @@ class StatisticsCreator extends DocumentCreator {
 		return sb.toString();
 	}
 	
-	protected void addIndexNavigator() {
-
+	protected Element addIndexNavigator() {
+		return null;
 	}
 }
 
@@ -263,7 +269,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
 		fTracksStats = isTracksStats;
 	}
 
-	protected void addIndexNavigator() {
+	protected Element addIndexNavigator() {
 		Div div = new Div();
 		
 		div.addElement("View: ");
@@ -275,7 +281,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
 			div.addElement("Albums");
 		}
 		
-		fDocument.getBody().addElement(div);
+		return div;
 	}
 }
 
@@ -305,8 +311,8 @@ class TracksDocumentCreator extends DocumentCreator {
 		return fLinks.getPagePath(fDocAlbum);
 	}
 	
-	protected void addIndexNavigator() {
-		Web.addIndexNavigator(fMusic, fLinks, fDocAlbum, fDocument);
+	protected Element addIndexNavigator() {
+		return Web.addIndexNavigator(fMusic, fLinks, fDocAlbum);
 	}
 }
 
@@ -1010,7 +1016,7 @@ public class Web {
 		}
 	}
 	
-	public static void addIndexNavigator(Music music, Links links, Artist artist, Document doc) {
+	public static Element addIndexNavigator(Music music, Links links, Artist artist) {
 		Div div = new Div();
 		
 		java.util.Map m = new TreeMap();
@@ -1033,10 +1039,10 @@ public class Web {
 			}
 		}
 		
-		doc.getBody().addElement(div);
+		return div;
 	}
 	
-	public static void addIndexNavigator(Music music, Links links, Venue venue, Document doc) {
+	public static Element addIndexNavigator(Music music, Links links, Venue venue) {
 		Div div = new Div();
 		
 		java.util.Map m = new TreeMap();
@@ -1060,10 +1066,10 @@ public class Web {
 			}
 		}
 		
-		doc.getBody().addElement(div);
+		return div;
 	}
 
-	public static void addIndexNavigator(Music music, Links links, Album album, Document doc) {
+	public static Element addIndexNavigator(Music music, Links links, Album album) {
 		Div div = new Div();
 		
 		java.util.Map m = new TreeMap();
@@ -1087,7 +1093,7 @@ public class Web {
 			}
 		}
 		
-		doc.getBody().addElement(div);
+		return div;
 	}
 	
 	public static Table makeTable(String[] names, int[] values, String caption, String header) {
@@ -1127,7 +1133,7 @@ public class Web {
 		return table;
 	}
 	
-	public static void addIndexNavigator(Music music, Links links, Show show, Document doc) {
+	public static Element addIndexNavigator(Music music, Links links, Show show) {
 		Div div = new Div();
 		
 		java.util.Map m = new TreeMap();
@@ -1153,7 +1159,7 @@ public class Web {
 		
 		div.addElement(links.getICalLink());
 		
-		doc.getBody().addElement(div);
+		return div;
 	}
 
 	private static String getCopyright() {

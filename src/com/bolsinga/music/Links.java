@@ -46,7 +46,7 @@ public class Links {
 		}
 	}
 	
-	public void addWebNavigator(Music music, Document doc, String program) {
+	public Element addWebNavigator(Music music, String program) {
 		Div div = new Div();
 		
 		StringBuffer sb = new StringBuffer();
@@ -89,7 +89,7 @@ public class Links {
 
 		div.addElement(sb.toString());
 		
-		doc.getBody().addElement(div);
+		return div;
 	}
 	
 	public String getPageFileName(String name) {
