@@ -1036,7 +1036,7 @@ public class Web {
 	
 	public static Element addIndexNavigator(Music music, Links links, Artist artist) {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_INDEX);
-		
+				
 		java.util.Map m = new TreeMap();
 		Iterator iterator = music.getArtist().iterator();
 		while (iterator.hasNext()) {
@@ -1047,15 +1047,19 @@ public class Web {
 			}
 		}
 
+		ul list = new ul();
+
 		iterator = m.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String)iterator.next();
 			if (s.equals(links.getPageFileName(artist))) {
-				d.addElement(s + " ");
+				list.addElement(new li(s));
 			} else {
-				d.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s).toString() + " ");
+				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s)));
 			}
 		}
+		
+		d.addElement(list);
 		
 		return d;
 	}
@@ -1073,16 +1077,19 @@ public class Web {
 			}
 		}
 
+		ul list = new ul();
+		
 		iterator = m.keySet().iterator();
 		while (iterator.hasNext()) {
 			String v = (String)iterator.next();
-			String l = " " + v + " ";
 			if (v.equals(links.getPageFileName(venue))) {
-				d.addElement(l);
+				list.addElement(new li(v));
 			} else {
-				d.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(v), l));
+				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(v), v)));
 			}
 		}
+		
+		d.addElement(list);
 		
 		return d;
 	}
@@ -1100,16 +1107,19 @@ public class Web {
 			}
 		}
 
+		ul list = new ul();
+		
 		iterator = m.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String)iterator.next();
-			String l = " " + s + " ";
 			if (s.equals(links.getPageFileName(album))) {
-				d.addElement(l);
+				list.addElement(new li(s));
 			} else {
-				d.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), l));
+				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s)));
 			}
 		}
+		
+		d.addElement(list);
 		
 		return d;
 	}
@@ -1170,18 +1180,21 @@ public class Web {
 			}
 		}
 
+		ul list = new ul();
+		
 		iterator = m.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String)iterator.next();
-			String l = " " + s + " ";
 			if (s.equals(links.getPageFileName(show))) {
-				d.addElement(l);
+				list.addElement(new li(s));
 			} else {
-				d.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), l));
+				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s)));
 			}
 		}
 		
-		d.addElement(links.getICalLink());
+		list.addElement(new li(links.getICalLink()));
+		
+		d.addElement(list);
 		
 		return d;
 	}
