@@ -575,7 +575,11 @@ public class Web {
 	
 	public static String embedLinks(String sourceFile, String data, boolean upOneLevel) {
 		Music music = createMusic(sourceFile);
-
+		
+		return embedLinks(music, data, upOneLevel);
+	}
+	
+	public static String embedLinks(Music music, String data, boolean upOneLevel) {
 		return Encode.getEncode(music).addLinks(data, upOneLevel);
 	}
 	
@@ -627,7 +631,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new LI(comment));
+				showInfo.addElement(new LI(embedLinks(music, comment, true)));
 			}
 			
 			showListing.addElement(showInfo);
@@ -679,7 +683,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new LI().addElement(comment));
+				showInfo.addElement(new LI(embedLinks(music, comment, true)));
 			}
 			
 			showListing.addElement(showInfo);
@@ -720,7 +724,7 @@ public class Web {
 
 		String comment = show.getComment();
 		if (comment != null) {
-			showInfo.addElement(new LI(comment));
+			showInfo.addElement(new LI(embedLinks(music, comment, true)));
 		}
 
 		showListing.addElement(showInfo);
