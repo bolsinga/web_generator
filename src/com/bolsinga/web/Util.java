@@ -4,6 +4,10 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 public class Util {
 
 	private static boolean sPrettyPrint = false;
@@ -73,5 +77,20 @@ public class Util {
 			an.setTitle(title);
 		}
 		return an;
+	}
+
+	public static com.bolsinga.settings.data.Settings createSettings(String sourceFile) {
+		com.bolsinga.settings.data.Settings settings = null;
+		try {
+			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
+			Unmarshaller u = jc.createUnmarshaller();
+			
+			settings = (com.bolsinga.settings.data.Settings)u.unmarshal(new java.io.FileInputStream(sourceFile));
+		} catch (Exception ume) {
+			System.err.println("Exception: " + ume);
+			ume.printStackTrace();
+			System.exit(1);
+		}
+		return settings;
 	}
 }

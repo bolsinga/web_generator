@@ -2,6 +2,7 @@ package com.bolsinga.music.web;
 
 import com.bolsinga.music.data.*;
 import com.bolsinga.music.util.*;
+import com.bolsinga.settings.data.*;
 
 import java.io.*;
 import java.math.*;
@@ -316,13 +317,35 @@ public class Web {
 	private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.music.web.web");
 	
 	public static void main(String[] args) {
-		if (args.length != 2) {
-			System.out.println("Usage: Web [source.xml] [output.dir]");
+		if (args.length != 3) {
+			System.out.println("Usage: Web [source.xml] [settings.xml] [output.dir]");
 			System.exit(0);
 		}
+        
+        Web.initializeSettings(args[1]);
 		
-		Web.generate(args[0], args[1]);
+		Web.generate(args[0], args[2]);
 	}
+    
+    private static void initializeSettings(String settingsFile) {
+        Settings settings = com.bolsinga.web.util.Util.createSettings(settingsFile);
+
+		System.setProperty("web.ico", settings.getIco());
+        com.bolsinga.settings.data.Image image = settings.getLogoImage();
+		System.setProperty("web.logo.url", image.getLocation());
+		System.setProperty("web.logo.width", image.getWidth().toString());
+		System.setProperty("web.logo.height", image.getHeight().toString());
+		System.setProperty("web.logo.alt", image.getAlt());
+		System.setProperty("web.layout.css", settings.getCssFile());
+		System.setProperty("music.contact", settings.getContact());
+		System.setProperty("rss.url", settings.getRssFile());
+		System.setProperty("music.ical.url", settings.getIcalName() + ".ics");
+        image = settings.getIcalImage();
+		System.setProperty("ical.image.url", image.getLocation());
+		System.setProperty("ical.image.width", image.getWidth().toString());
+		System.setProperty("ical.image.height", image.getHeight().toString());
+		System.setProperty("ical.image.alt", image.getAlt());
+    }
 	
 	public static void generate(String sourceFile, String outputDir) {
 		Music music = Util.createMusic(sourceFile);

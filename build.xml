@@ -195,7 +195,7 @@
 	</javac>
 </target>
 
-<target name="web_utilities" depends="prepare" >
+<target name="web_utilities" depends="settings_binding, prepare" >
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -437,20 +437,8 @@
 <target name="generateMusicWeb" depends="music_web, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
-		<sysproperty key="web.ico" value="http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico" />
-		<sysproperty key="web.logo.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif" />
-		<sysproperty key="web.logo.width" value="120" />
-		<sysproperty key="web.logo.height" value="90" />
-		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
-		<sysproperty key="web.layout.css" value="layout.css" />
-		<sysproperty key="music.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="rss.url" value="rss.xml" />
-		<sysproperty key="music.ical.url" value="Shows.ics" />
-		<sysproperty key="ical.image.url" value="http://icalshare.com/layout/iCalShare/theme-images/subscribe.gif" />
-		<sysproperty key="ical.image.width" value="14" />
-		<sysproperty key="ical.image.height" value="18" />
-		<sysproperty key="ical.image.alt" value="Click here to see an VCalendar representation of the shows." />
 		<arg value="${data.dir}music.xml" />
+		<arg value="${data.dir}settings.xml" />
 		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
 	</java>
