@@ -335,6 +335,7 @@ public class Links {
 		i.setHeight(image.getHeight().intValue());
 		i.setWidth(image.getWidth().intValue());
 		i.setAlt(image.getAlt());
+		i.setTitle(image.getAlt());
 		
 		return new a(sb.toString(), i.toString()); // ical: URL
 	}

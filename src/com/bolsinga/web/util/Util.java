@@ -41,6 +41,7 @@ public class Util {
 		i.setHeight(image.getHeight().intValue());
 		i.setWidth(image.getWidth().intValue());
 		i.setAlt(image.getAlt());
+        i.setTitle(image.getAlt());
         
 		return i;
 	}

@@ -78,6 +78,7 @@ public class Links {
 		i.setHeight(image.getHeight().intValue());
 		i.setWidth(image.getWidth().intValue());
 		i.setAlt(image.getAlt());
+		i.setTitle(image.getAlt());
 		
 		return new a(getRSSURL(), i.toString()); // rss feed URL
 	}
