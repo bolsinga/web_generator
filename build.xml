@@ -234,7 +234,6 @@
                 <src path="${src.dir}" />
                 <include name="com/bolsinga/diary/*.java" />
                 <include name="com/bolsinga/diary/web/*.java" />
-                <include name="com/bolsinga/diary/util/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
 </target>

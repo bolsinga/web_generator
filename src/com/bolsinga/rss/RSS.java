@@ -111,7 +111,7 @@ public class RSS {
     return sb.toString();
   }
 
-  public static void add(com.bolsinga.diary.data.Entry entry, com.bolsinga.diary.util.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
+  public static void add(com.bolsinga.diary.data.Entry entry, com.bolsinga.diary.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
     TRssItem item = objFactory.createTRssItem();
     List itemElements = item.getTitleOrDescriptionOrLink();
                 
@@ -153,7 +153,7 @@ public class RSS {
       Collections.reverse(entries);
                         
       com.bolsinga.music.util.Links musicLinks = com.bolsinga.music.util.Links.getLinks(false);
-      com.bolsinga.diary.util.Links diaryLinks = com.bolsinga.diary.util.Links.getLinks(false);
+      com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(false);
 
       int entryCount = com.bolsinga.web.util.Util.getSettings().getRssCount().intValue();
 

@@ -1,7 +1,6 @@
 package com.bolsinga.diary;
 
 import com.bolsinga.diary.data.*;
-import com.bolsinga.diary.util.*;
 
 import java.awt.*;
 import java.io.*;
