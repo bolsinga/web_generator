@@ -12,24 +12,20 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 abstract class DocumentCreator {
-	Music fMusic = null;
-	Links fLinks = null;
 	String fOutputDir = null;
 	private XhtmlDocument fDocument = null;
-	String fProgram = null;
 	div fMainDiv = null;
 	div fSubsection = null;
 	
-	protected DocumentCreator(Music music, Links links, String outputDir, String program) {
-		fMusic = music;
-		fLinks = links;
+	protected DocumentCreator(String outputDir) {
 		fOutputDir = outputDir;
-		fProgram = program;
 	}
 	
 	protected abstract String getTitle();
 
 	protected abstract boolean needNewDocument();
+    protected abstract XhtmlDocument createDocument();
+    protected abstract div getHeaderDiv();
     protected abstract boolean needNewSubsection();
     protected abstract Element getSubsectionTitle();
     
@@ -56,19 +52,6 @@ abstract class DocumentCreator {
 		return fMainDiv;
 	}
     
-    protected XhtmlDocument createDocument() {
-        return Web.createHTMLDocument(fLinks, getTitle());
-    }
-    
-    protected div getHeaderDiv() {
-        div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_HEADER);
-        headerDiv.addElement(new h1().addElement(getTitle()));
-        headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
-        headerDiv.addElement(fLinks.addWebNavigator(fMusic, fProgram));
-        headerDiv.addElement(addIndexNavigator());
-        return headerDiv;
-    }
-
     protected div getSubsection() {
         div mainDiv = getMainDiv();
         if ((fSubsection == null) || needNewSubsection()) {
@@ -124,7 +107,33 @@ abstract class DocumentCreator {
 	}
 }
 
-class ArtistDocumentCreator extends DocumentCreator {
+abstract class MusicDocumentCreator extends DocumentCreator {
+	Music fMusic = null;
+	Links fLinks = null;
+	String fProgram = null;
+    
+    protected MusicDocumentCreator(Music music, Links links, String outputDir, String program) {
+        super(outputDir);
+		fMusic = music;
+		fLinks = links;
+		fProgram = program;
+    }
+
+    protected XhtmlDocument createDocument() {
+        return Web.createHTMLDocument(fLinks, getTitle());
+    }
+
+    protected div getHeaderDiv() {
+        div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_HEADER);
+        headerDiv.addElement(new h1().addElement(getTitle()));
+        headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
+        headerDiv.addElement(fLinks.addWebNavigator(fMusic, fProgram));
+        headerDiv.addElement(addIndexNavigator());
+        return headerDiv;
+    }
+}
+
+class ArtistDocumentCreator extends MusicDocumentCreator {
 	Artist fLastArtist = null;
 	Artist fCurArtist = null;
 	
@@ -170,7 +179,7 @@ class ArtistDocumentCreator extends DocumentCreator {
 	}
 }
 
-class VenueDocumentCreator extends DocumentCreator {
+class VenueDocumentCreator extends MusicDocumentCreator {
 	Venue fLastVenue = null;
 	Venue fCurVenue = null;
 	
@@ -216,7 +225,7 @@ class VenueDocumentCreator extends DocumentCreator {
 	}
 }
 
-class ShowDocumentCreator extends DocumentCreator {
+class ShowDocumentCreator extends MusicDocumentCreator {
 	Show fLastShow = null;
 	Show fCurShow = null;
     
@@ -259,7 +268,7 @@ class ShowDocumentCreator extends DocumentCreator {
 	}
 }
 
-class StatisticsCreator extends DocumentCreator {
+class StatisticsCreator extends MusicDocumentCreator {
 	String fTitle = null;
 	String fDirectory = null;
 	String fFileName = null;
@@ -352,7 +361,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
 	}
 }
 
-class TracksDocumentCreator extends DocumentCreator {
+class TracksDocumentCreator extends MusicDocumentCreator {
 	Album fLastAlbum = null;
 	Album fCurAlbum = null;
 	
