@@ -1,10 +1,13 @@
 package com.bolsinga.ical;
 
 import java.io.*;
+import java.text.*;
 import java.util.*;
 
 public class VEvent {
 
+	static DateFormat sFormatter = new SimpleDateFormat("yyyyMMdd");
+	
 	Calendar fDate;
 	String fSummary;
 	String fURL;
@@ -44,29 +47,9 @@ public class VEvent {
 		end.add(Calendar.DATE, 1);
 
 		pw.print("DTSTART;VALUE=DATE:");
-		pw.print(fDate.get(Calendar.YEAR));
-		int val = fDate.get(Calendar.MONTH);
-		if (val < 10) {
-			pw.print("0");
-		}
-		pw.print(val);
-		val = fDate.get(Calendar.DAY_OF_MONTH);
-		if (val < 10) {
-			pw.print("0");
-		}
-		pw.println(val);
+		pw.println(sFormatter.format(fDate.getTime()));
 		
 		pw.print("DTEND;VALUE=DATE:");
-		pw.print(end.get(Calendar.YEAR));
-		val = end.get(Calendar.MONTH);
-		if (val < 10) {
-			pw.print("0");
-		}
-		pw.print(val);
-		val = end.get(Calendar.DAY_OF_MONTH);
-		if (val < 10) {
-			pw.print("0");
-		}
-		pw.println(val);
+		pw.println(sFormatter.format(end.getTime()));
 	}
 }
