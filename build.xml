@@ -240,6 +240,23 @@
 	</java>
 </target>
 
+<target name="music_edit" depends="music_web" >
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/music/ui/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+</target>
+
+<target name="editMusic" depends="music_edit, jar" >
+	<java classname="com.bolsinga.music.ui.UI" fork="true" >
+		<arg value="${data.dir}music.xml" />
+		<classpath refid="music_classpath" />
+	</java>
+</target>
+
 <target name="music" depends="converter, music_web, diary_web, ical, jar" />
 
 <target name="generateXML" depends="music, generateMusicXML, generateDiaryXML" />
