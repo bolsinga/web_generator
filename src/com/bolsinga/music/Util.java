@@ -3,6 +3,10 @@ package com.bolsinga.music.util;
 import java.text.*;
 import java.util.*;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 public class Util {
 
 	private static DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
@@ -54,5 +58,20 @@ public class Util {
 	
 	public static String toString(double value) {
 		return sPercentFormat.format(value);
+	}
+
+	public static com.bolsinga.music.data.Music createMusic(String sourceFile) {
+		com.bolsinga.music.data.Music music = null;
+		try {
+			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
+			Unmarshaller u = jc.createUnmarshaller();
+			
+			music = (com.bolsinga.music.data.Music)u.unmarshal(new java.io.FileInputStream(sourceFile));
+		} catch (Exception ume) {
+			System.err.println("Exception: " + ume);
+			ume.printStackTrace();
+			System.exit(1);
+		}
+		return music;
 	}
 }

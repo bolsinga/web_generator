@@ -8,10 +8,6 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
 public class ICal {
 
 	public static void main(String[] args) {
@@ -24,17 +20,7 @@ public class ICal {
 	}
 
 	public static void generate(String sourceFile, String outputDir) {
-		Music music = null;
-		try {
-			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
-			Unmarshaller u = jc.createUnmarshaller();
-			
-			music = (Music)u.unmarshal(new FileInputStream(sourceFile));
-		} catch (Exception ume) {
-			System.err.println("Exception: " + ume);
-			ume.printStackTrace();
-			System.exit(1);
-		}
+		Music music = Util.createMusic(sourceFile);
 		
 		generateICal(music, outputDir);
 	}

@@ -11,10 +11,6 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
 abstract class DocumentCreator {
 	Music fMusic = null;
 	Links fLinks = null;
@@ -261,7 +257,7 @@ public class Web {
 	}
 	
 	public static void generate(String sourceFile, String outputDir) {
-		Music music = createMusic(sourceFile);
+		Music music = Util.createMusic(sourceFile);
 		generate(music, outputDir);
 	}
 	
@@ -276,22 +272,7 @@ public class Web {
 		
 		generateCityPages(music, links, outputDir);
 	}
-	
-	private static Music createMusic(String sourceFile) {
-		Music music = null;
-		try {
-			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
-			Unmarshaller u = jc.createUnmarshaller();
-			
-			music = (Music)u.unmarshal(new FileInputStream(sourceFile));
-		} catch (Exception ume) {
-			System.err.println("Exception: " + ume);
-			ume.printStackTrace();
-			System.exit(1);
-		}
-		return music;
-	}
-	
+
 	// NOTE: Instead of a List of ID's, JAXB returns a List of real items.
 	
 	public static void generateArtistPages(Music music, Links links, String outputDir) {
@@ -464,7 +445,7 @@ public class Web {
 	}
 	
 	public static String generatePreview(String sourceFile, int lastShowsCount) {
-		Music music = createMusic(sourceFile);
+		Music music = Util.createMusic(sourceFile);
 		return generatePreview(music, lastShowsCount);
 	}
 	
@@ -586,7 +567,7 @@ public class Web {
 	}
 	
 	public static String embedLinks(String sourceFile, String data, boolean upOneLevel) {
-		Music music = createMusic(sourceFile);
+		Music music = Util.createMusic(sourceFile);
 		
 		return embedLinks(music, data, upOneLevel);
 	}

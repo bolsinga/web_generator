@@ -1,13 +1,10 @@
 package com.bolsinga.music.ui;
 
 import com.bolsinga.music.data.*;
+import com.bolsinga.music.util.*;
 
 import java.awt.*;
 import java.io.*;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 public class UI {
 
@@ -34,24 +31,9 @@ public class UI {
 		Frame f = new Frame("Edit");
 		f.setVisible(true);
 	}
-	
-	private static Music createMusic(String sourceFile) {
-		Music music = null;
-		try {
-			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
-			Unmarshaller u = jc.createUnmarshaller();
-			
-			music = (Music)u.unmarshal(new FileInputStream(sourceFile));
-		} catch (Exception ume) {
-			System.err.println("Exception: " + ume);
-			ume.printStackTrace();
-			System.exit(1);
-		}
-		return music;
-	}
-	
+		
 	public void edit(String sourceFile) {
-		Music music = createMusic(sourceFile);
+		Music music = Util.createMusic(sourceFile);
 		edit(music);
 	}
 	
