@@ -495,8 +495,10 @@ public class Web {
 			addItem(music, links, item, creator.getDocument(item));
 		}
 		creator.close();
-		
-/*
+
+/*		
+	//+++gdb This should be sorted by artist, and # of tracks, or # of albums?
+	
 		Collections.sort(items, com.bolsinga.music.util.Compare.getCompare(music).ALBUM_STATS_COMPARATOR);
 
 		String[] names = new String[items.size()];
@@ -505,8 +507,8 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Album)li.next();
 
-			names[index] = new A(links.getLinkTo(item), item.getName()).toString();
-			List shows = Lookup.getLookup(music).getShows(item);
+			names[index] = new A(links.getLinkTo(item), item.getTitle()).toString();
+			List shows = null; // Lookup.getLookup(music).getAlbums(item);
 			values[index] = (shows != null) ? shows.size() : 0;
 			
 			index++;
@@ -662,16 +664,17 @@ public class Web {
 	public static void addItem(Music music, Links links, Artist artist, Document doc) {
 		Body b = doc.getBody();
 
-		List shows = Lookup.getLookup(music).getShows(artist);
-		
 		b.addElement(new HR());
 		A a = new A();
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
 		b.addElement(new Center().addElement(new Big().addElement(a)));
+				
+		addTracks(music, links, artist, doc);
 		
 		addRelations(music, links, artist, doc);
-		
+
+		List shows = Lookup.getLookup(music).getShows(artist);
 		if (shows != null) {
 		    ListIterator li = shows.listIterator();
 		    while (li.hasNext()) {
@@ -720,8 +723,6 @@ public class Web {
 	
 	public static void addItem(Music music, Links links, Venue venue, Document doc) {
 		Body b = doc.getBody();
-
-		List shows = Lookup.getLookup(music).getShows(venue);
 		
 		b.addElement(new HR());
 		A a = new A();
@@ -731,6 +732,7 @@ public class Web {
 		
 		addRelations(music, links, venue, doc);
 
+		List shows = Lookup.getLookup(music).getShows(venue);
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
 			Show show = (Show)li.next();
@@ -854,15 +856,38 @@ public class Web {
 			UL ul = new UL();
 			ul.addElement(new LI().addElement("See Also"));
 			
+			UL related = new UL();
 			Iterator li = relations.iterator();
 			while (li.hasNext()) {
 				Venue v = (Venue)li.next();
 				if (v.equals(venue)) {
-					ul.addElement(new LI().addElement(v.getName()));
+					related.addElement(new LI().addElement(v.getName()));
 				} else {
-					ul.addElement(new LI().addElement(new A(links.getLinkTo(v), v.getName())));
+					related.addElement(new LI().addElement(new A(links.getLinkTo(v), v.getName())));
 				}
 			}
+			ul.addElement(related);
+			
+			b.addElement(ul);
+		}
+	}
+
+	public static void addTracks(Music music, Links links, Artist artist, Document doc) {
+		List albums = artist.getAlbum();
+		if (albums.size() > 0) {
+			Body b = doc.getBody();
+			
+			UL ul = new UL();
+			ul.addElement(new LI().addElement("Albums"));
+			
+			UL related = new UL();
+			Iterator li = albums.iterator();
+			while (li.hasNext()) {
+				Album a = (Album)li.next();
+				
+				related.addElement(new LI().addElement(new A(links.getLinkTo(a), a.getTitle())));
+			}
+			ul.addElement(related);
 			
 			b.addElement(ul);
 		}
