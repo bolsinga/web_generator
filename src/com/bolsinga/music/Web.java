@@ -259,6 +259,18 @@ public class Web {
 	}
 	
 	public static void generate(String sourceFile, String outputDir) {
+		Music music = createMusic(sourceFile);
+		
+		generateArtistPages(music, outputDir);
+		
+		generateVenuePages(music, outputDir);
+		
+		generateDatePages(music, outputDir);
+		
+		generateCityPages(music, outputDir);
+	}
+	
+	private static Music createMusic(String sourceFile) {
 		Music music = null;
 		try {
 			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
@@ -270,14 +282,7 @@ public class Web {
 			ume.printStackTrace();
 			System.exit(1);
 		}
-		
-		generateArtistPages(music, outputDir);
-		
-		generateVenuePages(music, outputDir);
-		
-		generateDatePages(music, outputDir);
-		
-		generateCityPages(music, outputDir);
+		return music;
 	}
 	
 	// NOTE: Instead of a List of ID's, JAXB returns a List of real items.
@@ -453,6 +458,12 @@ public class Web {
 		StatisticsCreator creator = new StatisticsCreator(music, outputDir);
 		creator.getDocument("City Statistics", Util.CITIES_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
+	}
+	
+	public static String generatePreview(String sourceFile) {
+		Music music = createMusic(sourceFile);
+		
+		return "ROCK!";
 	}
 	
 	public static void addItem(Music music, Artist artist, Document doc) {
