@@ -21,6 +21,7 @@ class CSS {
 	public static final String DIARY_ENTRY	= "diary_entry";
 	
 	public static final String MAIN_STATICS	= "main_statics";
+	public static final String MAIN_MAIN	= "main_main";
 	public static final String MAIN_HEADER	= "main_header";
 	public static final String MAIN_DIARY	= "main_diary";
 	public static final String MAIN_PREVIEW	= "main_preview";
@@ -222,16 +223,15 @@ public class Web {
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("60%");
-		Div mainHeader = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_HEADER);
-		mainHeader.addElement(diary.getHeader());
-		StringBuffer sb = new StringBuffer();
-		sb.append("Updated ");
-		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
-		sb.append("!");
-		mainHeader.addElement(sb.toString());
-		mainHeader.addElement(links.getRSSLink());
-		mainHeader.addElement(generateDiary(music, diary, links, mainPageEntryCount));
-		td.addElement(mainHeader);
+		Div main = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_MAIN);
+
+		Div header = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_HEADER);
+		header.addElement(diary.getHeader());
+		main.addElement(header);
+		
+		main.addElement(generateDiary(music, diary, links, mainPageEntryCount));
+		
+		td.addElement(main);
 		tr.addElement(td);
 		
 		td = new TD();
@@ -329,29 +329,36 @@ public class Web {
 		return d;
 	}
 	
-	private static Div generateDiary(Music music, Diary diary, Links links, int mainPageEntryCount) {
+	private static Element generateDiary(Music music, Diary diary, Links links, int mainPageEntryCount) {
 		List items = diary.getEntry();
 		Entry item = null;
+
+		Div diaryDiv = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_DIARY);
 		
-		Div mainDiv = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_DIARY);
-		
+		StringBuffer sb = new StringBuffer();
+		sb.append("Updated ");
+		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
+		sb.append("!");
+		diaryDiv.addElement(sb.toString());
+		diaryDiv.addElement(links.getRSSLink());
+				
 		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		Collections.reverse(items);
 		
 		for (int i = 0; i < mainPageEntryCount; i++) {
 			item = (Entry)items.get(i);
 			
-			addItem(music, item, mainDiv, false, true);
+			addItem(music, item, diaryDiv, false, true);
 		}
 		
-		StringBuffer archivesLink = new StringBuffer();
-		archivesLink.append("archives/");
-		archivesLink.append(Calendar.getInstance().get(Calendar.YEAR));
-		archivesLink.append(".html");
+		sb = new StringBuffer();
+		sb.append("archives/");
+		sb.append(Calendar.getInstance().get(Calendar.YEAR));
+		sb.append(".html");
 		
-		mainDiv.addElement(new H2().addElement(new A(archivesLink.toString(), "Archives")));
+		diaryDiv.addElement(new H2().addElement(new A(sb.toString(), "Archives")));
 		
-		return mainDiv;
+		return diaryDiv;
 	}
 	
 	public static void generateArchivePages(Music music, Diary diary, String outputDir) {
