@@ -246,7 +246,9 @@ class StatisticsCreator extends DocumentCreator {
 }
 
 public class Web {
-		
+	
+	private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.music.web.web");
+	
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			System.out.println("Usage: Web [source.xml] [output.dir]");
@@ -926,10 +928,10 @@ public class Web {
 	private static String getGenerator() {
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append(System.getProperty("music.program"));
+		sb.append(sResource.getString("program"));
 		
 		sb.append(" (built: ");
-		sb.append(System.getProperty("music.builddate"));
+		sb.append(sResource.getString("builddate"));
 		sb.append(" running on jdk ");
 		sb.append(System.getProperty("java.runtime.version"));
 		sb.append(" - ");

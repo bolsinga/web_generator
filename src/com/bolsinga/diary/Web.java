@@ -183,6 +183,9 @@ class DiaryDocumentCreator {
 }
 
 public class Web {
+
+	private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.diary.web.web");
+
 	public static void main(String[] args) {
 		if (args.length != 4) {
 			System.out.println("Usage: Web [# entries on main page] [diary.xml] [music.xml] [output.dir]");
@@ -290,10 +293,10 @@ public class Web {
 	private static String getGenerator() {
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append(System.getProperty("diary.program"));
+		sb.append(sResource.getString("program"));
 		
 		sb.append(" (built: ");
-		sb.append(System.getProperty("diary.builddate"));
+		sb.append(sResource.getString("builddate"));
 		sb.append(" running on jdk ");
 		sb.append(System.getProperty("java.runtime.version"));
 		sb.append(" - ");
