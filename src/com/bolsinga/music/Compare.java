@@ -39,12 +39,7 @@ public class Compare {
 			String s1 = (String)o1;
 			String s2 = (String)o2;
 			
-			String n1 = simplify(s1);
-			String n2 = simplify(s2);
-			
-			System.out.println(n1 + " " + n2);
-			
-			return n1.compareToIgnoreCase(n2);
+			return simplify(s1).compareToIgnoreCase(simplify(s2));
 		}
 	};
 	
