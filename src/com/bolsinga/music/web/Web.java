@@ -17,47 +17,53 @@ import javax.xml.bind.Unmarshaller;
 
 class DocumentCreator {
 	String fOutputDir = null;
+	String fType = null;
 	String fCurPath = null;
-	OutputStream fos = null;
+	Document fDocument = null;
 	
-	public DocumentCreator(String outputDir) {
+	public DocumentCreator(String outputDir, String type) {
 		fOutputDir = outputDir;
+		fType = type;
 	}
 	
-	public OutputStream getStream(String path) {
-		try {
-			if ((fCurPath == null) || (!fCurPath.equals(path))) {
-				fCurPath = path;
-				if (fos != null) {
-					fos.close();
-				}
-				File f = new File(fOutputDir, fCurPath);
-				File parent = new File(f.getParent());
-				if (!parent.exists()) {
-					if (!parent.mkdirs()) {
-						System.out.println("Can't: " + parent.getAbsolutePath());
-					}
-				}
-				fos = new FileOutputStream(f);
+	public Document getDocument(String path) {
+		if ((fCurPath == null) || (!fCurPath.equals(path))) {
+			if (fDocument != null) {
+				writeDocument();
 			}
+
+			fCurPath = path;
+			
+			String letter = fCurPath;
+			fDocument = Web.createHTMLDocument(letter, fType);
+		}
+		
+		return fDocument;
+	}
+	
+	public void close() {
+		if (fDocument != null) {
+			writeDocument();
+			fDocument = null;
+		}
+	}
+	
+	private void writeDocument() {
+		try {
+			File f = new File(fOutputDir, fCurPath);
+			File parent = new File(f.getParent());
+			if (!parent.exists()) {
+				if (!parent.mkdirs()) {
+					System.out.println("Can't: " + parent.getAbsolutePath());
+				}
+			}
+			OutputStream os = new FileOutputStream(f);
+			fDocument.output(os);
+			os.close();
 		} catch (IOException ioe) {
 			System.err.println("Exception: " + ioe);
 			ioe.printStackTrace();
 			System.exit(1);
-		}
-		
-		return fos;
-	}
-	
-	public void close() {
-		if (fos != null) {
-			try {
-				fos.close();
-			} catch (IOException ioe) {
-				System.err.println("Exception: " + ioe);
-				ioe.printStackTrace();
-				System.exit(1);
-			}
 		}
 	}
 	
@@ -116,13 +122,13 @@ public class Web {
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
 		
-		DocumentCreator creator = new DocumentCreator(outputDir);
+		DocumentCreator creator = new DocumentCreator(outputDir, "Artists");
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 			
-			addItem(music, item, creator.getStream(getPagePath(item)));
+			addItem(music, item, creator.getDocument(getPagePath(item)));
 		}
 		creator.close();
 	}
@@ -133,13 +139,13 @@ public class Web {
 
 		Collections.sort(items, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
 
-		DocumentCreator creator = new DocumentCreator(outputDir);
+		DocumentCreator creator = new DocumentCreator(outputDir, "Venues");
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Venue)li.next();
 			
-			addItem(music, item, creator.getStream(getPagePath(item)));
+			addItem(music, item, creator.getDocument(getPagePath(item)));
 		}
 		creator.close();
 	}
@@ -150,77 +156,77 @@ public class Web {
 
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 
-		DocumentCreator creator = new DocumentCreator(outputDir);
+		DocumentCreator creator = new DocumentCreator(outputDir, "Dates");
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Show)li.next();
 			
-			addItem(music, item, creator.getStream(getPagePath(item)));
+			addItem(music, item, creator.getDocument(getPagePath(item)));
 		}
 		creator.close();
 	}
 	
-	public static void addItem(Music music, Artist artist, OutputStream os) {
-		PrintWriter pw = new PrintWriter(os, true);
-		
+	public static void addItem(Music music, Artist artist, Document doc) {
+		Body b = doc.getBody();
+
 		List shows = Lookup.getLookup(music).getShows(artist);
 		
-		pw.println("----");
-		pw.println(artist.getName());
-		pw.println("----");
+		b.addElement("----");
+		b.addElement(artist.getName());
+		b.addElement("----");
 		
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
 			Show show = (Show)li.next();
 			
-			pw.println(Util.toString(show.getDate()));
-			pw.println(((Venue)show.getVenue()).getName());
+			b.addElement(Util.toString(show.getDate()));
+			b.addElement(((Venue)show.getVenue()).getName());
 			
 			ListIterator bi = show.getPerformance().listIterator();
 			while (bi.hasNext()) {
 				Performance p = (Performance)bi.next();
 				Artist a = (Artist)p.getArtist();
-				pw.print(a.getName());
-				pw.print(" - ");
+				b.addElement(a.getName());
+				b.addElement(" - ");
 			}
-			pw.println("");
-			pw.println("----");
+			b.addElement("");
+			b.addElement("----");
 		}
 	}
 	
-	public static void addItem(Music music, Venue venue, OutputStream os) {
-		PrintWriter pw = new PrintWriter(os, true);
+	public static void addItem(Music music, Venue venue, Document doc) {
+		Body b = doc.getBody();
 
 		List shows = Lookup.getLookup(music).getShows(venue);
 		
-		pw.println("----");
-		pw.println(venue.getName());
-		pw.println("----");
+		b.addElement("----");
+		b.addElement(venue.getName());
+		b.addElement("----");
 		
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
 			Show show = (Show)li.next();
 			
-			pw.println(Util.toString(show.getDate()));
-			pw.println(((Venue)show.getVenue()).getName());
+			b.addElement(Util.toString(show.getDate()));
+			b.addElement(((Venue)show.getVenue()).getName());
 			
 			ListIterator bi = show.getPerformance().listIterator();
 			while (bi.hasNext()) {
 				Performance p = (Performance)bi.next();
 				Artist a = (Artist)p.getArtist();
-				pw.print(a.getName());
-				pw.print(" - ");
+				b.addElement(a.getName());
+				b.addElement(" - ");
 			}
-			pw.println("");
-			pw.println("----");
+			b.addElement("");
+			b.addElement("----");
 		}
 	}
 	
-	public static void addItem(Music music, Show show, OutputStream os) {
-		PrintWriter pw = new PrintWriter(os, true);
+	public static void addItem(Music music, Show show, Document doc) {
+		Body b = doc.getBody();
 
-		pw.println(getLinkTo(show));
+		b.addElement(getLinkTo(show));
 	}
 	
 	private static String getCopyright() {
@@ -259,7 +265,7 @@ public class Web {
 		return sb.toString();
 	}
 	
-	private static Document createHTMLDocument(String letter, String type) {
+	static Document createHTMLDocument(String letter, String type) {
 		Document d = new Document();
 		
         d.setDoctype(new org.apache.ecs.Doctype.Html40Strict());
