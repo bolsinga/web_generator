@@ -910,14 +910,15 @@ public class Web {
 		int year = 2003; // This is the first year of this data.
 		int cur_year = Calendar.getInstance().get(Calendar.YEAR);
 		
-		cp.append("Copyright (c) ");
+		cp.append("Contents Copyright (c) ");
 		cp.append(year++);
 		for ( ; year <= cur_year; ++year) {
 			cp.append(", ");
 			cp.append(year);
 		}
 		
-		cp.append(" Greg Bolsinga");
+		cp.append(" ");
+		cp.append(System.getProperty("user.name"));
 		
 		return cp.toString();
 	}
@@ -935,6 +936,11 @@ public class Web {
 		sb.append(System.getProperty("os.name"));
 		sb.append(" ");
 		sb.append(System.getProperty("os.version"));
+		
+		sb.append(" [");
+		sb.append(sResource.getString("copyright"));
+		sb.append("]");
+		
 		sb.append(")");
 		
 		return sb.toString();

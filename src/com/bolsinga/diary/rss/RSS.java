@@ -39,6 +39,11 @@ public class RSS {
 		sb.append(System.getProperty("os.name"));
 		sb.append(" ");
 		sb.append(System.getProperty("os.version"));
+		
+		sb.append(" [");
+		sb.append(sResource.getString("copyright"));
+		sb.append("]");
+		
 		sb.append(")");
 		
 		return sb.toString();

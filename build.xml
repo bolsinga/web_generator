@@ -175,6 +175,7 @@
 		<filterset>
 			<filter token="builddate" value="${music.builddate}" />
 			<filter token="program" value="MusicWeb" />
+			<filter token="copyright" value="Program Copyright (c) 2004 Greg Bolsinga" />
 		</filterset>
 	</copy>
 </target>
@@ -194,6 +195,7 @@
 		<filterset>
 			<filter token="builddate" value="${music.rss.builddate}" />
 			<filter token="program" value="MusicRSS" />
+			<filter token="copyright" value="Program Copyright (c) 2004 Greg Bolsinga" />
 		</filterset>
 	</copy>
 </target>
@@ -213,6 +215,7 @@
 		<filterset>
 			<filter token="builddate" value="${diary.builddate}" />
 			<filter token="program" value="DiaryWeb" />
+			<filter token="copyright" value="Program Copyright (c) 2004 Greg Bolsinga" />
 		</filterset>
 	</copy>
 </target>
@@ -232,6 +235,7 @@
 		<filterset>
 			<filter token="builddate" value="${diary.rss.builddate}" />
 			<filter token="program" value="DiaryRSS" />
+			<filter token="copyright" value="Program Copyright (c) 2004 Greg Bolsinga" />
 		</filterset>
 	</copy>
 </target>
