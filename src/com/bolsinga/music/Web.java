@@ -208,25 +208,22 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 }
 
 class StatisticsCreator extends SingleSectionMusicDocumentCreator {
+	String fFileName = null;
 	String fTitle = null;
 	String fDirectory = null;
-	String fFileName = null;
-	
-	public StatisticsCreator(Music music, Links links, String outputDir, String program) {
-		this(music, links, outputDir, program, Links.STATS);
-	}
+    
+    Table fCurTable = null;
 
-	public StatisticsCreator(Music music, Links links, String outputDir, String program, String filename) {
+	public StatisticsCreator(Music music, Links links, String outputDir, String program, String filename, String title, String directory) {
 		super(music, links, outputDir, program);
 		fFileName = filename;
+        fTitle = title;
+        fDirectory = directory;
 	}
 
-    public void add(table t, String title, String directory) {
-		fTitle = title;
-		fDirectory = directory;
-
-		// On stats pages, this is the only div containing the table.
-		getContainer().addElement(t);
+    public void add(table t) {
+        fCurTable = t;
+		getContainer().addElement(getCurrentElement());
     }
 	
 	protected String getTitle() {
@@ -251,7 +248,7 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
     }
     
     protected Element getCurrentElement() {
-        return null;
+        return fCurTable;
     }
 	
 	protected Element addIndexNavigator() {
@@ -262,16 +259,16 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
 class TracksStatisticsCreator extends StatisticsCreator {
 	private boolean fTracksStats;
 	
-	public static TracksStatisticsCreator createTracksStats(Music music, Links links, String outputDir, String program) {
-		return new TracksStatisticsCreator(music, links, outputDir, program, Links.STATS, true);
+	public static TracksStatisticsCreator createTracksStats(Music music, Links links, String outputDir, String program, String title, String directory) {
+		return new TracksStatisticsCreator(music, links, outputDir, program, Links.STATS, true, title, directory);
 	}
 
-	public static TracksStatisticsCreator createAlbumStats(Music music, Links links, String outputDir, String program) {
-		return new TracksStatisticsCreator(music, links, outputDir, program, Links.ALBUM_STATS, false);
+	public static TracksStatisticsCreator createAlbumStats(Music music, Links links, String outputDir, String program, String title, String directory) {
+		return new TracksStatisticsCreator(music, links, outputDir, program, Links.ALBUM_STATS, false, title, directory);
 	}
 
-	private TracksStatisticsCreator(Music music, Links links, String outputDir, String program, String filename, boolean isTracksStats) {
-		super(music, links, outputDir, program, filename);
+	private TracksStatisticsCreator(Music music, Links links, String outputDir, String program, String filename, boolean isTracksStats, String title, String directory) {
+		super(music, links, outputDir, program, filename, title, directory);
 		fTracksStats = isTracksStats;
 	}
 
@@ -401,12 +398,13 @@ public class Web {
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
         String typeString = com.bolsinga.web.util.Util.getResourceString("artist");
         String typeArgs[] = { typeString };
         String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("showsby"), typeArgs);
         String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), typeArgs);
-		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.ARTIST_DIR);
+
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"), Links.STATS, pageTitle, Links.ARTIST_DIR);
+		stats.add(makeTable(names, values, tableTitle, typeString));
 		stats.close();
 	}
 	
@@ -441,12 +439,13 @@ public class Web {
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
         String typeString = com.bolsinga.web.util.Util.getResourceString("venue");
         String typeArgs[] = { typeString };
         String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("showsby"), typeArgs);
         String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), typeArgs);
-		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.VENUE_DIR);
+
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"), Links.STATS, pageTitle, Links.VENUE_DIR);
+		stats.add(makeTable(names, values, tableTitle, typeString));
 		stats.close();
 	}
 	
@@ -491,12 +490,13 @@ public class Web {
 			index++;
 		}
 		
-		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
         String typeString = com.bolsinga.web.util.Util.getResourceString("year");
         String typeArgs[] = { typeString };
         String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("showsby"), typeArgs);
         String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), typeArgs);
-		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.SHOW_DIR);
+
+		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"), Links.STATS, pageTitle, Links.SHOW_DIR);
+		stats.add(makeTable(names, values, tableTitle, typeString));
 		stats.close();
 	}
 	
@@ -546,12 +546,13 @@ public class Web {
 			}
 		}
 		
-		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
         String typeString = com.bolsinga.web.util.Util.getResourceString("city");
         String typeArgs[] = { typeString };
         String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("showsby"), typeArgs);
         String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), typeArgs);
-		creator.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.CITIES_DIR);
+
+		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"), Links.STATS, pageTitle, Links.CITIES_DIR);
+		creator.add(makeTable(names, values, tableTitle, typeString));
 		creator.close();
 	}
 
@@ -590,13 +591,14 @@ public class Web {
 		}
 		
         {
-		StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
         String typeString = com.bolsinga.web.util.Util.getResourceString("artist");
         String typeArgs[] = { typeString };
         String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("tracksby"), typeArgs);
         String statsArgs[] = { com.bolsinga.web.util.Util.getResourceString("track") };
         String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), statsArgs);
-		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.TRACKS_DIR);
+
+		StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
+		stats.add(makeTable(names, values, tableTitle, typeString));
 		stats.close();
         }
 
@@ -617,13 +619,14 @@ public class Web {
 		}
 
         {
-		StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
         String typeString = com.bolsinga.web.util.Util.getResourceString("artist");
         String typeArgs[] = { typeString };
         String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("albumsby"), typeArgs);
         String statsArgs[] = { com.bolsinga.web.util.Util.getResourceString("album") };
         String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), statsArgs);
-		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.TRACKS_DIR);
+
+		StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
+		stats.add(makeTable(names, values, tableTitle, typeString));
 		stats.close();
         }
 	}
