@@ -270,6 +270,64 @@ public class Web {
 		pw.println(getLinkTo(show));
 	}
 	
+	private static String getCopyright() {
+		StringBuffer cp = new StringBuffer();
+		
+		int year = 2003; // This is the first year of this data.
+		int cur_year = Calendar.getInstance().get(Calendar.YEAR);
+		
+		cp.append("Copyright (c) ");
+		cp.append(year++);
+		for ( ; year <= cur_year; ++year) {
+			cp.append(", ");
+			cp.append(year);
+		}
+		
+		cp.append(" Greg Bolsinga");
+		
+		return cp.toString();
+	}
+	
+	private static String getGenerator() {
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("My Program"); // Get this class name programmatically
+		
+		sb.append(" (built: ");
+		sb.append("BUILD_DATE"); // Replace this at build time with ant facilities.
+		sb.append(" running on jdk ");
+		sb.append(System.getProperty("java.runtime.version"));
+		sb.append(" - ");
+		sb.append(System.getProperty("os.name"));
+		sb.append(" ");
+		sb.append(System.getProperty("os.version"));
+		sb.append(")");
+		
+		return sb.toString();
+	}
+	
+	private static Document createHTMLDocument(String letter, String type) {
+		Document d = new Document();
+		
+        d.setDoctype(new org.apache.ecs.Doctype.Html40Strict());
+		StringBuffer sb = new StringBuffer();
+		sb.append("'");
+		sb.append(letter);
+		sb.append("' ");
+		sb.append(type);
+		d.appendTitle(sb.toString());
+		d.getHtml().setPrettyPrint(true);
+		
+		Head h = d.getHead();
+		h.addElement(new Link().setRel("SHORTCUT ICON").setHref("http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico"));
+		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
+		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
+		h.addElement(new Meta().setContent(Web.getCopyright()).setName("Copyright"));
+		h.addElement(new Meta().setContent(Web.getGenerator()).setName("Generator"));
+
+		return d;
+	}
+	
 	private static String getPageFileName(String name) {
 		String file = Compare.simplify(name).substring(0, 1).toUpperCase();
 		if (file.matches("\\W")) {

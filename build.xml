@@ -118,12 +118,17 @@
 	</java>
 </target>
 
+<path id="generate_web_classpath">
+	<path refid="music_classpath" />
+	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
+</path>
+
 <target name="generateWeb" depends="web, music">
 	<mkdir dir="/tmp/web/" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
 		<arg value="${data.dir}music.xml" />
 		<arg value="/tmp/web/" />
-		<classpath refid="music_classpath" />
+		<classpath refid="generate_web_classpath" />
 	</java>
 </target>
 
