@@ -15,11 +15,13 @@ public class Util {
 	private static String removeLinks(String data) {
 		StringBuffer sb = new StringBuffer();
 		
-		Matcher match = sHTMLTag.matcher(data);
-		while (match.find()) {
-			match.appendReplacement(sb, "$2");
+		if (data != null) {
+			Matcher match = sHTMLTag.matcher(data);
+			while (match.find()) {
+				match.appendReplacement(sb, "$2");
+			}
+			match.appendTail(sb);
 		}
-		match.appendTail(sb);
 		
 		return sb.toString();
 	}
