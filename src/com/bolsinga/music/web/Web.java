@@ -397,52 +397,41 @@ public class Web {
 	public static void addItem(Music music, Show show, Document doc) {
 		Body b = doc.getBody();
 
-		b.addElement(new P());
-		b.addElement(((Venue)show.getVenue()).getName());
-		
-/*			
+		UL showListing = new UL();
 		A a = new A();
-		a.setName(venue.getId());
-		a.addElement("test", venue.getName());
-		b.addElement(new Center().addElement(new Big().addElement(a)));
+		a.setName(show.getId());
+		a.addElement("test", Util.toString(show.getDate()));
+		showListing.addElement(new LI(new B(a)));
 		
-		addRelations(music, venue, doc);
-
-		ListIterator li = shows.listIterator();
-		while (li.hasNext()) {
-			Show show = (Show)li.next();
-			UL showListing = new UL();
+		UL showInfo = new UL();
+		
+		LI listItem = new LI();
+		ListIterator bi = show.getPerformance().listIterator();
+		while (bi.hasNext()) {
+			Performance p = (Performance)bi.next();
+			Artist performer = (Artist)p.getArtist();
 			
-			showListing.addElement(new LI().addElement(new A(Util.getLinkTo(show), Util.toString(show.getDate()))));
+			listItem.addElement(new A(Util.getLinkTo(performer), performer.getName()));
 			
-			UL showInfo = new UL();
-			
-			LI listItem = new LI();
-			ListIterator bi = show.getPerformance().listIterator();
-			while (bi.hasNext()) {
-				Performance p = (Performance)bi.next();
-				Artist performer = (Artist)p.getArtist();
-				
-				listItem.addElement(new A(Util.getLinkTo(performer), performer.getName()));
-				
-				if (bi.hasNext()) {
-					listItem.addElement(", ");
-				}
+			if (bi.hasNext()) {
+				listItem.addElement(", ");
 			}
-			showInfo.addElement(listItem);
-			
-			showInfo.addElement(new LI().addElement(new B(venue.getName())));
-			
-			String comment = show.getComment();
-			if (comment != null) {
-				showInfo.addElement(new LI().addElement(comment));
-			}
-			
-			showListing.addElement(showInfo);
-			
-			b.addElement(showListing);
 		}
-*/
+		showInfo.addElement(listItem);
+		
+		Venue venue = (Venue)show.getVenue();
+		A venueA = new A(Util.getLinkTo(venue), venue.getName());
+		Location l = (Location)venue.getLocation();
+		showInfo.addElement(new LI(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
+
+		String comment = show.getComment();
+		if (comment != null) {
+			showInfo.addElement(new LI(comment));
+		}
+
+		showListing.addElement(showInfo);
+		
+		b.addElement(showListing);
 	}
 	
 	public static void addRelations(Music music, Artist artist, Document doc) {
