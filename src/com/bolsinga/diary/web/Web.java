@@ -209,6 +209,7 @@ public class Web {
 		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append("!");
 		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
+		td.addElement(new Center(links.getRSSLink()).addElement(new P()));
 		
 		generateDiary(music, diary, links, mainPageEntryCount, td);
 		tr.addElement(td);
@@ -325,9 +326,6 @@ public class Web {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append(new A(archivesLink.toString(), "Archives").toString());
-		sb.append(" ");
-		sb.append(links.getRSSLink());
-		
 		addBanner(sb.toString(), table);
 		
 		td.addElement(table);
