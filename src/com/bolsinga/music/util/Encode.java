@@ -2,6 +2,7 @@ package com.bolsinga.music.util;
 
 import com.bolsinga.music.data.*;
 
+import java.text.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -11,10 +12,6 @@ import org.apache.ecs.filter.*;
 
 public class Encode {
 
-	private static final String MORE_ARTIST_INFO = "Artist: "; //+++gdb LOCAL
-	private static final String MORE_VENUE_INFO = "Venue: "; //+++gdb LOCAL
-	private static final String MORE_ALBUM_INFO = "Album: "; //+++gdb LOCAL
-	
 	private static Encode sEncode = null;
 
 	static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
@@ -31,33 +28,33 @@ public class Encode {
 			fName = artist.getName();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			StringBuffer sb = new StringBuffer(MORE_ARTIST_INFO);
-			sb.append(fName);
+            Object[] args = { fName };
+            String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfoartist"), args);
 			
-			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", sb.toString()).toString();
-			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(artist), "$2", sb.toString()).toString();
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
 		}
 		
 		Data(Venue venue, Links standardLinks, Links upLinks) {
 			fName = venue.getName();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			StringBuffer sb = new StringBuffer(MORE_VENUE_INFO);
-			sb.append(fName);
+            Object[] args = { fName };
+            String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfovenue"), args);
 
-			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", sb.toString()).toString();
-			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(venue), "$2", sb.toString()).toString();
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
 		}
 
 		Data(Album album, Links standardLinks, Links upLinks) {
 			fName = album.getTitle();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			StringBuffer sb = new StringBuffer(MORE_ALBUM_INFO);
-			sb.append(fName);
+            Object[] args = { fName };
+            String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfoalbum"), args);
 
-			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2", sb.toString()).toString();
-			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(album), "$2", sb.toString()).toString();
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
 		}
 		
 		String getName() {

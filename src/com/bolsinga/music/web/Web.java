@@ -6,6 +6,7 @@ import com.bolsinga.settings.data.*;
 
 import java.io.*;
 import java.math.*;
+import java.text.*;
 import java.util.*;
 
 import org.apache.ecs.*;
@@ -53,7 +54,7 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
     }
 	
 	protected String getTitle() {
-		return getTitle("Artists"); //+++gdb LOCAL
+		return getTitle(com.bolsinga.web.util.Util.getResourceString("artists"));
 	}
 	
 	protected boolean needNewDocument() {
@@ -99,7 +100,7 @@ class VenueDocumentCreator extends MusicDocumentCreator {
     }
 	
 	protected String getTitle() {
-		return getTitle("Venues"); //+++gdb LOCAL
+		return getTitle(com.bolsinga.web.util.Util.getResourceString("venues"));
 	}
 	
 	protected boolean needNewDocument() {
@@ -145,7 +146,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 	}
 	
 	protected String getTitle() {
-		return getTitle("Dates"); //+++gdb LOCAL
+		return getTitle(com.bolsinga.web.util.Util.getResourceString("dates"));
 	}
     
 	protected boolean needNewDocument() {
@@ -248,16 +249,16 @@ class TracksStatisticsCreator extends StatisticsCreator {
 	protected Element addIndexNavigator() {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.TRACKS_MENU);
 		
-		d.addElement(new h4("View: ")); //+++gdb LOCAL
+		d.addElement(new h4(com.bolsinga.web.util.Util.getResourceString("view")));
 		
 		ul list = new ul();
 		
 		if (fTracksStats) {
-			list.addElement(new li("Tracks")); //+++gdb LOCAL
+			list.addElement(new li(com.bolsinga.web.util.Util.getResourceString("tracks")));
 			list.addElement(new li(fLinks.getAlbumsLink()));
 		} else {
 			list.addElement(new li(fLinks.getTracksLink()));
-			list.addElement(new li("Albums")); //+++gdb LOCAL
+			list.addElement(new li(com.bolsinga.web.util.Util.getResourceString("albums")));
 		}
 		
 		d.addElement(list);
@@ -281,7 +282,7 @@ class TracksDocumentCreator extends MusicDocumentCreator {
     }
 	
 	protected String getTitle() {
-		return getTitle("Tracks"); //+++gdb LOCAL
+		return getTitle(com.bolsinga.web.util.Util.getResourceString("tracks"));
 	}
 	
 	protected boolean needNewDocument() {
@@ -379,7 +380,11 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
-		stats.add(makeTable(names, values, "Shows by Artist", "Artist"), "Artist Statistics", Links.ARTIST_DIR); //+++gdb LOCAL
+        String typeString = com.bolsinga.web.util.Util.getResourceString("artist");
+        String typeArgs[] = { typeString };
+        String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("showsby"), typeArgs);
+        String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), typeArgs);
+		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.ARTIST_DIR);
 		stats.close();
 	}
 	
@@ -415,7 +420,11 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
-		stats.add(makeTable(names, values, "Shows by Venue", "Venue"), "Venue Statistics", Links.VENUE_DIR); //+++gdb LOCAL
+        String typeString = com.bolsinga.web.util.Util.getResourceString("venue");
+        String typeArgs[] = { typeString };
+        String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("showsby"), typeArgs);
+        String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), typeArgs);
+		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.VENUE_DIR);
 		stats.close();
 	}
 	
@@ -461,7 +470,11 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
-		stats.add(makeTable(names, values, "Shows by Year", "Year"), "Show Statistics", Links.SHOW_DIR); //+++gdb LOCAL
+        String typeString = com.bolsinga.web.util.Util.getResourceString("year");
+        String typeArgs[] = { typeString };
+        String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("showsby"), typeArgs);
+        String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), typeArgs);
+		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.SHOW_DIR);
 		stats.close();
 	}
 	
@@ -512,7 +525,11 @@ public class Web {
 		}
 		
 		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
-		creator.add(makeTable(names, values, "Shows by City", "City"), "City Statistics", Links.CITIES_DIR); //+++gdb LOCAL
+        String typeString = com.bolsinga.web.util.Util.getResourceString("city");
+        String typeArgs[] = { typeString };
+        String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("showsby"), typeArgs);
+        String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), typeArgs);
+		creator.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.CITIES_DIR);
 		creator.close();
 	}
 
@@ -550,9 +567,16 @@ public class Web {
 			index++;
 		}
 		
+        {
 		StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
-		stats.add(makeTable(names, values, "Tracks by Artist", "Artist"), "Tracks Statistics", Links.TRACKS_DIR);//+++gdb LOCAL
+        String typeString = com.bolsinga.web.util.Util.getResourceString("artist");
+        String typeArgs[] = { typeString };
+        String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("tracksby"), typeArgs);
+        String statsArgs[] = { com.bolsinga.web.util.Util.getResourceString("track") };
+        String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), statsArgs);
+		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.TRACKS_DIR);
 		stats.close();
+        }
 
 		items = music.getArtist();
 		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_ALBUMS_COMPARATOR);
@@ -570,9 +594,16 @@ public class Web {
 			index++;
 		}
 
-		stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
-		stats.add(makeTable(names, values, "Albums by Artist", "Artist"), "Album Statistics", Links.TRACKS_DIR);//+++gdb LOCAL
+        {
+		StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
+        String typeString = com.bolsinga.web.util.Util.getResourceString("artist");
+        String typeArgs[] = { typeString };
+        String tableTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("albumsby"), typeArgs);
+        String statsArgs[] = { com.bolsinga.web.util.Util.getResourceString("album") };
+        String pageTitle = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("statistics"), statsArgs);
+		stats.add(makeTable(names, values, tableTitle, typeString), pageTitle, Links.TRACKS_DIR);
 		stats.close();
+        }
 	}
 	
 	public static Element generatePreview(String sourceFile, int lastShowsCount) {
@@ -594,14 +625,12 @@ public class Web {
 		div previewMenu = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.PREVIEW_MENU);
 		previewMenu.addElement(com.bolsinga.web.util.Util.getLogo());
 				
-		StringBuffer sb = new StringBuffer();
-		sb.append("Generated "); //+++gdb LOCAL
-		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
-		previewMenu.addElement(new h3(sb.toString()));
+        Object[] genArgs = { music.getTimestamp().getTime() };
+		previewMenu.addElement(new h3(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), genArgs)));
 
 		ul list = new ul();
 		
-		sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		sb.append(music.getArtist().size());
 		sb.append(" ");
 		sb.append(links.getArtistLink());
@@ -646,10 +675,8 @@ public class Web {
 		div previewRecent = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.PREVIEW_RECENT);
 		
 		sb = new StringBuffer();
-		sb.append("Last "); //+++gdb LOCAL
-		sb.append(Integer.toString(lastShowsCount));
-		sb.append(" shows:"); //+++gdb LOCAL
-		previewRecent.addElement(new h3(sb.toString()));
+        Object[] countArgs = { new Integer(lastShowsCount) };
+		previewRecent.addElement(new h3(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("lastshows"), countArgs)));
 		
 		for (int i = 0; i < lastShowsCount; i++) {
 			item = (Show)items.get(i);
@@ -732,7 +759,7 @@ public class Web {
 			    
 			    String comment = show.getComment();
 			    if (comment != null) {
-				    showInfo.addElement(new li(com.bolsinga.web.util.Util.createInternalA(showLink, "Show Summary"))); //+++gdb LOCAL
+				    showInfo.addElement(new li(com.bolsinga.web.util.Util.createInternalA(showLink, com.bolsinga.web.util.Util.getResourceString("showsummary"))));
 			    }
 			    
 			    showDiv.addElement(showInfo);
@@ -783,7 +810,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new li(com.bolsinga.web.util.Util.createInternalA(showLink, "Show Summary"))); //+++gdb LOCAL
+				showInfo.addElement(new li(com.bolsinga.web.util.Util.createInternalA(showLink, com.bolsinga.web.util.Util.getResourceString("showsummary"))));
 			}
 			
 			showDiv.addElement(showInfo);
@@ -899,7 +926,7 @@ public class Web {
 	public static div addRelations(Music music, Links links, Artist artist) {
 		div relDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_RELATION);
 			
-		relDiv.addElement(new h3().addElement("See Also")); //+++gdb LOCAL
+		relDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.getResourceString("seealso")));
 		
 		ul related = new ul();
 		Iterator iterator = Lookup.getLookup(music).getRelations(artist).iterator();
@@ -919,7 +946,7 @@ public class Web {
 	public static div addRelations(Music music, Links links, Venue venue) {
 		div relDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_RELATION);
 
-		relDiv.addElement(new h3().addElement("See Also")); //+++gdb LOCAL
+		relDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.getResourceString("seealso")));
 		
 		ul related = new ul();
 		Iterator iterator = Lookup.getLookup(music).getRelations(venue).iterator();
@@ -939,7 +966,7 @@ public class Web {
 	public static div addTracks(Music music, Links links, Artist artist) {
 		div albumsDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_TRACKS);
 			
-		albumsDiv.addElement(new h3().addElement("Albums")); //+++gdb LOCAL
+		albumsDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.getResourceString("albums")));
 		
 		ul related = new ul();
 		Iterator iterator = artist.getAlbum().iterator();

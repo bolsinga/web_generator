@@ -34,7 +34,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
     }
     
     protected String getTitle() {
-        return getTitle("Archives");
+        return getTitle(com.bolsinga.web.util.Util.getResourceString("archives"));
     }
     
 	protected boolean needNewDocument() {
@@ -109,14 +109,12 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 	private Element addWebNavigator(String program, Links links) {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_MENU);
 		
-		StringBuffer sb = new StringBuffer();
-		sb.append("Generated "); //+++gdb LOCAL
-		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
-		d.addElement(new h4(sb.toString()));
+        Object[] args = { Calendar.getInstance().getTime() };
+		d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
 
 		ul list = new ul();
 		
-		sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		sb.append("mailto:");
 		sb.append(com.bolsinga.web.util.Util.getSettings().getContact());
 		sb.append("?Subject=");
@@ -124,7 +122,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 		sb.append("%20Message&amp;Body=");
 		sb.append(program);
 		sb.append("%20Message%0A");
-		list.addElement(new li(new a(sb.toString(), "Contact"))); // mailto: URL //+++gdb LOCAL
+		list.addElement(new li(new a(sb.toString(), com.bolsinga.web.util.Util.getResourceString("contact")))); // mailto: URL
 
 		list.addElement(new li(links.getLinkToHome()));
 
@@ -290,11 +288,8 @@ public class Web {
 
 		div diaryDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_DIARY);
 		
-		StringBuffer sb = new StringBuffer();
-		sb.append("Updated "); //+++gdb LOCAL
-		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
-		sb.append("!");
-		diaryDiv.addElement(new h3(sb.toString()));
+        Object[] args = { Calendar.getInstance().getTime() };
+		diaryDiv.addElement(new h3(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("updated"), args)));
 		
 		diaryDiv.addElement(links.getRSSLink());
 				
@@ -309,12 +304,12 @@ public class Web {
 			diaryDiv.addElement(Web.addItem(music, item, false));
 		}
 		
-		sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 		sb.append("archives/");
 		sb.append(Calendar.getInstance().get(Calendar.YEAR));
 		sb.append(".html");
 		
-		diaryDiv.addElement(new h2().addElement(com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Archives"))); //+++gdb LOCAL
+		diaryDiv.addElement(new h2().addElement(com.bolsinga.web.util.Util.createInternalA(sb.toString(), com.bolsinga.web.util.Util.getResourceString("archives"))));
 		
 		return diaryDiv;
 	}

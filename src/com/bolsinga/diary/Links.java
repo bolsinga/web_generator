@@ -130,6 +130,6 @@ public class Links {
 			url.append(File.separator);
 		}
 		url.append("index.html");
-		return com.bolsinga.web.util.Util.createInternalA(url.toString(), "Home"); //+++gdb LOCAL
+		return com.bolsinga.web.util.Util.createInternalA(url.toString(), com.bolsinga.web.util.Util.getResourceString("home"));
 	}
 }

@@ -1,5 +1,6 @@
 package com.bolsinga.music.util;
 
+import java.math.*;
 import java.text.*;
 import java.util.*;
 
@@ -29,17 +30,10 @@ public class Util {
 		if (!date.isUnknown()) {
 			return sWebFormat.format(toCalendar(date).getTime());
 		} else {
-			StringBuffer sb = new StringBuffer();
-			
-			sb.append((date.getMonth() != null) ? date.getMonth().intValue() : 0);
-			sb.append("/");
-			sb.append((date.getDay() != null) ? date.getDay().intValue() : 0);
-			sb.append("/");
-			sb.append((date.getYear() != null) ? date.getYear().intValue() : 0);
-			
-			sb.append(" (Unknown)"); //+++gdb LOCAL
-			
-			return sb.toString();
+            Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
+                                ((date.getDay() != null) ? date.getDay() : BigInteger.ZERO),
+                                ((date.getYear() != null) ? date.getYear() : BigInteger.ZERO) };
+            return MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("unknowndate"), args);
 		}
 	}
 	
@@ -52,7 +46,7 @@ public class Util {
 				d.set(Calendar.MONTH, date.getMonth().intValue() - 1);
 				return sMonthFormat.format(d.getTime());
 			} else {
-				return "Unknown"; //+++gdb LOCAL
+				return com.bolsinga.web.util.Util.getResourceString("unknownmonth");
 			}
 		}
 	}
