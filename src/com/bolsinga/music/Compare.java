@@ -41,7 +41,7 @@ public class Compare {
 			Venue r1 = (Venue)o1;
 			Venue r2 = (Venue)o2;
 			
-			return r1.getName().compareTo(r2.getName());
+			return r1.getName().compareToIgnoreCase(r2.getName());
 		}
 	};
 	
@@ -59,7 +59,7 @@ public class Compare {
 				n2 = r2.getName();
 			}
 			
-			return n1.compareTo(n2);
+			return n1.compareToIgnoreCase(n2);
 		}
 	};
 	
