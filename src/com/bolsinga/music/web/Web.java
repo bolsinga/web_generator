@@ -303,7 +303,9 @@ public class Web {
 			showInfo.addElement(listItem);
 			
 			Venue venue = (Venue)show.getVenue();
-			showInfo.addElement(new LI().addElement(new A(getLinkTo(venue), venue.getName())));
+			A venueA = new A(getLinkTo(venue), venue.getName());
+			Location l = (Location)venue.getLocation();
+			showInfo.addElement(new LI().addElement(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
 			
 			String comment = show.getComment();
 			if (comment != null) {
@@ -353,7 +355,9 @@ public class Web {
 			}
 			showInfo.addElement(listItem);
 			
-			showInfo.addElement(new LI().addElement(new B(venue.getName())));
+			B venueB = new B(venue.getName());
+			Location l = (Location)venue.getLocation();
+			showInfo.addElement(new LI().addElement(venueB.toString() + " " + l.getCity() + ", " + l.getState()));
 			
 			String comment = show.getComment();
 			if (comment != null) {
