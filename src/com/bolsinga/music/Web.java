@@ -50,7 +50,7 @@ abstract class DocumentCreator {
 			
 			Div headerDiv = new Div();
 			headerDiv.addElement(new H1().addElement(title));
-			headerDiv.addElement(addHeader());
+			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
 			headerDiv.addElement(addWebNavigator());
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
@@ -95,10 +95,6 @@ abstract class DocumentCreator {
 		sb.append("' ");
 		sb.append(type);
 		return sb.toString();
-	}
-	
-	private Element addHeader() {
-		return new Div().addElement(com.bolsinga.web.util.Util.getLogo());
 	}
 	
 	protected Element addWebNavigator() {

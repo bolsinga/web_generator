@@ -38,7 +38,7 @@ class DiaryDocumentCreator {
 
 			Div headerDiv = new Div();
 			headerDiv.addElement(new H1().addElement(title));
-			headerDiv.addElement(addHeader());
+			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
 			headerDiv.addElement(addWebNavigator(fProgram));
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
@@ -95,10 +95,6 @@ class DiaryDocumentCreator {
 			ioe.printStackTrace();
 			System.exit(1);
 		}
-	}
-	
-	private Element addHeader() {
-		return new Div().addElement(com.bolsinga.web.util.Util.getLogo());
 	}
 
 	private Element addIndexNavigator() {
