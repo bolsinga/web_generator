@@ -44,7 +44,7 @@ public class RSS {
 		generate(entryCount, music, os);
 	}
 	
-	public static void generate(int entryCount, Diary diary, OutputStream os) {
+	public static void generate(int entryCount, Music music, OutputStream os) {
 		com.bolsinga.rss.data.ObjectFactory objFactory = new com.bolsinga.rss.data.ObjectFactory();
 
 		try {		
