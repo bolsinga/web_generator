@@ -184,7 +184,7 @@ class ShowDocumentCreator extends DocumentCreator {
 	Show fDocShow = null;
 	Show fShow = null;
 	com.bolsinga.music.data.Date fDate = null;
-	div fMonthDiv = null;
+	div fSubsection = null;
 	
 	public ShowDocumentCreator(Music music, Links links, String outputDir, String program) {
 		super(music, links, outputDir, program);
@@ -192,26 +192,33 @@ class ShowDocumentCreator extends DocumentCreator {
 	
 	public void add(Music music, Show item) {
 		fShow = item;
-		div mainDiv = internalGetMainDiv();
-		
-		com.bolsinga.music.data.Date d = item.getDate();
-		String month = Util.toMonth(d);
-		
-		if ((fDate == null) || (!month.equals(Util.toMonth(fDate)))) {
-		
-			if (fMonthDiv != null) {
-				mainDiv.addElement(fMonthDiv);
+		internalGetSubsection().addElement(Web.addItem(music, fLinks, fShow));
+	}
+
+    private div internalGetSubsection() {
+        if (needNewSubsection()) {
+			if (fSubsection != null) {
+				internalGetMainDiv().addElement(fSubsection);
 			}
 			
-			fDate = d;
-			fMonthDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_MONTH);
-			
-			fMonthDiv.addElement(new h2().addElement(month));
-		}
-
-		fMonthDiv.addElement(Web.addItem(music, fLinks, item));
-	}
+            fSubsection = createSubsection();
+        }
+        return fSubsection;
+    }
+    
+	protected boolean needNewSubsection() {
+        return (fDate == null) || (!Util.toMonth(fShow.getDate()).equals(Util.toMonth(fDate)));
+    }
 	
+    protected div createSubsection() {
+        fDate = fShow.getDate();
+
+        div monthDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_MONTH);
+        monthDiv.addElement(new h2().addElement(Util.toMonth(fShow.getDate())));
+        
+        return monthDiv;
+    }
+    
 	protected boolean needNewDocument() {
 		return (fDocShow == null) || (!fLinks.getPageFileName(fDocShow).equals(fLinks.getPageFileName(fShow)));
 	}
@@ -223,14 +230,14 @@ class ShowDocumentCreator extends DocumentCreator {
 	protected XhtmlDocument createDocument(String title) {
 		fDocShow = fShow;
 		fDate = null;
-		fMonthDiv = null;
+		fSubsection = null;
 		return Web.createHTMLDocument(fLinks, title);
 	}
 
 	protected void finishDocument() {
-		if (fMonthDiv != null) {
-			// Write out the last month's data if necessary
-			fMainDiv.addElement(fMonthDiv);
+		if (fSubsection != null) {
+			// Write out the last subsection's data if necessary
+			fMainDiv.addElement(fSubsection);
 		}
 	}
 	
