@@ -40,6 +40,14 @@ public class Encode {
 			fStandardLink = new A(standardLinks.getLinkTo(venue), "$2").toString();
 			fUpLink = new A(upLinks.getLinkTo(venue), "$2").toString();
 		}
+
+		Data(Album album, Links standardLinks, Links upLinks) {
+			fName = album.getTitle();
+			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+
+			fStandardLink = new A(standardLinks.getLinkTo(album), "$2").toString();
+			fUpLink = new A(upLinks.getLinkTo(album), "$2").toString();
+		}
 		
 		String getName() {
 			// This is only used for sorting.
@@ -124,6 +132,16 @@ public class Encode {
 			if (!startsLowerCase.matcher(vitem.getName()).matches()) {
 				fEncodings.add(new Data(vitem, standardLinks, upLinks));
 			}
+		}
+		
+		items = music.getAlbum();
+		Album aitem = null;
+		
+		li = items.listIterator();
+		while (li.hasNext()) {
+			aitem = (Album)li.next();
+			
+			fEncodings.add(new Data(aitem, standardLinks, upLinks));
 		}
 	}
 	
