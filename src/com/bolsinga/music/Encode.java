@@ -12,186 +12,186 @@ import org.apache.ecs.filter.*;
 
 public class Encode {
 
-        private static Encode sEncode = null;
+    private static Encode sEncode = null;
 
-        static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
+    static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
 
-        private TreeSet fEncodings = new TreeSet(DATA_COMPARATOR);
+    private TreeSet fEncodings = new TreeSet(DATA_COMPARATOR);
 
-        class Data {
-                String fName = null;
-                Pattern fPattern = null;
-                String fStandardLink = null;
-                String fUpLink = null;
+    class Data {
+	String fName = null;
+	Pattern fPattern = null;
+	String fStandardLink = null;
+	String fUpLink = null;
                 
-                Data(Artist artist, Links standardLinks, Links upLinks) {
-                        fName = artist.getName();
-                        fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+	Data(Artist artist, Links standardLinks, Links upLinks) {
+	    fName = artist.getName();
+	    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
             Object[] args = { fName };
             String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfoartist"), args);
                         
-                        fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString();
-                        fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
-                }
+	    fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString();
+	    fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
+	}
                 
-                Data(Venue venue, Links standardLinks, Links upLinks) {
-                        fName = venue.getName();
-                        fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+	Data(Venue venue, Links standardLinks, Links upLinks) {
+	    fName = venue.getName();
+	    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
             Object[] args = { fName };
             String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfovenue"), args);
 
-                        fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString();
-                        fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
-                }
+	    fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString();
+	    fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
+	}
 
-                Data(Album album, Links standardLinks, Links upLinks) {
-                        fName = album.getTitle();
-                        fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+	Data(Album album, Links standardLinks, Links upLinks) {
+	    fName = album.getTitle();
+	    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
             Object[] args = { fName };
             String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfoalbum"), args);
 
-                        fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
-                        fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
-                }
+	    fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
+	    fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
+	}
                 
-                String getName() {
-                        // This is only used for sorting.
-                        return fName;
-                }
+	String getName() {
+	    // This is only used for sorting.
+	    return fName;
+	}
                 
-                String createRegex(String name) {
-                        StringBuffer sb = new StringBuffer();
+	String createRegex(String name) {
+	    StringBuffer sb = new StringBuffer();
                         
-                        sb.append("(^|\\W)(");
+	    sb.append("(^|\\W)(");
                         
-                        Matcher m = sSpecialChars.matcher(name);
-                        while (m.find()) {
-                                m.appendReplacement(sb, "\\\\$1");
-                        }
-                        m.appendTail(sb);
+	    Matcher m = sSpecialChars.matcher(name);
+	    while (m.find()) {
+		m.appendReplacement(sb, "\\\\$1");
+	    }
+	    m.appendTail(sb);
 
-                        sb.append(")(\\W)");
+	    sb.append(")(\\W)");
                         
-                        return sb.toString();
-                }
+	    return sb.toString();
+	}
                 
-                Pattern getPattern() {
-                        return fPattern;
-                }
+	Pattern getPattern() {
+	    return fPattern;
+	}
                 
-                String getLink(boolean upOneLevel) {
-                        StringBuffer sb = new StringBuffer();
+	String getLink(boolean upOneLevel) {
+	    StringBuffer sb = new StringBuffer();
                         
-                        sb.append("$1");
-                        sb.append(upOneLevel ? fUpLink : fStandardLink);
-                        sb.append("$3");
+	    sb.append("$1");
+	    sb.append(upOneLevel ? fUpLink : fStandardLink);
+	    sb.append("$3");
                         
-                        return sb.toString();
-                }
-        }
+	    return sb.toString();
+	}
+    }
         
-        static final Comparator DATA_COMPARATOR = new Comparator() {
-                public int compare(Object o1, Object o2) {
-                        Data d1 = (Data)o1;
-                        Data d2 = (Data)o2;
+    static final Comparator DATA_COMPARATOR = new Comparator() {
+	    public int compare(Object o1, Object o2) {
+		Data d1 = (Data)o1;
+		Data d2 = (Data)o2;
                         
-                        int result = d2.getName().length() - d1.getName().length();
-                        if (result == 0) {
-                                result = d2.getName().compareTo(d1.getName());
-                        }
-                        return result;
-                }
+		int result = d2.getName().length() - d1.getName().length();
+		if (result == 0) {
+		    result = d2.getName().compareTo(d1.getName());
+		}
+		return result;
+	    }
         };
         
-        public synchronized static Encode getEncode(Music music) {
-                if (sEncode == null) {
-                        sEncode = new Encode(music);
-                }
-                return sEncode;
-        }
+    public synchronized static Encode getEncode(Music music) {
+	if (sEncode == null) {
+	    sEncode = new Encode(music);
+	}
+	return sEncode;
+    }
 
-        private Encode(Music music) {
-                List items = music.getArtist();
-                Artist item = null;
+    private Encode(Music music) {
+	List items = music.getArtist();
+	Artist item = null;
 
-                Links standardLinks = Links.getLinks(false);
-                Links upLinks = Links.getLinks(true);
+	Links standardLinks = Links.getLinks(false);
+	Links upLinks = Links.getLinks(true);
                 
-                ListIterator li = items.listIterator();
-                while (li.hasNext()) {
-                        item = (Artist)li.next();
+	ListIterator li = items.listIterator();
+	while (li.hasNext()) {
+	    item = (Artist)li.next();
                         
-                        fEncodings.add(new Data(item, standardLinks, upLinks));
-                }
+	    fEncodings.add(new Data(item, standardLinks, upLinks));
+	}
                 
-                items = music.getVenue();
-                Venue vitem = null;
+	items = music.getVenue();
+	Venue vitem = null;
                 
-                // Don't use venues with lower case names, these are 'vague' venues.
-                Pattern startsLowerCase = Pattern.compile("\\p{Lower}.*");
+	// Don't use venues with lower case names, these are 'vague' venues.
+	Pattern startsLowerCase = Pattern.compile("\\p{Lower}.*");
                 
-                li = items.listIterator();
-                while (li.hasNext()) {
-                        vitem = (Venue)li.next();
+	li = items.listIterator();
+	while (li.hasNext()) {
+	    vitem = (Venue)li.next();
                         
-                        if (!startsLowerCase.matcher(vitem.getName()).matches()) {
-                                fEncodings.add(new Data(vitem, standardLinks, upLinks));
-                        }
-                }
+	    if (!startsLowerCase.matcher(vitem.getName()).matches()) {
+		fEncodings.add(new Data(vitem, standardLinks, upLinks));
+	    }
+	}
                 
-                items = music.getAlbum();
-                Album aitem = null;
+	items = music.getAlbum();
+	Album aitem = null;
                 
-                li = items.listIterator();
-                while (li.hasNext()) {
-                        aitem = (Album)li.next();
+	li = items.listIterator();
+	while (li.hasNext()) {
+	    aitem = (Album)li.next();
                         
-                        fEncodings.add(new Data(aitem, standardLinks, upLinks));
-                }
-        }
+	    fEncodings.add(new Data(aitem, standardLinks, upLinks));
+	}
+    }
         
-        private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         
-        public String addLinks(String source, boolean upOneLevel) {
-                String result = source;
-                Data data = null;
+    public String addLinks(String source, boolean upOneLevel) {
+	String result = source;
+	Data data = null;
                 
-                Iterator li = fEncodings.iterator();
-                while (li.hasNext()) {
-                        data = (Data)li.next();
+	Iterator li = fEncodings.iterator();
+	while (li.hasNext()) {
+	    data = (Data)li.next();
                         
-                        result = addLinks(data, result, upOneLevel);
-                }
+	    result = addLinks(data, result, upOneLevel);
+	}
 
-                return result;
-        }
+	return result;
+    }
         
-        private String addLinks(Data data, String source, boolean upOneLevel) {
-                String result = source;
+    private String addLinks(Data data, String source, boolean upOneLevel) {
+	String result = source;
                                                 
-                Matcher entryMatch = data.getPattern().matcher(source);
-                if (entryMatch.find()) {                        
+	Matcher entryMatch = data.getPattern().matcher(source);
+	if (entryMatch.find()) {                        
 
-                        StringBuffer sb = new StringBuffer();
+	    StringBuffer sb = new StringBuffer();
                         
-                        Matcher html = sHTMLTag.matcher(source);
-                        if (html.find()) {
-                                sb.append(addLinks(data, html.group(1), upOneLevel));
-                                sb.append(html.group(2));
-                                sb.append(addLinks(data, html.group(4), upOneLevel));
-                        } else {
-                                do {
-                                        entryMatch.appendReplacement(sb, data.getLink(upOneLevel));
-                                } while (entryMatch.find());
-                                entryMatch.appendTail(sb);
-                        }
+	    Matcher html = sHTMLTag.matcher(source);
+	    if (html.find()) {
+		sb.append(addLinks(data, html.group(1), upOneLevel));
+		sb.append(html.group(2));
+		sb.append(addLinks(data, html.group(4), upOneLevel));
+	    } else {
+		do {
+		    entryMatch.appendReplacement(sb, data.getLink(upOneLevel));
+		} while (entryMatch.find());
+		entryMatch.appendTail(sb);
+	    }
                         
-                        result = sb.toString();
-                }
+	    result = sb.toString();
+	}
                 
-                return result;
-        }
+	return result;
+    }
 }

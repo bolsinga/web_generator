@@ -3,21 +3,21 @@ package com.bolsinga.rss.util;
 import java.text.*;
 
 public class Util {
-        private static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+    private static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         
-        public static String getRSSDate(java.util.Date date) {
-                return sRSSDateFormat.format(date);
-        }
+    public static String getRSSDate(java.util.Date date) {
+	return sRSSDateFormat.format(date);
+    }
         
-        public static com.bolsinga.rss.data.TRssChannel.Image createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
-                com.bolsinga.rss.data.TRssChannel.Image logo = objFactory.createTRssChannelImage();
+    public static com.bolsinga.rss.data.TRssChannel.Image createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
+	com.bolsinga.rss.data.TRssChannel.Image logo = objFactory.createTRssChannelImage();
 
         com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getLogoImage();
-                logo.setHeight(image.getHeight());
-                logo.setWidth(image.getWidth());
-                logo.setUrl(image.getLocation());
-                logo.setTitle(image.getAlt());
+	logo.setHeight(image.getHeight());
+	logo.setWidth(image.getWidth());
+	logo.setUrl(image.getLocation());
+	logo.setTitle(image.getAlt());
                 
-                return logo;
-        }
+	return logo;
+    }
 }

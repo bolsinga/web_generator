@@ -4,39 +4,39 @@ import java.io.*;
 import java.util.*;
 
 public class BandMap {
-        private String fName;
-        private String fSortName;
+    private String fName;
+    private String fSortName;
         
-        public BandMap(String name, String sortName) {
-                fName = name;
-                fSortName = sortName;
-        }
+    public BandMap(String name, String sortName) {
+	fName = name;
+	fSortName = sortName;
+    }
         
-        public String getName() {
-                return fName;
-        }
+    public String getName() {
+	return fName;
+    }
         
-        public void setName(String name) {
-                fName = name;
-        }
+    public void setName(String name) {
+	fName = name;
+    }
         
-        public String getSortName() {
-                return fSortName;
-        }
+    public String getSortName() {
+	return fSortName;
+    }
         
-        public void setSortName(String sortName) {
-                fSortName = sortName;
-        }
+    public void setSortName(String sortName) {
+	fSortName = sortName;
+    }
         
-        public String toString() {
-                StringBuffer sb = new StringBuffer();
+    public String toString() {
+	StringBuffer sb = new StringBuffer();
                 
-                sb.append(getClass().getName().toString());
-                sb.append(" ");
-                sb.append(getName());
-                sb.append(" -> ");
-                sb.append(getSortName());
+	sb.append(getClass().getName().toString());
+	sb.append(" ");
+	sb.append(getName());
+	sb.append(" -> ");
+	sb.append(getSortName());
                 
-                return sb.toString();
-        }
+	return sb.toString();
+    }
 }

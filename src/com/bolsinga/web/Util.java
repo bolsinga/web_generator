@@ -12,81 +12,81 @@ import javax.xml.bind.Unmarshaller;
 
 public class Util {
 
-	private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.util.web");
+    private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.util.web");
 
     private static com.bolsinga.settings.data.Settings sSettings = null;
-	private static boolean sPrettyPrint = false;
-	static {
-		String value = System.getProperty("web.pretty_containers");
-		if (value != null) {
-			sPrettyPrint = true;
-		}
+    private static boolean sPrettyPrint = false;
+    static {
+	String value = System.getProperty("web.pretty_containers");
+	if (value != null) {
+	    sPrettyPrint = true;
 	}
+    }
 	
-	public static boolean getPrettyPrint() {
-		return sPrettyPrint;
-	}
+    public static boolean getPrettyPrint() {
+	return sPrettyPrint;
+    }
 	
-	public static link getIconLink() {
-		link result = new link();
-		result.setRel("SHORTCUT ICON");
-		result.setHref(com.bolsinga.web.util.Util.getSettings().getIco());
-		return result;
-	}
+    public static link getIconLink() {
+	link result = new link();
+	result.setRel("SHORTCUT ICON");
+	result.setHref(com.bolsinga.web.util.Util.getSettings().getIco());
+	return result;
+    }
 	
-	public static img getLogo() {
+    public static img getLogo() {
         com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getLogoImage();
 
-		img i = new img(image.getLocation());
-		i.setHeight(image.getHeight().intValue());
-		i.setWidth(image.getWidth().intValue());
-		i.setAlt(image.getAlt());
+	img i = new img(image.getLocation());
+	i.setHeight(image.getHeight().intValue());
+	i.setWidth(image.getWidth().intValue());
+	i.setAlt(image.getAlt());
         i.setTitle(image.getAlt());
         
-		return i;
-	}
+	return i;
+    }
 	
-	public static ul convertToUnOrderedList(String data) {
-		ul list = new ul();
+    public static ul convertToUnOrderedList(String data) {
+	ul list = new ul();
 		
-		// Convert each line to a li tag.
-		String[] lines = data.split("\\n");
-		for (int i = 0; i < lines.length; i++) {
-			list.addElement(new li(lines[i]));
-		}
+	// Convert each line to a li tag.
+	String[] lines = data.split("\\n");
+	for (int i = 0; i < lines.length; i++) {
+	    list.addElement(new li(lines[i]));
+	}
 		
-		return list;
-	}
+	return list;
+    }
 	
-	public static String convertToParagraphs(String data) {
-		// Convert each line to <p> tags
-		StringBuffer tagged = new StringBuffer();
-		String[] lines = data.split("\\n");
-		for (int i = 0; i < lines.length; i++) {
-			tagged.append(new p().addElement(lines[i]));
-		}
-		return tagged.toString();
+    public static String convertToParagraphs(String data) {
+	// Convert each line to <p> tags
+	StringBuffer tagged = new StringBuffer();
+	String[] lines = data.split("\\n");
+	for (int i = 0; i < lines.length; i++) {
+	    tagged.append(new p().addElement(lines[i]));
 	}
+	return tagged.toString();
+    }
 	
-	public static div createDiv(String className) {
-		div d = new div();
-		d.setClass(className);
-		d.setPrettyPrint(Util.getPrettyPrint());
-		return d;
-	}
+    public static div createDiv(String className) {
+	div d = new div();
+	d.setClass(className);
+	d.setPrettyPrint(Util.getPrettyPrint());
+	return d;
+    }
 	
-	public static a createInternalA(String url, String value) {
-		return Util.createInternalA(url, value, null);
-	}
+    public static a createInternalA(String url, String value) {
+	return Util.createInternalA(url, value, null);
+    }
 	
-	public static a createInternalA(String url, String value, String title) {
-		a an = new a(url, value);
-		an.setClass(CSS.INTERNAL);
-		if (title != null) {
-			an.setTitle(title);
-		}
-		return an;
+    public static a createInternalA(String url, String value, String title) {
+	a an = new a(url, value);
+	an.setClass(CSS.INTERNAL);
+	if (title != null) {
+	    an.setTitle(title);
 	}
+	return an;
+    }
     
     public static a createNamedTarget(String name, String value) {
         a an = new a();

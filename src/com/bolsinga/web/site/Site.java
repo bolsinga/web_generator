@@ -5,14 +5,14 @@ import com.bolsinga.diary.data.*;
 
 public class Site {
     public static void main(String[] args) {
-                if (args.length != 5) {
-                        System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir] <all|web|music|diary>");
-                        System.exit(0);
-                }
+	if (args.length != 5) {
+	    System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir] <all|web|music|diary>");
+	    System.exit(0);
+	}
 
         com.bolsinga.web.util.Util.createSettings(args[2]);
                 
-                Site.generate(args[0], args[1], args[3], args[4]);
+	Site.generate(args[0], args[1], args[3], args[4]);
     }
     
     public static void generate(String diaryFile, String musicFile, String outputDir, String variant) {
