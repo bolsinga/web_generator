@@ -69,7 +69,6 @@ public class Diary {
 	private static void createStatics(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List statics) throws JAXBException {
 		Statics oldStatic = null;
 		com.bolsinga.diary.data.Static xStatic = null;
-		int index = 0;
 		
 		ListIterator li = statics.listIterator();
 		while (li.hasNext()) {
@@ -88,7 +87,7 @@ public class Diary {
 	private static void createComments(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List comments) throws JAXBException {
 		Comments oldComment = null;
 		com.bolsinga.diary.data.Entry xEntry = null;
-		int index = 0;
+		int index = comments.size() - 1;
 		
 		ListIterator li = comments.listIterator();
 		while (li.hasNext()) {
@@ -97,6 +96,7 @@ public class Diary {
 			xEntry = objFactory.createEntry();
 			xEntry.setTimestamp(Diary.createTimestamp(oldComment.getDate()));
 			xEntry.setComment(oldComment.getData());
+			xEntry.setId("e" + index--);
 			
 			diary.getEntry().add(xEntry);
 		}
