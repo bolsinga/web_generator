@@ -4,10 +4,6 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
-class CSS {
-	public static final String INTERNAL	= "internal";
-}
-
 public class Util {
 
 	private static boolean sPrettyPrint = false;

@@ -12,21 +12,6 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
-class CSS {
-	public static final String DIARY_HEADER	= "diary_header";
-	public static final String DIARY_MAIN	= "diary_main";
-	public static final String DIARY_FOOTER	= "diary_footer";
-	public static final String DIARY_INDEX	= "diary_index";
-	public static final String DIARY_MENU	= "diary_menu";
-	public static final String DIARY_ENTRY	= "diary_entry";
-	
-	public static final String MAIN_COL1	= "main_col1";
-	public static final String MAIN_COL2	= "main_col2";
-	public static final String MAIN_MAIN	= "main_main";
-	public static final String MAIN_HEADER	= "main_header";
-	public static final String MAIN_DIARY	= "main_diary";
-}
-
 class DiaryDocumentCreator {
 	Diary fDiary = null;
 	Links fLinks = null;

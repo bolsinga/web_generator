@@ -364,6 +364,14 @@
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
+<target name="generateCSSTemplate" depends="web_utilities, jar">
+	<mkdir dir="${output.dir}" />
+	<java classname="com.bolsinga.web.util.CSS" fork="true">
+		<arg value="${output.dir}/styles/" />
+		<classpath refid="music_classpath" />
+	</java>
+</target>
+
 <!--	Add the following property to any web using code to have the output's
 		container tags be pretty printed. This can assist in debugging the output.
 
