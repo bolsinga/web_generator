@@ -272,6 +272,8 @@ public class Links {
 	public String getRSSLink() {
 		StringBuffer link = new StringBuffer();
 		
+		link.append("feed:");
+
 		if (fUpOneLevel) {
 			link.append("..");
 			link.append(File.separator);
@@ -291,6 +293,8 @@ public class Links {
 	public String getICalLink() {
 		StringBuffer link = new StringBuffer();
 		
+		link.append("ical:");
+
 		if (fUpOneLevel) {
 			link.append("..");
 			link.append(File.separator);

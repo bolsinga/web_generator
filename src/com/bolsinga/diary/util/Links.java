@@ -73,6 +73,8 @@ public class Links {
 	public String getRSSLink() {
 		StringBuffer link = new StringBuffer();
 		
+		link.append("feed:");
+		
 		if (fUpOneLevel) {
 			link.append("..");
 			link.append(File.separator);
