@@ -580,6 +580,14 @@ public class Web {
 		navigation.addElement(tr);
 
 		tr = new TR().setAlign("right");
+		sb = new StringBuffer();
+		sb.append(music.getSong().size());
+		sb.append(" ");
+		sb.append(links.getTracksLink());
+		tr.addElement(new TD(sb.toString()));
+		navigation.addElement(tr);
+
+		tr = new TR().setAlign("right");
 		tr.addElement(new TD(links.getICalLink()));
 		navigation.addElement(tr);
 		
