@@ -922,7 +922,7 @@ public class Web {
             sb.append(")");
         }
 
-        com.bolsinga.web.util.Util.addListItem(list, new h2().addElement(sb.toString()))
+        com.bolsinga.web.util.Util.addListItem(list, new h2().addElement(sb.toString()));
                 
         ol albumListing = new ol();
 
@@ -946,7 +946,7 @@ public class Web {
                     sb.append(")");
                 }
             }
-            com.bolsinga.web.util.Util.addListItem(albumListing, sb.toString());
+            albumListing.addElement(new li(sb.toString()));
         }
 
         com.bolsinga.web.util.Util.addListItem(list, albumListing);
