@@ -37,7 +37,6 @@ public class RSS {
 		System.setProperty("web.logo.height", image.getHeight().toString());
 		System.setProperty("web.logo.alt", image.getAlt());
         
-		System.setProperty("rss.contact", settings.getContact());
 		System.setProperty("rss.root", settings.getRssRoot());
 		System.setProperty("rss.description", settings.getRssDescription());
     }
@@ -98,7 +97,7 @@ public class RSS {
 			channelElements.add(objFactory.createTRssChannelDescription(System.getProperty("rss.description")));
 			channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
 			channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
-			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("rss.contact")));
+			channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.util.Util.getSettings().getContact()));
 
 			TRssChannel.Image logo = com.bolsinga.rss.util.Util.createLogo(objFactory);
 			logo.setLink(System.getProperty("rss.root"));

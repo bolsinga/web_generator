@@ -50,7 +50,7 @@ public class Links {
 
 		sb = new StringBuffer();
 		sb.append("mailto:");
-		sb.append(System.getProperty("music.contact"));
+		sb.append(com.bolsinga.web.util.Util.getSettings().getContact());
 		sb.append("?Subject=");
 		sb.append(program);
 		sb.append("%20Message&amp;Body=");

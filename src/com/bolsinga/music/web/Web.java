@@ -336,7 +336,6 @@ public class Web {
 		System.setProperty("web.logo.height", image.getHeight().toString());
 		System.setProperty("web.logo.alt", image.getAlt());
 		System.setProperty("web.layout.css", settings.getCssFile());
-		System.setProperty("music.contact", settings.getContact());
 		System.setProperty("rss.url", settings.getRssFile());
 		System.setProperty("music.ical.url", settings.getIcalName() + ".ics");
         image = settings.getIcalImage();

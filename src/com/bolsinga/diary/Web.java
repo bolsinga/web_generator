@@ -118,7 +118,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 		
 		sb = new StringBuffer();
 		sb.append("mailto:");
-		sb.append(System.getProperty("diary.contact"));
+		sb.append(com.bolsinga.web.util.Util.getSettings().getContact());
 		sb.append("?Subject=");
 		sb.append(program);
 		sb.append("%20Message&amp;Body=");
@@ -160,7 +160,6 @@ public class Web {
 		System.setProperty("web.logo.height", image.getHeight().toString());
 		System.setProperty("web.logo.alt", image.getAlt());
 		System.setProperty("web.layout.css", settings.getCssFile());
-		System.setProperty("diary.contact", settings.getContact());
 		System.setProperty("rss.url", settings.getRssFile());
         image = settings.getRssImage();
 		System.setProperty("rss.image.url", image.getLocation());
