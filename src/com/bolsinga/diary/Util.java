@@ -2,6 +2,7 @@ package com.bolsinga.diary.util;
 
 import com.bolsinga.diary.data.*;
 
+import java.text.*;
 import java.util.*;
 
 import javax.xml.bind.JAXBContext;
@@ -9,6 +10,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 public class Util {
+	public static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
 
 	public static final Comparator ENTRY_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
@@ -19,6 +21,10 @@ public class Util {
 		}
 	};
 
+	public static String getTitle(Entry entry) {
+		return sWebFormat.format(entry.getTimestamp().getTime());
+	}
+	
 	public static com.bolsinga.diary.data.Diary createDiary(String sourceFile) {
 		com.bolsinga.diary.data.Diary diary = null;
 		try {
