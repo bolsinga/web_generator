@@ -95,6 +95,25 @@
 	</javac>
 </target>
 
+<target name="ical-gen" depends="prepare">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/ical/**" />
+	</javac>
+</target>
+
+<target name="ical" depends="ical-gen, utilities">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/music/ical/**" />
+		<classpath refid="jaxb_classpath" />
+	</javac>
+</target>
+
 <target name="music">
 	<jar jarfile="${build.lib}/music.jar"
 		basedir="${build.classes}" >
@@ -130,6 +149,15 @@
 		<arg value="${data.dir}music.xml" />
 		<arg value="/tmp/web/" />
 		<classpath refid="generate_web_classpath" />
+	</java>
+</target>
+
+<target name="generateICal" depends="ical, music">
+	<mkdir dir="/tmp/ical/" />
+	<java classname="com.bolsinga.music.ical.ICal" fork="true">
+		<arg value="${data.dir}music.xml" />
+		<arg value="/tmp/ical/" />
+		<classpath refid="music_classpath" />
 	</java>
 </target>
 
