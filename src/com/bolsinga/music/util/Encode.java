@@ -13,6 +13,8 @@ public class Encode {
 
 	private static Encode sEncode = null;
 
+	static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
+
 	private TreeSet fEncodings = new TreeSet(DATA_COMPARATOR);
 
 	class Data {
@@ -38,14 +40,23 @@ public class Encode {
 		}
 		
 		String getName() {
+			// This is only used for sorting.
 			return fName;
 		}
 		
 		String createRegex(String name) {
 			StringBuffer sb = new StringBuffer();
+			
 			sb.append("(^|\\W)(");
-			sb.append(name);
+			
+			Matcher m = sSpecialChars.matcher(name);
+			while (m.find()) {
+				m.appendReplacement(sb, "\\\\$1");
+			}
+			m.appendTail(sb);
+
 			sb.append(")(\\W)");
+			
 			return sb.toString();
 		}
 		
@@ -91,16 +102,11 @@ public class Encode {
 		Links standardLinks = Links.getLinks(false);
 		Links upLinks = Links.getLinks(true);
 		
-		// Don't encode anything with punctuation in their name for now.
-		Pattern notEncoded = Pattern.compile(".*\\p{Punct}.*");
-		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Artist)li.next();
 			
-			if (!notEncoded.matcher(item.getName()).matches()) {
-				fEncodings.add(new Data(item, standardLinks, upLinks));
-			}
+			fEncodings.add(new Data(item, standardLinks, upLinks));
 		}
 		
 		items = music.getVenue();
@@ -113,10 +119,8 @@ public class Encode {
 		while (li.hasNext()) {
 			vitem = (Venue)li.next();
 			
-			if (!notEncoded.matcher(vitem.getName()).matches()) {
-				if (!startsLowerCase.matcher(vitem.getName()).matches()) {
-					fEncodings.add(new Data(vitem, standardLinks, upLinks));
-				}
+			if (!startsLowerCase.matcher(vitem.getName()).matches()) {
+				fEncodings.add(new Data(vitem, standardLinks, upLinks));
 			}
 		}
 	}
