@@ -48,22 +48,17 @@ public abstract class DocumentCreator {
 	}
     
     protected div getSubsection() {
-        div mainDiv = getMainDiv();
         if ((fSubsection == null) || needNewSubsection()) {
-            if (fSubsection != null) {
-                mainDiv.addElement(fSubsection);
-            }
-            
+            div mainDiv = getMainDiv();
             fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_SUB);
             fSubsection.addElement(getSubsectionTitle());
+            mainDiv.addElement(fSubsection);
         }
         return fSubsection;
     }
 	
 	private void writeDocument() {
 		if (fSubsection != null) {
-			// Write out the last subsection's data if necessary
-			fMainDiv.addElement(fSubsection);
             fSubsection = null;
 		}
 		
