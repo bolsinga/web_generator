@@ -553,7 +553,7 @@ public class Web {
 			Venue venue = (Venue)item.getVenue();
 			A venueA = new A(links.getLinkTo(venue), venue.getName());
 			Location l = (Location)venue.getLocation();
-			showInfo.addElement(new LI().addElement(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
+			showInfo.addElement(new LI().addElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
 			
 			showListing.addElement(showInfo);
 			
@@ -637,7 +637,7 @@ public class Web {
 			Venue venue = (Venue)show.getVenue();
 			A venueA = new A(links.getLinkTo(venue), venue.getName());
 			Location l = (Location)venue.getLocation();
-			showInfo.addElement(new LI().addElement(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
+			showInfo.addElement(new LI().addElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
 			
 			String comment = show.getComment();
 			if (comment != null) {
@@ -689,7 +689,7 @@ public class Web {
 			
 			B venueB = new B(venue.getName());
 			Location l = (Location)venue.getLocation();
-			showInfo.addElement(new LI().addElement(venueB.toString() + " " + l.getCity() + ", " + l.getState()));
+			showInfo.addElement(new LI().addElement(venueB.toString() + ", " + l.getCity() + ", " + l.getState()));
 			
 			String comment = show.getComment();
 			if (comment != null) {
@@ -730,7 +730,7 @@ public class Web {
 		Venue venue = (Venue)show.getVenue();
 		A venueA = new A(links.getLinkTo(venue), venue.getName());
 		Location l = (Location)venue.getLocation();
-		showInfo.addElement(new LI(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
+		showInfo.addElement(new LI(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
 
 		String comment = show.getComment();
 		if (comment != null) {
