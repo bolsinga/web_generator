@@ -27,7 +27,11 @@ public class RSS {
 
 	public static void generate(int entryCount, String sourceFile, String outputFile) {
 		Music music = Util.createMusic(sourceFile);
-
+		
+		generate(entryCount, music, outputFile);
+	}
+	
+	public static void generate(int entryCount, Music music, String outputFile) {
 		com.bolsinga.rss.data.ObjectFactory objFactory = new com.bolsinga.rss.data.ObjectFactory();
 
 		try {		
