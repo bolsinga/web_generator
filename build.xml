@@ -7,6 +7,23 @@
 
 <property name="jwsdp.home" value="/usr/local/jwsdp-1_3" />
 
+<path id="jaxb_xjc_classpath">
+	<pathelement path="." />
+	<fileset dir="${jwsdp.home}" includes="jaxb/lib/jaxb-xjc.jar" />
+</path>
+
+<path id="jaxb_binder_classpath">
+	<pathelement path="." />
+	<fileset dir="${jwsdp.home}" includes="jaxb/lib/jaxb-api.jar" />
+	<fileset dir="${jwsdp.home}" includes="jaxb/lib/jaxb-impl.jar" />
+	<fileset dir="${jwsdp.home}" includes="jaxb/lib/jaxb-libs.jar" />
+
+	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/jax-qname.jar" />
+	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/namespace.jar" />
+	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/relaxngDatatype.jar" />
+	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/xsdlib.jar" />
+</path>
+
 <path id="jaxb_classpath">
 	<pathelement path="." />
 	<!-- for use with bundled ant -->
@@ -16,7 +33,7 @@
 </path>
 
 <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-	<classpath refid="jaxb_classpath" />
+	<classpath refid="jaxb_xjc_classpath" />
 </taskdef>
 
 <property name="legacy_data.dir" value="../data/" />
@@ -59,7 +76,7 @@
 			deprecation="on">
 		<src path="${build.gensrc}" />
 		<include name="com/bolsinga/music/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 	<copy todir="${build.classes}">
 		<fileset dir="${build.gensrc}" >
@@ -78,7 +95,7 @@
 			deprecation="on">
 		<src path="${build.gensrc}" />
 		<include name="com/bolsinga/diary/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 	<copy todir="${build.classes}">
 		<fileset dir="${build.gensrc}" >
@@ -97,7 +114,7 @@
 			deprecation="on">
 		<src path="${build.gensrc}" />
 		<include name="com/bolsinga/rss/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 	<copy todir="${build.classes}">
 		<fileset dir="${build.gensrc}" >
@@ -116,7 +133,7 @@
 			deprecation="on">
 		<src path="${build.gensrc}" />
 		<include name="com/bolsinga/plist/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 	<copy todir="${build.classes}">
 		<fileset dir="${build.gensrc}" >
