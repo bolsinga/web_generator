@@ -2,6 +2,7 @@ package com.bolsinga.diary.web;
 
 import com.bolsinga.diary.data.*;
 import com.bolsinga.diary.util.*;
+import com.bolsinga.music.data.*;
 
 import java.io.*;
 import java.text.*;
@@ -178,12 +179,18 @@ public class Web {
 	}
 	
 	public static void generate(int mainPageEntryCount, Diary diary, String musicFile, String outputDir) {
-		generateMainPage(musicFile, mainPageEntryCount, diary, outputDir);
+		Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
 		
-		generateArchivePages(musicFile, diary, outputDir);
+		generate(mainPageEntryCount, diary, music, outputDir);
 	}
 	
-	public static void generateMainPage(String musicFile, int mainPageEntryCount, Diary diary, String outputDir) {
+	public static void generate(int mainPageEntryCount, Diary diary, Music music, String outputDir) {
+		generateMainPage(music, mainPageEntryCount, diary, outputDir);
+		
+		generateArchivePages(music, diary, outputDir);
+	}
+	
+	public static void generateMainPage(Music music, int mainPageEntryCount, Diary diary, String outputDir) {
 		Document doc = createDocument(diary.getTitle());
 
 		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
@@ -205,14 +212,14 @@ public class Web {
 		sb.append("!");
 		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
 		
-		generateDiary(musicFile, diary, mainPageEntryCount, td);
+		generateDiary(music, diary, mainPageEntryCount, td);
 		tr.addElement(td);
 		
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
 
-		td.addElement(com.bolsinga.music.web.Web.generatePreview(musicFile, 5));
+		td.addElement(com.bolsinga.music.web.Web.generatePreview(music, 5));
 		tr.addElement(td);
 		
 		doc.getBody().addElement(table.addElement(tr));
@@ -289,7 +296,7 @@ public class Web {
 		return d;
 	}
 	
-	private static void generateDiary(String musicFile, Diary diary, int mainPageEntryCount, TD td) {
+	private static void generateDiary(Music music, Diary diary, int mainPageEntryCount, TD td) {
 		List items = diary.getEntry();
 		Entry item = null;
 		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
@@ -300,7 +307,7 @@ public class Web {
 		for (int i = 0; i < mainPageEntryCount; i++) {
 			item = (Entry)items.get(i);
 			
-			addItem(musicFile, item, table, false);
+			addItem(music, item, table, false);
 		}
 		
 		StringBuffer archivesLink = new StringBuffer();
@@ -320,7 +327,7 @@ public class Web {
 		td.addElement(table);
 	}
 	
-	public static void generateArchivePages(String musicFile, Diary diary, String outputDir) {
+	public static void generateArchivePages(Music music, Diary diary, String outputDir) {
 		List items = diary.getEntry();
 		Entry item = null;
 		
@@ -334,7 +341,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Entry)li.next();
 			
-			addItem(musicFile, item, creator.getTable(item), true);
+			addItem(music, item, creator.getTable(item), true);
 		}
 		
 		creator.close();
@@ -356,25 +363,25 @@ public class Web {
 		table.addElement(tr);
 	}
 	
-	public static void addItem(String musicFile, Entry entry, Table table, boolean upOneLevel) {
+	public static void addItem(Music music, Entry entry, Table table, boolean upOneLevel) {
 		A a = new A();
 		a.setName(entry.getId());
 		a.addElement("test", Util.getTitle(entry));
 		addBanner(a.toString(), table);
 		
-		table.addElement(new TR().addElement(new TD(Web.encodedComment(musicFile, entry, upOneLevel))));
+		table.addElement(new TR().addElement(new TD(Web.encodedComment(music, entry, upOneLevel))));
 	}
 	
 	private static Pattern sCommentEncoding = Pattern.compile("\n", Pattern.DOTALL);
 	
 	private static HashMap sLinkedData = new HashMap();
 	
-	private static synchronized String encodedComment(String musicFile, Entry entry, boolean upOneLevel) {
+	private static synchronized String encodedComment(Music music, Entry entry, boolean upOneLevel) {
 		String comment = entry.getComment();
 		
 		if (!sLinkedData.containsKey(comment)) {
 			// Automatically add music links to the comments.
-			String result = com.bolsinga.music.web.Web.embedLinks(musicFile, comment, upOneLevel);
+			String result = com.bolsinga.music.web.Web.embedLinks(music, comment, upOneLevel);
 			
 			// Convert new lines to <p>
 			result = sCommentEncoding.matcher(result).replaceAll("<p>");
