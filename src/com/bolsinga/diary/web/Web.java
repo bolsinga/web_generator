@@ -55,39 +55,12 @@ class DiaryDocumentCreator {
 	}
 
 	private boolean needNewDocument(Entry entry) {
-		return (fEntry == null) || (!getPageFileName(fEntry).equals(getPageFileName(entry)));
-	}
-	
-	static DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
-	
-	private static String getPageFileName(Entry entry) {
-		return sArchivePageFormat.format(entry.getTimestamp().getTime());
-	}
-	
-	private static String getLinkToPage(Entry entry) {
-		StringBuffer link = new StringBuffer();
-		
-		link.append("../");
-		link.append("archives");
-		link.append(File.separator);
-		link.append(getPageFileName(entry));
-		link.append(".html");
-		
-		return link.toString();
-	}
-	
-	private String getCurrentPath(Entry entry) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("archives");
-		sb.append(File.separator);
-		sb.append(getPageFileName(entry));
-		sb.append(".html");
-		return sb.toString();
+		return (fEntry == null) || (!Links.getPageFileName(fEntry).equals(Links.getPageFileName(entry)));
 	}
 	
 	private String getTitle(Entry entry) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(getPageFileName(entry));
+		sb.append(Links.getPageFileName(entry));
 		sb.append(" Archives");
 		return sb.toString();
 	}
@@ -98,7 +71,7 @@ class DiaryDocumentCreator {
 		addIndexNavigator();
 		addWebNavigator(fProgram);
 		try {
-			File f = new File(fOutputDir, getCurrentPath(fEntry));
+			File f = new File(fOutputDir, Links.getPagePath(fEntry));
 			File parent = new File(f.getParent());
 			if (!parent.exists()) {
 				if (!parent.mkdirs()) {
@@ -130,16 +103,16 @@ class DiaryDocumentCreator {
 		Iterator li = fDiary.getEntry().iterator();
 		while (li.hasNext()) {
 			Entry a = (Entry)li.next();
-			String letter = getPageFileName(a);
+			String letter = Links.getPageFileName(a);
 			if (!m.containsKey(letter)) {
-				m.put(letter, getLinkToPage(a));
+				m.put(letter, Links.getLinkToPage(a));
 			}
 		}
 
 		li = m.keySet().iterator();
 		while (li.hasNext()) {
 			String a = (String)li.next();
-			if (a.equals(getPageFileName(fEntry))) {
+			if (a.equals(Links.getPageFileName(fEntry))) {
 				c.addElement(a + " ");
 			} else {
 				c.addElement(new A((String)m.get(a), a).toString() + " ");
@@ -331,7 +304,7 @@ public class Web {
 		archivesLink.append(Calendar.getInstance().get(Calendar.YEAR));
 		archivesLink.append(".html");
 		
-		addBanner(new A(archivesLink.toString(), "Archives").toString(), table);
+		addBanner(new A(archivesLink.toString(), "Archives"), table);
 
 		td.addElement(table);
 	}
@@ -356,10 +329,10 @@ public class Web {
 
 	static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
 
-	public static void addBanner(String text, Table table) {
+	public static void addBanner(A item, Table table) {
 		Font f = new Font();
 		f.addAttribute("color", "white");
-		f.addElement(new B(text));
+		f.addElement(new B(item));
 		
 		Div div = new Div();
 		div.addAttribute("align", "center");
@@ -373,7 +346,10 @@ public class Web {
 	}
 	
 	public static void addItem(String musicFile, Entry entry, Table table, boolean upOneLevel) {
-		addBanner(sWebFormat.format(entry.getTimestamp().getTime()), table);
+		A a = new A();
+		a.setName(entry.getId());
+		a.addElement("test", sWebFormat.format(entry.getTimestamp().getTime()));
+		addBanner(a, table);
 		
 		table.addElement(new TR().addElement(new TD(Web.encodedComment(musicFile, entry, upOneLevel))));
 	}
