@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- Define Entry -->
+<xs:simpleType name="entryID" >
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="e.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="entry">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="comment" type="xs:string" minOccurs="0" />
+			<xs:element name="timestamp" type="xs:date" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="entryID" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Static -->
+<xs:simpleType name="staticID" >
+	<xs:restriction base="xs:ID" >
+		<xs:pattern value="s.*" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="location">
+	<xs:restriction base="xs:token" >
+		<xs:enumeration value="left" />
+		<xs:enumeration value="right" />
+		<xs:enumeration value="header" />
+		<xs:enumeration value="footer" />
+	</xs:restriction>
+</xs:simpleType>
+<xs:element name="static">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="data" type="xs:string" minOccurs="0" />
+			<xs:element name="location" type="location" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="id" type="staticID" />
+	</xs:complexType>
+</xs:element>
+
+<!-- Define Diary -->
+<xs:element name="diary">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="entry" maxOccurs="unbounded" />
+			<xs:element ref="static" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+</xs:schema>
