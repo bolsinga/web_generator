@@ -311,7 +311,7 @@
 	<pathelement path="${build.lib}/music.jar" />
 </path>
 
-<target name="generateMusicXML" depends="converter, jar">
+<target name="generateShowsXML" depends="converter, jar">
 	<java classname="com.bolsinga.shows.converter.Music" fork="true">
 		<arg value="${legacy_data.dir}shows.txt" />
 		<arg value="${legacy_data.dir}venuemap.txt" />
@@ -462,7 +462,7 @@
 
 <target name="music" depends="converter, music_web, diary_web, music_rss, diary_rss, rss, ical, jar" />
 
-<target name="generateXML" depends="music, generateMusicXML, generateDiaryXML" />
+<target name="generateXML" depends="music, generateShowsXML, generateDiaryXML" />
 
 <target name="generateWeb" depends="music, generateMusicWeb, generateDiaryWeb" />
 
