@@ -278,25 +278,6 @@ public class Links {
 		return a.toString();
 	}
 
-	public String getRSSLink() {
-		StringBuffer link = new StringBuffer();
-		
-		link.append("feed:");
-
-		link.append(System.getProperty("music.root"));
-
-		link.append(RSS_DIR);
-		link.append(File.separator);
-		link.append(System.getProperty("music.rss.url"));
-
-		IMG img = new IMG(System.getProperty("rss.image.url"));
-		img.setHeight(System.getProperty("rss.image.height"));
-		img.setWidth(System.getProperty("rss.image.width"));
-		img.setAlt(System.getProperty("rss.image.alt"));
-		
-		return new A(link.toString(), img.toString()).toString();
-	}
-
 	public Link getAlternateRSSLink() {
 		Link result = new Link();
 		result.setRel("alternate");
@@ -307,7 +288,7 @@ public class Links {
 		sb.append(System.getProperty("music.root"));
 		sb.append(RSS_DIR);
 		sb.append(File.separator);
-		sb.append(System.getProperty("music.rss.url"));
+		sb.append(System.getProperty("rss.url"));
 
 		result.setHref(sb.toString());
 		

@@ -512,10 +512,6 @@ public class Web {
 		navigation.addElement(tr);
 
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(links.getRSSLink()));
-		navigation.addElement(tr);
-
-		tr = new TR().setAlign("right");
 		tr.addElement(new TD(links.getICalLink()));
 		navigation.addElement(tr);
 		
@@ -903,7 +899,6 @@ public class Web {
 			}
 		}
 		
-		c.addElement(links.getRSSLink());
 		c.addElement(links.getICalLink());
 		
 		doc.getBody().addElement(c);

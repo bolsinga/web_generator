@@ -79,7 +79,7 @@ public class Links {
 
 		link.append(RSS_DIR);
 		link.append(File.separator);
-		link.append(System.getProperty("diary.rss.url"));
+		link.append(System.getProperty("rss.url"));
 
 		IMG img = new IMG(System.getProperty("rss.image.url"));
 		img.setHeight(System.getProperty("rss.image.height"));
@@ -99,7 +99,7 @@ public class Links {
 		sb.append(System.getProperty("diary.root"));
 		sb.append(RSS_DIR);
 		sb.append(File.separator);
-		sb.append(System.getProperty("diary.rss.url"));
+		sb.append(System.getProperty("rss.url"));
 
 		result.setHref(sb.toString());
 		

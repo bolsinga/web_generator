@@ -34,7 +34,7 @@
 <property name="build.lib" value="${build.dir}/lib" />
 <property name="build.gensrc" value="${build.dir}/gensrc" />
 
-<property name="javac.debug" value="yes" />
+<property name="javac.debug" value="no" />
 
 <target name="clean">
 	<delete dir="${build.dir}" />
@@ -308,11 +308,7 @@
 		<sysproperty key="music.contact" value="bolsinga@gmail.com" />
 		<sysproperty key="music.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
-		<sysproperty key="music.rss.url" value="music.xml" />
-		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
-		<sysproperty key="rss.image.width" value="36" />
-		<sysproperty key="rss.image.height" value="14" />
-		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the shows." />
+		<sysproperty key="rss.url" value="rss.xml" />
 		<sysproperty key="music.ical.url" value="Shows.ics" />
 		<sysproperty key="ical.image.url" value="http://icalshare.com/layout/iCalShare/theme-images/subscribe.gif" />
 		<sysproperty key="ical.image.width" value="14" />
@@ -335,8 +331,7 @@
 		<sysproperty key="diary.contact" value="bolsinga@gmail.com" />
 		<sysproperty key="diary.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
-		<sysproperty key="diary.rss.url" value="diary.xml" />
-		<sysproperty key="music.rss.url" value="music.xml" />
+		<sysproperty key="rss.url" value="rss.xml" />
 		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
 		<sysproperty key="rss.image.width" value="36" />
 		<sysproperty key="rss.image.height" value="14" />
