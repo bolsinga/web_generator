@@ -496,20 +496,18 @@ public class Web {
 		}
 		creator.close();
 
-/*		
-	//+++gdb This should be sorted by artist, and # of tracks, or # of albums?
-	
-		Collections.sort(items, com.bolsinga.music.util.Compare.getCompare(music).ALBUM_STATS_COMPARATOR);
+		items = music.getArtist();
+		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_TRACKS_COMPARATOR);
 
+		Artist artist = null;
 		String[] names = new String[items.size()];
 		int[] values = new int[items.size()];
 		li = items.listIterator();
 		while (li.hasNext()) {
-			item = (Album)li.next();
+			artist = (Artist)li.next();
 
-			names[index] = new A(links.getLinkTo(item), item.getTitle()).toString();
-			List shows = null; // Lookup.getLookup(music).getAlbums(item);
-			values[index] = (shows != null) ? shows.size() : 0;
+			names[index] = new A(links.getLinkTo(artist), artist.getName()).toString();
+			values[index] = Util.trackCount(artist);
 			
 			index++;
 		}
@@ -517,7 +515,6 @@ public class Web {
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
 		stats.getDocument("Tracks Statistics", Links.TRACKS_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Tracks by Artist", "Artist")));
 		stats.close();
-*/
 	}
 	
 	public static String generatePreview(String sourceFile, int lastShowsCount) {

@@ -75,4 +75,25 @@ public class Util {
 		}
 		return music;
 	}
+	
+	public static int trackCount(com.bolsinga.music.data.Artist artist) {
+		int tracks = 0;
+		List albums = artist.getAlbum();
+		if (albums != null) {
+			ListIterator li = albums.listIterator();
+			while (li.hasNext()) {
+				com.bolsinga.music.data.Album album = (com.bolsinga.music.data.Album)li.next();
+				List songs = album.getSong();
+				ListIterator si = songs.listIterator();
+				while (si.hasNext()) {
+					com.bolsinga.music.data.Song song = (com.bolsinga.music.data.Song)si.next();
+					if (song.getPerformer().equals(artist)) {
+						tracks++;
+					}
+				}
+			}
+		}
+		
+		return tracks;
+	}
 }

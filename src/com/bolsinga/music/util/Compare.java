@@ -128,6 +128,22 @@ public class Compare {
 			return ((r1.getTrack() != null) ? r1.getTrack().intValue() : 0) - ((r2.getTrack() != null) ? r2.getTrack().intValue() : 0);
 		}
 	};
+
+	public static final Comparator ARTIST_TRACKS_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Artist r1 = (Artist)o1;
+			Artist r2 = (Artist)o2;
+			
+			int tracks1 = Util.trackCount(r1);
+			int tracks2 = Util.trackCount(r2);
+			
+			int result = tracks2 - tracks1;
+			if (result == 0) {
+				result = ARTIST_COMPARATOR.compare(r1, r2);
+			}
+			return result;
+		}
+	};
 	
 	public final Comparator ARTIST_STATS_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
