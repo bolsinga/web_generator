@@ -157,11 +157,6 @@ public class Web {
 		System.setProperty("web.layout.css", settings.getCssFile());
 		System.setProperty("rss.url", settings.getRssFile());
 		System.setProperty("music.ical.url", settings.getIcalName() + ".ics");
-        com.bolsinga.settings.data.Image image = settings.getIcalImage();
-		System.setProperty("ical.image.url", image.getLocation());
-		System.setProperty("ical.image.width", image.getWidth().toString());
-		System.setProperty("ical.image.height", image.getHeight().toString());
-		System.setProperty("ical.image.alt", image.getAlt());
     }
 
 	public static void generate(int mainPageEntryCount, String sourceFile, String musicFile, String outputDir) {

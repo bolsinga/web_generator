@@ -337,10 +337,12 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(System.getProperty("music.ical.url"));
 
-		img i = new img(System.getProperty("ical.image.url"));
-		i.setHeight(System.getProperty("ical.image.height"));
-		i.setWidth(System.getProperty("ical.image.width"));
-		i.setAlt(System.getProperty("ical.image.alt"));
+        com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getIcalImage();
+
+		img i = new img(image.getLocation());
+		i.setHeight(image.getHeight().intValue());
+		i.setWidth(image.getWidth().intValue());
+		i.setAlt(image.getAlt());
 		
 		return new a(sb.toString(), i.toString()); // ical: URL
 	}
