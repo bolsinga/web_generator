@@ -64,11 +64,6 @@ abstract class DocumentCreator {
 		finishDocument();
 		
 		fDocument.getBody().addElement(fMainDiv);
-		
-		Div footerDiv = com.bolsinga.web.util.Util.createDiv(CSS.MUSIC_FOOTER);
-		footerDiv.addElement(addIndexNavigator());
-		footerDiv.addElement(addWebNavigator());
-		fDocument.getBody().addElement(footerDiv);
 
 		try {
 			File f = new File(fOutputDir, getCurrentPath());
