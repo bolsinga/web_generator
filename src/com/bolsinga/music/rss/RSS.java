@@ -25,6 +25,24 @@ public class RSS {
 		RSS.generate(Integer.parseInt(args[0]), args[1], args[2]);
 	}
 
+	private static String getGenerator() {
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append(sResource.getString("program"));
+		
+		sb.append(" (built: ");
+		sb.append(sResource.getString("builddate"));
+		sb.append(" running on jdk ");
+		sb.append(System.getProperty("java.runtime.version"));
+		sb.append(" - ");
+		sb.append(System.getProperty("os.name"));
+		sb.append(" ");
+		sb.append(System.getProperty("os.version"));
+		sb.append(")");
+		
+		return sb.toString();
+	}
+
 	public static void generate(int entryCount, String sourceFile, String outputFile) {
 		Music music = Util.createMusic(sourceFile);
 		
@@ -55,7 +73,7 @@ public class RSS {
 			channelElements.add(objFactory.createTRssChannelTitle(System.getProperty("music.title")));
 			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("music.link")));
 			channelElements.add(objFactory.createTRssChannelDescription(System.getProperty("music.description")));
-			channelElements.add(objFactory.createTRssChannelGenerator(sResource.getString("program")));
+			channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
 			channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
 			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("music.contact")));
 			
