@@ -1209,7 +1209,7 @@ public class Web {
 	static Document createHTMLDocument(String title) {
 		Document d = new Document(ECSDefaults.getDefaultCodeset());
 		
-        d.setDoctype(new org.apache.ecs.Doctype.Html401Transitional());
+        d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
 		d.appendTitle(title);
 		d.getHtml().setPrettyPrint(true);
 		
