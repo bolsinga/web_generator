@@ -317,78 +317,55 @@ public class Web {
 	public static void generateCityPages(Music music, String outputDir) {
 		List items = music.getLocation();
 		Location item = null;
-		HashMap cities = new HashMap();
+		HashMap cityCount = new HashMap();
 		String city = null;
 		Integer val = null;
 		HashSet set = null;
-		int totalShows = music.getShow().size();
-		int cityCount = 0;
+		HashSet cities = new HashSet();
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Location)li.next();
 			
 			city = item.getCity();
+			cities.add(city);
 			
 			val = new Integer(Lookup.getLookup(music).getShows(item).size());
-			if (cities.containsKey(val)) {
-				set = (HashSet)cities.get(val);
+			if (cityCount.containsKey(val)) {
+				set = (HashSet)cityCount.get(val);
 				set.add(city);
 			} else {
 				set = new HashSet();
 				set.add(city);
-				cities.put(val, set);
+				cityCount.put(val, set);
 			}
 		}
 		
-		CityStatisticsCreator creator = new CityStatisticsCreator(music, outputDir);
-		Body b = creator.getDocument().getBody();
-		
-		// Make a generic table method
-		// makeTable(Document doc, String[] names, int[] values, String caption, String header)
-		
-		Table table = new Table();
-		Caption caption = new Caption();
-		caption.addElement("Shows by City");
-		table.addElement(caption);
-		TR tr = new TR(true).addElement(new TH("City")).addElement(new TH("#")).addElement(new TH("%"));
-		tr.setAlign("center");
-		table.addElement(tr);
-		TD td = null;
-		
-		List keys = new Vector(cities.keySet());
+		List keys = new Vector(cityCount.keySet());
 		Collections.sort(keys);
+		Collections.reverse(keys);
+		
+		String[] names = new String[cities.size()];
+		int[] values = new int[cities.size()];
+		int index = 0;
 		
 		Iterator i = keys.iterator();
 		while (i.hasNext()) {
 			val = (Integer)i.next();
 			
-			keys = new Vector((HashSet)cities.get(val));
+			keys = new Vector((HashSet)cityCount.get(val));
 			Collections.sort(keys);
 			
 			Iterator j = keys.iterator();
 			while (j.hasNext()) {
-				cityCount++;
-				
-				tr = new TR(true);
-				tr.setAlign("center");
-				td = new TD((String)j.next());
-				td.setAlign("left");
-				tr.addElement(td);
-				// use DecimalFormat...
-				tr.addElement(new TD(val.toString()));
-				tr.addElement(new TD(Util.toString((double)val.intValue() / totalShows * 100.0)));
-				
-				table.addElement(tr);
+				names[index] = (String)j.next();
+				values[index] = val.intValue();
+				index++;
 			}
 		}
-		tr = new TR(true);
-		tr.setAlign("center");
-		tr.addElement(new TH(Integer.toString(cityCount)));
-		tr.addElement(new TH(Integer.toString(totalShows)));
-		table.addElement(tr);
-		b.addElement(new Center().addElement(table));
 		
+		CityStatisticsCreator creator = new CityStatisticsCreator(music, outputDir);
+		creator.getDocument().getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
 	}
 	
@@ -638,6 +615,43 @@ public class Web {
 		}
 		
 		doc.getBody().addElement(c);
+	}
+	
+	public static Table makeTable(String[] names, int[] values, String caption, String header) {
+		Table table = new Table();
+		Caption capt = new Caption();
+		capt.addElement(caption);
+		table.addElement(capt);
+		TR tr = new TR(true).addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
+		tr.setAlign("center");
+		table.addElement(tr);
+		TD td = null;
+		
+		int total = 0;
+		int i;
+		for (i = 0; i < values.length; i++) {
+			total += values[i];
+		}
+
+		for (i = 0; i < values.length; i++) {
+			tr = new TR(true);
+			tr.setAlign("center");
+			td = new TD(names[i]);
+			td.setAlign("left");
+			tr.addElement(td);
+			tr.addElement(new TD(Integer.toString(values[i])));
+			tr.addElement(new TD(Util.toString((double)values[i] / total * 100.0)));
+			
+			table.addElement(tr);
+		}
+		
+		tr = new TR(true);
+		tr.setAlign("center");
+		tr.addElement(new TH(Integer.toString(names.length)));
+		tr.addElement(new TH(Integer.toString(total)));
+		table.addElement(tr);
+		
+		return table;
 	}
 	
 	public static void addIndexNavigator(Music music, Show show, Document doc) {
