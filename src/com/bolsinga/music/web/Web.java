@@ -458,24 +458,21 @@ public class Web {
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 		Collections.reverse(items);
 		
-		TBody tbody = null;
 		TR tr = null;
 		StringBuffer sb = null;
 		
-		Table navigation = null;
-		Table recent = null;
+		Table navigation = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0);
 		
-		tbody = new TBody();
 		tr = new TR().setAlign("right");
 		tr.addElement(new TD(Web.getImage()));
-		tbody.addElement(tr);
+		navigation.addElement(tr);
 		
 		sb = new StringBuffer();
 		sb.append("Generated ");
 		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
 		tr = new TR().setAlign("right");
 		tr.addElement(new TD(sb.toString()));
-		tbody.addElement(tr);
+		navigation.addElement(tr);
 		
 		tr = new TR().setAlign("right");
 		sb = new StringBuffer();
@@ -483,7 +480,7 @@ public class Web {
 		sb.append(" ");
 		sb.append(links.getArtistLink());
 		tr.addElement(new TD(sb.toString()));
-		tbody.addElement(tr);
+		navigation.addElement(tr);
 
 		tr = new TR().setAlign("right");
 		sb = new StringBuffer();
@@ -491,7 +488,7 @@ public class Web {
 		sb.append(" ");
 		sb.append(links.getShowLink());
 		tr.addElement(new TD(sb.toString()));
-		tbody.addElement(tr);
+		navigation.addElement(tr);
 		
 		tr = new TR().setAlign("right");
 		sb = new StringBuffer();
@@ -499,7 +496,7 @@ public class Web {
 		sb.append(" ");
 		sb.append(links.getVenueLink());
 		tr.addElement(new TD(sb.toString()));
-		tbody.addElement(tr);
+		navigation.addElement(tr);
 		
 		tr = new TR().setAlign("right");
 		sb = new StringBuffer();
@@ -507,18 +504,17 @@ public class Web {
 		sb.append(" ");
 		sb.append(links.getCityLink());
 		tr.addElement(new TD(sb.toString()));
-		tbody.addElement(tr);
+		navigation.addElement(tr);
 		
-		navigation = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(0).addElement(tbody);
+		Table recent = new Table().setBorder(0).setWidth("100%").setCellSpacing(5).setCellPadding(0);
 
-		tbody = new TBody();
 		sb = new StringBuffer();
 		sb.append("Last ");
 		sb.append(Integer.toString(lastShowsCount));
 		sb.append(" shows:");
 		tr = new TR().setAlign("center");
 		tr.addElement(new TD(sb.toString()));
-		tbody.addElement(tr);
+		recent.addElement(tr);
 		
 		TD td = new TD();
 		for (int i = 0; i < lastShowsCount; i++) {
@@ -555,8 +551,7 @@ public class Web {
 			td.addElement(new P());
 		}
 		
-		tbody.addElement(new TR().addElement(td));
-		recent = new Table().setBorder(0).setWidth("100%").setCellSpacing(5).setCellPadding(0).addElement(tbody);
+		recent.addElement(new TR().addElement(td));
 		
 		sb = new StringBuffer();
 		sb.append(navigation.toString());
