@@ -51,7 +51,6 @@ abstract class DocumentCreator {
 	}
 	
 	private void writeDocument() {
-		fDocument.getBody().addElement(new HR());
 		addIndexNavigator();
 		addWebNavigator();
 		try {
@@ -174,7 +173,6 @@ class ShowDocumentCreator extends DocumentCreator {
 		if ((fDate == null) || (!Util.toMonth(d).equals(Util.toMonth(fDate)))) {
 			Body b = doc.getBody();
 
-			b.addElement(new HR());
 			b.addElement(new Div().addElement(Util.toMonth(d)));
 			
 			fDate = d;
@@ -705,7 +703,6 @@ public class Web {
 		
 		sb = new StringBuffer();
 		sb.append(navigation.toString());
-		sb.append(new HR().toString());
 		sb.append(recent.toString());
 		
 		return sb.toString();
@@ -734,7 +731,6 @@ public class Web {
 	public static void addItem(Music music, Links links, Artist artist, Document doc) {
 		Body b = doc.getBody();
 
-		b.addElement(new HR());
 		A a = new A();
 		a.setName(artist.getId());
 		a.addElement("test", artist.getName());
@@ -795,7 +791,6 @@ public class Web {
 	public static void addItem(Music music, Links links, Venue venue, Document doc) {
 		Body b = doc.getBody();
 		
-		b.addElement(new HR());
 		A a = new A();
 		a.setName(venue.getId());
 		a.addElement("test", venue.getName());
@@ -891,7 +886,6 @@ public class Web {
 
 		boolean isCompilation = album.isCompilation();
 		
-		b.addElement(new HR());
 		A a = new A();
 		a.setName(album.getId());
 		a.addElement("test", album.getTitle());
