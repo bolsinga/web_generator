@@ -12,27 +12,27 @@ import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 class CSS {
-	public static final String MUSIC_HEADER	= "music_header";
-	public static final String MUSIC_MAIN	= "music_main";
-	public static final String MUSIC_FOOTER	= "music_footer";
-	public static final String MUSIC_MENU	= "music_menu";
+	public static final String MUSIC_HEADER		= "music_header";
+	public static final String MUSIC_MAIN		= "music_main";
+	public static final String MUSIC_FOOTER		= "music_footer";
+	public static final String MUSIC_MENU		= "music_menu";
 
-	public static final String SHOW_MONTH	= "show_month";
-	public static final String TRACKS_MENU	= "tracks_menu";
+	public static final String SHOW_MONTH		= "show_month";
+	public static final String TRACKS_MENU		= "tracks_menu";
 
-	public static final String ARTIST_INDEX	= "artist_index";
-	public static final String VENUE_INDEX	= "venue_index";
-	public static final String SHOW_INDEX	= "show_index";
-	public static final String TRACKS_INDEX	= "tracks_index";
+	public static final String ARTIST_INDEX		= "artist_index";
+	public static final String VENUE_INDEX		= "venue_index";
+	public static final String SHOW_INDEX		= "show_index";
+	public static final String TRACKS_INDEX		= "tracks_index";
 
-	public static final String ARTIST_ITEM	= "artist_item";
-	public static final String ARTIST_SHOW	= "artist_show";
-	public static final String VENUE_ITEM	= "venue_item";
-	public static final String VENUE_SHOW	= "venue_show";
-	public static final String SHOW_ITEM	= "show_item";
-	public static final String TRACKS_ITEM	= "tracks_item";
+	public static final String ARTIST_ITEM		= "artist_item";
+	public static final String ARTIST_SHOW		= "artist_show";
+	public static final String VENUE_ITEM		= "venue_item";
+	public static final String VENUE_SHOW		= "venue_show";
+	public static final String SHOW_ITEM		= "show_item";
+	public static final String TRACKS_ITEM		= "tracks_item";
 	
-	public static final String SHOW_COMMENT	= "show_comment";
+	public static final String SHOW_COMMENT		= "show_comment";
 
 	public static final String ARTIST_RELATION	= "artist_relation";
 	public static final String ARTIST_TRACKS	= "artist_tracks";
