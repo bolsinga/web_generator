@@ -170,7 +170,7 @@
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
-                <include name="com.bolsinga.web/*.java" />
+                <include name="com/bolsinga/web/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
         <tstamp>
