@@ -6,10 +6,15 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
+import org.apache.ecs.*;
+import org.apache.ecs.html.*;
+import org.apache.ecs.filter.*;
+
 public class Links {
 
 	public static final String HTML_EXT = ".html";
 	public static final String ARCHIVES_DIR = "archives";
+	public static final String RSS_DIR = "rss";
 	private static final String HASH = "#";
 
 	static DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
@@ -63,5 +68,24 @@ public class Links {
 		link.append(entry.getId());
 		
 		return link.toString();
+	}
+	
+	public String getRSSLink() {
+		StringBuffer link = new StringBuffer();
+		
+		if (fUpOneLevel) {
+			link.append("..");
+			link.append(File.separator);
+		}
+		link.append(RSS_DIR);
+		link.append(File.separator);
+		link.append(System.getProperty("diary.rss.url"));
+
+		IMG img = new IMG(System.getProperty("rss.image.url"));
+		img.setHeight(System.getProperty("rss.image.height"));
+		img.setWidth(System.getProperty("rss.image.width"));
+		img.setAlt(System.getProperty("rss.image.alt"));
+		
+		return new A(link.toString(), img.toString()).toString();
 	}
 }

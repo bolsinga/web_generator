@@ -121,6 +121,8 @@ class DiaryDocumentCreator {
 			}
 		}
 		
+		c.addElement(fLinks.getRSSLink());
+		
 		fDocument.getBody().addElement(c);
 	}
 	
@@ -305,9 +307,16 @@ public class Web {
 		archivesLink.append("archives/");
 		archivesLink.append(Calendar.getInstance().get(Calendar.YEAR));
 		archivesLink.append(".html");
-		
-		addBanner(new A(archivesLink.toString(), "Archives"), table);
 
+		Links links = Links.getLinks(false);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(new A(archivesLink.toString(), "Archives").toString());
+		sb.append(" ");
+		sb.append(links.getRSSLink());
+		
+		addBanner(sb.toString(), table);
+		
 		td.addElement(table);
 	}
 	
@@ -331,7 +340,7 @@ public class Web {
 		creator.close();
 	}
 
-	public static void addBanner(A item, Table table) {
+	public static void addBanner(String item, Table table) {
 		Font f = new Font();
 		f.addAttribute("color", "white");
 		f.addElement(new B(item));
@@ -351,7 +360,7 @@ public class Web {
 		A a = new A();
 		a.setName(entry.getId());
 		a.addElement("test", Util.getTitle(entry));
-		addBanner(a, table);
+		addBanner(a.toString(), table);
 		
 		table.addElement(new TR().addElement(new TD(Web.encodedComment(musicFile, entry, upOneLevel))));
 	}
