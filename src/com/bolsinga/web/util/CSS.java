@@ -27,6 +27,7 @@ public class CSS {
 
 	public static final String MUSIC_HEADER		= "music_header";
 	public static final String MUSIC_MAIN		= "music_main";
+	public static final String MUSIC_SUB		= "music_sub";
 	public static final String MUSIC_MENU		= "music_menu";
 
 	public static final String PREVIEW_MAIN		= "preview_main";
@@ -37,7 +38,6 @@ public class CSS {
 	public static final String SHOW_COMMENT		= "show_comment";
 	public static final String SHOW_INDEX		= "show_index";
 	public static final String SHOW_ITEM		= "show_item";
-	public static final String SHOW_MONTH		= "show_month";
 
 	public static final String TRACKS_INDEX		= "tracks_index";
 	public static final String TRACKS_ITEM		= "tracks_item";
@@ -102,6 +102,7 @@ public class CSS {
 		writeCSSDeclaration(pw, MAIN_LINKS);
 		writeCSSDeclaration(pw, MUSIC_HEADER);
 		writeCSSDeclaration(pw, MUSIC_MAIN);
+		writeCSSDeclaration(pw, MUSIC_SUB);
 		writeCSSDeclaration(pw, MUSIC_MENU);
 		writeCSSDeclaration(pw, PREVIEW_MAIN);
 		writeCSSDeclaration(pw, PREVIEW_MENU);
@@ -110,7 +111,6 @@ public class CSS {
 		writeCSSDeclaration(pw, SHOW_COMMENT);
 		writeCSSDeclaration(pw, SHOW_INDEX);
 		writeCSSDeclaration(pw, SHOW_ITEM);
-		writeCSSDeclaration(pw, SHOW_MONTH);
 		writeCSSDeclaration(pw, TRACKS_INDEX);
 		writeCSSDeclaration(pw, TRACKS_ITEM);
 		writeCSSDeclaration(pw, TRACKS_MENU);
