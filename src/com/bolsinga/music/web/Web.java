@@ -1132,6 +1132,7 @@ public class Web {
 		capt.addElement(caption);
 		t.addElement(capt);
 		tr trow = new tr().addElement(new th(header)).addElement(new th("#")).addElement(new th("%"));
+        trow.setClass(com.bolsinga.web.util.CSS.TABLE_HEADER);
 		trow.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		t.addElement(trow);
 		th thh = null;
@@ -1145,6 +1146,7 @@ public class Web {
 		for (i = 0; i < values.length; i++) {
 			trow = new tr();
 			trow.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+            trow.setClass((((i + 1) % 2) == 1) ? com.bolsinga.web.util.CSS.TABLE_ROW : com.bolsinga.web.util.CSS.TABLE_ROW_ALT);
 			thh = new th(names[i]);
 			thh.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 			trow.addElement(thh);
@@ -1156,9 +1158,10 @@ public class Web {
 		
 		trow = new tr();
 		trow.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+        trow.setClass(com.bolsinga.web.util.CSS.TABLE_FOOTER);
 		trow.addElement(new th(Integer.toString(names.length)));
 		trow.addElement(new th(Integer.toString(total)));
-		trow.addElement(new td());
+		trow.addElement(new th());
 		t.addElement(trow);
 		
 		return t;

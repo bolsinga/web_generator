@@ -47,6 +47,11 @@ public class CSS {
 	public static final String VENUE_ITEM		= "venue_item";
 	public static final String VENUE_RELATION	= "venue_relation";
 	public static final String VENUE_SHOW		= "venue_show";
+    
+    public static final String TABLE_HEADER     = "table_header";
+    public static final String TABLE_ROW        = "table_row";
+    public static final String TABLE_ROW_ALT    = "table_row_alt";
+    public static final String TABLE_FOOTER     = "table_footer";
 	
 	public static void main(String[] args) {
 		if (args.length != 1) {
@@ -113,6 +118,10 @@ public class CSS {
 		writeCSSDeclaration(pw, VENUE_ITEM);
 		writeCSSDeclaration(pw, VENUE_RELATION);
 		writeCSSDeclaration(pw, VENUE_SHOW);
+		writeCSSDeclaration(pw, TABLE_HEADER);
+		writeCSSDeclaration(pw, TABLE_ROW);
+		writeCSSDeclaration(pw, TABLE_ROW_ALT);
+		writeCSSDeclaration(pw, TABLE_FOOTER);
 	}
 	
 	private static void writeCSSDeclaration(PrintWriter pw, String name) {
