@@ -28,6 +28,8 @@
             <xs:element name="rssRoot" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
             <xs:element name="rssDescription" type="xs:string" minOccurs="1" maxOccurs="1" />
             <xs:element name="icalName" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="linksTitle" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="friendsTitle" type="xs:string" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
     </xs:complexType>
 </xs:element>

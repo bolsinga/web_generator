@@ -188,14 +188,14 @@ public class Web {
 
   private static div createMainStatics(Diary diary) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_STATIC);
-    d.addElement(new h4(com.bolsinga.web.Util.getResourceString("mainlinks")));
+    d.addElement(new h4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
     d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(diary.getStatic()));
     return d;
   }
 
   private static div createMainLinks(Diary diary) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_LINKS);
-    d.addElement(new h4(com.bolsinga.web.Util.getResourceString("mainfriends")));
+    d.addElement(new h4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
     d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(diary.getFriends()));
     return d;
   }
