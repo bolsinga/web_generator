@@ -58,7 +58,7 @@
 
 <target name="jaxb" depends="prepare">
 	<mkdir dir="${build.gensrc}" />
-	<xjc schema="xml/shows.xsd" target="${build.gensrc}" package="com.bolsinga.shows.data."/>
+	<xjc schema="xml/shows.xsd" target="${build.gensrc}" package="com.bolsinga.shows.data"/>
 </target>
 
 </project>
