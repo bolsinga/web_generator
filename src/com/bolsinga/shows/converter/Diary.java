@@ -74,10 +74,12 @@ public class Diary {
 			oldStatic = (Statics)li.next();
 			
 			xStatic = objFactory.createStatic();
-			xStatic.setLocation(oldStatic.getLocation());
-			xStatic.setData(oldStatic.getData());
 			
-			diary.getStatic().add(xStatic);
+			if (oldStatic.getLocation().equalsIgnoreCase("left")) {
+				diary.setStatic(oldStatic.getData());
+			} else if (oldStatic.getLocation().equalsIgnoreCase("header")) {
+				diary.setHeader(oldStatic.getData());
+			}
 		}
 	}
 

@@ -5,36 +5,22 @@
 <xs:element name="entry">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element name="comment" type="xs:string" minOccurs="0" />
-			<xs:element name="timestamp" type="xs:date" minOccurs="0" />
+			<xs:element name="comment" type="xs:string" minOccurs="1" />
+			<xs:element name="timestamp" type="xs:date" minOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
 
-<!-- Define Static -->
-<xs:simpleType name="location">
-	<xs:restriction base="xs:token" >
-		<xs:enumeration value="left" />
-		<xs:enumeration value="right" />
-		<xs:enumeration value="header" />
-		<xs:enumeration value="footer" />
-	</xs:restriction>
-</xs:simpleType>
-<xs:element name="static">
-	<xs:complexType>
-		<xs:sequence>
-			<xs:element name="data" type="xs:string" minOccurs="0" />
-			<xs:element name="location" type="location" minOccurs="0" />
-		</xs:sequence>
-	</xs:complexType>
-</xs:element>
+<xs:element name="static" type="xs:string" />
+<xs:element name="header" type="xs:string" />
 
 <!-- Define Diary -->
 <xs:element name="diary">
 	<xs:complexType>
 		<xs:sequence>
+			<xs:element ref="static" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="header" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="entry" maxOccurs="unbounded" />
-			<xs:element ref="static" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
