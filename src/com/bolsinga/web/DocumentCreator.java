@@ -24,6 +24,7 @@ public abstract class DocumentCreator {
     
 	protected abstract String getLastPath();
 	protected abstract String getCurrentLetter();
+    protected abstract Element getCurrentElement();
 	protected abstract Element addIndexNavigator();
 	
 	public void close() {

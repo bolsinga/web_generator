@@ -15,21 +15,23 @@ import org.apache.ecs.filter.*;
 
 class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
 	Diary fDiary = null;
+    Music fMusic = null;
 	Links fLinks = null;
 	String fProgram = null;
 	Entry fCurEntry = null;
 	Entry fLastEntry = null;
 	
-	public DiaryDocumentCreator(Diary diary, Links links, String outputDir, String program) {
+	public DiaryDocumentCreator(Diary diary, Music music, Links links, String outputDir, String program) {
         super(outputDir);
 		fDiary = diary;
+        fMusic = music;
 		fLinks = links;
 		fProgram = program;
 	}
 
-    public void add(Music music, Entry entry) {
+    public void add(Entry entry) {
         fCurEntry = entry;
-		getContainer().addElement(Web.addItem(music, entry, true));
+		getContainer().addElement(getCurrentElement());
         fLastEntry = fCurEntry;
     }
     
@@ -69,6 +71,10 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
     
 	protected String getCurrentLetter() {
         return fLinks.getPageFileName(fCurEntry);
+    }
+
+    protected Element getCurrentElement() {
+        return Web.addItem(fMusic, fCurEntry, true);
     }
 
 	protected Element addIndexNavigator() {
@@ -312,13 +318,13 @@ public class Web {
 		
 		Links links = Links.getLinks(true);
 		
-		DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
+		DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Entry)li.next();
 			
-            creator.add(music, item);
+            creator.add(item);
 		}
 		
 		creator.close();

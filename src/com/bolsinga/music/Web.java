@@ -73,9 +73,9 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
 		super(music, links, outputDir, program);
 	}
 
-	public void add(Music music, Links links, Artist item) {
+	public void add(Artist item) {
 		fCurArtist = item;
-        getContainer().addElement(Web.addItem(music, links, fCurArtist));
+        getContainer().addElement(getCurrentElement());
         fLastArtist = fCurArtist;
     }
 	
@@ -102,6 +102,10 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
 	protected String getCurrentLetter() {
         return fLinks.getPageFileName(fCurArtist);
     }
+
+    protected Element getCurrentElement() {
+        return Web.addItem(fMusic, fLinks, fCurArtist);
+    }
     
 	protected Element addIndexNavigator() {
 		return Web.addArtistIndexNavigator(fMusic, fLinks, getCurrentLetter());
@@ -116,9 +120,9 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 		super(music, links, outputDir, program);
 	}
 
-	public void add(Music music, Links links, Venue item) {
+	public void add(Venue item) {
 		fCurVenue = item;
-		getContainer().addElement(Web.addItem(music, links, fCurVenue));
+		getContainer().addElement(getCurrentElement());
 		fLastVenue = fCurVenue;
     }
 	
@@ -145,6 +149,10 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 	protected String getCurrentLetter() {
         return fLinks.getPageFileName(fCurVenue);
     }
+
+    protected Element getCurrentElement() {
+        return Web.addItem(fMusic, fLinks, fCurVenue);
+    }
 	
 	protected Element addIndexNavigator() {
 		return Web.addVenueIndexNavigator(fMusic, fLinks, getCurrentLetter());
@@ -159,9 +167,9 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 		super(music, links, outputDir, program);
 	}
 	
-	public void add(Music music, Show item) {
+	public void add(Show item) {
 		fCurShow = item;
-		getContainer().addElement(Web.addItem(music, fLinks, fCurShow));
+		getContainer().addElement(getCurrentElement());
 		fLastShow = fCurShow;
 	}
 	
@@ -188,6 +196,10 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 	
 	protected String getCurrentLetter() {
         return fLinks.getPageFileName(fCurShow);
+    }
+
+    protected Element getCurrentElement() {
+        return Web.addItem(fMusic, fLinks, fCurShow);
     }
 
 	protected Element addIndexNavigator() {
@@ -235,6 +247,10 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
 	}
 
 	protected String getCurrentLetter() {
+        return null;
+    }
+    
+    protected Element getCurrentElement() {
         return null;
     }
 	
@@ -288,9 +304,9 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
 		super(music, links, outputDir, program);
 	}
 	
-	public void add(Music music, Links links, Album item) {
+	public void add(Album item) {
 		fCurAlbum = item;
-        getContainer().addElement(Web.addItem(music, links, fCurAlbum));
+        getContainer().addElement(getCurrentElement());
         fLastAlbum = fCurAlbum;
     }
 	
@@ -308,6 +324,10 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
 	
 	protected String getCurrentLetter() {
         return fLinks.getPageFileName(fCurAlbum);
+    }
+
+    protected Element getCurrentElement() {
+        return Web.addItem(fMusic, fLinks, fCurAlbum);
     }
 
 	protected Element addIndexNavigator() {
@@ -362,7 +382,7 @@ public class Web {
 		while (iterator.hasNext()) {
 			item = (Artist)iterator.next();
 			
-            creator.add(music, links, item);
+            creator.add(item);
 		}
 		creator.close();
 		
@@ -403,7 +423,7 @@ public class Web {
 		while (iterator.hasNext()) {
 			item = (Venue)iterator.next();
 
-            creator.add(music, links, item);
+            creator.add(item);
 		}
 		creator.close();
 
@@ -453,7 +473,7 @@ public class Web {
 				dates.put(item, list);
 			}
 			
-			creator.add(music, item);
+			creator.add(item);
 		}
 		creator.close();
 
@@ -549,7 +569,7 @@ public class Web {
 		while (iterator.hasNext()) {
 			item = (Album)iterator.next();
 			
-            creator.add(music, links, item);
+            creator.add(item);
 		}
 		creator.close();
 
