@@ -137,7 +137,7 @@ public class Web {
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
 			item = (Artist)li.next();
-			
+
 			addItem(music, item, creator.getDocument(item));
 		}
 		creator.close();
@@ -312,6 +312,87 @@ public class Web {
 		}
 	}
 	
+	public static void addNavigator(Music music, Artist artist, Document doc) {
+		Center c = new Center();
+		
+		java.util.Map m = new TreeMap();
+		Iterator li = music.getArtist().iterator();
+		while (li.hasNext()) {
+			Artist a = (Artist)li.next();
+			String letter = getPageFileName(a);
+			if (!m.containsKey(letter)) {
+				m.put(letter, getLinkToPage(a));
+			}
+		}
+
+		li = m.keySet().iterator();
+		while (li.hasNext()) {
+			String a = (String)li.next();
+			String l = " " + a + " ";
+			if (a.equals(getPageFileName(artist))) {
+				c.addElement(l);
+			} else {
+				c.addElement(new A((String)m.get(a), l));
+			}
+		}
+		
+		doc.getBody().addElement(c);
+	}
+	
+	public static void addNavigator(Music music, Venue venue, Document doc) {
+		Center c = new Center();
+		
+		java.util.Map m = new TreeMap();
+		Iterator li = music.getVenue().iterator();
+		while (li.hasNext()) {
+			Venue v = (Venue)li.next();
+			String letter = getPageFileName(v);
+			if (!m.containsKey(letter)) {
+				m.put(letter, getLinkToPage(v));
+			}
+		}
+
+		li = m.keySet().iterator();
+		while (li.hasNext()) {
+			String v = (String)li.next();
+			String l = " " + v + " ";
+			if (v.equals(getPageFileName(venue))) {
+				c.addElement(l);
+			} else {
+				c.addElement(new A((String)m.get(v), l));
+			}
+		}
+		
+		doc.getBody().addElement(c);
+	}
+	
+	public static void addNavigator(Music music, Show show, Document doc) {
+		Center c = new Center();
+		
+		java.util.Map m = new TreeMap();
+		Iterator li = music.getShow().iterator();
+		while (li.hasNext()) {
+			Show s = (Show)li.next();
+			String letter = getPageFileName(s);
+			if (!m.containsKey(letter)) {
+				m.put(letter, getLinkToPage(s));
+			}
+		}
+
+		li = m.keySet().iterator();
+		while (li.hasNext()) {
+			String s = (String)li.next();
+			String l = " " + s + " ";
+			if (s.equals(getPageFileName(show))) {
+				c.addElement(l);
+			} else {
+				c.addElement(new A((String)m.get(s), l));
+			}
+		}
+		
+		doc.getBody().addElement(c);
+	}
+	
 	private static String getCopyright() {
 		StringBuffer cp = new StringBuffer();
 		
@@ -429,8 +510,8 @@ public class Web {
 		sb.append(HTML_EXT);
 		return sb.toString();
 	}
-	
-	public static String getLinkTo(Artist artist) {
+
+	public static String getLinkToPage(Artist artist) {
 		StringBuffer link = new StringBuffer();
 		
 		link.append("../");
@@ -438,6 +519,38 @@ public class Web {
 		link.append(SEPARATOR);
 		link.append(getPageFileName(artist));
 		link.append(Web.HTML_EXT);
+		
+		return link.toString();
+	}
+	
+	public static String getLinkToPage(Venue venue) {
+		StringBuffer link = new StringBuffer();
+		
+		link.append("../");
+		link.append(Web.VENUE_DIR);
+		link.append(SEPARATOR);
+		link.append(getPageFileName(venue));
+		link.append(Web.HTML_EXT);
+
+		return link.toString();
+	}
+	
+	public static String getLinkToPage(Show show) {
+		StringBuffer link = new StringBuffer();
+		
+		link.append("../");
+		link.append(Web.SHOW_DIR);
+		link.append(SEPARATOR);
+		link.append(getPageFileName(show));
+		link.append(Web.HTML_EXT);
+
+		return link.toString();
+	}
+	
+	public static String getLinkTo(Artist artist) {
+		StringBuffer link = new StringBuffer();
+		
+		link.append(getLinkToPage(artist));
 		link.append(HASH);
 		link.append(artist.getId());
 		
@@ -447,11 +560,7 @@ public class Web {
 	public static String getLinkTo(Venue venue) {
 		StringBuffer link = new StringBuffer();
 		
-		link.append("../");
-		link.append(Web.VENUE_DIR);
-		link.append(SEPARATOR);
-		link.append(getPageFileName(venue));
-		link.append(Web.HTML_EXT);
+		link.append(getLinkToPage(venue));
 		link.append(HASH);
 		link.append(venue.getId());
 		
@@ -461,17 +570,13 @@ public class Web {
 	public static String getLinkTo(Show show) {
 		StringBuffer link = new StringBuffer();
 		
-		link.append("../");
-		link.append(Web.SHOW_DIR);
-		link.append(SEPARATOR);
-		link.append(getPageFileName(show));
-		link.append(Web.HTML_EXT);
+		link.append(getLinkToPage(show));
 		link.append(HASH);
 		link.append(show.getId());
 		
 		return link.toString();
 	}
-	
+		
 	public static String getEntry(Artist artist) {
 		return null;
 	}
