@@ -225,16 +225,6 @@
 	</javac>
 </target>
 
-<target name="settings_converter" depends="settings_binding">
-	<javac	destdir="${build.classes}"
-			debug="${javac.debug}"
-			deprecation="on">
-		<src path="${src.dir}" />
-		<include name="com/bolsinga/shows/settings/**" />
-		<classpath refid="jaxb_binder_classpath" />
-	</javac>
-</target>
-
 <target name="music_converter" depends="shows_converter, itunes_converter">
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
@@ -382,35 +372,6 @@
 		<arg value="${legacy_data.dir}comments.txt" />
 		<arg value="${legacy_data.dir}statics.txt" />
 		<arg value="${data.dir}diary.xml" />
-		<classpath refid="music_classpath" />
-	</java>
-</target>
-
-<target name="generateSettingsXML" depends="settings_converter, jar">
-	<java classname="com.bolsinga.shows.settings.Preferences" fork="true">
-		<sysproperty key="contact" value="bolsinga@gmail.com" />
-		<sysproperty key="ical.image.alt" value="Click here to see an VCalendar representation of the shows." />
-		<sysproperty key="ical.image.height" value="18" />
-		<sysproperty key="ical.image.url" value="http://icalshare.com/layout/iCalShare/theme-images/subscribe.gif" />
-		<sysproperty key="ical.image.width" value="14" />
-		<sysproperty key="music.ical.url" value="Shows.ics" />
-		<sysproperty key="rss.description" value="Random posts and rock shows from Greg Bolsinga" />
-		<sysproperty key="rss.image.alt" value="Click here to see an XML representation of the latest from this web site." />
-		<sysproperty key="rss.image.height" value="14" />
-		<sysproperty key="rss.image.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/xml.gif" />
-		<sysproperty key="rss.image.width" value="36" />
-		<sysproperty key="rss.root" value="http://www.io.com/~bolsinga/" />
-		<sysproperty key="rss.url" value="rss.xml" />
-		<sysproperty key="web.ico" value="http://homepage.mac.com/bolsinga/.Pictures/images/computer.ico" />
-		<sysproperty key="web.layout.css" value="layout.css" />
-		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
-		<sysproperty key="web.logo.height" value="90" />
-		<sysproperty key="web.logo.url" value="http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif" />
-		<sysproperty key="web.logo.width" value="120" />
-		<sysproperty key="diary.count" value="3" />
-		<sysproperty key="rss.count" value="20" />
-		<sysproperty key="ical.name" value="Shows" />
-		<arg value="${data.dir}settings.xml" />
 		<classpath refid="music_classpath" />
 	</java>
 </target>
