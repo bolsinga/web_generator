@@ -684,10 +684,12 @@ public class Web {
 		    ListIterator li = shows.listIterator();
 		    while (li.hasNext()) {
 			    Show show = (Show)li.next();
+
+				String showLink = links.getLinkTo(show);
 			    
 			    UL showListing = new UL();
 			    
-			    showListing.addElement(new LI().addElement(new A(links.getLinkTo(show), Util.toString(show.getDate()))));
+			    showListing.addElement(new LI().addElement(new A(showLink, Util.toString(show.getDate()))));
 			    
 			    UL showInfo = new UL();
 			    
@@ -716,7 +718,7 @@ public class Web {
 			    
 			    String comment = show.getComment();
 			    if (comment != null) {
-				    showInfo.addElement(new LI(getLinkedData(music, comment, true)));
+				    showInfo.addElement(new LI(new A(showLink, new I("Show Summary"))));
 			    }
 			    
 			    showListing.addElement(showInfo);
@@ -742,9 +744,11 @@ public class Web {
 		while (li.hasNext()) {
 			Show show = (Show)li.next();
 			
+			String showLink = links.getLinkTo(show);
+			
 			UL showListing = new UL();
 			
-			showListing.addElement(new LI().addElement(new A(links.getLinkTo(show), Util.toString(show.getDate()))));
+			showListing.addElement(new LI().addElement(new A(showLink, Util.toString(show.getDate()))));
 			
 			UL showInfo = new UL();
 			
@@ -768,7 +772,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new LI(getLinkedData(music, comment, true)));
+				showInfo.addElement(new LI(new A(showLink, new I("Show Summary"))));
 			}
 			
 			showListing.addElement(showInfo);
