@@ -88,14 +88,40 @@ public class RSS {
 			logo.setDescription(diary.getTitle());
 			
 			channelElements.add(logo);
+
+			List shows = music.getShow();
+			Collections.sort(shows, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
+			Collections.reverse(shows);
+
+			List entries = diary.getEntry();
+			Collections.sort(entries, com.bolsinga.diary.util.Util.ENTRY_COMPARATOR);
+			Collections.reverse(entries);
 			
-			com.bolsinga.diary.rss.RSS.generate(entryCount / 2, diary, objFactory, channel);
-			com.bolsinga.music.rss.RSS.generate(entryCount / 2, music, objFactory, channel);
+			com.bolsinga.music.util.Links musicLinks = com.bolsinga.music.util.Links.getLinks(false);
+			com.bolsinga.diary.util.Links diaryLinks = com.bolsinga.diary.util.Links.getLinks(false);
+
+			Vector items = new Vector(entryCount);
+			items.addAll(shows.subList(0, entryCount / 2));
+			items.addAll(entries.subList(0, entryCount / 2));
+
+			Collections.sort(items, CHANNEL_ITEM_COMPARATOR);
+			Collections.reverse(items);
+			
+			Iterator i = items.iterator();
+			while (i.hasNext()) {
+				Object o = i.next();
+				
+				if (o instanceof com.bolsinga.music.data.Show) {
+					com.bolsinga.music.rss.RSS.add((Show)o, musicLinks, objFactory, channel);
+				} else if (o instanceof com.bolsinga.diary.data.Entry) {
+					com.bolsinga.diary.rss.RSS.add((Entry)o, diaryLinks, objFactory, channel);
+				}
+			}
 
 			TRss rss = objFactory.createRss();
 			rss.setVersion(new java.math.BigDecimal(2.0));
 			rss.setChannel(channel);
-			
+						
 			// Write out to the output file.
 			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.rss.data");
 			Marshaller m = jc.createMarshaller();
@@ -109,4 +135,25 @@ public class RSS {
 			System.exit(1);
 		}
 	}
+
+	public static final Comparator CHANNEL_ITEM_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Calendar c1 = null;
+			Calendar c2 = null;
+			
+			if (o1 instanceof com.bolsinga.music.data.Show) {
+				c1 = com.bolsinga.music.util.Util.toCalendar(((Show)o1).getDate());
+			} else if (o1 instanceof com.bolsinga.diary.data.Entry) {
+				c1 = ((Entry)o1).getTimestamp();
+			}
+
+			if (o2 instanceof com.bolsinga.music.data.Show) {
+				c2 = com.bolsinga.music.util.Util.toCalendar(((Show)o2).getDate());
+			} else if (o2 instanceof com.bolsinga.diary.data.Entry) {
+				c2 = ((Entry)o2).getTimestamp();
+			}
+			
+			return c1.getTime().compareTo(c2.getTime());
+		}
+	};
 }

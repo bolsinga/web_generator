@@ -10,32 +10,16 @@ import java.util.*;
 import javax.xml.bind.JAXBException;
 
 public class RSS {
-	public static void generate(int entryCount, Music music, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
-		List items = music.getShow();
-		Show show = null;
-
-		List rssItems = channel.getItem();
-		TRssItem item = null;
-		List itemElements = null;
+	public static void add(com.bolsinga.music.data.Show show, com.bolsinga.music.util.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
+		TRssItem item = objFactory.createTRssItem();
+		List itemElements = item.getTitleOrDescriptionOrLink();
 		
-		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
-		Collections.reverse(items);
-
-		com.bolsinga.music.util.Links links = com.bolsinga.music.util.Links.getLinks(false);
+		itemElements.add(objFactory.createTRssItemTitle(getTitle(show)));
+		itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.util.Util.getRSSDate(com.bolsinga.music.util.Util.toCalendar(show.getDate()).getTime())));
+		itemElements.add(objFactory.createTRssItemLink(System.getProperty("rss.root") + links.getLinkTo(show)));
+		itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.rss.util.Util.createDescription(show.getComment(), Integer.MAX_VALUE)));
 		
-		for (int i = 0; i < entryCount; i++) {
-			show = (Show)items.get(i);
-			
-			item = objFactory.createTRssItem();
-			itemElements = item.getTitleOrDescriptionOrLink();
-			
-			itemElements.add(objFactory.createTRssItemTitle(getTitle(show)));
-			itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.util.Util.getRSSDate(com.bolsinga.music.util.Util.toCalendar(show.getDate()).getTime())));
-			itemElements.add(objFactory.createTRssItemLink(System.getProperty("rss.root") + links.getLinkTo(show)));
-			itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.rss.util.Util.createDescription(show.getComment(), Integer.MAX_VALUE)));
-			
-			rssItems.add(item);
-		}
+		channel.getItem().add(item);
 	}
 	
 	private static String getTitle(Show show) {
