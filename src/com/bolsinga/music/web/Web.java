@@ -583,6 +583,16 @@ public class Web {
 		return Encode.getEncode(music).addLinks(data, upOneLevel);
 	}
 	
+	private static HashMap sLinkedData = new HashMap();
+	
+	public static synchronized String getLinkedData(Music music, String data, boolean upOneLevel) {
+		if (!sLinkedData.containsKey(data)) {
+			sLinkedData.put(data, embedLinks(music, data, upOneLevel));
+		}
+		
+		return (String)sLinkedData.get(data);
+	}
+	
 	public static void addItem(Music music, Links links, Artist artist, Document doc) {
 		Body b = doc.getBody();
 
@@ -631,7 +641,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new LI(embedLinks(music, comment, true)));
+				showInfo.addElement(new LI(getLinkedData(music, comment, true)));
 			}
 			
 			showListing.addElement(showInfo);
@@ -683,7 +693,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new LI(embedLinks(music, comment, true)));
+				showInfo.addElement(new LI(getLinkedData(music, comment, true)));
 			}
 			
 			showListing.addElement(showInfo);
@@ -724,7 +734,7 @@ public class Web {
 
 		String comment = show.getComment();
 		if (comment != null) {
-			showInfo.addElement(new LI(embedLinks(music, comment, true)));
+			showInfo.addElement(new LI(getLinkedData(music, comment, true)));
 		}
 
 		showListing.addElement(showInfo);
