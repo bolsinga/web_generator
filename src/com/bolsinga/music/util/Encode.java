@@ -65,7 +65,7 @@ public class Encode {
 		Links standardLinks = Links.getLinks(false);
 		Links upLinks = Links.getLinks(true);
 		
-		// Don't encode any bands with punctuation in their name for now.
+		// Don't encode anything with punctuation in their name for now.
 		Pattern notEncoded = Pattern.compile(".*\\p{Punct}.*");
 		
 		ListIterator li = items.listIterator();
@@ -80,12 +80,17 @@ public class Encode {
 		items = music.getVenue();
 		Venue vitem = null;
 		
+		// Don't use venues with lower case names, these are 'vague' venues.
+		Pattern startsLowerCase = Pattern.compile("\\p{Lower}.*");
+		
 		li = items.listIterator();
 		while (li.hasNext()) {
 			vitem = (Venue)li.next();
 			
 			if (!notEncoded.matcher(vitem.getName()).matches()) {
-				fEncodings.add(new Data(vitem, standardLinks, upLinks));
+				if (!startsLowerCase.matcher(vitem.getName()).matches()) {
+					fEncodings.add(new Data(vitem, standardLinks, upLinks));
+				}
 			}
 		}
 	}
