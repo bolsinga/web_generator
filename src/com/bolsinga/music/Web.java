@@ -30,7 +30,6 @@ abstract class DocumentCreator {
 	protected abstract String getTitle();
 
 	protected abstract boolean needNewDocument();
-	protected abstract XhtmlDocument createDocument(String title);
     
     protected boolean needNewSubsection() {
         return false;
@@ -40,7 +39,8 @@ abstract class DocumentCreator {
         return null;
     }
     
-	protected abstract String getCurrentPath();
+	protected abstract String getLastPath();
+	protected abstract String getCurrentLetter();
 	protected abstract Element addIndexNavigator();
 	
 	public void close() {
@@ -51,11 +51,11 @@ abstract class DocumentCreator {
 	}
 	
 	protected div getMainDiv() {
-		if (needNewDocument()) {
+		if ((fDocument == null) || needNewDocument()) {
             close();
             
 			String title = getTitle();
-			fDocument = createDocument(title);
+			fDocument = Web.createHTMLDocument(fLinks, title);
 			
 			div headerDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_HEADER);
 			headerDiv.addElement(new h1().addElement(title));
@@ -70,11 +70,11 @@ abstract class DocumentCreator {
 	}
 
     protected div getSubsection() {
-        if (needNewSubsection()) {
+        div mainDiv = getMainDiv();
+        if ((fSubsection == null) || needNewSubsection()) {
             if (fSubsection != null) {
-                getMainDiv().addElement(fSubsection);
+                mainDiv.addElement(fSubsection);
             }
-
             fSubsection = createSubsection();
         }
         return fSubsection;
@@ -84,12 +84,13 @@ abstract class DocumentCreator {
 		if (fSubsection != null) {
 			// Write out the last subsection's data if necessary
 			fMainDiv.addElement(fSubsection);
+            fSubsection = null;
 		}
 		
 		fDocument.getBody().addElement(fMainDiv);
 
 		try {
-			File f = new File(fOutputDir, getCurrentPath());
+			File f = new File(fOutputDir, getLastPath());
 			File parent = new File(f.getParent());
 			if (!parent.exists()) {
 				if (!parent.mkdirs()) {
@@ -106,10 +107,10 @@ abstract class DocumentCreator {
 		}
 	}
 	
-	protected String getTitle(String letter, String type) {
+	protected String getTitle(String type) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("'");
-		sb.append(letter);
+		sb.append(getCurrentLetter());
 		sb.append("' ");
 		sb.append(type);
 		return sb.toString();
@@ -122,42 +123,35 @@ abstract class DocumentCreator {
 }
 
 class ArtistDocumentCreator extends DocumentCreator {
-	Artist fDocArtist = null;
-	Artist fArtist = null;
-    String fArtistName = null;
+	Artist fLastArtist = null;
+	Artist fCurArtist = null;
 	
 	public ArtistDocumentCreator(Music music, Links links, String outputDir, String program) {
 		super(music, links, outputDir, program);
 	}
 
 	public void add(Music music, Links links, Artist item) {
-		fArtist = item;
-        getSubsection().addElement(Web.addItem(music, links, item));
+		fCurArtist = item;
+        getSubsection().addElement(Web.addItem(music, links, fCurArtist));
+        fLastArtist = fCurArtist;
     }
 	
 	protected String getTitle() {
-		return getTitle(fLinks.getPageFileName(fArtist), "Artists");
+		return getTitle("Artists");
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocArtist == null) || (!fLinks.getPageFileName(fDocArtist).equals(fLinks.getPageFileName(fArtist)));
-	}
-
-	protected XhtmlDocument createDocument(String title) {
-		fDocArtist = fArtist;
-		return Web.createHTMLDocument(fLinks, title);
+		return ((fLastArtist == null) || !fLinks.getPageFileName(fLastArtist).equals(getCurrentLetter()));
 	}
 	
     protected boolean needNewSubsection() {
-        return (fArtistName == null) || (!fArtist.getName().equals(fArtistName));
+        return ((fLastArtist == null) || !fLastArtist.getName().equals(fCurArtist.getName()));
     }
 
     protected div createSubsection() {
-        fArtistName = fArtist.getName();
-
         a an = new a(); // named target
-        an.setName(fArtist.getId());
-        an.addElement("t", fArtistName);
+        an.setName(fCurArtist.getId());
+        an.addElement("t", fCurArtist.getName());
 
         div subDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_SUB);
         subDiv.addElement(new h2().addElement(an));
@@ -165,52 +159,49 @@ class ArtistDocumentCreator extends DocumentCreator {
         return subDiv;
     }
 
-	protected String getCurrentPath() {
-		return fLinks.getPagePath(fDocArtist);
+	protected String getLastPath() {
+		return fLinks.getPagePath(fLastArtist);
 	}
 	
+	protected String getCurrentLetter() {
+        return fLinks.getPageFileName(fCurArtist);
+    }
+    
 	protected Element addIndexNavigator() {
-		return Web.addIndexNavigator(fMusic, fLinks, fDocArtist);
+		return Web.addArtistIndexNavigator(fMusic, fLinks, getCurrentLetter());
 	}
 }
 
 class VenueDocumentCreator extends DocumentCreator {
-	Venue fDocVenue = null;
-	Venue fVenue = null;
-    String fVenueName = null;
+	Venue fLastVenue = null;
+	Venue fCurVenue = null;
 	
 	public VenueDocumentCreator(Music music, Links links, String outputDir, String program) {
 		super(music, links, outputDir, program);
 	}
 
 	public void add(Music music, Links links, Venue item) {
-		fVenue = item;
-		getSubsection().addElement(Web.addItem(music, links, item));
+		fCurVenue = item;
+		getSubsection().addElement(Web.addItem(music, links, fCurVenue));
+		fLastVenue = fCurVenue;
     }
 	
 	protected String getTitle() {
-		return getTitle(fLinks.getPageFileName(fVenue), "Venues");
+		return getTitle("Venues");
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocVenue == null) || (!fLinks.getPageFileName(fDocVenue).equals(fLinks.getPageFileName(fVenue)));
-	}
-
-	protected XhtmlDocument createDocument(String title) {
-		fDocVenue = fVenue;
-		return Web.createHTMLDocument(fLinks, title);
+		return (fLastVenue == null) || (!fLinks.getPageFileName(fLastVenue).equals(getCurrentLetter()));
 	}
 	
     protected boolean needNewSubsection() {
-        return (fVenueName == null) || (!fVenue.getName().equals(fVenueName));
+        return (fLastVenue == null) || (!fLastVenue.getName().equals(fCurVenue.getName()));
     }
 
     protected div createSubsection() {
-        fVenueName = fVenue.getName();
-
         a an = new a(); // named target
-        an.setName(fVenue.getId());
-        an.addElement("t", fVenueName);
+        an.setName(fCurVenue.getId());
+        an.addElement("t", fCurVenue.getName());
 
         div subDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_SUB);
         subDiv.addElement(new h2().addElement(an));
@@ -218,63 +209,62 @@ class VenueDocumentCreator extends DocumentCreator {
         return subDiv;
     }
 
-	protected String getCurrentPath() {
-		return fLinks.getPagePath(fDocVenue);
+	protected String getLastPath() {
+		return fLinks.getPagePath(fLastVenue);
 	}
+
+	protected String getCurrentLetter() {
+        return fLinks.getPageFileName(fCurVenue);
+    }
 	
 	protected Element addIndexNavigator() {
-		return Web.addIndexNavigator(fMusic, fLinks, fDocVenue);
+		return Web.addVenueIndexNavigator(fMusic, fLinks, getCurrentLetter());
 	}
 }
 
 class ShowDocumentCreator extends DocumentCreator {
-	Show fDocShow = null;
-	Show fShow = null;
-	com.bolsinga.music.data.Date fDate = null;
-	
+	Show fLastShow = null;
+	Show fCurShow = null;
+    
 	public ShowDocumentCreator(Music music, Links links, String outputDir, String program) {
 		super(music, links, outputDir, program);
 	}
 	
 	public void add(Music music, Show item) {
-		fShow = item;
-		getSubsection().addElement(Web.addItem(music, fLinks, fShow));
+		fCurShow = item;
+		getSubsection().addElement(Web.addItem(music, fLinks, fCurShow));
+		fLastShow = fCurShow;
 	}
 	
 	protected String getTitle() {
-		return getTitle(fLinks.getPageFileName(fShow), "Dates");
+		return getTitle("Dates");
 	}
     
 	protected boolean needNewDocument() {
-		return (fDocShow == null) || (!fLinks.getPageFileName(fDocShow).equals(fLinks.getPageFileName(fShow)));
-	}
-
-	protected XhtmlDocument createDocument(String title) {
-		fDocShow = fShow;
-		fDate = null;
-		fSubsection = null;
-		return Web.createHTMLDocument(fLinks, title);
+		return (fLastShow == null) || (!fLinks.getPageFileName(fLastShow).equals(getCurrentLetter()));
 	}
 	
 	protected boolean needNewSubsection() {
-        return (fDate == null) || (!Util.toMonth(fShow.getDate()).equals(Util.toMonth(fDate)));
+        return (fLastShow == null) || (!Util.toMonth(fLastShow.getDate()).equals(Util.toMonth(fCurShow.getDate())));
     }
     
     protected div createSubsection() {
-        fDate = fShow.getDate();
-
         div subDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_SUB);
-        subDiv.addElement(new h2().addElement(Util.toMonth(fDate)));
+        subDiv.addElement(new h2().addElement(Util.toMonth(fCurShow.getDate())));
         
         return subDiv;
     }
 
-	protected String getCurrentPath() {
-		return fLinks.getPagePath(fDocShow);
+	protected String getLastPath() {
+		return fLinks.getPagePath(fLastShow);
 	}
 	
+	protected String getCurrentLetter() {
+        return fLinks.getPageFileName(fCurShow);
+    }
+
 	protected Element addIndexNavigator() {
-		return Web.addIndexNavigator(fMusic, fLinks, fDocShow);
+		return Web.addShowIndexNavigator(fMusic, fLinks, getCurrentLetter());
 	}
 }
 
@@ -308,11 +298,7 @@ class StatisticsCreator extends DocumentCreator {
 		return true;
 	}
 
-	protected XhtmlDocument createDocument(String title) {
-		return Web.createHTMLDocument(fLinks, title);
-	}
-
-	protected String getCurrentPath() {
+	protected String getLastPath() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(fDirectory);
 		sb.append(File.separator);
@@ -320,6 +306,10 @@ class StatisticsCreator extends DocumentCreator {
 		sb.append(Links.HTML_EXT);
 		return sb.toString();
 	}
+
+	protected String getCurrentLetter() {
+        return null;
+    }
 	
 	protected Element addIndexNavigator() {
 		return null;
@@ -364,37 +354,37 @@ class TracksStatisticsCreator extends StatisticsCreator {
 }
 
 class TracksDocumentCreator extends DocumentCreator {
-	Album fDocAlbum = null;
-	Album fAlbum = null;
+	Album fLastAlbum = null;
+	Album fCurAlbum = null;
 	
 	public TracksDocumentCreator(Music music, Links links, String outputDir, String program) {
 		super(music, links, outputDir, program);
 	}
 	
 	public void add(Music music, Links links, Album item) {
-		fAlbum = item;
-        getMainDiv().addElement(Web.addItem(music, links, item));
+		fCurAlbum = item;
+        getMainDiv().addElement(Web.addItem(music, links, fCurAlbum));
+        fLastAlbum = fCurAlbum;
     }
 	
 	protected String getTitle() {
-		return getTitle(fLinks.getPageFileName(fAlbum), "Tracks");
+		return getTitle("Tracks");
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocAlbum == null) || (!fLinks.getPageFileName(fDocAlbum).equals(fLinks.getPageFileName(fAlbum)));
+		return (fLastAlbum == null) || (!fLinks.getPageFileName(fLastAlbum).equals(getCurrentLetter()));
 	}
 
-	protected XhtmlDocument createDocument(String title) {
-		fDocAlbum = fAlbum;
-		return Web.createHTMLDocument(fLinks, title);
-	}
-
-	protected String getCurrentPath() {
-		return fLinks.getPagePath(fDocAlbum);
+	protected String getLastPath() {
+		return fLinks.getPagePath(fLastAlbum);
 	}
 	
+	protected String getCurrentLetter() {
+        return fLinks.getPageFileName(fCurAlbum);
+    }
+
 	protected Element addIndexNavigator() {
-		return Web.addIndexNavigator(fMusic, fLinks, fDocAlbum);
+		return Web.addAlbumIndexNavigator(fMusic, fLinks, getCurrentLetter());
 	}
 }
 
@@ -1047,7 +1037,7 @@ public class Web {
 		return albumsDiv;
 	}
 	
-	public static Element addIndexNavigator(Music music, Links links, Artist artist) {
+	public static Element addArtistIndexNavigator(Music music, Links links, String curLetter) {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_INDEX);
 				
 		java.util.Map m = new TreeMap();
@@ -1065,7 +1055,7 @@ public class Web {
 		iterator = m.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String)iterator.next();
-			if (s.equals(links.getPageFileName(artist))) {
+			if (s.equals(curLetter)) {
 				list.addElement(new li(s));
 			} else {
 				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s)));
@@ -1077,7 +1067,7 @@ public class Web {
 		return d;
 	}
 	
-	public static Element addIndexNavigator(Music music, Links links, Venue venue) {
+	public static Element addVenueIndexNavigator(Music music, Links links, String curLetter) {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_INDEX);
 		
 		java.util.Map m = new TreeMap();
@@ -1095,7 +1085,7 @@ public class Web {
 		iterator = m.keySet().iterator();
 		while (iterator.hasNext()) {
 			String v = (String)iterator.next();
-			if (v.equals(links.getPageFileName(venue))) {
+			if (v.equals(curLetter)) {
 				list.addElement(new li(v));
 			} else {
 				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(v), v)));
@@ -1107,7 +1097,7 @@ public class Web {
 		return d;
 	}
 
-	public static Element addIndexNavigator(Music music, Links links, Album album) {
+	public static Element addAlbumIndexNavigator(Music music, Links links, String curLetter) {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.TRACKS_INDEX);
 		
 		java.util.Map m = new TreeMap();
@@ -1125,7 +1115,7 @@ public class Web {
 		iterator = m.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String)iterator.next();
-			if (s.equals(links.getPageFileName(album))) {
+			if (s.equals(curLetter)) {
 				list.addElement(new li(s));
 			} else {
 				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s)));
@@ -1180,7 +1170,7 @@ public class Web {
 		return t;
 	}
 	
-	public static Element addIndexNavigator(Music music, Links links, Show show) {
+	public static Element addShowIndexNavigator(Music music, Links links, String curLetter) {
 		div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_INDEX);
 		
 		java.util.Map m = new TreeMap();
@@ -1198,7 +1188,7 @@ public class Web {
 		iterator = m.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String)iterator.next();
-			if (s.equals(links.getPageFileName(show))) {
+			if (s.equals(curLetter)) {
 				list.addElement(new li(s));
 			} else {
 				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s)));
