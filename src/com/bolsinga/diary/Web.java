@@ -39,7 +39,7 @@ class DiaryDocumentCreator {
 			Div headerDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_HEADER);
 			headerDiv.addElement(new H1().addElement(title));
 			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
-			headerDiv.addElement(addWebNavigator(fProgram));
+			headerDiv.addElement(addWebNavigator(fProgram, fLinks));
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
 			
@@ -76,7 +76,7 @@ class DiaryDocumentCreator {
 		
 		Div footerDiv = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_FOOTER);
 		footerDiv.addElement(addIndexNavigator());
-		footerDiv.addElement(addWebNavigator(fProgram));
+		footerDiv.addElement(addWebNavigator(fProgram, fLinks));
 		fDocument.getBody().addElement(footerDiv);
 		
 		try {
@@ -125,7 +125,7 @@ class DiaryDocumentCreator {
 		return div;
 	}
 	
-	private Element addWebNavigator(String program) {
+	private Element addWebNavigator(String program, Links links) {
 		Div div = com.bolsinga.web.util.Util.createDiv(CSS.DIARY_MENU);
 		
 		StringBuffer sb = new StringBuffer();
@@ -147,9 +147,8 @@ class DiaryDocumentCreator {
 		sb.append(a.toString());
 		sb.append(" ");
 
-		a = com.bolsinga.web.util.Util.createInternalA(System.getProperty("diary.root"), "Home");
+		a = links.getLinkToHome();
 		sb.append(a.toString());
-		sb.append(" ");
 
 		div.addElement(sb.toString());
 		

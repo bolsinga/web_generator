@@ -120,4 +120,14 @@ public class Links {
 		result.setHref(getStyleSheetLink());
 		return result;
 	}
+	
+	public A getLinkToHome() {
+		StringBuffer url = new StringBuffer();
+		if (fUpOneLevel) {
+			url.append("..");
+			url.append(File.separator);
+		}
+		url.append("index.html");
+		return com.bolsinga.web.util.Util.createInternalA(url.toString(), "Home");
+	}
 }
