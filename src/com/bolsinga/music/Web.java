@@ -276,18 +276,17 @@ class TracksStatisticsCreator extends StatisticsCreator {
         div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.TRACKS_MENU);
                 
         d.addElement(new h4(com.bolsinga.web.util.Util.getResourceString("view")));
-                
-        ul list = new ul();
-                
+
+        Vector e = new Vector();
         if (fTracksStats) {
-            com.bolsinga.web.util.Util.addListItem(list, new StringElement( com.bolsinga.web.util.Util.getResourceString("tracks")));
-            com.bolsinga.web.util.Util.addListItem(list, fLinks.getAlbumsLink());
+            e.add(new StringElement(com.bolsinga.web.util.Util.getResourceString("tracks")));
+            e.add(fLinks.getAlbumsLink());
         } else {
-            com.bolsinga.web.util.Util.addListItem(list, fLinks.getTracksLink());
-            com.bolsinga.web.util.Util.addListItem(list, new StringElement(com.bolsinga.web.util.Util.getResourceString("albums")));
+            e.add(fLinks.getTracksLink());
+            e.add(new StringElement(com.bolsinga.web.util.Util.getResourceString("albums")));
         }
                 
-        d.addElement(list);
+        d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         return d;
     }
@@ -653,45 +652,45 @@ public class Web {
         Object[] genArgs = { music.getTimestamp().getTime() };
         previewMenu.addElement(new h3(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), genArgs)));
 
-        ul list = new ul();
+        Vector e = new Vector();
                 
         StringBuffer sb = new StringBuffer();
         sb.append(music.getArtist().size());
         sb.append(" ");
         sb.append(links.getArtistLink());
-        com.bolsinga.web.util.Util.addListItem(list, new StringElement(sb.toString()));
+        e.add(new StringElement(sb.toString()));
 
         sb = new StringBuffer();
         sb.append(music.getShow().size());
         sb.append(" ");
         sb.append(links.getShowLink());
-        com.bolsinga.web.util.Util.addListItem(list, new StringElement(sb.toString()));
+        e.add(new StringElement(sb.toString()));
 
         sb = new StringBuffer();
         sb.append(music.getVenue().size());
         sb.append(" ");
         sb.append(links.getVenueLink());
-        com.bolsinga.web.util.Util.addListItem(list, new StringElement(sb.toString()));
+        e.add(new StringElement(sb.toString()));
 
         sb = new StringBuffer();
         sb.append(Lookup.getLookup(music).getCities().size());
         sb.append(" ");
         sb.append(links.getCityLink());
-        com.bolsinga.web.util.Util.addListItem(list, new StringElement(sb.toString()));
+        e.add(new StringElement(sb.toString()));
 
         sb = new StringBuffer();
         sb.append(music.getSong().size());
         sb.append(" ");
         sb.append(links.getTracksLink());
-        com.bolsinga.web.util.Util.addListItem(list, new StringElement(sb.toString()));
+        e.add(new StringElement(sb.toString()));
 
         sb = new StringBuffer();
         sb.append(music.getAlbum().size());
         sb.append(" ");
         sb.append(links.getAlbumsLink());
-        com.bolsinga.web.util.Util.addListItem(list, new StringElement(sb.toString()));
+        e.add(new StringElement(sb.toString()));
 
-        previewMenu.addElement(list);
+        previewMenu.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         previewMenu.addElement(links.getICalLink());
                 
@@ -735,19 +734,16 @@ public class Web {
     }
         
     public static Element addItem(Music music, Links links, Artist artist) {
-        ul list = new ul();
-        list.setClass(com.bolsinga.web.util.CSS.ARTIST_ITEM);
-        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-
-        li i = null;
+        // CSS.ARTIST_ITEM
+        Vector e = new Vector();
 
         if (artist.getAlbum().size() > 0) {
-            com.bolsinga.web.util.Util.addListItem(list, addTracks(music, links, artist));
+            e.add(Web.addTracks(music, links, artist));
         }
                 
         Collection relations = Lookup.getLookup(music).getRelations(artist);
         if (relations != null) {
-            com.bolsinga.web.util.Util.addListItem(list, addRelations(music, links, artist));
+            e.add(Web.addRelations(music, links, artist));
         }
 
         List shows = Lookup.getLookup(music).getShows(artist);
@@ -761,54 +757,50 @@ public class Web {
                 div showDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_SHOW);
                                 
                 showDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.createInternalA(showLink, Util.toString(show.getDate()))));
-                            
-                ul showInfo = new ul();
-                            
-                li listItem = new li();
+
+                Vector se = new Vector();
+                StringBuffer sb = new StringBuffer();
                 ListIterator bi = show.getArtist().listIterator();
                 while (bi.hasNext()) {
                     Artist performer = (Artist)bi.next();
                                     
                     if (artist.equals(performer)) {
-                        listItem.addElement(performer.getName());
+                        sb.append(performer.getName());
                     } else {
-                        listItem.addElement(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
+                        sb.append(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
                     }
                                     
                     if (bi.hasNext()) {
-                        listItem.addElement(", ");
+                        sb.append(", ");
                     }
                 }
-                showInfo.addElement(listItem);
+                se.add(new StringElement(sb.toString()));
                             
                 Venue venue = (Venue)show.getVenue();
                 a venueA = com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(venue), venue.getName());
                 Location l = (Location)venue.getLocation();
-                showInfo.addElement(new li().addElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
+                se.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
                             
                 String comment = show.getComment();
                 if (comment != null) {
-                    com.bolsinga.web.util.Util.addListItem(showInfo, com.bolsinga.web.util.Util.createInternalA(showLink, com.bolsinga.web.util.Util.getResourceString("showsummary")));
+                    se.add(com.bolsinga.web.util.Util.createInternalA(showLink, com.bolsinga.web.util.Util.getResourceString("showsummary")));
                 }
                             
-                showDiv.addElement(showInfo);
-                com.bolsinga.web.util.Util.addListItem(list, showDiv);
+                showDiv.addElement(com.bolsinga.web.util.Util.createUnorderedList(se));
+                e.add(showDiv);
             }
         }
                 
-        return list;
+        return com.bolsinga.web.util.Util.createUnorderedList(e);
     }
         
     public static Element addItem(Music music, Links links, Venue venue) {
-        ul list = new ul();
-        list.setClass(com.bolsinga.web.util.CSS.VENUE_ITEM);
-        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-
-        li i = null;
+        // CSS.VENUE_ITEM
+        Vector e = new Vector();
                 
         Collection relations = Lookup.getLookup(music).getRelations(venue);
         if (relations != null) {
-            com.bolsinga.web.util.Util.addListItem(list, addRelations(music, links, venue));
+            e.add(Web.addRelations(music, links, venue));
         }
 
         List shows = Lookup.getLookup(music).getShows(venue);
@@ -821,86 +813,77 @@ public class Web {
             div showDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_SHOW);
                         
             showDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.createInternalA(showLink, Util.toString(show.getDate()))));
-                        
-            ul showInfo = new ul();
-                        
-            li listItem = new li();
+
+            Vector se = new Vector();
+            StringBuffer sb = new StringBuffer();
             ListIterator bi = show.getArtist().listIterator();
             while (bi.hasNext()) {
                 Artist performer = (Artist)bi.next();
-                                
-                listItem.addElement(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
+                sb.append(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
                                 
                 if (bi.hasNext()) {
-                    listItem.addElement(", ");
+                    sb.append(", ");
                 }
             }
-            showInfo.addElement(listItem);
+            se.add(new StringElement(sb.toString()));
                         
             Location l = (Location)venue.getLocation();
-            com.bolsinga.web.util.Util.addListItem(showInfo, new StringElement(venue.getName() + ", " + l.getCity() + ", " + l.getState()));
+            se.add(new StringElement(venue.getName() + ", " + l.getCity() + ", " + l.getState()));
                         
             String comment = show.getComment();
             if (comment != null) {
-                com.bolsinga.web.util.Util.addListItem(showInfo, com.bolsinga.web.util.Util.createInternalA(showLink, com.bolsinga.web.util.Util.getResourceString("showsummary")));
+                se.add(com.bolsinga.web.util.Util.createInternalA(showLink, com.bolsinga.web.util.Util.getResourceString("showsummary")));
             }
                         
-            showDiv.addElement(showInfo);
-            com.bolsinga.web.util.Util.addListItem(list, showDiv);                        
+            showDiv.addElement(com.bolsinga.web.util.Util.createUnorderedList(se));
+            e.add(showDiv);                        
         }
                 
-        return list;
+        return com.bolsinga.web.util.Util.createUnorderedList(e);
     }
         
     private static ul getShowListing(Links links, Show show) {
-        ul showInfo = new ul();
-                
-        li listItem = new li();
+        Vector e = new Vector();
+        StringBuffer sb = new StringBuffer();
         ListIterator bi = show.getArtist().listIterator();
         while (bi.hasNext()) {
             Artist performer = (Artist)bi.next();
                         
-            listItem.addElement(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
+            sb.append(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
                         
             if (bi.hasNext()) {
-                listItem.addElement(", ");
+                sb.append(", ");
             }
         }
-        showInfo.addElement(listItem);
+        e.add(new StringElement(sb.toString()));
                 
         Venue venue = (Venue)show.getVenue();
         a venueA = com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(venue), venue.getName());
         Location l = (Location)venue.getLocation();
-        com.bolsinga.web.util.Util.addListItem(showInfo, new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
+        e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
                 
-        return showInfo;
+        return com.bolsinga.web.util.Util.createUnorderedList(e);
     }
         
     public static Element addItem(Music music, Links links, Show show) {
-        ul list = new ul();
-        list.setClass(com.bolsinga.web.util.CSS.SHOW_ITEM);
-        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+        // CSS.SHOW_ITEM
+        Vector e = new Vector();
 
-        li i = null;
+        e.add(new h3().addElement(com.bolsinga.web.util.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
 
-        com.bolsinga.web.util.Util.addListItem(list, new h3().addElement(com.bolsinga.web.util.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
-
-        com.bolsinga.web.util.Util.addListItem(list, getShowListing(links, show));
+        e.add(Web.getShowListing(links, show));
 
         String comment = show.getComment();
         if (comment != null) {
-            com.bolsinga.web.util.Util.addListItem(list, com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_COMMENT).addElement(getLinkedData(music, comment, true)));
+            e.add(com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_COMMENT).addElement(getLinkedData(music, comment, true)));
         }
                 
-        return list;
+        return com.bolsinga.web.util.Util.createUnorderedList(e);
     }
 
     public static Element addItem(Music music, Links links, Album album) {
-        ul list = new ul();
-        list.setClass(com.bolsinga.web.util.CSS.TRACKS_ITEM);
-        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-
-        li i = null;
+        // CSS.TRACKS_ITEM
+        Vector e = new Vector();
                 
         StringBuffer sb;
         Artist artist = null;
@@ -922,7 +905,7 @@ public class Web {
             sb.append(")");
         }
 
-        com.bolsinga.web.util.Util.addListItem(list, new h2().addElement(sb.toString()));
+        e.add(new h2().addElement(sb.toString()));
                 
         ol albumListing = new ol();
 
@@ -949,27 +932,27 @@ public class Web {
             albumListing.addElement(new li(sb.toString()));
         }
 
-        com.bolsinga.web.util.Util.addListItem(list, albumListing);
+        e.add(albumListing);
 
-        return list;
+        return com.bolsinga.web.util.Util.createUnorderedList(e);
     }
         
     public static div addRelations(Music music, Links links, Artist artist) {
         div relDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_RELATION);
                         
         relDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.getResourceString("seealso")));
-                
-        ul related = new ul();
+
+        Vector e = new Vector();
         Iterator iterator = Lookup.getLookup(music).getRelations(artist).iterator();
         while (iterator.hasNext()) {
             Artist art = (Artist)iterator.next();
             if (art.equals(artist)) {
-                com.bolsinga.web.util.Util.addListItem(related, new StringElement(art.getName()));
+                e.add(new StringElement(art.getName()));
             } else {
-                com.bolsinga.web.util.Util.addListItem(related, com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(art), art.getName()));
+                e.add(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(art), art.getName()));
             }
         }
-        relDiv.addElement(related);
+        relDiv.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
 
         return relDiv;
     }
@@ -978,18 +961,18 @@ public class Web {
         div relDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_RELATION);
 
         relDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.getResourceString("seealso")));
-                
-        ul related = new ul();
+
+        Vector e = new Vector();
         Iterator iterator = Lookup.getLookup(music).getRelations(venue).iterator();
         while (iterator.hasNext()) {
             Venue v = (Venue)iterator.next();
             if (v.equals(venue)) {
-                com.bolsinga.web.util.Util.addListItem(related, new StringElement(v.getName()));
+                e.add(new StringElement(v.getName()));
             } else {
-                com.bolsinga.web.util.Util.addListItem(related, com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(v), v.getName()));
+                e.add(com.bolsinga.web.util.Util.createInternalA(links.getLinkTo(v), v.getName()));
             }
         }
-        relDiv.addElement(related);
+        relDiv.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
 
         return relDiv;
     }
@@ -998,8 +981,8 @@ public class Web {
         div albumsDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_TRACKS);
                         
         albumsDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.getResourceString("albums")));
-                
-        ul related = new ul();
+
+        Vector e = new Vector();
         Iterator iterator = artist.getAlbum().iterator();
         while (iterator.hasNext()) {
             Album alb = (Album)iterator.next();
@@ -1012,9 +995,9 @@ public class Web {
                 sb.append(albumRelease.getYear());
                 sb.append(")");
             }
-            com.bolsinga.web.util.Util.addListItem(related, new StringElement(sb.toString()));
+            e.add(new StringElement(sb.toString()));
         }
-        albumsDiv.addElement(related);
+        albumsDiv.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
 
         return albumsDiv;
     }
@@ -1032,19 +1015,17 @@ public class Web {
             }
         }
 
-        ul list = new ul();
-
+        Vector e = new Vector();
         iterator = m.keySet().iterator();
         while (iterator.hasNext()) {
             String s = (String)iterator.next();
             if (s.equals(curLetter)) {
-                com.bolsinga.web.util.Util.addListItem(list, new StringElement(s));
+                e.add(new StringElement(s));
             } else {
-                com.bolsinga.web.util.Util.addListItem(list, com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
+                e.add(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
             }
         }
-                
-        d.addElement(list);
+        d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         return d;
     }
@@ -1062,19 +1043,17 @@ public class Web {
             }
         }
 
-        ul list = new ul();
-                
+        Vector e = new Vector();
         iterator = m.keySet().iterator();
         while (iterator.hasNext()) {
             String v = (String)iterator.next();
             if (v.equals(curLetter)) {
-                com.bolsinga.web.util.Util.addListItem(list, new StringElement(v));
+                e.add(new StringElement(v));
             } else {
-                com.bolsinga.web.util.Util.addListItem(list, com.bolsinga.web.util.Util.createInternalA((String)m.get(v), v));
+                e.add(com.bolsinga.web.util.Util.createInternalA((String)m.get(v), v));
             }
         }
-                
-        d.addElement(list);
+        d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         return d;
     }
@@ -1092,19 +1071,17 @@ public class Web {
             }
         }
 
-        ul list = new ul();
-                
+        Vector e = new Vector();
         iterator = m.keySet().iterator();
         while (iterator.hasNext()) {
             String s = (String)iterator.next();
             if (s.equals(curLetter)) {
-                com.bolsinga.web.util.Util.addListItem(list, new StringElement(s));
+                e.add(new StringElement(s));
             } else {
-                com.bolsinga.web.util.Util.addListItem(list, com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
+                e.add(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
             }
         }
-                
-        d.addElement(list);
+        d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         return d;
     }
@@ -1165,21 +1142,18 @@ public class Web {
             }
         }
 
-        ul list = new ul();
-                
+        Vector e = new Vector();
         iterator = m.keySet().iterator();
         while (iterator.hasNext()) {
             String s = (String)iterator.next();
             if (s.equals(curLetter)) {
-                com.bolsinga.web.util.Util.addListItem(list, new StringElement(s));
+                e.add(new StringElement(s));
             } else {
-                com.bolsinga.web.util.Util.addListItem(list, com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
+                e.add(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
             }
         }
-
-        com.bolsinga.web.util.Util.addListItem(list, links.getICalLink());
-                
-        d.addElement(list);
+        e.add(links.getICalLink());
+        d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         return d;
     }

@@ -95,10 +95,19 @@ public class Util {
         return an;
     }
 
-    public static void addListItem(ul list, Element data) {
-        li item = new li(data);
-        item.setPrettyPrint(Util.getPrettyPrint());
-        list.addElement(new li(data));
+    public static ul createUnorderedList(Vector elements) {
+        ul list = new ul();
+        list.setPrettyPrint(Util.getPrettyPrint());
+
+        Iterator i = elements.iterator();
+        while (i.hasNext()) {
+            Element e = (Element)i.next();
+            li item = new li(e);
+            item.setPrettyPrint(Util.getPrettyPrint());
+            list.addElement(item);
+        }
+
+        return list;
     }
 
     public static void createSettings(String sourceFile) {

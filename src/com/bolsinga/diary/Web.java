@@ -89,22 +89,19 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
                 m.put(letter, fLinks.getLinkToPage(e));
             }
         }
-                
-        ul list = new ul();
 
+        Vector e = new Vector();
         i = m.keySet().iterator();
         while (i.hasNext()) {
             String s = (String)i.next();
             if (s.equals(getCurrentLetter())) {
-                com.bolsinga.web.util.Util.addListItem(list, new StringElement(s));
+                e.add(new StringElement(s));
             } else {
-                com.bolsinga.web.util.Util.addListItem(list, com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
+                e.add(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
             }
         }
-        
-        com.bolsinga.web.util.Util.addListItem(list, fLinks.getRSSLink());
-                
-        d.addElement(list);
+        e.add(fLinks.getRSSLink());
+        d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         return d;
     }
@@ -115,14 +112,12 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
         Object[] args = { Calendar.getInstance().getTime() };
         d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
 
-        ul list = new ul();
+        Vector e = new Vector();
                 
         Object[] args2 = { com.bolsinga.web.util.Util.getSettings().getContact(), program };
-        com.bolsinga.web.util.Util.addListItem(list, new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
-
-        com.bolsinga.web.util.Util.addListItem(list, links.getLinkToHome());
-
-        d.addElement(list);
+        e.add(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
+        e.add(links.getLinkToHome());
+        d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         return d;
     }
@@ -331,15 +326,11 @@ public class Web {
     }
 
     public static ul addItem(Music music, Entry entry, boolean upOneLevel) {
-        ul list = new ul();
-        list.setClass(com.bolsinga.web.util.CSS.DIARY_ENTRY);
-        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-
-        com.bolsinga.web.util.Util.addListItem(list, new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
-
-        com.bolsinga.web.util.Util.addListItem(list, new StringElement(Web.encodedComment(music, entry, upOneLevel)));
-
-        return list;
+        // CSS.DIARY_ENTRY
+        Vector e = new Vector();
+        e.add(new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
+        e.add(new StringElement(Web.encodedComment(music, entry, upOneLevel)));
+        return com.bolsinga.web.util.Util.createUnorderedList(e);
     }
         
     private static String encodedComment(Music music, Entry entry, boolean upOneLevel) {

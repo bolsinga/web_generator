@@ -45,24 +45,16 @@ public class Links {
         Object[] args = { music.getTimestamp().getTime() };
         d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
 
-        ul list = new ul();
-
+        Vector e = new Vector();
         Object[] args2 = { com.bolsinga.web.util.Util.getSettings().getContact(), program };
-        com.bolsinga.web.util.Util.addListItem(list, new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
-
-        com.bolsinga.web.util.Util.addListItem(list, getLinkToHome());
-
-        com.bolsinga.web.util.Util.addListItem(list, getArtistLink());
-
-        com.bolsinga.web.util.Util.addListItem(list, getTracksLink());
-
-        com.bolsinga.web.util.Util.addListItem(list, getShowLink());
-
-        com.bolsinga.web.util.Util.addListItem(list, getVenueLink());
-
-        com.bolsinga.web.util.Util.addListItem(list, getCityLink());
-
-        d.addElement(list);
+        e.add(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
+        e.add(getLinkToHome());
+        e.add(getArtistLink());
+        e.add(getTracksLink());
+        e.add(getShowLink());
+        e.add(getVenueLink());
+        e.add(getCityLink());
+        d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
                 
         return d;
     }
