@@ -254,7 +254,7 @@ public class ITunes {
 	public static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {
 	    Album result = null;
 	    if (name == null) {
-			name = "Unknown";
+			name = "Unknown - " + artist.getName();
 	    }
 	    if (!sAlbums.containsKey(name)) {
 			result = objFactory.createAlbum();
