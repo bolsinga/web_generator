@@ -16,18 +16,8 @@ public class Util {
 		return sNewlineEncoding.matcher(data).replaceAll("<p>");
 	}
 	
-	public static String createDescription(String data, int maxlength) {
-		String linkFree = encodeNewlines(data);
-		
-		// This truncate at the nearest word after maxlength characters, and add an ellipsis if necessary.
-		StringBuffer sb = new StringBuffer();
-		if (linkFree.length() > maxlength) {
-			sb.append(linkFree.substring(0, maxlength));
-			sb.append("É");
-		} else {
-			sb.append(linkFree);
-		}
-		return sb.toString();
+	public static String createDescription(String data) {
+		return encodeNewlines(data);
 	}
 	
 	public static com.bolsinga.rss.data.TRssChannel.Image createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
