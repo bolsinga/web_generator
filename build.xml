@@ -295,7 +295,7 @@
 	</javac>
 </target>
 
-<target name="ical-gen" depends="prepare">
+<target name="ical_gen" depends="prepare">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -304,7 +304,7 @@
 	</javac>
 </target>
 
-<target name="ical" depends="ical-gen, music_utilities">
+<target name="ical" depends="ical_gen, music_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
