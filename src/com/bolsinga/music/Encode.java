@@ -11,6 +11,8 @@ import org.apache.ecs.filter.*;
 
 public class Encode {
 
+	private static final String MORE_INFO = "More Information About ";
+	
 	private static Encode sEncode = null;
 
 	static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
@@ -29,24 +31,33 @@ public class Encode {
 			fName = artist.getName();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2").toString();
-			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(artist), "$2").toString();
+			StringBuffer sb = new StringBuffer(MORE_INFO);
+			sb.append(fName);
+			
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", sb.toString()).toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(artist), "$2", sb.toString()).toString();
 		}
 		
 		Data(Venue venue, Links standardLinks, Links upLinks) {
 			fName = venue.getName();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2").toString();
-			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(venue), "$2").toString();
+			StringBuffer sb = new StringBuffer(MORE_INFO);
+			sb.append(fName);
+
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", sb.toString()).toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(venue), "$2", sb.toString()).toString();
 		}
 
 		Data(Album album, Links standardLinks, Links upLinks) {
 			fName = album.getTitle();
 			fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
-			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2").toString();
-			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(album), "$2").toString();
+			StringBuffer sb = new StringBuffer(MORE_INFO);
+			sb.append(fName);
+
+			fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2", sb.toString()).toString();
+			fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(album), "$2", sb.toString()).toString();
 		}
 		
 		String getName() {

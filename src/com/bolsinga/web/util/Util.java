@@ -63,8 +63,15 @@ public class Util {
 	}
 	
 	public static a createInternalA(String url, String value) {
+		return Util.createInternalA(url, value, null);
+	}
+	
+	public static a createInternalA(String url, String value, String title) {
 		a an = new a(url, value);
 		an.setClass(CSS.INTERNAL);
+		if (title != null) {
+			an.setTitle(title);
+		}
 		return an;
 	}
 }
