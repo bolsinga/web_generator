@@ -364,7 +364,7 @@ public class Web {
 		creator.close();
 		
 		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
-		stats.getDocument("Show Statistics", Util.ARTIST_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Year", "Year")));
+		stats.getDocument("Show Statistics", Util.SHOW_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Year", "Year")));
 		stats.close();
 	}
 	
