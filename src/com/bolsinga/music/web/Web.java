@@ -51,9 +51,8 @@ abstract class DocumentCreator {
 	
 	protected div internalGetMainDiv() {
 		if (needNewDocument()) {
-			if (fDocument != null) {
-				writeDocument();
-			}
+            close();
+            
 			String title = getTitle();
 			fDocument = createDocument(title);
 			
