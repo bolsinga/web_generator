@@ -14,9 +14,9 @@ public class Links {
 
 	public static final String HTML_EXT = ".html";
 
-	public static final String ARTIST_DIR = "artists";
+	public static final String ARTIST_DIR = "bands";
 	public static final String VENUE_DIR = "venues";
-	public static final String SHOW_DIR = "shows";
+	public static final String SHOW_DIR = "dates";
 	public static final String CITIES_DIR = "cities";
 	
 	private static final String OTHER = "other";
