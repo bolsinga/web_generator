@@ -58,32 +58,23 @@
 	<xs:attribute ref="unknown" />
 </xs:complexType>
 
-<!-- Define Common -->
-<xs:element name="title" type="xs:token" />
-<xs:element name="performer" type="artistID" />
-<xs:element name="producer" type="artistID" />
-<xs:element name="comment" type="xs:string"  />
-<xs:attribute name="digitized" type="xs:boolean" />
-<xs:attribute name="active" type="xs:boolean" />
-
 <!-- Define Song -->
 <xs:simpleType name="songID">
 	<xs:restriction base="xs:ID" >
 		<xs:pattern value="song_.*" />
 	</xs:restriction>
 </xs:simpleType>
-<xs:element name="composer" type="artistID" />
 <xs:element name="song">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element ref="title" />
-			<xs:element ref="performer" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="composer" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="producer" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="title" type="xs:token" />
+			<xs:element name="performer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="composer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="producer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="releaseDate" type="date" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="songID" />
-		<xs:attribute ref="digitized" />
+		<xs:attribute name="digitized" type="xs:boolean" />
 	</xs:complexType>
 </xs:element>
 
@@ -93,23 +84,21 @@
 		<xs:pattern value="album_.*" />
 	</xs:restriction>
 </xs:simpleType>
-<xs:element name="imprint" type="labelID" />
-<xs:attribute name="compilation" type="xs:boolean" />
 <xs:element name="album" >
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element ref="title" />
-			<xs:element ref="performer" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="producer" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="title" type="xs:token" />
+			<xs:element name="performer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="producer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="releaseDate" type="date" minOccurs="0" />
 			<xs:element name="purchaseDate" type="date" minOccurs="0" />
-			<xs:element ref="label" minOccurs="0" />
-			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="comment" minOccurs="0" />
+			<xs:element name="label" type="xs:IDREF" minOccurs="0" />
+			<xs:element name="song" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="albumID" />
-		<xs:attribute ref="compilation" />
-		<xs:attribute ref="digitized" />
+		<xs:attribute name="compilation" type="xs:boolean" />
+		<xs:attribute name="digitized" type="xs:boolean" />
 	</xs:complexType>
 </xs:element>
 
@@ -125,11 +114,11 @@
 			<xs:element name="name" type="xs:token" />
 			<xs:element name="sortname" type="xs:token" minOccurs="0" />
 			<xs:element ref="location" minOccurs="0" />
-			<xs:element ref="album" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="comment" minOccurs="0" />
+			<xs:element name="album" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="artistID" />
-		<xs:attribute ref="active" />
+		<xs:attribute name="active" type="xs:boolean" />
 	</xs:complexType>
 </xs:element>
 
@@ -144,10 +133,10 @@
 		<xs:sequence>
 			<xs:element name="name" type="xs:token" />
 			<xs:element ref="location" minOccurs="0" />
-			<xs:element ref="comment" minOccurs="0" />
+			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="labelID" />
-		<xs:attribute ref="active" />
+		<xs:attribute name="active" type="xs:boolean" />
 	</xs:complexType>
 </xs:element>
 
@@ -162,10 +151,10 @@
 		<xs:sequence>
 			<xs:element name="name" type="xs:token" />
 			<xs:element ref="location" minOccurs="0" />
-			<xs:element ref="comment" minOccurs="0" />
+			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="venueID" />
-		<xs:attribute ref="active" />
+		<xs:attribute name="active" type="xs:boolean" />
 	</xs:complexType>
 </xs:element>
 
@@ -178,10 +167,10 @@
 <xs:element name="performance">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element ref="artist" />
+			<xs:element name="artist" type="xs:IDREF" />
 			<xs:element name="date" type="date" />
-			<xs:element ref="song" minOccurs="0" maxOccurs="unbounded" />
-			<xs:element ref="comment" minOccurs="0" />
+			<xs:element name="song" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="performanceID" />
 	</xs:complexType>
@@ -196,10 +185,10 @@
 <xs:element name="show">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element ref="performance" maxOccurs="unbounded" />
+			<xs:element name="performance" type="xs:IDREF" maxOccurs="unbounded" />
 			<xs:element name="date" type="date" />
-			<xs:element ref="venue" minOccurs="0" />
-			<xs:element ref="comment" minOccurs="0" />
+			<xs:element name="venue" type="xs:IDREF" minOccurs="0" />
+			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="id" type="showID" />
 	</xs:complexType>
