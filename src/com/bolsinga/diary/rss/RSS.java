@@ -35,12 +35,12 @@ public class RSS {
 
 			List channelElements = channel.getTitleOrLinkOrDescription();
 			
-			channelElements.add(objFactory.createTRssChannelTitle("channel title"));
-			channelElements.add(objFactory.createTRssChannelLink("http://www.io.com/~bolsinga/index.html"));
+			channelElements.add(objFactory.createTRssChannelTitle(diary.getTitle()));
+			channelElements.add(objFactory.createTRssChannelLink(System.getProperty("diary.link")));
 			channelElements.add(objFactory.createTRssChannelDescription("channel descr"));
-			channelElements.add(objFactory.createTRssChannelGenerator("channel gen"));
+			channelElements.add(objFactory.createTRssChannelGenerator(sResource.getString("program")));
 			channelElements.add(objFactory.createTRssChannelPubDate("Sat, 29 May 2004 20:15:10 GMT"));
-			channelElements.add(objFactory.createTRssChannelWebMaster("bolsinga@hotmail.com"));
+			channelElements.add(objFactory.createTRssChannelWebMaster(System.getProperty("diary.contact")));
 			
 			generate(entryCount, diary, objFactory, channel);
 
@@ -89,7 +89,7 @@ public class RSS {
 			
 			itemElements.add(objFactory.createTRssItemTitle("A title"));
 			itemElements.add(objFactory.createTRssItemPubDate("Sat, 29 May 2004 20:15:10 GMT"));
-			itemElements.add(objFactory.createTRssItemLink("http://www.io.com/~bolsinga/index.html"));
+			itemElements.add(objFactory.createTRssItemLink(System.getProperty("diary.link")));
 			itemElements.add(objFactory.createTRssItemDescription(entry.getComment().substring(0, 100)));
 			
 			rssItems.add(item);
