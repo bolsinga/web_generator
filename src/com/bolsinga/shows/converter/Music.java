@@ -128,9 +128,7 @@ public class Music {
 		}
 		return result;
 	}
-	
-	private
-	
+		
 	private static void convert(ObjectFactory objFactory, List shows, List mShows) throws JAXBException {
 		// Go through each show.
 		//  Create an Artist for each band in the set, if it doesn't already exist. Use the sort name.
