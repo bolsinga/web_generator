@@ -15,6 +15,58 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+class DocumentCreator {
+	String fOutputDir = null;
+	String fCurPath = null;
+	OutputStream fos = null;
+	
+	public DocumentCreator(String outputDir) {
+		fOutputDir = outputDir;
+	}
+	
+	public OutputStream getStream(String path) {
+		try {
+			if ((fCurPath == null) || (!fCurPath.equals(path))) {
+				fCurPath = path;
+				if (fos != null) {
+					fos.close();
+				}
+				File f = new File(fOutputDir, fCurPath);
+				File parent = new File(f.getParent());
+				if (!parent.exists()) {
+					if (!parent.mkdirs()) {
+						System.out.println("Can't: " + parent.getAbsolutePath());
+					}
+				}
+				fos = new FileOutputStream(f);
+			}
+		} catch (IOException ioe) {
+			System.err.println("Exception: " + ioe);
+			ioe.printStackTrace();
+			System.exit(1);
+		}
+		
+		return fos;
+	}
+	
+	public void close() {
+		if (fos != null) {
+			try {
+				fos.close();
+			} catch (IOException ioe) {
+				System.err.println("Exception: " + ioe);
+				ioe.printStackTrace();
+				System.exit(1);
+			}
+		}
+	}
+	
+	protected void finalize() throws Throwable {
+		close();
+		super.finalize();
+	}
+}
+
 public class Web {
 
 	public static final String HTML_EXT = ".html";
@@ -59,156 +111,57 @@ public class Web {
 	// NOTE: Instead of a List of ID's, JAXB returns a List of real items.
 	
 	public static void generateArtistPages(Music music, String outputDir) {
-		List artists = music.getArtist();
-		Artist artist = null;
-		String pagePath = null;
-		String filePath = null;
-		FileOutputStream os = null;
+		List items = music.getArtist();
+		Artist item = null;
 		
-		Collections.sort(artists, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
+		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
 		
-		try {
-			ListIterator li = artists.listIterator();
-			while (li.hasNext()) {
-				artist = (Artist)li.next();
-				
-				pagePath = getPagePath(artist);
-				
-				if ((filePath == null) || (!filePath.equals(pagePath))) {
-					filePath = pagePath;
-					if (os != null) {
-						os.close();
-					}
-					File f = new File(outputDir, filePath);
-					File parent = new File(f.getParent());
-					if (!parent.exists()) {
-						if (!parent.mkdirs()) {
-							System.out.println("Can't: " + parent.getAbsolutePath());
-						}
-					}
-					os = new FileOutputStream(f);
-				}
-				
-				addArtist(music, artist, os);
-			}
-		} catch (IOException ioe) {
-			System.err.println("Exception: " + ioe);
-			ioe.printStackTrace();
-			System.exit(1);
-		} finally {
-			if (os != null) {
-				try {
-					os.close();
-				} catch (IOException ioe) {
-					System.err.println("Exception: " + ioe);
-					ioe.printStackTrace();
-					System.exit(1);
-				}
-			}
+		DocumentCreator creator = new DocumentCreator(outputDir);
+		
+		ListIterator li = items.listIterator();
+		while (li.hasNext()) {
+			item = (Artist)li.next();
+			
+			addItem(music, item, creator.getStream(getPagePath(item)));
 		}
+		creator.close();
 	}
 	
 	public static void generateVenuePages(Music music, String outputDir) {
-		List venues = music.getVenue();
-		Venue venue = null;
-		String pagePath = null;
-		String filePath = null;
-		FileOutputStream os = null;
+		List items = music.getVenue();
+		Venue item = null;
 
-		Collections.sort(venues, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
+		Collections.sort(items, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
+
+		DocumentCreator creator = new DocumentCreator(outputDir);
 		
-		try {
-			ListIterator li = venues.listIterator();
-			while (li.hasNext()) {
-				venue = (Venue)li.next();
-				
-				pagePath = getPagePath(venue);
-				
-				if ((filePath == null) || (!filePath.equals(pagePath))) {
-					filePath = pagePath;
-					if (os != null) {
-						os.close();
-					}
-					File f = new File(outputDir, filePath);
-					File parent = new File(f.getParent());
-					if (!parent.exists()) {
-						if (!parent.mkdirs()) {
-							System.out.println("Can't: " + parent.getAbsolutePath());
-						}
-					}
-					os = new FileOutputStream(f);
-				}
-				
-				addVenue(music, venue, os);
-			}
-		} catch (IOException ioe) {
-			System.err.println("Exception: " + ioe);
-			ioe.printStackTrace();
-			System.exit(1);
-		} finally {
-			if (os != null) {
-				try {
-					os.close();
-				} catch (IOException ioe) {
-					System.err.println("Exception: " + ioe);
-					ioe.printStackTrace();
-					System.exit(1);
-				}
-			}
+		ListIterator li = items.listIterator();
+		while (li.hasNext()) {
+			item = (Venue)li.next();
+			
+			addItem(music, item, creator.getStream(getPagePath(item)));
 		}
+		creator.close();
 	}
 	
 	public static void generateDatePages(Music music, String outputDir) {
-		List shows = music.getShow();
-		Show show = null;
-		String pagePath = null;
-		String filePath = null;
-		FileOutputStream os = null;
+		List items = music.getShow();
+		Show item = null;
 
-		Collections.sort(shows, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
+		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
+
+		DocumentCreator creator = new DocumentCreator(outputDir);
 		
-		try {
-			ListIterator li = shows.listIterator();
-			while (li.hasNext()) {
-				show = (Show)li.next();
-				
-				pagePath = getPagePath(show);
-				
-				if ((filePath == null) || (!filePath.equals(pagePath))) {
-					filePath = pagePath;
-					if (os != null) {
-						os.close();
-					}
-					File f = new File(outputDir, filePath);
-					File parent = new File(f.getParent());
-					if (!parent.exists()) {
-						if (!parent.mkdirs()) {
-							System.out.println("Can't: " + parent.getAbsolutePath());
-						}
-					}
-					os = new FileOutputStream(f);
-				}
-				
-				addShow(music, show, os);
-			}
-		} catch (IOException ioe) {
-			System.err.println("Exception: " + ioe);
-			ioe.printStackTrace();
-			System.exit(1);
-		} finally {
-			if (os != null) {
-				try {
-					os.close();
-				} catch (IOException ioe) {
-					System.err.println("Exception: " + ioe);
-					ioe.printStackTrace();
-					System.exit(1);
-				}
-			}
+		ListIterator li = items.listIterator();
+		while (li.hasNext()) {
+			item = (Show)li.next();
+			
+			addItem(music, item, creator.getStream(getPagePath(item)));
 		}
+		creator.close();
 	}
 	
-	public static void addArtist(Music music, Artist artist, OutputStream os) {
+	public static void addItem(Music music, Artist artist, OutputStream os) {
 		PrintWriter pw = new PrintWriter(os, true);
 		
 		List shows = Lookup.getLookup(music).getShows(artist);
@@ -236,7 +189,7 @@ public class Web {
 		}
 	}
 	
-	public static void addVenue(Music music, Venue venue, OutputStream os) {
+	public static void addItem(Music music, Venue venue, OutputStream os) {
 		PrintWriter pw = new PrintWriter(os, true);
 
 		List shows = Lookup.getLookup(music).getShows(venue);
@@ -264,7 +217,7 @@ public class Web {
 		}
 	}
 	
-	public static void addShow(Music music, Show show, OutputStream os) {
+	public static void addItem(Music music, Show show, OutputStream os) {
 		PrintWriter pw = new PrintWriter(os, true);
 
 		pw.println(getLinkTo(show));
