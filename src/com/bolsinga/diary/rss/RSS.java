@@ -28,7 +28,11 @@ public class RSS {
 		
 	public static void generate(int entryCount, String sourceFile, String outputFile) {
 		Diary diary = Util.createDiary(sourceFile);
-
+		
+		generate(entryCount, diary, outputFile);
+	}
+	
+	public static void generate(int entryCount, Diary diary, String outputFile) {
 		com.bolsinga.rss.data.ObjectFactory objFactory = new com.bolsinga.rss.data.ObjectFactory();
 
 		try {		
