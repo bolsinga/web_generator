@@ -19,7 +19,9 @@
 	<classpath refid="jaxb_classpath" />
 </taskdef>
 
+<property name="legacy_data.dir" value="../data/" />
 <property name="data.dir" value="../data/" />
+<property name="output.dir" value="/tmp/web" />
 
 <property name="src.dir" value="src" />
 <property name="lib.dir" value="lib" />
@@ -179,10 +181,10 @@
 
 <target name="generateMusicXML" depends="converter, jar">
 	<java classname="com.bolsinga.shows.converter.Music" fork="true">
-		<arg value="${data.dir}shows.txt" />
-		<arg value="${data.dir}venuemap.txt" />
-		<arg value="${data.dir}bandsort.txt" />
-		<arg value="${data.dir}relations.txt" />
+		<arg value="${legacy_data.dir}shows.txt" />
+		<arg value="${legacy_data.dir}venuemap.txt" />
+		<arg value="${legacy_data.dir}bandsort.txt" />
+		<arg value="${legacy_data.dir}relations.txt" />
 		<arg value="${data.dir}music.xml" />
 		<classpath refid="music_classpath" />
 	</java>
@@ -191,8 +193,8 @@
 <target name="generateDiaryXML" depends="converter, jar">
 	<java classname="com.bolsinga.shows.converter.Diary" fork="true">
 		<sysproperty key="diary.title" value="En Vogue Webmaster" />
-		<arg value="${data.dir}comments.txt" />
-		<arg value="${data.dir}statics.txt" />
+		<arg value="${legacy_data.dir}comments.txt" />
+		<arg value="${legacy_data.dir}statics.txt" />
 		<arg value="${data.dir}diary.xml" />
 		<classpath refid="music_classpath" />
 	</java>
@@ -204,19 +206,19 @@
 </path>
 
 <target name="generateMusicWeb" depends="music_web, jar">
-	<mkdir dir="/tmp/web/" />
+	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
 		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
 		<sysproperty key="music.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="music.root" value="../index.html" />
 		<arg value="${data.dir}music.xml" />
-		<arg value="/tmp/web/" />
+		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
 	</java>
 </target>
 
 <target name="generateDiaryWeb" depends="music_web, diary_web, jar">
-	<mkdir dir="/tmp/web/" />
+	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.diary.web.Web" fork="true">
 		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
 		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
@@ -224,16 +226,16 @@
 		<arg value="3" />
 		<arg value="${data.dir}diary.xml" />
 		<arg value="${data.dir}music.xml" />
-		<arg value="/tmp/web/" />
+		<arg value="${output.dir}" />
 		<classpath refid="generate_web_classpath" />
 	</java>
 </target>
 
 <target name="generateICal" depends="ical, jar">
-	<mkdir dir="/tmp/ical/" />
+	<mkdir dir="${output.dir}/ical/" />
 	<java classname="com.bolsinga.music.ical.ICal" fork="true">
 		<arg value="${data.dir}music.xml" />
-		<arg value="/tmp/ical/" />
+		<arg value="${output.dir}/ical/" />
 		<classpath refid="music_classpath" />
 	</java>
 </target>
