@@ -56,7 +56,7 @@ public class ICal {
 		}
 		
 		try {
-			File f = new File(outputDir, "shows.ics");
+			File f = new File(outputDir, "Shows.ics");
 			File parent = new File(f.getParent());
 			if (!parent.exists()) {
 				if (!parent.mkdirs()) {
