@@ -36,6 +36,19 @@
 		</xsd:sequence>
 	</xsd:complexType>
 	
+	<xsd:simpleType name="FormatType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="12 Inch LP" />
+			<xsd:enumeration value="12 Inch EP" />
+			<xsd:enumeration value="12 Inch Single" />
+			<xsd:enumeration value="10 Inch EP" />
+			<xsd:enumeration value="7 Inch Single" />
+			<xsd:enumeration value="Cassette" />
+			<xsd:enumeration value="CD" />
+			<xsd:enumeration value="Digital File" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	
 	<xsd:complexType name="Albums">
 		<xsd:sequence>
 			<xsd:element name="album" minOccurs="0" maxOccurs="unbounded">
@@ -43,7 +56,7 @@
 					<xsd:sequence>
 						<xsd:element name="label" type="xsd:string" />
 						<xsd:element name="date" type="xsd:date" />
-						<xsd:element name="format" type="xsd:string" />
+						<xsd:element name="format" type="FormatType" />
 					</xsd:sequence>
 				<xsd:attribute name="name" type="xsd:string" />
 				</xsd:complexType>
