@@ -347,7 +347,7 @@ public class Web {
 		sb.append("Updated ");
 		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append("!");
-		diaryDiv.addElement(sb.toString());
+		diaryDiv.addElement(new H3(sb.toString()));
 		
 		diaryDiv.addElement(links.getRSSLink());
 				
