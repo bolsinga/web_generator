@@ -215,7 +215,7 @@
         </javac>
 </target>
 
-<target name="music" depends="web_utilities, music_binding, settings_binding">
+<target name="music" depends="web_utilities, music_binding, settings_binding, ical_gen">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -256,17 +256,7 @@
         </javac>
 </target>
 
-<target name="ical" depends="ical_gen, music">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/music/ical/*.java" />
-                <classpath refid="jaxb_binder_classpath" />
-        </javac>
-</target>
-
-<target name="web_site" depends="music, diary, rss, ical">
+<target name="web_site" depends="music, diary, rss">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -361,9 +351,9 @@
         </java>
 </target>
 
-<target name="generateICal" depends="ical, jar">
+<target name="generateICal" depends="music, jar">
         <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.music.ical.ICal" fork="true">
+        <java classname="com.bolsinga.music.ICal" fork="true">
                 <arg value="${data.dir}music.xml" />
                 <arg value="${data.dir}settings.xml" />
                 <arg value="${output.dir}" />

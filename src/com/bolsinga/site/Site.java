@@ -29,7 +29,7 @@ public class Site {
     if (!diaryOnly) {
       com.bolsinga.music.web.Web.generate(music, outputDir);
       if (!webOnly) {
-        com.bolsinga.music.ical.ICal.generate(music, outputDir);
+        com.bolsinga.music.ICal.generate(music, outputDir);
       }
     }
     if (!webOnly) {

@@ -1,4 +1,4 @@
-package com.bolsinga.music.ical;
+package com.bolsinga.music;
 
 import com.bolsinga.ical.*;
 import com.bolsinga.music.data.*;
