@@ -1,6 +1,7 @@
 package com.bolsinga.music.util;
 
 import java.util.*;
+import java.util.regex.*;
 
 import com.bolsinga.music.data.*;
 
@@ -11,6 +12,8 @@ public class Compare {
 	private static final String A = "a ";
 	private static final String AN = "an ";
 
+	private static Pattern sChomp = Pattern.compile("\\W*");
+	
 	private static Compare sCompare = null;
 	
 	private Music fMusic = null;
@@ -47,7 +50,14 @@ public class Compare {
 		if (lower.startsWith(THEE)) {
 			return s.substring(THEE.length(), len);
 		}
-		return s;
+		
+		Matcher m = sChomp.matcher(lower);
+		String result = m.replaceAll("");
+		if ((result != null) && (result.length() > 0)) {
+			return result;
+		}
+
+		return lower;
 	}
 	
 	public static final Comparator LIBRARY_COMPARATOR = new Comparator() {
