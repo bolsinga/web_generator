@@ -15,41 +15,20 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-class DocumentCreator {
+abstract class DocumentCreator {
+	Music fMusic = null;
 	String fOutputDir = null;
-	String fType = null;
-	String fCurPath = null;
 	Document fDocument = null;
 	
-	public DocumentCreator(String outputDir, String type) {
+	protected DocumentCreator(Music music, String outputDir) {
+		fMusic = music;
 		fOutputDir = outputDir;
-		fType = type;
 	}
 	
-	public Document getDocument(Artist artist) {
-		return getDocument(Web.getPageFileName(artist), Web.getPagePath(artist));
-	}
-
-	public Document getDocument(Venue venue) {
-		return getDocument(Web.getPageFileName(venue), Web.getPagePath(venue));
-	}
-
-	public Document getDocument(Show show) {
-		return getDocument(Web.getPageFileName(show), Web.getPagePath(show));
-	}
-	
-	private Document getDocument(String letter, String path) {
-		if ((fCurPath == null) || (!fCurPath.equals(path))) {
-			if (fDocument != null) {
-				writeDocument();
-			}
-
-			fCurPath = path;
-			fDocument = Web.createHTMLDocument(letter, fType);
-		}
-		
-		return fDocument;
-	}
+	protected abstract boolean needNewDocument();
+	protected abstract Document createDocument();
+	protected abstract String getCurrentPath();
+	protected abstract void addNavigator();
 	
 	public void close() {
 		if (fDocument != null) {
@@ -58,9 +37,21 @@ class DocumentCreator {
 		}
 	}
 	
+	protected Document internalGetDocument() {
+		if (needNewDocument()) {
+			if (fDocument != null) {
+				writeDocument();
+			}
+			fDocument = createDocument();
+			addNavigator();
+		}
+		return fDocument;
+	}
+	
 	private void writeDocument() {
+		addNavigator();
 		try {
-			File f = new File(fOutputDir, fCurPath);
+			File f = new File(fOutputDir, getCurrentPath());
 			File parent = new File(f.getParent());
 			if (!parent.exists()) {
 				if (!parent.mkdirs()) {
@@ -80,6 +71,99 @@ class DocumentCreator {
 	protected void finalize() throws Throwable {
 		close();
 		super.finalize();
+	}
+}
+
+class ArtistDocumentCreator extends DocumentCreator {
+	Artist fDocArtist = null;
+	Artist fArtist = null;
+	
+	public ArtistDocumentCreator(Music music, String outputDir) {
+		super(music, outputDir);
+	}
+	
+	public Document getDocument(Artist artist) {
+		fArtist = artist;
+		return internalGetDocument();
+	}
+	
+	protected boolean needNewDocument() {
+		return (fDocArtist == null) || (!Web.getPageFileName(fDocArtist).equals(Web.getPageFileName(fArtist)));
+	}
+	
+	protected Document createDocument() {
+		fDocArtist = fArtist;
+		return Web.createHTMLDocument(Web.getPageFileName(fDocArtist), "Artists");
+	}
+	
+	protected String getCurrentPath() {
+		return Web.getPagePath(fDocArtist);
+	}
+	
+	protected void addNavigator() {
+		Web.addNavigator(fMusic, fDocArtist, fDocument);
+	}
+}
+
+class VenueDocumentCreator extends DocumentCreator {
+	Venue fDocVenue = null;
+	Venue fVenue = null;
+	
+	public VenueDocumentCreator(Music music, String outputDir) {
+		super(music, outputDir);
+	}
+	
+	public Document getDocument(Venue venue) {
+		fVenue = venue;
+		return internalGetDocument();
+	}
+	
+	protected boolean needNewDocument() {
+		return (fDocVenue == null) || (!Web.getPageFileName(fDocVenue).equals(Web.getPageFileName(fVenue)));
+	}
+	
+	protected Document createDocument() {
+		fDocVenue = fVenue;
+		return Web.createHTMLDocument(Web.getPageFileName(fDocVenue), "Venues");
+	}
+	
+	protected String getCurrentPath() {
+		return Web.getPagePath(fDocVenue);
+	}
+	
+	protected void addNavigator() {
+		Web.addNavigator(fMusic, fDocVenue, fDocument);
+	}
+}
+
+class ShowDocumentCreator extends DocumentCreator {
+	Show fDocShow = null;
+	Show fShow = null;
+	
+	public ShowDocumentCreator(Music music, String outputDir) {
+		super(music, outputDir);
+	}
+	
+	public Document getDocument(Show show) {
+		fShow = show;
+		return internalGetDocument();
+	}
+	
+	protected boolean needNewDocument() {
+		return (fDocShow == null) || (!Web.getPageFileName(fDocShow).equals(Web.getPageFileName(fShow)));
+	}
+	
+	protected Document createDocument() {
+		fDocShow = fShow;
+		return Web.createHTMLDocument(Web.getPageFileName(fDocShow), "Dates");
+	}
+	
+	protected String getCurrentPath() {
+		return Web.getPagePath(fDocShow);
+	}
+	
+	protected void addNavigator() {
+		Web.addNavigator(fMusic, fDocShow, fDocument);
 	}
 }
 
@@ -132,7 +216,7 @@ public class Web {
 		
 		Collections.sort(items, com.bolsinga.music.util.Compare.ARTIST_COMPARATOR);
 		
-		DocumentCreator creator = new DocumentCreator(outputDir, "Artists");
+		ArtistDocumentCreator creator = new ArtistDocumentCreator(music, outputDir);
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
@@ -149,7 +233,7 @@ public class Web {
 
 		Collections.sort(items, com.bolsinga.music.util.Compare.VENUE_COMPARATOR);
 
-		DocumentCreator creator = new DocumentCreator(outputDir, "Venues");
+		VenueDocumentCreator creator = new VenueDocumentCreator(music, outputDir);
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
@@ -166,7 +250,7 @@ public class Web {
 
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 
-		DocumentCreator creator = new DocumentCreator(outputDir, "Dates");
+		ShowDocumentCreator creator = new ShowDocumentCreator(music, outputDir);
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
