@@ -389,7 +389,7 @@ public class Web {
 			item = (Show)i.next();
 			
 			BigInteger year = item.getDate().getYear();
-			names[index] = (year != null) ? year.toString() : "Unknown";
+			names[index] = new A(Util.getLinkToPage(item), (year != null) ? year.toString() : "Unknown").toString();
 			values[index] = ((Vector)dates.get(item)).size();
 			
 			index++;
