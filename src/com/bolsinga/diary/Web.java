@@ -96,7 +96,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
         while (i.hasNext()) {
             String s = (String)i.next();
             if (s.equals(getCurrentLetter())) {
-                com.bolsinga.web.util.Util.addListItem(list, s);
+                com.bolsinga.web.util.Util.addListItem(list, new StringElement(s));
             } else {
                 com.bolsinga.web.util.Util.addListItem(list, com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s));
             }
@@ -337,7 +337,7 @@ public class Web {
 
         com.bolsinga.web.util.Util.addListItem(list, new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
 
-        com.bolsinga.web.util.Util.addListItem(list, Web.encodedComment(music, entry, upOneLevel));
+        com.bolsinga.web.util.Util.addListItem(list, new StringElement(Web.encodedComment(music, entry, upOneLevel)));
 
         return list;
     }

@@ -95,10 +95,6 @@ public class Util {
         return an;
     }
 
-    public static void addListItem(ul list, String data) {
-        Util.addListItem(list, new StringElement(data));
-    }
-
     public static void addListItem(ul list, Element data) {
         li item = new li(data);
         item.setPrettyPrint(Util.getPrettyPrint());
