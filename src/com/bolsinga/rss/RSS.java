@@ -23,7 +23,7 @@ public class RSS {
 			System.exit(0);
 		}
 
-        Settings settings = com.bolsinga.web.util.Util.createSettings(args[2]);
+        com.bolsinga.web.util.Util.createSettings(args[2]);
 		        
 		RSS.generate(args[0], args[1], args[3]);
 	}

@@ -83,7 +83,7 @@ public class Util {
 		return an;
 	}
 
-    public synchronized static com.bolsinga.settings.data.Settings createSettings(String sourceFile) {
+    public synchronized static void createSettings(String sourceFile) {
         if (sSettings == null) {
             try {
                 JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
@@ -96,7 +96,6 @@ public class Util {
                 System.exit(1);
             }
         }
-        return sSettings;
     }
 
     public synchronized static com.bolsinga.settings.data.Settings getSettings() {

@@ -144,7 +144,7 @@ public class Web {
 			System.exit(0);
 		}
 
-        Settings settings = com.bolsinga.web.util.Util.createSettings(args[2]);
+        com.bolsinga.web.util.Util.createSettings(args[2]);
                 
 		Web.generate(args[0], args[1], args[3]);
 	}
