@@ -13,25 +13,32 @@ public class Encode {
 
 	private static Encode sEncode = null;
 
-	private Vector fEncodings = new Vector();
+	private TreeSet fEncodings = new TreeSet(DATA_COMPARATOR);
 
 	class Data {
+		String fName = null;
 		Pattern fPattern = null;
 		String fStandardLink = null;
 		String fUpLink = null;
 		
 		Data(Artist artist, Links standardLinks, Links upLinks) {
-			fPattern = Pattern.compile(createRegex(artist.getName()), Pattern.DOTALL);
+			fName = artist.getName();
+			fPattern = Pattern.compile(createRegex(fName), Pattern.DOTALL);
 
-			fStandardLink = new A(standardLinks.getLinkTo(artist), artist.getName()).toString();
-			fUpLink = new A(upLinks.getLinkTo(artist), artist.getName()).toString();
+			fStandardLink = new A(standardLinks.getLinkTo(artist), fName).toString();
+			fUpLink = new A(upLinks.getLinkTo(artist), fName).toString();
 		}
 		
 		Data(Venue venue, Links standardLinks, Links upLinks) {
-			fPattern = Pattern.compile(createRegex(venue.getName()), Pattern.DOTALL);
+			fName = venue.getName();
+			fPattern = Pattern.compile(createRegex(fName), Pattern.DOTALL);
 
-			fStandardLink = new A(standardLinks.getLinkTo(venue), venue.getName()).toString();
-			fUpLink = new A(upLinks.getLinkTo(venue), venue.getName()).toString();
+			fStandardLink = new A(standardLinks.getLinkTo(venue), fName).toString();
+			fUpLink = new A(upLinks.getLinkTo(venue), fName).toString();
+		}
+		
+		String getName() {
+			return fName;
 		}
 		
 		String createRegex(String name) {
@@ -54,9 +61,21 @@ public class Encode {
 			sb.append("$3");
 			
 			return sb.toString();
-			
 		}
 	}
+	
+	static final Comparator DATA_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Data d1 = (Data)o1;
+			Data d2 = (Data)o2;
+			
+			int result = d2.getName().length() - d1.getName().length();
+			if (result == 0) {
+				result = d2.getName().compareTo(d1.getName());
+			}
+			return result;
+		}
+	};
 	
 	public synchronized static Encode getEncode(Music music) {
 		if (sEncode == null) {
