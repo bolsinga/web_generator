@@ -474,8 +474,6 @@
             userid="bolsinga"
             password="${ftp.password}"
             remotedir="public-web"
-            newer="yes"
-            timediffauto="yes"
             verbose="yes" >
         <fileset dir="${output.dir}">
             <include name="index.html" />
