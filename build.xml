@@ -175,16 +175,6 @@
         </javac>
 </target>
 
-<target name="rss_utilities" depends="rss_binding, settings_binding">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/rss/util/**" />
-                <classpath refid="web_classpath" />
-        </javac>
-</target>
-
 <target name="plist_utilities" depends="plist_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -255,16 +245,6 @@
         </javac>
 </target>
 
-<target name="music_rss" depends="rss_utilities, music_utilities">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/music/rss/**" />
-                <classpath refid="jaxb_binder_classpath" />
-        </javac>
-</target>
-
 <target name="diary_web" depends="web_utilities, diary_utilities, music_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -275,17 +255,7 @@
         </javac>
 </target>
 
-<target name="diary_rss" depends="rss_utilities, diary_utilities">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/diary/rss/**" />
-                <classpath refid="jaxb_binder_classpath" />
-        </javac>
-</target>
-
-<target name="rss" depends="music_rss, diary_rss">
+<target name="rss" depends="music_utilities, diary_utilities, rss_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">

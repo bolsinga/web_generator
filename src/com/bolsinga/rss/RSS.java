@@ -76,6 +76,53 @@ public class RSS {
     return sb.toString();
   }
         
+  public static void add(com.bolsinga.music.data.Show show, com.bolsinga.music.util.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
+    TRssItem item = objFactory.createTRssItem();
+    List itemElements = item.getTitleOrDescriptionOrLink();
+                
+    itemElements.add(objFactory.createTRssItemTitle(getTitle(show)));
+    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.music.util.Util.toCalendar(show.getDate()).getTime())));
+    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.util.Util.getSettings().getRssRoot() + links.getLinkTo(show)));
+    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.util.Util.convertToParagraphs(show.getComment())));
+                
+    channel.getItem().add(item);
+  }
+        
+  private static String getTitle(Show show) {
+    StringBuffer sb = new StringBuffer();
+    
+    sb.append(com.bolsinga.music.util.Util.toString(show.getDate()));
+    sb.append(" - ");
+                
+    ListIterator i = show.getArtist().listIterator();
+    while (i.hasNext()) {
+      Artist performer = (Artist)i.next();
+                        
+      sb.append(performer.getName());
+                        
+      if (i.hasNext()) {
+        sb.append(", ");
+      }
+    }
+                
+    sb.append(" @ ");
+    sb.append(((Venue)show.getVenue()).getName());
+                        
+    return sb.toString();
+  }
+
+  public static void add(com.bolsinga.diary.data.Entry entry, com.bolsinga.diary.util.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
+    TRssItem item = objFactory.createTRssItem();
+    List itemElements = item.getTitleOrDescriptionOrLink();
+                
+    itemElements.add(objFactory.createTRssItemTitle(com.bolsinga.diary.util.Util.getTitle(entry)));
+    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(entry.getTimestamp().getTime())));
+    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.util.Util.getSettings().getRssRoot() + links.getLinkTo(entry)));
+    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.util.Util.convertToParagraphs(entry.getComment())));
+                
+    channel.getItem().add(item);
+  }
+
   public static void generate(Diary diary, Music music, OutputStream os) {
     com.bolsinga.rss.data.ObjectFactory objFactory = new com.bolsinga.rss.data.ObjectFactory();
 
@@ -88,10 +135,10 @@ public class RSS {
       channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.util.Util.getSettings().getRssRoot()));
       channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.util.Util.getSettings().getRssDescription()));
       channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
-      channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.util.Util.getRSSDate(Calendar.getInstance().getTime())));
+      channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(Calendar.getInstance().getTime())));
       channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.util.Util.getSettings().getContact()));
 
-      TRssChannel.Image logo = com.bolsinga.rss.util.Util.createLogo(objFactory);
+      TRssChannel.Image logo = com.bolsinga.rss.Util.createLogo(objFactory);
       logo.setLink(com.bolsinga.web.util.Util.getSettings().getRssRoot());
       logo.setDescription(diary.getTitle());
                         
@@ -122,9 +169,9 @@ public class RSS {
         Object o = i.next();
                                 
         if (o instanceof com.bolsinga.music.data.Show) {
-          com.bolsinga.music.rss.RSS.add((Show)o, musicLinks, objFactory, channel);
+          RSS.add((Show)o, musicLinks, objFactory, channel);
         } else if (o instanceof com.bolsinga.diary.data.Entry) {
-          com.bolsinga.diary.rss.RSS.add((Entry)o, diaryLinks, objFactory, channel);
+          RSS.add((Entry)o, diaryLinks, objFactory, channel);
         }
       }
 
