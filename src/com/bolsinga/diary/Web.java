@@ -78,8 +78,6 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
     }
 
     protected Element addIndexNavigator() {
-        div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_INDEX);
-
         java.util.Map m = new TreeMap();
         Iterator i = fDiary.getEntry().iterator();
         while (i.hasNext()) {
@@ -101,24 +99,23 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
             }
         }
         e.add(fLinks.getRSSLink());
+
+        div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_INDEX);
         d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
-                
         return d;
     }
         
     private Element addWebNavigator(String program, Links links) {
-        div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_MENU);
-                
-        Object[] args = { Calendar.getInstance().getTime() };
-        d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
-
         Vector e = new Vector();
                 
         Object[] args2 = { com.bolsinga.web.util.Util.getSettings().getContact(), program };
         e.add(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
         e.add(links.getLinkToHome());
+
+        div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_MENU);
+        Object[] args = { Calendar.getInstance().getTime() };
+        d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
         d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
-                
         return d;
     }
 }

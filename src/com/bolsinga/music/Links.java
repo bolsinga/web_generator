@@ -40,11 +40,6 @@ public class Links {
     }
         
     public div addWebNavigator(Music music, String program) {
-        div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MENU);
-                                                
-        Object[] args = { music.getTimestamp().getTime() };
-        d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
-
         Vector e = new Vector();
         Object[] args2 = { com.bolsinga.web.util.Util.getSettings().getContact(), program };
         e.add(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
@@ -54,8 +49,11 @@ public class Links {
         e.add(getShowLink());
         e.add(getVenueLink());
         e.add(getCityLink());
+
+        div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MUSIC_MENU);
+        Object[] args = { music.getTimestamp().getTime() };
+        d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
         d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
-                
         return d;
     }
         
