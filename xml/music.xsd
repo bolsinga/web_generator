@@ -68,7 +68,7 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="title" type="xs:token" />
-			<xs:element name="performer" type="xs:IDREF" minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="performer" type="xs:IDREF" minOccurs="1" />
 			<xs:element name="composer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="producer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="releaseDate" type="date" minOccurs="0" />
@@ -103,7 +103,7 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="title" type="xs:token" />
-			<xs:element name="performer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="performer" type="xs:IDREF" minOccurs="0" />
 			<xs:element name="producer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="releaseDate" type="date" minOccurs="0" />
 			<xs:element name="purchaseDate" type="date" minOccurs="0" />

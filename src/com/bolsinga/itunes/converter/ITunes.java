@@ -261,7 +261,7 @@ public class ITunes {
 			
 			result.setTitle(name);
 			if (artist != null) {
-				result.getPerformer().add(artist);
+				result.setPerformer(artist);
 			} else {
 				result.setCompilation(true);
 			}
@@ -298,7 +298,7 @@ public class ITunes {
 	    
 	    result = objFactory.createSong();
 	    result.setTitle(songTitle);
-	    result.getPerformer().add(artist);
+	    result.setPerformer(artist);
 	    result.setLastPlayed(lastPlayed);
 	    result.setGenre(genre);
 	    

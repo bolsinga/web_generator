@@ -829,7 +829,7 @@ public class Web {
 		sb = new StringBuffer();
 		sb.append(a);
 		if (!isCompilation) {
-			artist = (Artist)album.getPerformer().get(0);
+			artist = (Artist)album.getPerformer();
 			sb.append(" - ");
 			sb.append(new A(links.getLinkTo(artist), artist.getName()));
 		}
@@ -843,7 +843,7 @@ public class Web {
 			song = (Song)li.next();
 			sb = new StringBuffer();
 			if (isCompilation) {
-				artist = (Artist)song.getPerformer().get(0);
+				artist = (Artist)song.getPerformer();
 				sb.append(new A(links.getLinkTo(artist), artist.getName()));
 				sb.append(" - ");
 			}
