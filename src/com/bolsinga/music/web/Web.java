@@ -4,7 +4,6 @@ import com.bolsinga.music.data.*;
 import com.bolsinga.music.util.*;
 
 import java.io.*;
-import java.math.*;
 import java.util.*;
 
 import org.apache.ecs.*;
@@ -88,16 +87,16 @@ class ArtistDocumentCreator extends DocumentCreator {
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocArtist == null) || (!Web.getPageFileName(fDocArtist).equals(Web.getPageFileName(fArtist)));
+		return (fDocArtist == null) || (!Util.getPageFileName(fDocArtist).equals(Util.getPageFileName(fArtist)));
 	}
 	
 	protected Document createDocument() {
 		fDocArtist = fArtist;
-		return Web.createHTMLDocument(Web.getPageFileName(fDocArtist), "Artists");
+		return Web.createHTMLDocument(Util.getPageFileName(fDocArtist), "Artists");
 	}
 	
 	protected String getCurrentPath() {
-		return Web.getPagePath(fDocArtist);
+		return Util.getPagePath(fDocArtist);
 	}
 	
 	protected void addNavigator() {
@@ -119,16 +118,16 @@ class VenueDocumentCreator extends DocumentCreator {
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocVenue == null) || (!Web.getPageFileName(fDocVenue).equals(Web.getPageFileName(fVenue)));
+		return (fDocVenue == null) || (!Util.getPageFileName(fDocVenue).equals(Util.getPageFileName(fVenue)));
 	}
 	
 	protected Document createDocument() {
 		fDocVenue = fVenue;
-		return Web.createHTMLDocument(Web.getPageFileName(fDocVenue), "Venues");
+		return Web.createHTMLDocument(Util.getPageFileName(fDocVenue), "Venues");
 	}
 	
 	protected String getCurrentPath() {
-		return Web.getPagePath(fDocVenue);
+		return Util.getPagePath(fDocVenue);
 	}
 	
 	protected void addNavigator() {
@@ -150,16 +149,16 @@ class ShowDocumentCreator extends DocumentCreator {
 	}
 	
 	protected boolean needNewDocument() {
-		return (fDocShow == null) || (!Web.getPageFileName(fDocShow).equals(Web.getPageFileName(fShow)));
+		return (fDocShow == null) || (!Util.getPageFileName(fDocShow).equals(Util.getPageFileName(fShow)));
 	}
 	
 	protected Document createDocument() {
 		fDocShow = fShow;
-		return Web.createHTMLDocument(Web.getPageFileName(fDocShow), "Dates");
+		return Web.createHTMLDocument(Util.getPageFileName(fDocShow), "Dates");
 	}
 	
 	protected String getCurrentPath() {
-		return Web.getPagePath(fDocShow);
+		return Util.getPagePath(fDocShow);
 	}
 	
 	protected void addNavigator() {
@@ -168,17 +167,7 @@ class ShowDocumentCreator extends DocumentCreator {
 }
 
 public class Web {
-
-	public static final String HTML_EXT = ".html";
-	
-	public static final String ARTIST_DIR = "artists";
-	public static final String VENUE_DIR = "venues";
-	public static final String SHOW_DIR = "shows";
-	
-	public static final String OTHER = "other";
-	public static final String SEPARATOR = "/";
-	public static final String HASH = "#";
-	
+		
 	public static void main(String[] args) {
 		if (args.length != 2) {
 			System.out.println("Usage: Web [source.xml] [output.dir]");
@@ -280,7 +269,7 @@ public class Web {
 			
 			UL showListing = new UL();
 			
-			showListing.addElement(new LI().addElement(new A(getLinkTo(show), Util.toString(show.getDate()))));
+			showListing.addElement(new LI().addElement(new A(Util.getLinkTo(show), Util.toString(show.getDate()))));
 			
 			UL showInfo = new UL();
 			
@@ -293,7 +282,7 @@ public class Web {
 				if (artist.equals(performer)) {
 					listItem.addElement(new B(performer.getName()));
 				} else {
-					listItem.addElement(new A(getLinkTo(performer), performer.getName()));
+					listItem.addElement(new A(Util.getLinkTo(performer), performer.getName()));
 				}
 				
 				if (bi.hasNext()) {
@@ -303,7 +292,7 @@ public class Web {
 			showInfo.addElement(listItem);
 			
 			Venue venue = (Venue)show.getVenue();
-			A venueA = new A(getLinkTo(venue), venue.getName());
+			A venueA = new A(Util.getLinkTo(venue), venue.getName());
 			Location l = (Location)venue.getLocation();
 			showInfo.addElement(new LI().addElement(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
 			
@@ -337,7 +326,7 @@ public class Web {
 			
 			UL showListing = new UL();
 			
-			showListing.addElement(new LI().addElement(new A(getLinkTo(show), Util.toString(show.getDate()))));
+			showListing.addElement(new LI().addElement(new A(Util.getLinkTo(show), Util.toString(show.getDate()))));
 			
 			UL showInfo = new UL();
 			
@@ -347,7 +336,7 @@ public class Web {
 				Performance p = (Performance)bi.next();
 				Artist performer = (Artist)p.getArtist();
 				
-				listItem.addElement(new A(getLinkTo(performer), performer.getName()));
+				listItem.addElement(new A(Util.getLinkTo(performer), performer.getName()));
 				
 				if (bi.hasNext()) {
 					listItem.addElement(", ");
@@ -373,7 +362,52 @@ public class Web {
 	public static void addItem(Music music, Show show, Document doc) {
 		Body b = doc.getBody();
 
-		b.addElement(getLinkTo(show));
+		b.addElement(new HR());
+		b.addElement(new Center().addElement(new Big().addElement(Util.toMonth(show.getDate()))));
+		
+/*			
+		A a = new A();
+		a.setName(venue.getId());
+		a.addElement("test", venue.getName());
+		b.addElement(new Center().addElement(new Big().addElement(a)));
+		
+		addRelations(music, venue, doc);
+
+		ListIterator li = shows.listIterator();
+		while (li.hasNext()) {
+			Show show = (Show)li.next();
+			UL showListing = new UL();
+			
+			showListing.addElement(new LI().addElement(new A(Util.getLinkTo(show), Util.toString(show.getDate()))));
+			
+			UL showInfo = new UL();
+			
+			LI listItem = new LI();
+			ListIterator bi = show.getPerformance().listIterator();
+			while (bi.hasNext()) {
+				Performance p = (Performance)bi.next();
+				Artist performer = (Artist)p.getArtist();
+				
+				listItem.addElement(new A(Util.getLinkTo(performer), performer.getName()));
+				
+				if (bi.hasNext()) {
+					listItem.addElement(", ");
+				}
+			}
+			showInfo.addElement(listItem);
+			
+			showInfo.addElement(new LI().addElement(new B(venue.getName())));
+			
+			String comment = show.getComment();
+			if (comment != null) {
+				showInfo.addElement(new LI().addElement(comment));
+			}
+			
+			showListing.addElement(showInfo);
+			
+			b.addElement(showListing);
+		}
+*/
 	}
 	
 	public static void addRelations(Music music, Artist artist, Document doc) {
@@ -391,7 +425,7 @@ public class Web {
 				if (a.equals(artist)) {
 					related.addElement(new LI().addElement(a.getName()));
 				} else {
-					related.addElement(new LI().addElement(new A(getLinkTo(a), a.getName())));
+					related.addElement(new LI().addElement(new A(Util.getLinkTo(a), a.getName())));
 				}
 			}
 			ul.addElement(related);
@@ -414,7 +448,7 @@ public class Web {
 				if (v.equals(venue)) {
 					ul.addElement(new LI().addElement(v.getName()));
 				} else {
-					ul.addElement(new LI().addElement(new A(getLinkTo(v), v.getName())));
+					ul.addElement(new LI().addElement(new A(Util.getLinkTo(v), v.getName())));
 				}
 			}
 			
@@ -429,9 +463,9 @@ public class Web {
 		Iterator li = music.getArtist().iterator();
 		while (li.hasNext()) {
 			Artist a = (Artist)li.next();
-			String letter = getPageFileName(a);
+			String letter = Util.getPageFileName(a);
 			if (!m.containsKey(letter)) {
-				m.put(letter, getLinkToPage(a));
+				m.put(letter, Util.getLinkToPage(a));
 			}
 		}
 
@@ -439,7 +473,7 @@ public class Web {
 		while (li.hasNext()) {
 			String a = (String)li.next();
 			String l = " " + a + " ";
-			if (a.equals(getPageFileName(artist))) {
+			if (a.equals(Util.getPageFileName(artist))) {
 				c.addElement(l);
 			} else {
 				c.addElement(new A((String)m.get(a), l));
@@ -456,9 +490,9 @@ public class Web {
 		Iterator li = music.getVenue().iterator();
 		while (li.hasNext()) {
 			Venue v = (Venue)li.next();
-			String letter = getPageFileName(v);
+			String letter = Util.getPageFileName(v);
 			if (!m.containsKey(letter)) {
-				m.put(letter, getLinkToPage(v));
+				m.put(letter, Util.getLinkToPage(v));
 			}
 		}
 
@@ -466,7 +500,7 @@ public class Web {
 		while (li.hasNext()) {
 			String v = (String)li.next();
 			String l = " " + v + " ";
-			if (v.equals(getPageFileName(venue))) {
+			if (v.equals(Util.getPageFileName(venue))) {
 				c.addElement(l);
 			} else {
 				c.addElement(new A((String)m.get(v), l));
@@ -483,9 +517,9 @@ public class Web {
 		Iterator li = music.getShow().iterator();
 		while (li.hasNext()) {
 			Show s = (Show)li.next();
-			String letter = getPageFileName(s);
+			String letter = Util.getPageFileName(s);
 			if (!m.containsKey(letter)) {
-				m.put(letter, getLinkToPage(s));
+				m.put(letter, Util.getLinkToPage(s));
 			}
 		}
 
@@ -493,7 +527,7 @@ public class Web {
 		while (li.hasNext()) {
 			String s = (String)li.next();
 			String l = " " + s + " ";
-			if (s.equals(getPageFileName(show))) {
+			if (s.equals(Util.getPageFileName(show))) {
 				c.addElement(l);
 			} else {
 				c.addElement(new A((String)m.get(s), l));
@@ -559,143 +593,5 @@ public class Web {
 		h.addElement(new Meta().setContent(Web.getGenerator()).setName("Generator"));
 
 		return d;
-	}
-	
-	private static String getPageFileName(String name) {
-		String file = Compare.simplify(name).substring(0, 1).toUpperCase();
-		if (file.matches("\\W")) {
-			file = OTHER;
-		}
-		return file;
-	}
-	
-	private static String getPageFileName(BigInteger year) {
-		if (year == null) {
-			return OTHER;
-		} else {
-			return year.toString();
-		}
-	}
-	
-	public static String getPageFileName(Artist artist) {
-		String name = artist.getSortname();
-		if (name == null) {
-			name = artist.getName();
-		}
-		return getPageFileName(name);
-	}
-	
-	public static String getPageFileName(Venue venue) {
-		return getPageFileName(venue.getName());
-	}
-	
-	public static String getPageFileName(Show show) {
-		BigInteger current = show.getDate().getYear();
-		return getPageFileName(current);
-	}
-	
-	public static String getPagePath(Artist artist) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(ARTIST_DIR);
-		sb.append(File.separator);
-		sb.append(getPageFileName(artist));
-		sb.append(HTML_EXT);
-		return sb.toString();
-	}
-	
-	public static String getPagePath(Venue venue) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(VENUE_DIR);
-		sb.append(File.separator);
-		sb.append(getPageFileName(venue));
-		sb.append(HTML_EXT);
-		return sb.toString();
-	}
-	
-	public static String getPagePath(Show show) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(SHOW_DIR);
-		sb.append(File.separator);
-		sb.append(getPageFileName(show));
-		sb.append(HTML_EXT);
-		return sb.toString();
-	}
-
-	public static String getLinkToPage(Artist artist) {
-		StringBuffer link = new StringBuffer();
-		
-		link.append("../");
-		link.append(Web.ARTIST_DIR);
-		link.append(SEPARATOR);
-		link.append(getPageFileName(artist));
-		link.append(Web.HTML_EXT);
-		
-		return link.toString();
-	}
-	
-	public static String getLinkToPage(Venue venue) {
-		StringBuffer link = new StringBuffer();
-		
-		link.append("../");
-		link.append(Web.VENUE_DIR);
-		link.append(SEPARATOR);
-		link.append(getPageFileName(venue));
-		link.append(Web.HTML_EXT);
-
-		return link.toString();
-	}
-	
-	public static String getLinkToPage(Show show) {
-		StringBuffer link = new StringBuffer();
-		
-		link.append("../");
-		link.append(Web.SHOW_DIR);
-		link.append(SEPARATOR);
-		link.append(getPageFileName(show));
-		link.append(Web.HTML_EXT);
-
-		return link.toString();
-	}
-	
-	public static String getLinkTo(Artist artist) {
-		StringBuffer link = new StringBuffer();
-		
-		link.append(getLinkToPage(artist));
-		link.append(HASH);
-		link.append(artist.getId());
-		
-		return link.toString();
-	}
-	
-	public static String getLinkTo(Venue venue) {
-		StringBuffer link = new StringBuffer();
-		
-		link.append(getLinkToPage(venue));
-		link.append(HASH);
-		link.append(venue.getId());
-		
-		return link.toString();
-	}
-	
-	public static String getLinkTo(Show show) {
-		StringBuffer link = new StringBuffer();
-		
-		link.append(getLinkToPage(show));
-		link.append(HASH);
-		link.append(show.getId());
-		
-		return link.toString();
-	}
-		
-	public static String getEntry(Artist artist) {
-		return null;
-	}
-	
-	public static String getEntry(Venue venue) {
-		return null;
-	}
-	
-	public static String getEntry(com.bolsinga.music.data.Date date) {
-		return null;
 	}
 }
