@@ -143,7 +143,7 @@
 </target>
 
 <path id="web_classpath">
-	<path refid="jaxb_classpath" />
+	<path refid="jaxb_binder_classpath" />
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
@@ -173,7 +173,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/rss/util/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 </target>
 
@@ -183,7 +183,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/plist/util/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 </target>
 
@@ -203,7 +203,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/shows/converter/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 </target>
 
@@ -213,7 +213,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/itunes/converter/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 </target>
 
@@ -223,7 +223,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/music/converter/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 </target>
 
@@ -253,7 +253,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/music/rss/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 </target>
 
@@ -283,7 +283,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/diary/rss/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 </target>
 
@@ -293,7 +293,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/rss/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 	<tstamp>
 		<format property="rss.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
@@ -322,7 +322,7 @@
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/music/ical/**" />
-		<classpath refid="jaxb_classpath" />
+		<classpath refid="jaxb_binder_classpath" />
 	</javac>
 </target>
 
