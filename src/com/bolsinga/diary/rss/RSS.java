@@ -131,7 +131,7 @@ public class RSS {
 			itemElements.add(objFactory.createTRssItemTitle(Util.getTitle(entry)));
 			itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.util.Util.getRSSDate(entry.getTimestamp().getTime())));
 			itemElements.add(objFactory.createTRssItemLink(System.getProperty("diary.link") + links.getLinkTo(entry)));
-			itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.rss.util.Util.createDescription(entry.getComment(), 200)));
+			itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.rss.util.Util.createDescription(entry.getComment(), Integer.MAX_VALUE)));
 			
 			rssItems.add(item);
 		}
