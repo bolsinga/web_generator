@@ -64,7 +64,7 @@ public class ICal {
 					System.out.println("Can't: " + parent.getAbsolutePath());
 				}
 			}
-			OutputStream os = new FileOutputStream(f);
+			OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
 			cal.output(os);
 			os.close();
 		} catch (IOException ioe) {
