@@ -5,19 +5,37 @@ Location
 	- ZIP
 	- URL
 
+Date
+	- Year
+	- Month
+	- Day
+	- isUnknown
+	
 Relation
-	- ID(s)
+	- IDRef(s)
 
 Artist
+	- ID
 	- Name
 	- Sort Name
 	- Location
 	- Albums(s)
 	- Relations(s)
 	- Comment
+	- Active
 
+Song
+	- ID
+	- Title
+	- Performer (Artist)
+	- Composer (Artist)
+	- Date
+	
 Album
-	- Name
+	- ID
+	- Title
+	- Artist
+	- isCompilation
 	- Release Date
 	- Purchase Date
 	- Label
@@ -27,11 +45,24 @@ Album
 	- Comment
 
 Venue
+	- ID
+	- Name
 	- Location
 	- Relations(s)
+	- Comment
 
+Label
+	- ID
+	- Name
+	- Location
+	- Relations(s)
+	- Comment
+	
 Show
+	- Name
 	- Venue
 	- Date
 	- Artist(s)
+	- Headliner?
+	- Songs(s)
 	- Comment
