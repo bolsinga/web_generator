@@ -50,6 +50,7 @@ abstract class DocumentCreator {
 	}
 	
 	private void writeDocument() {
+		fDocument.getBody().addElement(new HR());
 		addIndexNavigator();
 		addWebNavigator();
 		try {
