@@ -262,6 +262,10 @@ public class Web {
 	
 	public static void generate(String sourceFile, String outputDir) {
 		Music music = createMusic(sourceFile);
+		generate(music, outputDir);
+	}
+	
+	public static void generate(Music music, String outputDir) {
 		Links links = Links.getLinks(true);
 		
 		generateArtistPages(music, links, outputDir);
@@ -461,6 +465,10 @@ public class Web {
 	
 	public static String generatePreview(String sourceFile, int lastShowsCount) {
 		Music music = createMusic(sourceFile);
+		return generatePreview(music, lastShowsCount);
+	}
+	
+	public static String generatePreview(Music music, int lastShowsCount) {
 		Links links = Links.getLinks(false);
 
 		List items = music.getShow();
