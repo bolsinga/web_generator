@@ -166,9 +166,11 @@ public class ITunes {
 			ITunes.addTrack(objFactory, music, track);
 	    }
 		
-		sortAlbumsSongOrder(music);
-		
 		setAlbumYears(objFactory, music);
+		
+		sortAlbumOrder(music);
+
+		sortAlbumsSongOrder(music);
 	}
 	
 	private static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) throws JAXBException {
@@ -315,6 +317,14 @@ public class ITunes {
 		return release;
 	}
 	
+	private static void sortAlbumOrder(com.bolsinga.music.data.Music music) {
+		ListIterator li = music.getArtist().listIterator();
+		while (li.hasNext()) {
+			Artist a = (Artist)li.next();
+			Collections.sort(a.getAlbum(), com.bolsinga.music.util.Compare.ALBUM_ORDER_COMPARATOR);
+		}
+	}
+
 	private static void sortAlbumsSongOrder(com.bolsinga.music.data.Music music) {
 		ListIterator li = music.getAlbum().listIterator();
 		while (li.hasNext()) {

@@ -129,6 +129,16 @@ public class Compare {
 		}
 	};
 
+	public static final Comparator ALBUM_ORDER_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Album r1 = (Album)o1;
+			Album r2 = (Album)o2;
+
+			// The 3000 assures that 'unknown' album dates are after the known ones.
+			return ((r1.getReleaseDate() != null) ? r1.getReleaseDate().getYear().intValue() : 3000) - ((r2.getReleaseDate() != null) ? r2.getReleaseDate().getYear().intValue() : 3000);
+		}
+	};
+
 	public static final Comparator ARTIST_TRACKS_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
 			Artist r1 = (Artist)o1;
