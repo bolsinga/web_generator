@@ -105,7 +105,7 @@ public class Music {
 			xVenue = objFactory.createVenue();
 			xVenue.setName(name);
 			xVenue.setLocation(xLocation);
-			xVenue.setId("venue_" + index++);
+			xVenue.setId("v" + index++);
 			
 			mVenues.add(xVenue);
 			
@@ -141,7 +141,7 @@ public class Music {
 			if (!reason.equals("^")) {
 				xRelation.setReason(reason);
 			}
-			xRelation.setId("relation_" + index++);
+			xRelation.setId("r" + index++);
 			
 			if (type.equals("band")) {
 				xRelation.setType("artist");
@@ -208,7 +208,7 @@ public class Music {
 		if (!sArtists.containsKey(name)) {
 			result = objFactory.createArtist();
 			result.setName(name);
-			result.setId("artist_" + sArtists.size());
+			result.setId("ar" + sArtists.size());
 			if (sBandSorts.containsKey(name)) {
 				result.setSortname((String)sBandSorts.get(name));
 			}
@@ -222,15 +222,14 @@ public class Music {
 	
 	static int sPerformanceID = 0;
 
-	private static com.bolsinga.music.Performance createPerformance(ObjectFactory objFactory, com.bolsinga.music.Music music, String name, com.bolsinga.music.Date date) throws JAXBException {
+	private static com.bolsinga.music.Performance createPerformance(ObjectFactory objFactory, com.bolsinga.music.Music music, String name) throws JAXBException {
 			
 		com.bolsinga.music.Artist xArtist = addArtist(objFactory, music, name);
 				
 		com.bolsinga.music.Performance perf = objFactory.createPerformance();
 		
 		perf.setArtist(xArtist);
-		perf.setDate(date);
-		perf.setId("performance_" + sPerformanceID++);
+		perf.setId("p" + sPerformanceID++);
 		
 		return perf;
 	}
@@ -270,7 +269,7 @@ public class Music {
 			while (bi.hasNext()) {
 				oldBand = (String)bi.next();
 								
-				xPerf = createPerformance(objFactory, music, oldBand, xDate);
+				xPerf = createPerformance(objFactory, music, oldBand);
 				music.getPerformance().add(xPerf);
 				
 				xShow.getPerformance().add(xPerf);
@@ -280,7 +279,7 @@ public class Music {
 			if (oldShow.getComment() != null) {
 				xShow.setComment(oldShow.getComment());
 			}
-			xShow.setId("show_" + index++);
+			xShow.setId("sh" + index++);
 			
 			music.getShow().add(xShow);
 		}

@@ -61,7 +61,7 @@
 <!-- Define Song -->
 <xs:simpleType name="songID">
 	<xs:restriction base="xs:ID" >
-		<xs:pattern value="song_.*" />
+		<xs:pattern value="s.*" />
 	</xs:restriction>
 </xs:simpleType>
 <xs:element name="song">
@@ -81,7 +81,7 @@
 <!-- Define Album -->
 <xs:simpleType name="albumID">
 	<xs:restriction base="xs:ID" >
-		<xs:pattern value="album_.*" />
+		<xs:pattern value="a.*" />
 	</xs:restriction>
 </xs:simpleType>
 <xs:simpleType name="format">
@@ -118,7 +118,7 @@
 <!-- Define Artist -->
 <xs:simpleType name="artistID">
 	<xs:restriction base="xs:ID" >
-		<xs:pattern value="artist_.*" />
+		<xs:pattern value="ar.*" />
 	</xs:restriction>
 </xs:simpleType>
 <xs:element name="artist" >
@@ -138,7 +138,7 @@
 <!-- Define Label -->
 <xs:simpleType name="labelID" >
 	<xs:restriction base="xs:ID" >
-		<xs:pattern value="label_.*" />
+		<xs:pattern value="l.*" />
 	</xs:restriction>
 </xs:simpleType>
 <xs:element name="label">
@@ -156,7 +156,7 @@
 <!-- Define Venue -->
 <xs:simpleType name="venueID" >
 	<xs:restriction base="xs:ID" >
-		<xs:pattern value="venue_.*" />
+		<xs:pattern value="v.*" />
 	</xs:restriction>
 </xs:simpleType>
 <xs:element name="venue">
@@ -174,7 +174,7 @@
 <!-- Define Relation -->
 <xs:simpleType name="relationID" >
 	<xs:restriction base="xs:ID" >
-		<xs:pattern value="relation_.*" />
+		<xs:pattern value="r.*" />
 	</xs:restriction>
 </xs:simpleType>
 <xs:simpleType name="relationType" >
@@ -198,14 +198,13 @@
 <!-- Define Performace -->
 <xs:simpleType name="performanceID">
 	<xs:restriction base="xs:ID" >
-		<xs:pattern value="performance_.*" />
+		<xs:pattern value="p.*" />
 	</xs:restriction>
 </xs:simpleType>
 <xs:element name="performance">
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="artist" type="xs:IDREF" />
-			<xs:element name="date" type="date" />
 			<xs:element name="song" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="comment" type="xs:string" minOccurs="0" />
 		</xs:sequence>
@@ -216,7 +215,7 @@
 <!-- Define Show -->
 <xs:simpleType name="showID" >
 	<xs:restriction base="xs:ID" >
-		<xs:pattern value="show_.*" />
+		<xs:pattern value="sh.*" />
 	</xs:restriction>
 </xs:simpleType>
 <xs:element name="show">
