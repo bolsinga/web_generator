@@ -61,9 +61,11 @@ public class Util {
   public static String convertToParagraphs(String data) {
     // Convert each line to <p> tags
     StringBuffer tagged = new StringBuffer();
-    String[] lines = data.split("\\n");
-    for (int i = 0; i < lines.length; i++) {
-      tagged.append(new p().addElement(lines[i]));
+    if (data != null) {
+      String[] lines = data.split("\\n");
+      for (int i = 0; i < lines.length; i++) {
+        tagged.append(new p().addElement(lines[i]));
+      }
     }
     return tagged.toString();
   }
