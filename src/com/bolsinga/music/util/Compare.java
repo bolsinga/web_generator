@@ -77,6 +77,22 @@ public class Compare {
 		}
 	};
 	
+	public final Comparator VENUE_STATS_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Venue r1 = (Venue)o1;
+			Venue r2 = (Venue)o2;
+			
+			int sets1 = Lookup.getLookup(fMusic).getShows(r1).size();
+			int sets2 = Lookup.getLookup(fMusic).getShows(r2).size();
+			
+			int result = sets2 - sets1;
+			if (result == 0) {
+				result = VENUE_COMPARATOR.compare(r1, r2);
+			}
+			return result;
+		}
+	};
+	
 	public static final Comparator ARTIST_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
 			Artist r1 = (Artist)o1;
