@@ -229,11 +229,13 @@ public class Web {
 
 		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
 		
+		TR tr = new TR(true);
+		
 		TD td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
 		td.addElement(diary.getStatic());
-		table.addElement(td);
+		tr.addElement(td);
 
 		td = new TD();
 		td.setVAlign("top");
@@ -245,16 +247,16 @@ public class Web {
 		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
 		
 		generateDiary(musicFile, diary, mainPageEntryCount, td);
-		table.addElement(td);
+		tr.addElement(td);
 		
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("20%");
 
 		td.addElement(com.bolsinga.music.web.Web.generatePreview(musicFile, 5));
-		table.addElement(td);
+		tr.addElement(td);
 		
-		doc.getBody().addElement(table);
+		doc.getBody().addElement(table.addElement(tr));
 		
 		try {
 			File f = new File(outputDir, "index.html");
