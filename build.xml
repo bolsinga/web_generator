@@ -9,19 +9,18 @@
 
 <path id="jaxb_xjc_classpath">
 	<pathelement path="." />
-	<fileset dir="${jwsdp.home}" includes="jaxb/lib/jaxb-xjc.jar" />
+	<pathelement path="${jwsdp.home}/jaxb/lib/jaxb-xjc.jar" />
 </path>
 
 <path id="jaxb_binder_classpath">
 	<pathelement path="." />
-	<fileset dir="${jwsdp.home}" includes="jaxb/lib/jaxb-api.jar" />
-	<fileset dir="${jwsdp.home}" includes="jaxb/lib/jaxb-impl.jar" />
-	<fileset dir="${jwsdp.home}" includes="jaxb/lib/jaxb-libs.jar" />
-
-	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/jax-qname.jar" />
-	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/namespace.jar" />
-	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/relaxngDatatype.jar" />
-	<fileset dir="${jwsdp.home}" includes="jwsdp-shared/lib/xsdlib.jar" />
+	<pathelement path="${jwsdp.home}/jaxb/lib/jaxb-api.jar" />
+	<pathelement path="${jwsdp.home}/jaxb/lib/jaxb-impl.jar" />
+	<pathelement path="${jwsdp.home}/jaxb/lib/jaxb-libs.jar" />
+	<pathelement path="${jwsdp.home}/jwsdp-shared/lib/jax-qname.jar" />
+	<pathelement path="${jwsdp.home}/jwsdp-shared/lib/namespace.jar" />
+	<pathelement path="${jwsdp.home}/jwsdp-shared/lib/relaxngDatatype.jar" />
+	<pathelement path="${jwsdp.home}/jwsdp-shared/lib/xsdlib.jar" />
 </path>
 
 <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
