@@ -489,15 +489,27 @@ public class Web {
 		tbody.addElement(tr);
 		
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(links.getArtistLink()));
+		sb = new StringBuffer();
+		sb.append(music.getArtist().size());
+		sb.append(" ");
+		sb.append(links.getArtistLink());
+		tr.addElement(new TD(sb.toString()));
 		tbody.addElement(tr);
 
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(links.getShowLink()));
+		sb = new StringBuffer();
+		sb.append(music.getShow().size());
+		sb.append(" ");
+		sb.append(links.getShowLink());
+		tr.addElement(new TD(sb.toString()));
 		tbody.addElement(tr);
 		
 		tr = new TR().setAlign("right");
-		tr.addElement(new TD(links.getVenueLink()));
+		sb = new StringBuffer();
+		sb.append(music.getVenue().size());
+		sb.append(" ");
+		sb.append(links.getVenueLink());
+		tr.addElement(new TD(sb.toString()));
 		tbody.addElement(tr);
 		
 		tr = new TR().setAlign("right");
