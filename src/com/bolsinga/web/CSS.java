@@ -14,7 +14,7 @@ public class CSS {
 	public static final String DIARY_INDEX		= "diary_index";
 	public static final String DIARY_MENU		= "diary_menu";
 
-	public static final String INTERNAL			= "internal";
+	public static final String INTERNAL			= "int";
 
 	public static final String MAIN_COL1		= "main_col1";
 	public static final String MAIN_COL2		= "main_col2";
