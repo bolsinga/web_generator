@@ -177,15 +177,15 @@ class DiaryDocumentCreator {
 
 public class Web {
 	public static void main(String[] args) {
-		if (args.length != 3) {
-			System.out.println("Usage: Web [# entries on main page] [source.xml] [output.dir]");
+		if (args.length != 4) {
+			System.out.println("Usage: Web [# entries on main page] [diary.xml] [music.xml] [output.dir]");
 			System.exit(0);
 		}
 		
-		Web.generate(Integer.parseInt(args[0]), args[1], args[2]);
+		Web.generate(Integer.parseInt(args[0]), args[1], args[2], args[3]);
 	}
 
-	public static void generate(int mainPageEntryCount, String sourceFile, String outputDir) {
+	public static void generate(int mainPageEntryCount, String sourceFile, String musicFile, String outputDir) {
 		Diary diary = null;
 		try {
 			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
@@ -198,7 +198,7 @@ public class Web {
 			System.exit(1);
 		}
 		
-		generateMainPage(mainPageEntryCount, diary, outputDir);
+		generateMainPage(musicFile, mainPageEntryCount, diary, outputDir);
 		
 		generateArchivePages(diary, outputDir);
 	}
@@ -212,16 +212,33 @@ public class Web {
 		}
 	};
 	
-	public static void generateMainPage(int mainPageEntryCount, Diary diary, String outputDir) {
-		Document doc = createDocument("title");
+	public static void generateMainPage(String musicFile, int mainPageEntryCount, Diary diary, String outputDir) {
+		Document doc = createDocument(System.getProperty("diary.title"));
+
+		TBody tbody = new TBody();
 		
-		generateLeft(diary, doc);
+		TD td = new TD();
+		td.setVAlign("top");
+		td.setWidth("20%");
+		td.addElement(diary.getStatic());
+		tbody.addElement(td);
+
+		td = new TD();
+		td.setVAlign("top");
+		td.setWidth("60%");
+		td.addElement(new Center(diary.getHeader()));
+
+		generateDiary(diary, mainPageEntryCount, td);
+		tbody.addElement(td);
 		
-		generateHeader(diary, doc);
+		td = new TD();
+		td.setVAlign("top");
+		td.setWidth("20%");
+
+		td.addElement(com.bolsinga.music.web.Web.generatePreview(musicFile));
+		tbody.addElement(td);
 		
-		generateDiary(diary, mainPageEntryCount, doc);
-		
-		generateMusic(diary, doc);
+		doc.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(5).addElement(tbody));
 		
 		try {
 			File f = new File(outputDir, "index.html");
@@ -292,20 +309,23 @@ public class Web {
 		return d;
 	}
 	
-	private static void generateLeft(Diary diary, Document doc) {
+	private static void generateDiary(Diary diary, int mainPageEntryCount, TD td) {
+		List items = diary.getEntry();
+		Entry item = null;
+		TBody tbody = new TBody();
+		
+		Collections.sort(items, ENTRY_COMPARATOR);
+		Collections.reverse(items);
+		
+		for (int i = 0; i < mainPageEntryCount; i++) {
+			item = (Entry)items.get(i);
+			
+			addItem(item, tbody);
+		}
+		
+		addBanner(new A("archives/2004.html", "Archives").toString(), tbody);
 
-	}
-	
-	private static void generateHeader(Diary diary, Document doc) {
-	
-	}
-	
-	private static void generateDiary(Diary diary, int mainPageEntryCount, Document doc) {
-	
-	}
-	
-	private static void generateMusic(Diary diary, Document doc) {
-	
+		td.addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(tbody));
 	}
 	
 	public static void generateArchivePages(Diary diary, String outputDir) {
@@ -320,7 +340,7 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Entry)li.next();
 			
-			addItem(diary, item, creator.getTableBody(item));
+			addItem(item, creator.getTableBody(item));
 		}
 		
 		creator.close();
@@ -328,10 +348,10 @@ public class Web {
 
 	static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
 
-	public static void addItem(Diary diary, Entry entry, TBody tb) {
+	public static void addBanner(String text, TBody tb) {
 		Font f = new Font();
 		f.addAttribute("color", "white");
-		f.addElement(new B(sWebFormat.format(entry.getTimestamp().getTime())));
+		f.addElement(new B(text));
 		
 		Div div = new Div();
 		div.addAttribute("align", "center");
@@ -342,7 +362,11 @@ public class Web {
 		tr.addElement(new TD(div));
 		
 		tb.addElement(tr);
+	}
+	
+	public static void addItem(Entry entry, TBody tb) {
+		addBanner(sWebFormat.format(entry.getTimestamp().getTime()), tb);
 		
-		tb.addElement(new TR().addElement(new TD(entry.getComment())));
+		tb.addElementToRegistry(new TR().addElement(new TD(entry.getComment())));
 	}
 }
