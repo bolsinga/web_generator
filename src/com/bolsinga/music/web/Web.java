@@ -4,6 +4,7 @@ import com.bolsinga.music.data.*;
 import com.bolsinga.music.util.*;
 
 import java.io.*;
+import java.math.*;
 import java.util.*;
 
 import org.apache.ecs.*;
@@ -355,11 +356,10 @@ public class Web {
 	
 	public static void generateDatePages(Music music, String outputDir) {
 		List items = music.getShow();
-		String[] names = new String[items.size()];
-		int[] values = new int[items.size()];
 		Show item = null;
-		int index = 0;
-
+		Vector list = null;
+		TreeMap dates = new TreeMap(com.bolsinga.music.util.Compare.SHOW_STATS_COMPARATOR);
+		
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
 
 		ShowDocumentCreator creator = new ShowDocumentCreator(music, outputDir);
@@ -368,14 +368,32 @@ public class Web {
 		while (li.hasNext()) {
 			item = (Show)li.next();
 
-//			names[index] = item.getName();
-//			values[index] = Lookup.getLookup(music).getShows(item).size();
+			if (dates.containsKey(item)) {
+				list = (Vector)dates.get(item);
+				list.add(item);
+			} else {
+				list = new Vector();
+				list.add(item);
+				dates.put(item, list);
+			}
 			
 			creator.add(music, item);
+		}
+		creator.close();
+
+		String[] names = new String[dates.size()];
+		int[] values = new int[dates.size()];
+		int index = 0;
+		Iterator i = dates.keySet().iterator();
+		while (i.hasNext()) {
+			item = (Show)i.next();
+			
+			BigInteger year = item.getDate().getYear();
+			names[index] = (year != null) ? year.toString() : "Unknown";
+			values[index] = ((Vector)dates.get(item)).size();
 			
 			index++;
 		}
-		creator.close();
 		
 		StatisticsCreator stats = new StatisticsCreator(music, outputDir);
 		stats.getDocument("Show Statistics", Util.SHOW_DIR).getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by Year", "Year")));
