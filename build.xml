@@ -388,7 +388,6 @@
 		<sysproperty key="web.logo.alt" value="[Busy computing... for you!]" />
 		<sysproperty key="web.layout.css" value="layout.css" />
 		<sysproperty key="music.contact" value="bolsinga@gmail.com" />
-		<sysproperty key="music.root" value="http://www.io.com/~bolsinga/" />
 		<sysproperty key="music.no_embedded_links" value="${music.no_embedded_links}" />
 		<sysproperty key="rss.url" value="rss.xml" />
 		<sysproperty key="music.ical.url" value="Shows.ics" />
