@@ -269,7 +269,9 @@ class StatisticsCreator extends DocumentCreator {
 	public Div getMainDiv(String title, String directory) {
 		fTitle = title;
 		fDirectory = directory;
-		return internalGetMainDiv();
+		Div mainDiv = internalGetMainDiv();
+		// On stats pages, this is the only Div containing the table.
+		return mainDiv;
 	}
 
 	protected boolean needNewDocument() {
@@ -440,7 +442,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Artist Statistics", Links.ARTIST_DIR).addElement(new Div().addElement(makeTable(names, values, "Shows by Artist", "Artist")));
+		stats.getMainDiv("Artist Statistics", Links.ARTIST_DIR).addElement(makeTable(names, values, "Shows by Artist", "Artist"));
 		stats.close();
 	}
 	
@@ -476,7 +478,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Venue Statistics", Links.VENUE_DIR).addElement(new Div().addElement(makeTable(names, values, "Shows by Venue", "Venue")));
+		stats.getMainDiv("Venue Statistics", Links.VENUE_DIR).addElement(makeTable(names, values, "Shows by Venue", "Venue"));
 		stats.close();
 	}
 	
@@ -522,7 +524,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Show Statistics", Links.SHOW_DIR).addElement(new Div().addElement(makeTable(names, values, "Shows by Year", "Year")));
+		stats.getMainDiv("Show Statistics", Links.SHOW_DIR).addElement(makeTable(names, values, "Shows by Year", "Year"));
 		stats.close();
 	}
 	
@@ -573,7 +575,7 @@ public class Web {
 		}
 		
 		StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, sResource.getString("program"));
-		creator.getMainDiv("City Statistics", Links.CITIES_DIR).addElement(new Div().addElement(makeTable(names, values, "Shows by City", "City")));
+		creator.getMainDiv("City Statistics", Links.CITIES_DIR).addElement(makeTable(names, values, "Shows by City", "City"));
 		creator.close();
 	}
 
@@ -612,7 +614,7 @@ public class Web {
 		}
 		
 		StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Tracks Statistics", Links.TRACKS_DIR).addElement(new Div().addElement(makeTable(names, values, "Tracks by Artist", "Artist")));
+		stats.getMainDiv("Tracks Statistics", Links.TRACKS_DIR).addElement(makeTable(names, values, "Tracks by Artist", "Artist"));
 		stats.close();
 
 		items = music.getArtist();
@@ -632,7 +634,7 @@ public class Web {
 		}
 
 		stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, sResource.getString("program"));
-		stats.getMainDiv("Album Statistics", Links.TRACKS_DIR).addElement(new Div().addElement(makeTable(names, values, "Albums by Artist", "Artist")));
+		stats.getMainDiv("Album Statistics", Links.TRACKS_DIR).addElement(makeTable(names, values, "Albums by Artist", "Artist"));
 		stats.close();
 	}
 	
