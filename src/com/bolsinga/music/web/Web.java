@@ -178,6 +178,8 @@ public class Web {
 		a.addElement("test", artist.getName());
 		b.addElement(new Center().addElement(new Big().addElement(a)));
 		
+		addRelations(music, artist, doc);
+		
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
 			Show show = (Show)li.next();
@@ -252,6 +254,52 @@ public class Web {
 		Body b = doc.getBody();
 
 		b.addElement(getLinkTo(show));
+	}
+	
+	public static void addRelations(Music music, Artist artist, Document doc) {
+		Collection relations = Lookup.getLookup(music).getRelations(artist);
+		if (relations != null) {
+			Body b = doc.getBody();
+			
+			UL ul = new UL();
+			ul.addElement(new LI().addElement("See Also"));
+			
+			UL related = new UL();
+			Iterator li = relations.iterator();
+			while (li.hasNext()) {
+				Artist a = (Artist)li.next();
+				if (a.equals(artist)) {
+					related.addElement(new LI().addElement(a.getName()));
+				} else {
+					related.addElement(new LI().addElement(new A(getLinkTo(a), a.getName())));
+				}
+			}
+			ul.addElement(related);
+			
+			b.addElement(ul);
+		}
+	}
+	
+	public static void addRelations(Music music, Venue venue, Document doc) {
+		Collection relations = Lookup.getLookup(music).getRelations(venue);
+		if (relations != null) {
+			Body b = doc.getBody();
+			
+			UL ul = new UL();
+			ul.addElement(new LI().addElement("See Also"));
+			
+			Iterator li = relations.iterator();
+			while (li.hasNext()) {
+				Venue v = (Venue)li.next();
+				if (v.equals(venue)) {
+					ul.addElement(new LI().addElement(v.getName()));
+				} else {
+					ul.addElement(new LI().addElement(getLinkTo(v)));
+				}
+			}
+			
+			b.addElement(ul);
+		}
 	}
 	
 	private static String getCopyright() {
