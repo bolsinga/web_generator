@@ -1,4 +1,4 @@
-package com.bolsinga.web.util;
+package com.bolsinga.web;
 
 import java.io.*;
 import java.text.*;

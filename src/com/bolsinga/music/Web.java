@@ -38,7 +38,7 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.util.MultiDocumentC
   }
 }
 
-abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
+abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
   Music  fMusic   = null;
   Links  fLinks   = null;
   String fProgram = null;
