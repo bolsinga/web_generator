@@ -30,9 +30,9 @@ public class Lookup {
         Artist artist = null;
         Set set = null;
                 
-        ListIterator li = music.getShow().listIterator();
-        while (li.hasNext()) {
-            show = (Show)li.next();
+        ListIterator i = music.getShow().listIterator();
+        while (i.hasNext()) {
+            show = (Show)i.next();
                         
             id = ((Venue)show.getVenue()).getId();
             if (fVenueMap.containsKey(id)) {
@@ -73,9 +73,9 @@ public class Lookup {
         Relation rel = null;
         ListIterator ri = null;
                 
-        li = music.getRelation().listIterator();
-        while (li.hasNext()) {
-            rel = (Relation)li.next();
+        i = music.getRelation().listIterator();
+        while (i.hasNext()) {
+            rel = (Relation)i.next();
                         
             ri = rel.getMember().listIterator();
             while (ri.hasNext()) {

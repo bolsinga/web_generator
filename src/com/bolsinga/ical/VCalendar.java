@@ -28,9 +28,9 @@ public class VCalendar {
             w.write("\r\n");
                         
             VEvent event = null;
-            ListIterator li = fEvents.listIterator();
-            while (li.hasNext()) {
-                event = (VEvent)li.next();
+            ListIterator i = fEvents.listIterator();
+            while (i.hasNext()) {
+                event = (VEvent)i.next();
                                 
                 event.output(w);
             }

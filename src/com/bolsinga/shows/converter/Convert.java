@@ -218,9 +218,9 @@ public class Convert {
     }
         
     private static void dump(List list) {
-        ListIterator li = list.listIterator();
-        while (li.hasNext()) {
-            System.out.println(li.next());
+        ListIterator i = list.listIterator();
+        while (i.hasNext()) {
+            System.out.println(i.next());
         }
     }
 }

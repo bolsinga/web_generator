@@ -59,9 +59,9 @@ public class ICal {
                 
         VCalendar cal = new VCalendar(name);
                 
-        ListIterator li = items.listIterator();
-        while (li.hasNext()) {
-            item = (Show)li.next();
+        ListIterator i = items.listIterator();
+        while (i.hasNext()) {
+            item = (Show)i.next();
                         
             if (!item.getDate().isUnknown()) {
                 addItem(item, cal);

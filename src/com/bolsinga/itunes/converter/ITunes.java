@@ -143,26 +143,26 @@ public class ITunes {
 
         com.bolsinga.plist.data.Plist plist = Util.createPlist(itunesFile);
             
-        ListIterator li = (plist.getDict().getKeyAndArrayOrData()).listIterator();
-        while (li.hasNext()) {
-            com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)li.next();
+        ListIterator i = (plist.getDict().getKeyAndArrayOrData()).listIterator();
+        while (i.hasNext()) {
+            com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)i.next();
             if (key.getValue().equals("Tracks")) {
-                com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)li.next();
+                com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
                                 
                 List tracks = dict.getKeyAndArrayOrData();
                 ITunes.addTracks(objFactory, music, tracks);
             } else {
-                Object o = li.next();
+                Object o = i.next();
             }
         }
     }
         
     private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List tracks) throws JAXBException {
-        ListIterator li = tracks.listIterator();
-        while (li.hasNext()) {
-            com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)li.next();
+        ListIterator i = tracks.listIterator();
+        while (i.hasNext()) {
+            com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)i.next();
 
-            com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)li.next();
+            com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)i.next();
             ITunes.addTrack(objFactory, music, track);
         }
                 
@@ -174,7 +174,7 @@ public class ITunes {
     }
         
     private static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) throws JAXBException {
-        ListIterator li = track.getKeyAndArrayOrData().listIterator();
+        ListIterator i = track.getKeyAndArrayOrData().listIterator();
             
         String songTitle = null;
         String artist = null;
@@ -184,45 +184,45 @@ public class ITunes {
         int index = -1, year = -1;
         boolean compilation = false;
             
-        while (li.hasNext()) {
-            String key = ((com.bolsinga.plist.data.Key)li.next()).getValue();
+        while (i.hasNext()) {
+            String key = ((com.bolsinga.plist.data.Key)i.next()).getValue();
                                         
             if (key.equals(TK_NAME)) {
-                songTitle = ((com.bolsinga.plist.data.String)li.next()).getValue();
+                songTitle = ((com.bolsinga.plist.data.String)i.next()).getValue();
                 continue;
             }
             if (key.equals(TK_ARTIST)) {
-                artist = ((com.bolsinga.plist.data.String)li.next()).getValue();
+                artist = ((com.bolsinga.plist.data.String)i.next()).getValue();
                 continue;
             }
             if (key.equals(TK_ALBUM)) {
-                albumTitle = ((com.bolsinga.plist.data.String)li.next()).getValue();
+                albumTitle = ((com.bolsinga.plist.data.String)i.next()).getValue();
                 continue;
             }
             if (key.equals(TK_GENRE)) {
-                genre = ((com.bolsinga.plist.data.String)li.next()).getValue();
+                genre = ((com.bolsinga.plist.data.String)i.next()).getValue();
                 continue;
             }
             if (key.equals(TK_TRACK_NUMBER)) {
-                index = ((com.bolsinga.plist.data.Integer)li.next()).getValue().intValue();
+                index = ((com.bolsinga.plist.data.Integer)i.next()).getValue().intValue();
                 continue;
             }
             if (key.equals(TK_YEAR)) {
-                year = ((com.bolsinga.plist.data.Integer)li.next()).getValue().intValue();
+                year = ((com.bolsinga.plist.data.Integer)i.next()).getValue().intValue();
                 continue;
             }
             if (key.equals(TK_PLAY_DATE_UTC)) {
-                lastPlayed = ((com.bolsinga.plist.data.Date)li.next()).getValue();
+                lastPlayed = ((com.bolsinga.plist.data.Date)i.next()).getValue();
                 continue;
             }
             if (key.equals(TK_COMPILATION)) {
                 // Ignore the value, but it needs to be pulled.
-                compilation = (li.next() != null);
+                compilation = (i.next() != null);
                 continue;
             }
 
             // This key isn't used, so pass over its value.
-            Object o = li.next();
+            Object o = i.next();
 
             if (!sITunesKeys.contains(key)) {
                 System.out.println("iTunes added a new key: " + key);
@@ -324,27 +324,27 @@ public class ITunes {
     }
         
     private static void sortAlbumOrder(com.bolsinga.music.data.Music music) {
-        ListIterator li = music.getArtist().listIterator();
-        while (li.hasNext()) {
-            Artist a = (Artist)li.next();
+        ListIterator i = music.getArtist().listIterator();
+        while (i.hasNext()) {
+            Artist a = (Artist)i.next();
             Collections.sort(a.getAlbum(), com.bolsinga.music.util.Compare.ALBUM_ORDER_COMPARATOR);
         }
     }
 
     private static void sortAlbumsSongOrder(com.bolsinga.music.data.Music music) {
-        ListIterator li = music.getAlbum().listIterator();
-        while (li.hasNext()) {
-            Album a = (Album)li.next();
+        ListIterator i = music.getAlbum().listIterator();
+        while (i.hasNext()) {
+            Album a = (Album)i.next();
             Collections.sort(a.getSong(), com.bolsinga.music.util.Compare.SONG_ORDER_COMPARATOR);
         }
     }
         
     private static void setAlbumYears(ObjectFactory objFactory, com.bolsinga.music.data.Music music) throws JAXBException {
-        ListIterator li = music.getAlbum().listIterator();
+        ListIterator i = music.getAlbum().listIterator();
         int albumYear, songYear;
         com.bolsinga.music.data.Date date;
-        while (li.hasNext()) {                  
-            Album a = (Album)li.next();
+        while (i.hasNext()) {                  
+            Album a = (Album)i.next();
             if (a.getReleaseDate() != null) {
                 // The album already has a date; don't change it.
                 break;

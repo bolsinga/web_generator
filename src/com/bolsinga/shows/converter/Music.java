@@ -102,9 +102,9 @@ public class Music {
                 
         Collections.sort(venues, Compare.VENUE_COMPARATOR);
                 
-        ListIterator li = venues.listIterator();
-        while (li.hasNext()) {
-            oldVenue = (Venue)li.next();
+        ListIterator i = venues.listIterator();
+        while (i.hasNext()) {
+            oldVenue = (Venue)i.next();
                         
             name = oldVenue.getName();
                         
@@ -129,9 +129,9 @@ public class Music {
         // Make a hash of the band sort names by name
         BandMap bandMap = null;
                 
-        ListIterator li = bands.listIterator();
-        while (li.hasNext()) {
-            bandMap = (BandMap)li.next();
+        ListIterator i = bands.listIterator();
+        while (i.hasNext()) {
+            bandMap = (BandMap)i.next();
             sBandSorts.put(bandMap.getName(), bandMap.getSortName());
         }
     }
@@ -143,9 +143,9 @@ public class Music {
         ListIterator mi = null;
         int index = 0;
                 
-        ListIterator li = relations.listIterator();
-        while (li.hasNext()) {
-            oldRelation = (Relation)li.next();
+        ListIterator i = relations.listIterator();
+        while (i.hasNext()) {
+            oldRelation = (Relation)i.next();
             type = oldRelation.getType();
                         
             xRelation = objFactory.createRelation();
@@ -253,9 +253,9 @@ public class Music {
 
         Collections.sort(shows, Compare.SHOW_COMPARATOR);
                 
-        ListIterator li = shows.listIterator();
-        while (li.hasNext()) {
-            oldShow = (Show)li.next();
+        ListIterator i = shows.listIterator();
+        while (i.hasNext()) {
+            oldShow = (Show)i.next();
                         
             xShow = objFactory.createShow();
                         

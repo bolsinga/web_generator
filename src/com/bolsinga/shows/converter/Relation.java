@@ -55,9 +55,9 @@ public class Relation {
         sb.append(getReason());
         sb.append(" (");
                 
-        ListIterator li = getMembers().listIterator();
-        while (li.hasNext()) {
-            sb.append((String)(li.next()));
+        ListIterator i = getMembers().listIterator();
+        while (i.hasNext()) {
+            sb.append((String)(i.next()));
             sb.append(", ");
         }
                 

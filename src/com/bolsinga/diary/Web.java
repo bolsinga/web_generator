@@ -81,9 +81,9 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
         div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_INDEX);
 
         java.util.Map m = new TreeMap();
-        Iterator li = fDiary.getEntry().iterator();
-        while (li.hasNext()) {
-            Entry e = (Entry)li.next();
+        Iterator i = fDiary.getEntry().iterator();
+        while (i.hasNext()) {
+            Entry e = (Entry)i.next();
             String letter = fLinks.getPageFileName(e);
             if (!m.containsKey(letter)) {
                 m.put(letter, fLinks.getLinkToPage(e));
@@ -92,9 +92,9 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
                 
         ul list = new ul();
 
-        li = m.keySet().iterator();
-        while (li.hasNext()) {
-            String s = (String)li.next();
+        i = m.keySet().iterator();
+        while (i.hasNext()) {
+            String s = (String)i.next();
             if (s.equals(getCurrentLetter())) {
                 list.addElement(new li(s));
             } else {
@@ -320,9 +320,9 @@ public class Web {
                 
         DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, music, links, outputDir, com.bolsinga.web.util.Util.getResourceString("program"));
                 
-        ListIterator li = items.listIterator();
-        while (li.hasNext()) {
-            item = (Entry)li.next();
+        ListIterator i = items.listIterator();
+        while (i.hasNext()) {
+            item = (Entry)i.next();
                         
             creator.add(item);
         }

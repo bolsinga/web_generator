@@ -74,9 +74,9 @@ public class Util {
         int tracks = 0;
         List albums = artist.getAlbum();
         if (albums != null) {
-            ListIterator li = albums.listIterator();
-            while (li.hasNext()) {
-                com.bolsinga.music.data.Album album = (com.bolsinga.music.data.Album)li.next();
+            ListIterator i = albums.listIterator();
+            while (i.hasNext()) {
+                com.bolsinga.music.data.Album album = (com.bolsinga.music.data.Album)i.next();
                 List songs = album.getSong();
                 ListIterator si = songs.listIterator();
                 while (si.hasNext()) {

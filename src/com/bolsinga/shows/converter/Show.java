@@ -66,9 +66,9 @@ public class Show {
         sb.append(getDate());
 
         sb.append(" (");
-        ListIterator li = getBands().listIterator();
-        while (li.hasNext()) {
-            sb.append((String)(li.next()));
+        ListIterator i = getBands().listIterator();
+        while (i.hasNext()) {
+            sb.append((String)(i.next()));
             sb.append(", ");
         }
         sb.append(") ");

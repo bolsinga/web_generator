@@ -28,13 +28,13 @@ public class RSS {
         sb.append(com.bolsinga.music.util.Util.toString(show.getDate()));
         sb.append(" - ");
                 
-        ListIterator li = show.getArtist().listIterator();
-        while (li.hasNext()) {
-            Artist performer = (Artist)li.next();
+        ListIterator i = show.getArtist().listIterator();
+        while (i.hasNext()) {
+            Artist performer = (Artist)i.next();
                         
             sb.append(performer.getName());
                         
-            if (li.hasNext()) {
+            if (i.hasNext()) {
                 sb.append(", ");
             }
         }

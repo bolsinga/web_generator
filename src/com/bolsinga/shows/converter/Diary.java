@@ -70,9 +70,9 @@ public class Diary {
         Statics oldStatic = null;
         com.bolsinga.diary.data.Static xStatic = null;
                 
-        ListIterator li = statics.listIterator();
-        while (li.hasNext()) {
-            oldStatic = (Statics)li.next();
+        ListIterator i = statics.listIterator();
+        while (i.hasNext()) {
+            oldStatic = (Statics)i.next();
                         
             xStatic = objFactory.createStatic();
                         
@@ -91,9 +91,9 @@ public class Diary {
         com.bolsinga.diary.data.Entry xEntry = null;
         int index = comments.size() - 1;
                 
-        ListIterator li = comments.listIterator();
-        while (li.hasNext()) {
-            oldComment = (Comments)li.next();
+        ListIterator i = comments.listIterator();
+        while (i.hasNext()) {
+            oldComment = (Comments)i.next();
                         
             xEntry = objFactory.createEntry();
             xEntry.setTimestamp(Diary.createTimestamp(oldComment.getDate()));

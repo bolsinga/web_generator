@@ -120,9 +120,9 @@ public class Encode {
         Links standardLinks = Links.getLinks(false);
         Links upLinks = Links.getLinks(true);
                 
-        ListIterator li = items.listIterator();
-        while (li.hasNext()) {
-            item = (Artist)li.next();
+        ListIterator i = items.listIterator();
+        while (i.hasNext()) {
+            item = (Artist)i.next();
                         
             fEncodings.add(new Data(item, standardLinks, upLinks));
         }
@@ -133,9 +133,9 @@ public class Encode {
         // Don't use venues with lower case names, these are 'vague' venues.
         Pattern startsLowerCase = Pattern.compile("\\p{Lower}.*");
                 
-        li = items.listIterator();
-        while (li.hasNext()) {
-            vitem = (Venue)li.next();
+        i = items.listIterator();
+        while (i.hasNext()) {
+            vitem = (Venue)i.next();
                         
             if (!startsLowerCase.matcher(vitem.getName()).matches()) {
                 fEncodings.add(new Data(vitem, standardLinks, upLinks));
@@ -145,9 +145,9 @@ public class Encode {
         items = music.getAlbum();
         Album aitem = null;
                 
-        li = items.listIterator();
-        while (li.hasNext()) {
-            aitem = (Album)li.next();
+        i = items.listIterator();
+        while (i.hasNext()) {
+            aitem = (Album)i.next();
                         
             fEncodings.add(new Data(aitem, standardLinks, upLinks));
         }
@@ -159,9 +159,9 @@ public class Encode {
         String result = source;
         Data data = null;
                 
-        Iterator li = fEncodings.iterator();
-        while (li.hasNext()) {
-            data = (Data)li.next();
+        Iterator i = fEncodings.iterator();
+        while (i.hasNext()) {
+            data = (Data)i.next();
                         
             result = addLinks(data, result, upOneLevel);
         }

@@ -54,9 +54,9 @@ public class Music {
         String s;
         HashSet bands = new HashSet();
                 
-        ListIterator li = music.getArtist().listIterator();
-        while (li.hasNext()) {
-            s = ((Artist)li.next()).getName().toLowerCase();
+        ListIterator i = music.getArtist().listIterator();
+        while (i.hasNext()) {
+            s = ((Artist)i.next()).getName().toLowerCase();
             if (bands.contains(s)) {
                 System.out.println(s);
             } else {
