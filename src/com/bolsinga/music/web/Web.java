@@ -71,6 +71,15 @@ abstract class DocumentCreator {
 		}
 	}
 	
+	public String getTitle(String letter, String type) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("'");
+		sb.append(letter);
+		sb.append("' ");
+		sb.append(type);
+		return sb.toString();
+	}
+	
 	private void addHeader() {
 		IMG img = new IMG("http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif");
 		img.setHeight(90);
@@ -108,7 +117,7 @@ class ArtistDocumentCreator extends DocumentCreator {
 	
 	protected Document createDocument() {
 		fDocArtist = fArtist;
-		return Web.createHTMLDocument(Util.getPageFileName(fDocArtist), "Artists");
+		return Web.createHTMLDocument(getTitle(Util.getPageFileName(fDocArtist), "Artists"));
 	}
 	
 	protected String getCurrentPath() {
@@ -139,7 +148,7 @@ class VenueDocumentCreator extends DocumentCreator {
 	
 	protected Document createDocument() {
 		fDocVenue = fVenue;
-		return Web.createHTMLDocument(Util.getPageFileName(fDocVenue), "Venues");
+		return Web.createHTMLDocument(getTitle(Util.getPageFileName(fDocVenue), "Venues"));
 	}
 	
 	protected String getCurrentPath() {
@@ -189,7 +198,7 @@ class ShowDocumentCreator extends DocumentCreator {
 	protected Document createDocument() {
 		fDocShow = fShow;
 		fDate = null;
-		return Web.createHTMLDocument(Util.getPageFileName(fDocShow), "Dates");
+		return Web.createHTMLDocument(getTitle(Util.getPageFileName(fDocShow), "Dates"));
 	}
 	
 	protected String getCurrentPath() {
@@ -201,13 +210,19 @@ class ShowDocumentCreator extends DocumentCreator {
 	}
 }
 
-class CityStatisticsCreator extends DocumentCreator {
-
-	public CityStatisticsCreator(Music music, String outputDir) {
+class StatisticsCreator extends DocumentCreator {
+	static final String FILE_NAME = "stats.html";
+	
+	String fTitle = null;
+	String fDirectory = null;
+	
+	public StatisticsCreator(Music music, String outputDir) {
 		super(music, outputDir);
 	}
 
-	public Document getDocument() {
+	public Document getDocument(String title, String directory) {
+		fTitle = title;
+		fDirectory = directory;
 		return internalGetDocument();
 	}
 
@@ -216,11 +231,11 @@ class CityStatisticsCreator extends DocumentCreator {
 	}
 	
 	protected Document createDocument() {
-		return Web.createHTMLDocument("stats.html", "City Statistics");
+		return Web.createHTMLDocument(fTitle);
 	}
 	
 	protected String getCurrentPath() {
-		return "cities/stats.html";
+		return fDirectory + "/" + FILE_NAME;
 	}
 	
 	protected void addIndexNavigator() {
@@ -364,8 +379,8 @@ public class Web {
 			}
 		}
 		
-		CityStatisticsCreator creator = new CityStatisticsCreator(music, outputDir);
-		creator.getDocument().getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
+		StatisticsCreator creator = new StatisticsCreator(music, outputDir);
+		creator.getDocument("City Statistics", "cities").getBody().addElement(new Center().addElement(makeTable(names, values, "Shows by City", "City")));
 		creator.close();
 	}
 	
@@ -717,16 +732,11 @@ public class Web {
 		return sb.toString();
 	}
 	
-	static Document createHTMLDocument(String letter, String type) {
+	static Document createHTMLDocument(String title) {
 		Document d = new Document();
 		
         d.setDoctype(new org.apache.ecs.Doctype.Html40Strict());
-		StringBuffer sb = new StringBuffer();
-		sb.append("'");
-		sb.append(letter);
-		sb.append("' ");
-		sb.append(type);
-		d.appendTitle(sb.toString());
+		d.appendTitle(title);
 		d.getHtml().setPrettyPrint(true);
 		
 		Head h = d.getHead();
