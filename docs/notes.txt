@@ -66,3 +66,29 @@ Show
 	- Headliner?
 	- Songs(s)
 	- Comment
+
+icalendar format (filename.ics -> "filename" is calendar name in iCal):
+
+BEGIN:VCALENDAR
+X-WR-CALNAME:filename
+CALSCALE:GREGORIAN
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20040328
+DTEND;VALUE=DATE:20040329
+SUMMARY:band1\, band2 @ venue\, year
+URL;VALUE=URI:http://www.io.com/~bolsinga/link_to_show
+RRULE:FREQ=YEARLY;INTERVAL=1
+END:VEVENT
+END:VCALENDAR
+
+-VCalendar
+ VCalendar(String name)
+ add(VEvent)
+ output(OutputStream)
+
+-VEvent
+ setDate(Date)
+ setSummary(String)
+ setURL(URL)
+ output(OutputStream)
