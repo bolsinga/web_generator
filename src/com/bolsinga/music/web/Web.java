@@ -782,7 +782,7 @@ public class Web {
 			    
 			    String comment = show.getComment();
 			    if (comment != null) {
-				    showInfo.addElement(new LI(new A(showLink, new I("Show Summary"))));
+				    showInfo.addElement(new LI(new A(showLink, "Show Summary")));
 			    }
 			    
 			    showListing.addElement(showInfo);
@@ -834,7 +834,7 @@ public class Web {
 			
 			String comment = show.getComment();
 			if (comment != null) {
-				showInfo.addElement(new LI(new A(showLink, new I("Show Summary"))));
+				showInfo.addElement(new LI(new A(showLink, "Show Summary")));
 			}
 			
 			showListing.addElement(showInfo);
