@@ -75,7 +75,7 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
 
 	public void add(Artist item) {
 		fCurArtist = item;
-        getContainer().addElement(getCurrentElement());
+        add();
         fLastArtist = fCurArtist;
     }
 	
@@ -122,7 +122,7 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 
 	public void add(Venue item) {
 		fCurVenue = item;
-		getContainer().addElement(getCurrentElement());
+        add();
 		fLastVenue = fCurVenue;
     }
 	
@@ -169,7 +169,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 	
 	public void add(Show item) {
 		fCurShow = item;
-		getContainer().addElement(getCurrentElement());
+        add();
 		fLastShow = fCurShow;
 	}
 	
@@ -212,7 +212,7 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
 	String fTitle = null;
 	String fDirectory = null;
     
-    Table fCurTable = null;
+    table fCurTable = null;
 
 	public StatisticsCreator(Music music, Links links, String outputDir, String program, String filename, String title, String directory) {
 		super(music, links, outputDir, program);
@@ -223,7 +223,7 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
 
     public void add(table t) {
         fCurTable = t;
-		getContainer().addElement(getCurrentElement());
+        add();
     }
 	
 	protected String getTitle() {
@@ -303,7 +303,7 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
 	
 	public void add(Album item) {
 		fCurAlbum = item;
-        getContainer().addElement(getCurrentElement());
+        add();
         fLastAlbum = fCurAlbum;
     }
 	

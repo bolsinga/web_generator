@@ -31,7 +31,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.MultiDocumentCreator {
 
     public void add(Entry entry) {
         fCurEntry = entry;
-		getContainer().addElement(getCurrentElement());
+        add();
         fLastEntry = fCurEntry;
     }
     
