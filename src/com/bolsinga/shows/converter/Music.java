@@ -59,6 +59,8 @@ public class Music {
 
 			createRelations(objFactory, music, relations);
 
+			music.setTimestamp(Calendar.getInstance());
+
 			// Write out to the output file.
 			JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
 			Marshaller m = jc.createMarshaller();

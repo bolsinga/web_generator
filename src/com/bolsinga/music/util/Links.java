@@ -33,13 +33,13 @@ public class Links {
 		fUpOneLevel = upOneLevel;
 	}
 	
-	public void addWebNavigator(Document doc) {
+	public void addWebNavigator(Music music, Document doc) {
 		Center c = new Center();
 		
 		StringBuffer sb = new StringBuffer();
 		
 		sb.append("Generated ");
-		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
+		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
 		sb.append(" ");
 
 		StringBuffer link = new StringBuffer();

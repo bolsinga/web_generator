@@ -88,7 +88,7 @@ abstract class DocumentCreator {
 	}
 	
 	protected void addWebNavigator() {
-		fLinks.addWebNavigator(fDocument);
+		fLinks.addWebNavigator(fMusic, fDocument);
 	}
 	
 	protected void finalize() throws Throwable {
@@ -459,14 +459,15 @@ public class Web {
 		creator.close();
 	}
 	
-	public static String generatePreview(String sourceFile) {
+	public static String generatePreview(String sourceFile, int lastShowsCount) {
 		Music music = createMusic(sourceFile);
 		Links links = Links.getLinks(false);
 
 		List items = music.getShow();
+		Show item = null;
+
 		Collections.sort(items, com.bolsinga.music.util.Compare.SHOW_COMPARATOR);
-		
-		int lastShowsCount = 5;
+		Collections.reverse(items);
 		
 		TBody tbody = null;
 		TR tr = null;
@@ -482,7 +483,7 @@ public class Web {
 		
 		sb = new StringBuffer();
 		sb.append("Generated ");
-		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
+		sb.append(Util.sWebFormat.format(music.getTimestamp().getTime()));
 		tr = new TR().setAlign("right");
 		tr.addElement(new TD(sb.toString()));
 		tbody.addElement(tr);
@@ -514,10 +515,42 @@ public class Web {
 		tr.addElement(new TD(sb.toString()));
 		tbody.addElement(tr);
 		
+		TD td = new TD();
 		for (int i = 0; i < lastShowsCount; i++) {
-		
+			item = (Show)items.get(i);
+			
+			UL showListing = new UL();
+			showListing.addElement(new LI().addElement(new A(links.getLinkTo(item), Util.toString(item.getDate()))));
+			
+			UL showInfo = new UL();
+			
+			LI listItem = new LI();
+			ListIterator li = item.getPerformance().listIterator();
+			while (li.hasNext()) {
+				Performance p = (Performance)li.next();
+				Artist performer = (Artist)p.getArtist();
+				
+				listItem.addElement(new A(links.getLinkTo(performer), performer.getName()));
+				
+				if (li.hasNext()) {
+					listItem.addElement(", ");
+				}
+			}
+			showInfo.addElement(listItem);
+			
+			Venue venue = (Venue)item.getVenue();
+			A venueA = new A(links.getLinkTo(venue), venue.getName());
+			Location l = (Location)venue.getLocation();
+			showInfo.addElement(new LI().addElement(venueA.toString() + " " + l.getCity() + ", " + l.getState()));
+			
+			showListing.addElement(showInfo);
+			
+			td.addElement(showListing);
+			
+			td.addElement(new P());
 		}
 		
+		tbody.addElement(new TR().addElement(td));
 		recent = new Table().setBorder(0).setWidth("100%").setCellSpacing(5).setCellPadding(0).addElement(tbody);
 		
 		sb = new StringBuffer();

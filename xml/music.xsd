@@ -240,6 +240,7 @@
 <xs:element name="music">
 	<xs:complexType>
 		<xs:sequence>
+			<xs:element name="timestamp" type="xs:date" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="location" maxOccurs="unbounded" />
 			<xs:element ref="venue" maxOccurs="unbounded" />
 			<xs:element ref="artist" maxOccurs="unbounded" />

@@ -233,8 +233,12 @@ public class Web {
 		td = new TD();
 		td.setVAlign("top");
 		td.setWidth("60%");
-		td.addElement(new Center(diary.getHeader()));
-
+		StringBuffer sb = new StringBuffer();
+		sb.append("Updated ");
+		sb.append(Web.sWebFormat.format(Calendar.getInstance().getTime()));
+		sb.append("!");
+		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
+		
 		generateDiary(diary, mainPageEntryCount, td);
 		tbody.addElement(td);
 		
@@ -242,7 +246,7 @@ public class Web {
 		td.setVAlign("top");
 		td.setWidth("20%");
 
-		td.addElement(com.bolsinga.music.web.Web.generatePreview(musicFile));
+		td.addElement(com.bolsinga.music.web.Web.generatePreview(musicFile, 5));
 		tbody.addElement(td);
 		
 		doc.getBody().addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(tbody));
