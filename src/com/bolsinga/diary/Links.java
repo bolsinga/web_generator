@@ -13,12 +13,22 @@ public class Links {
 	private static final String HASH = "#";
 
 	static DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
+
+	private boolean fUpOneLevel;
 	
-	public static String getPageFileName(Entry entry) {
+	public static Links getLinks(boolean upOneLevel) {
+		return new Links(upOneLevel);
+	}
+	
+	Links(boolean upOneLevel) {
+		fUpOneLevel = upOneLevel;
+	}
+	
+	public String getPageFileName(Entry entry) {
 		return sArchivePageFormat.format(entry.getTimestamp().getTime());
 	}
 
-	public static String getPagePath(Entry entry) {
+	public String getPagePath(Entry entry) {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append(ARCHIVES_DIR);
@@ -29,11 +39,13 @@ public class Links {
 		return sb.toString();
 	}
 
-	public static String getLinkToPage(Entry entry) {
+	public String getLinkToPage(Entry entry) {
 		StringBuffer link = new StringBuffer();
 		
-		link.append("..");
-		link.append(File.separator);
+		if (fUpOneLevel) {
+			link.append("..");
+			link.append(File.separator);
+		}
 		
 		link.append(ARCHIVES_DIR);
 		link.append(File.separator);

@@ -14,14 +14,16 @@ import org.apache.ecs.filter.*;
 
 class DiaryDocumentCreator {
 	Diary fDiary = null;
+	Links fLinks = null;
 	String fOutputDir = null;
 	Document fDocument = null;
 	Table fTable = null;
 	Entry fEntry = null;
 	String fProgram = null;
 	
-	public DiaryDocumentCreator(Diary diary, String outputDir, String program) {
+	public DiaryDocumentCreator(Diary diary, Links links, String outputDir, String program) {
 		fDiary = diary;
+		fLinks = links;
 		fOutputDir = outputDir;
 		fProgram = program;
 	}
@@ -55,12 +57,12 @@ class DiaryDocumentCreator {
 	}
 
 	private boolean needNewDocument(Entry entry) {
-		return (fEntry == null) || (!Links.getPageFileName(fEntry).equals(Links.getPageFileName(entry)));
+		return (fEntry == null) || (!fLinks.getPageFileName(fEntry).equals(fLinks.getPageFileName(entry)));
 	}
 	
 	private String getTitle(Entry entry) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(Links.getPageFileName(entry));
+		sb.append(fLinks.getPageFileName(entry));
 		sb.append(" Archives");
 		return sb.toString();
 	}
@@ -71,7 +73,7 @@ class DiaryDocumentCreator {
 		addIndexNavigator();
 		addWebNavigator(fProgram);
 		try {
-			File f = new File(fOutputDir, Links.getPagePath(fEntry));
+			File f = new File(fOutputDir, fLinks.getPagePath(fEntry));
 			File parent = new File(f.getParent());
 			if (!parent.exists()) {
 				if (!parent.mkdirs()) {
@@ -103,16 +105,16 @@ class DiaryDocumentCreator {
 		Iterator li = fDiary.getEntry().iterator();
 		while (li.hasNext()) {
 			Entry a = (Entry)li.next();
-			String letter = Links.getPageFileName(a);
+			String letter = fLinks.getPageFileName(a);
 			if (!m.containsKey(letter)) {
-				m.put(letter, Links.getLinkToPage(a));
+				m.put(letter, fLinks.getLinkToPage(a));
 			}
 		}
 
 		li = m.keySet().iterator();
 		while (li.hasNext()) {
 			String a = (String)li.next();
-			if (a.equals(Links.getPageFileName(fEntry))) {
+			if (a.equals(fLinks.getPageFileName(fEntry))) {
 				c.addElement(a + " ");
 			} else {
 				c.addElement(new A((String)m.get(a), a).toString() + " ");
@@ -128,7 +130,7 @@ class DiaryDocumentCreator {
 		StringBuffer sb = new StringBuffer();
 		
 		sb.append("Generated ");
-		sb.append(Web.sWebFormat.format(Calendar.getInstance().getTime()));
+		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append(" ");
 
 		StringBuffer link = new StringBuffer();
@@ -197,7 +199,7 @@ public class Web {
 		td.setWidth("60%");
 		StringBuffer sb = new StringBuffer();
 		sb.append("Updated ");
-		sb.append(Web.sWebFormat.format(Calendar.getInstance().getTime()));
+		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append("!");
 		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
 		
@@ -315,7 +317,9 @@ public class Web {
 		
 		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		
-		DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, outputDir, sResource.getString("program"));
+		Links links = Links.getLinks(true);
+		
+		DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, links, outputDir, sResource.getString("program"));
 		
 		ListIterator li = items.listIterator();
 		while (li.hasNext()) {
@@ -326,8 +330,6 @@ public class Web {
 		
 		creator.close();
 	}
-
-	static DateFormat sWebFormat = new SimpleDateFormat("M/d/yyyy");
 
 	public static void addBanner(A item, Table table) {
 		Font f = new Font();
@@ -348,7 +350,7 @@ public class Web {
 	public static void addItem(String musicFile, Entry entry, Table table, boolean upOneLevel) {
 		A a = new A();
 		a.setName(entry.getId());
-		a.addElement("test", sWebFormat.format(entry.getTimestamp().getTime()));
+		a.addElement("test", Util.getTitle(entry));
 		addBanner(a, table);
 		
 		table.addElement(new TR().addElement(new TD(Web.encodedComment(musicFile, entry, upOneLevel))));
