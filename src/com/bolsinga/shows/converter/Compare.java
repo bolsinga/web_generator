@@ -44,4 +44,13 @@ public class Compare {
 			return result;
 		}
 	};
+	
+	public static final Comparator COMMENT_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			Comments r1 = (Comments)o1;
+			Comments r2 = (Comments)o2;
+			
+			return convert(r1.getDate()) - convert(r2.getDate());
+		}
+	};
 }
