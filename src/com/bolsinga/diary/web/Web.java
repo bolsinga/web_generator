@@ -104,18 +104,22 @@ class DiaryDocumentCreator {
 				m.put(letter, fLinks.getLinkToPage(e));
 			}
 		}
+		
+		ul list = new ul();
 
 		li = m.keySet().iterator();
 		while (li.hasNext()) {
 			String s = (String)li.next();
 			if (s.equals(fLinks.getPageFileName(fEntry))) {
-				d.addElement(s + " ");
+				list.addElement(new li(s));
 			} else {
-				d.addElement(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s).toString() + " ");
+				list.addElement(new li(com.bolsinga.web.util.Util.createInternalA((String)m.get(s), s)));
 			}
 		}
 		
-		d.addElement(fLinks.getRSSLink());
+		list.addElement(fLinks.getRSSLink());
+		
+		d.addElement(list);
 		
 		return d;
 	}
