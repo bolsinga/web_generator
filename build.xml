@@ -52,7 +52,7 @@
 	</javac>
 </target>
 
-<target name="converter" depends="prepare">
+<target name="converter" depends="jaxb">
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
