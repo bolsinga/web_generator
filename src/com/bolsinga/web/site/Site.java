@@ -10,7 +10,7 @@ public class Site {
       System.exit(0);
     }
 
-    com.bolsinga.web.util.Util.createSettings(args[2]);
+    com.bolsinga.web.Util.createSettings(args[2]);
                 
     Site.generate(args[0], args[1], args[3], args[4]);
   }

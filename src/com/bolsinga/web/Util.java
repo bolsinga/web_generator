@@ -1,6 +1,4 @@
-package com.bolsinga.web.util;
-
-import com.bolsinga.web.*;
+package com.bolsinga.web;
 
 import java.util.*;
 
@@ -14,7 +12,7 @@ import javax.xml.bind.Unmarshaller;
 
 public class Util {
 
-  private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.util.web");
+  private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.web");
 
   private static com.bolsinga.settings.data.Settings sSettings = null;
   private static boolean sPrettyPrint = false;
@@ -32,12 +30,12 @@ public class Util {
   public static link getIconLink() {
     link result = new link();
     result.setRel("SHORTCUT ICON");
-    result.setHref(com.bolsinga.web.util.Util.getSettings().getIco());
+    result.setHref(Util.getSettings().getIco());
     return result;
   }
         
   public static img getLogo() {
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getLogoImage();
+    com.bolsinga.settings.data.Image image = Util.getSettings().getLogoImage();
 
     img i = new img(image.getLocation());
     i.setHeight(image.getHeight().intValue());

@@ -42,8 +42,8 @@ public class Links {
         
   public div addWebNavigator(Music music, String program) {
     Vector e = new Vector();
-    Object[] args2 = { com.bolsinga.web.util.Util.getSettings().getContact(), program };
-    e.add(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact"))); // mailto: URL
+    Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
+    e.add(new a(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
     e.add(getLinkToHome());
     e.add(getArtistLink());
     e.add(getTracksLink());
@@ -51,10 +51,10 @@ public class Links {
     e.add(getVenueLink());
     e.add(getCityLink());
 
-    div d = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
+    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
     Object[] args = { music.getTimestamp().getTime() };
-    d.addElement(new h4(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("generated"), args)));
-    d.addElement(com.bolsinga.web.util.Util.createUnorderedList(e));
+    d.addElement(new h4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
         
@@ -241,7 +241,7 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.util.Util.createInternalA(sb.toString(), com.bolsinga.web.util.Util.getResourceString("bands"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("bands"));
   }
                 
   public a getShowLink() {
@@ -254,7 +254,7 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.util.Util.createInternalA(sb.toString(), com.bolsinga.web.util.Util.getResourceString("dates"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("dates"));
   }
         
   public a getTracksLink() {
@@ -267,7 +267,7 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.util.Util.createInternalA(sb.toString(), com.bolsinga.web.util.Util.getResourceString("tracks"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("tracks"));
   }
 
   public a getAlbumsLink() {
@@ -280,7 +280,7 @@ public class Links {
     sb.append(File.separator);
     sb.append(ALBUM_STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.util.Util.createInternalA(sb.toString(), com.bolsinga.web.util.Util.getResourceString("albums"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("albums"));
   }
 
   public a getVenueLink() {
@@ -293,7 +293,7 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.util.Util.createInternalA(sb.toString(), com.bolsinga.web.util.Util.getResourceString("venues"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("venues"));
   }
         
   public a getCityLink() {
@@ -306,7 +306,7 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.util.Util.createInternalA(sb.toString(), com.bolsinga.web.util.Util.getResourceString("cities"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("cities"));
   }
 
   public a getICalLink() {
@@ -318,9 +318,9 @@ public class Links {
     }
     sb.append(ICAL_DIR);
     sb.append(File.separator);
-    sb.append(com.bolsinga.web.util.Util.getSettings().getIcalName() + ".ics");
+    sb.append(com.bolsinga.web.Util.getSettings().getIcalName() + ".ics");
 
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getIcalImage();
+    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getIcalImage();
 
     img i = new img(image.getLocation());
     i.setHeight(image.getHeight().intValue());
@@ -339,7 +339,7 @@ public class Links {
     }
     url.append(STYLES_DIR);
     url.append(File.separator);
-    url.append(com.bolsinga.web.util.Util.getSettings().getCssFile());
+    url.append(com.bolsinga.web.Util.getSettings().getCssFile());
     return url.toString();
   }
 
@@ -358,6 +358,6 @@ public class Links {
       url.append(File.separator);
     }
     url.append("index.html");
-    return com.bolsinga.web.util.Util.createInternalA(url.toString(), com.bolsinga.web.util.Util.getResourceString("home"));
+    return com.bolsinga.web.Util.createInternalA(url.toString(), com.bolsinga.web.Util.getResourceString("home"));
   }
 }

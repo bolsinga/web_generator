@@ -33,7 +33,7 @@ public class Util {
       Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
                           ((date.getDay() != null) ? date.getDay() : BigInteger.ZERO),
                           ((date.getYear() != null) ? date.getYear() : BigInteger.ZERO) };
-      return MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("unknowndate"), args);
+      return MessageFormat.format(com.bolsinga.web.Util.getResourceString("unknowndate"), args);
     }
   }
         
@@ -46,7 +46,7 @@ public class Util {
         d.set(Calendar.MONTH, date.getMonth().intValue() - 1);
         return sMonthFormat.format(d.getTime());
       } else {
-        return com.bolsinga.web.util.Util.getResourceString("unknownmonth");
+        return com.bolsinga.web.Util.getResourceString("unknownmonth");
       }
     }
   }

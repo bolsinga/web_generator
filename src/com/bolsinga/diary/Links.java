@@ -72,7 +72,7 @@ public class Links {
   }
         
   public a getRSSLink() {
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getRssImage();
+    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getRssImage();
 
     img i = new img(image.getLocation());
     i.setHeight(image.getHeight().intValue());
@@ -91,7 +91,7 @@ public class Links {
     }
     url.append(RSS_DIR);
     url.append(File.separator);
-    url.append(com.bolsinga.web.util.Util.getSettings().getRssFile());
+    url.append(com.bolsinga.web.Util.getSettings().getRssFile());
     return url.toString();
   }
         
@@ -112,7 +112,7 @@ public class Links {
     }
     url.append(STYLES_DIR);
     url.append(File.separator);
-    url.append(com.bolsinga.web.util.Util.getSettings().getCssFile());
+    url.append(com.bolsinga.web.Util.getSettings().getCssFile());
     return url.toString();
   }
 
@@ -131,6 +131,6 @@ public class Links {
       url.append(File.separator);
     }
     url.append("index.html");
-    return com.bolsinga.web.util.Util.createInternalA(url.toString(), com.bolsinga.web.util.Util.getResourceString("home"));
+    return com.bolsinga.web.Util.createInternalA(url.toString(), com.bolsinga.web.Util.getResourceString("home"));
   }
 }

@@ -16,7 +16,7 @@ public class ICal {
       System.exit(0);
     }
 
-    com.bolsinga.web.util.Util.createSettings(args[1]);
+    com.bolsinga.web.Util.createSettings(args[1]);
         
     ICal.generate(args[0], args[2]);
   }
@@ -30,7 +30,7 @@ public class ICal {
   public static void generate(Music music, String outputDir) {
     OutputStreamWriter w = null;
 
-    String name = com.bolsinga.web.util.Util.getSettings().getIcalName();
+    String name = com.bolsinga.web.Util.getSettings().getIcalName();
                 
     try {
       File f = new File(outputDir, "ical/" + name + ".ics");

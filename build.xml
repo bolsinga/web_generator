@@ -171,13 +171,12 @@
                         deprecation="on">
                 <src path="${src.dir}" />
                 <include name="com.bolsinga.web/*.java" />
-                <include name="com/bolsinga/web/util/*.java" />
                 <classpath refid="web_classpath" />
         </javac>
         <tstamp>
                 <format property="web.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
         </tstamp>
-        <copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/util/web.properties">
+        <copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/web.properties">
                 <filterset>
                         <filter token="builddate" value="${web.builddate}" />
                         <filter token="program" value="com.bolsinga.web.site" />
@@ -306,7 +305,7 @@
 
 <target name="generateCSSTemplate" depends="web, jar">
         <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.web.util.CSS" fork="true">
+        <java classname="com.bolsinga.web.CSS" fork="true">
                 <arg value="${output.dir}/styles/" />
                 <classpath refid="music_classpath" />
         </java>

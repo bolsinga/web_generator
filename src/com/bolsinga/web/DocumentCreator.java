@@ -45,7 +45,7 @@ public abstract class DocumentCreator {
       fDocument = createDocument();
       fDocument.getBody().addElement(getHeaderDiv());
                         
-      fMain = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.CSS.DOC_MAIN);
+      fMain = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DOC_MAIN);
     }
     return fMain;
   }
@@ -73,7 +73,7 @@ public abstract class DocumentCreator {
         
   protected String getTitle(String type) {
     Object[] args = { getCurrentLetter(), type };
-    return MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("htmltitle"), args);
+    return MessageFormat.format(com.bolsinga.web.Util.getResourceString("htmltitle"), args);
   }
         
   protected void finalize() throws Throwable {

@@ -21,7 +21,7 @@ public class RSS {
       System.exit(0);
     }
 
-    com.bolsinga.web.util.Util.createSettings(args[2]);
+    com.bolsinga.web.Util.createSettings(args[2]);
                         
     RSS.generate(args[0], args[1], args[3]);
   }
@@ -56,10 +56,10 @@ public class RSS {
   private static String getGenerator() {
     StringBuffer sb = new StringBuffer();
 
-    sb.append(com.bolsinga.web.util.Util.getResourceString("program"));
+    sb.append(com.bolsinga.web.Util.getResourceString("program"));
 
     sb.append(" (built: ");
-    sb.append(com.bolsinga.web.util.Util.getResourceString("builddate"));
+    sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
     sb.append(" running on jdk ");
     sb.append(System.getProperty("java.runtime.version"));
     sb.append(" - ");
@@ -68,7 +68,7 @@ public class RSS {
     sb.append(System.getProperty("os.version"));
 
     sb.append(" [");
-    sb.append(com.bolsinga.web.util.Util.getResourceString("copyright"));
+    sb.append(com.bolsinga.web.Util.getResourceString("copyright"));
     sb.append("]");
 
     sb.append(")");
@@ -82,8 +82,8 @@ public class RSS {
                 
     itemElements.add(objFactory.createTRssItemTitle(getTitle(show)));
     itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.music.Util.toCalendar(show.getDate()).getTime())));
-    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.util.Util.getSettings().getRssRoot() + links.getLinkTo(show)));
-    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.util.Util.convertToParagraphs(show.getComment())));
+    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRssRoot() + links.getLinkTo(show)));
+    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(show.getComment())));
                 
     channel.getItem().add(item);
   }
@@ -117,8 +117,8 @@ public class RSS {
                 
     itemElements.add(objFactory.createTRssItemTitle(com.bolsinga.diary.Util.getTitle(entry)));
     itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(entry.getTimestamp().getTime())));
-    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.util.Util.getSettings().getRssRoot() + links.getLinkTo(entry)));
-    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.util.Util.convertToParagraphs(entry.getComment())));
+    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRssRoot() + links.getLinkTo(entry)));
+    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(entry.getComment())));
                 
     channel.getItem().add(item);
   }
@@ -132,14 +132,14 @@ public class RSS {
       List channelElements = channel.getTitleOrLinkOrDescription();
                         
       channelElements.add(objFactory.createTRssChannelTitle(diary.getTitle()));
-      channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.util.Util.getSettings().getRssRoot()));
-      channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.util.Util.getSettings().getRssDescription()));
+      channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRssRoot()));
+      channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.Util.getSettings().getRssDescription()));
       channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
       channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(Calendar.getInstance().getTime())));
-      channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.util.Util.getSettings().getContact()));
+      channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.Util.getSettings().getContact()));
 
       TRssChannel.Image logo = com.bolsinga.rss.Util.createLogo(objFactory);
-      logo.setLink(com.bolsinga.web.util.Util.getSettings().getRssRoot());
+      logo.setLink(com.bolsinga.web.Util.getSettings().getRssRoot());
       logo.setDescription(diary.getTitle());
                         
       channelElements.add(logo);
@@ -155,7 +155,7 @@ public class RSS {
       com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(false);
       com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(false);
 
-      int entryCount = com.bolsinga.web.util.Util.getSettings().getRssCount().intValue();
+      int entryCount = com.bolsinga.web.Util.getSettings().getRssCount().intValue();
 
       Vector items = new Vector(entryCount * 2);
       items.addAll(shows.subList(0, entryCount));

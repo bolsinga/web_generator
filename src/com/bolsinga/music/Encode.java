@@ -29,10 +29,10 @@ public class Encode {
       fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
       Object[] args = { fName };
-      String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfoartist"), args);
+      String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoartist"), args);
                         
-      fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString();
-      fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
+      fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString();
+      fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
     }
                 
     Data(Venue venue, Links standardLinks, Links upLinks) {
@@ -40,10 +40,10 @@ public class Encode {
       fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
       Object[] args = { fName };
-      String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfovenue"), args);
+      String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfovenue"), args);
 
-      fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString();
-      fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
+      fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString();
+      fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
     }
 
     Data(Album album, Links standardLinks, Links upLinks) {
@@ -51,10 +51,10 @@ public class Encode {
       fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
 
       Object[] args = { fName };
-      String t = MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("moreinfoalbum"), args);
+      String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoalbum"), args);
 
-      fStandardLink = com.bolsinga.web.util.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
-      fUpLink = com.bolsinga.web.util.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
+      fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
+      fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
     }
                 
     String getName() {

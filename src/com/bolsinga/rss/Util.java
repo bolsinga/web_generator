@@ -12,7 +12,7 @@ public class Util {
   public static com.bolsinga.rss.data.TRssChannel.Image createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
     com.bolsinga.rss.data.TRssChannel.Image logo = objFactory.createTRssChannelImage();
 
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.util.Util.getSettings().getLogoImage();
+    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getLogoImage();
     logo.setHeight(image.getHeight());
     logo.setWidth(image.getWidth());
     logo.setUrl(image.getLocation());
