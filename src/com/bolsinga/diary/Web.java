@@ -60,7 +60,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 
     protected Element getSubsectionTitle() {
         String m = Util.getMonth(fCurEntry);
-        return new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(m, m));
+        return com.bolsinga.web.util.Util.createNamedTarget(m, m);
     }
 
 	protected String getLastPath() {

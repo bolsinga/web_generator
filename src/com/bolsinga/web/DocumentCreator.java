@@ -52,7 +52,10 @@ public abstract class DocumentCreator {
         if ((fSubsection == null) || needNewSubsection()) {
             div mainDiv = getMainDiv();
             fSubsection = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DOC_SUB);
-            fSubsection.addElement(getSubsectionTitle());
+            Element e = getSubsectionTitle();
+            if (e != null) {
+                fSubsection.addElement(new h2().addElement(e));
+            }
             mainDiv.addElement(fSubsection);
         }
         return fSubsection;

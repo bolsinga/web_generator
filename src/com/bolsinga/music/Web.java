@@ -66,7 +66,7 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
     }
 
     protected Element getSubsectionTitle() {
-        return new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(fCurArtist.getId(), fCurArtist.getName()));
+        return com.bolsinga.web.util.Util.createNamedTarget(fCurArtist.getId(), fCurArtist.getName());
     }
 
 	protected String getLastPath() {
@@ -109,7 +109,7 @@ class VenueDocumentCreator extends MusicDocumentCreator {
     }
 
     protected Element getSubsectionTitle() {
-        return new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(fCurVenue.getId(), fCurVenue.getName()));
+        return com.bolsinga.web.util.Util.createNamedTarget(fCurVenue.getId(), fCurVenue.getName());
     }
 
 	protected String getLastPath() {
@@ -152,7 +152,8 @@ class ShowDocumentCreator extends MusicDocumentCreator {
     }
     
     protected Element getSubsectionTitle() {
-        return new h2().addElement(Util.toMonth(fCurShow.getDate()));
+        String m = Util.toMonth(fCurShow.getDate());
+        return com.bolsinga.web.util.Util.createNamedTarget(m, m);
     }
 
 	protected String getLastPath() {
