@@ -6,7 +6,7 @@ import com.bolsinga.diary.data.*;
 public class Site {
     public static void main(String[] args) {
 		if (args.length != 5) {
-			System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir] <all|music|diary>");
+			System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir] <all|web|music|diary>");
 			System.exit(0);
 		}
 
@@ -19,15 +19,21 @@ public class Site {
         Diary diary = com.bolsinga.diary.util.Util.createDiary(diaryFile);
         Music music = com.bolsinga.music.util.Util.createMusic(musicFile);
         
-        if (!variant.equals("music")) {
+        boolean musicOnly = variant.equals("music");
+        boolean diaryOnly = variant.equals("diary");
+        boolean webOnly = variant.equals("web");
+        
+        if (!musicOnly) {
             com.bolsinga.diary.web.Web.generate(diary, music, outputDir);
         }
-        
-        if (!variant.equals("diary")) {
+        if (!diaryOnly) {
             com.bolsinga.music.web.Web.generate(music, outputDir);
-            com.bolsinga.music.ical.ICal.generate(music, outputDir);
+            if (!webOnly) {
+                com.bolsinga.music.ical.ICal.generate(music, outputDir);
+            }
         }
-        
-        com.bolsinga.rss.RSS.generate(diary, music, outputDir);
+        if (!webOnly) {
+            com.bolsinga.rss.RSS.generate(diary, music, outputDir);
+        }
     }
 }

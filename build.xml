@@ -451,6 +451,18 @@
 	</java>
 </target>
 
+<target name="SiteWeb" depends="web_site, jar">
+	<mkdir dir="${output.dir}" />
+	<java classname="com.bolsinga.web.site.Site" fork="true">
+		<arg value="${data.dir}diary.xml" />
+		<arg value="${data.dir}music.xml" />
+		<arg value="${data.dir}settings.xml" />
+		<arg value="${output.dir}" />
+        <arg value="web" />
+		<classpath refid="generate_web_classpath" />
+	</java>
+</target>
+
 <target name="SiteMusic" depends="web_site, jar">
 	<mkdir dir="${output.dir}" />
 	<java classname="com.bolsinga.web.site.Site" fork="true">
