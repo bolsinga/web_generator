@@ -208,49 +208,23 @@ public class Web {
 
 		Document doc = createDocument(diary.getTitle(), links);
 
-		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
-		table.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		
-		TR tr = new TR(true);
-		tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		
-		TD td = new TD();
-		td.setVAlign("top");
-		td.setWidth("20%");
-		td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-		
 		Div mainStatics = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_STATICS);
 		mainStatics.addElement(diary.getStatic());
-		td.addElement(mainStatics);
-		tr.addElement(td);
-
-		td = new TD();
-		td.setVAlign("top");
-		td.setWidth("60%");
-		td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		doc.getBody().addElement(mainStatics);
 		
 		Div main = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_MAIN);
 
 		Div header = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_HEADER);
 		header.addElement(diary.getHeader());
 		main.addElement(header);
-		
 		main.addElement(generateDiary(music, diary, links, mainPageEntryCount));
 		
-		td.addElement(main);
-		tr.addElement(td);
+		doc.getBody().addElement(main);
 		
-		td = new TD();
-		td.setVAlign("top");
-		td.setWidth("20%");
-		td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-
 		Div previewDiv = com.bolsinga.web.util.Util.createDiv(CSS.MAIN_PREVIEW);
 		previewDiv.addElement(com.bolsinga.music.web.Web.generatePreview(music, 5));
-		td.addElement(previewDiv);
-		tr.addElement(td);
 		
-		doc.getBody().addElement(table.addElement(tr));
+		doc.getBody().addElement(previewDiv);
 		
 		try {
 			File f = new File(outputDir, "index.html");
