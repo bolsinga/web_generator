@@ -42,6 +42,7 @@ abstract class DocumentCreator {
 				writeDocument();
 			}
 			fDocument = createDocument();
+			addHeader();
 			addNavigator();
 		}
 		return fDocument;
@@ -65,6 +66,14 @@ abstract class DocumentCreator {
 			ioe.printStackTrace();
 			System.exit(1);
 		}
+	}
+	
+	private void addHeader() {
+		IMG img = new IMG("http://homepage.mac.com/bolsinga/.Pictures/images/comp.gif");
+		img.setHeight(90);
+		img.setWidth(120);
+		img.setAlt("[Busy computing... for you!]");
+		fDocument.getBody().addElement(new Center(img));
 	}
 	
 	protected void finalize() throws Throwable {
