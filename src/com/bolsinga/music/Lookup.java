@@ -10,6 +10,9 @@ public class Lookup {
 	
 	private HashMap fArtistMap = new HashMap();
 	private HashMap fVenueMap = new HashMap();
+	private HashMap fArtistRelationMap = new HashMap();
+	private HashMap fVenueRelationMap = new HashMap();
+	private HashMap fLabelRelationMap = new HashMap();
 	
 	public synchronized static Lookup getLookup(Music music) {
 		if (sLookup == null) {
@@ -19,26 +22,25 @@ public class Lookup {
 	}
 
 	private Lookup(Music music) {
-		List shows = music.getShow();
 		Show show = null;
 		String id = null;
-		List venues = null;
-		List artists = null;
+		List list = null;
 		ListIterator pi = null;
 		Performance perf = null;
+		Set set = null;
 		
-		ListIterator li = shows.listIterator();
+		ListIterator li = music.getShow().listIterator();
 		while (li.hasNext()) {
 			show = (Show)li.next();
 			
 			id = ((Venue)show.getVenue()).getId();
 			if (fVenueMap.containsKey(id)) {
-				venues = (List)fVenueMap.get(id);
-				venues.add(show);
+				list = (List)fVenueMap.get(id);
+				list.add(show);
 			} else {
-				venues = new Vector();
-				venues.add(show);
-				fVenueMap.put(id, venues);
+				list = new Vector();
+				list.add(show);
+				fVenueMap.put(id, list);
 			}
 			
 			pi = show.getPerformance().listIterator();
@@ -47,12 +49,62 @@ public class Lookup {
 				
 				id = ((Artist)perf.getArtist()).getId();
 				if (fArtistMap.containsKey(id)) {
-					artists = (List)fArtistMap.get(id);
-					artists.add(show);
+					list = (List)fArtistMap.get(id);
+					list.add(show);
 				} else {
-					artists = new Vector();
-					artists.add(show);
-					fArtistMap.put(id, artists);
+					list = new Vector();
+					list.add(show);
+					fArtistMap.put(id, list);
+				}
+			}
+		}
+		
+		Relation rel = null;
+		ListIterator ri = null;
+		
+		li = music.getRelation().listIterator();
+		while (li.hasNext()) {
+			rel = (Relation)li.next();
+			
+			ri = rel.getMember().listIterator();
+			while (ri.hasNext()) {
+				Object o = ri.next();
+				if (o instanceof Artist) {
+					id = ((Artist)o).getId();
+					if (!fArtistRelationMap.containsKey(id)) {
+						set = new HashSet();
+						fArtistRelationMap.put(id, set);
+					}
+					ListIterator nri = rel.getMember().listIterator();
+					while (nri.hasNext()) {
+						Artist artist = (Artist)nri.next();
+						set = (Set)fArtistRelationMap.get(id);
+						set.add(artist);
+					}
+				} else if (o instanceof Venue) {
+					id = ((Venue)o).getId();
+					if (!fVenueRelationMap.containsKey(id)) {
+						set = new HashSet();
+						fVenueRelationMap.put(id, set);
+					}
+					ListIterator nri = rel.getMember().listIterator();
+					while (nri.hasNext()) {
+						Venue venue = (Venue)nri.next();
+						set = (Set)fVenueRelationMap.get(id);
+						set.add(venue);
+					}
+				} else if (o instanceof Label) {
+					id = ((Label)o).getId();
+					if (!fLabelRelationMap.containsKey(id)) {
+						set = new HashSet();
+						fLabelRelationMap.put(id, set);
+					}
+					ListIterator nri = rel.getMember().listIterator();
+					while (nri.hasNext()) {
+						Label label = (Label)nri.next();
+						set = (Set)fLabelRelationMap.get(id);
+						set.add(label);
+					}
 				}
 			}
 		}
@@ -64,5 +116,17 @@ public class Lookup {
 	
 	public List getShows(Venue venue) {
 		return (List)fVenueMap.get(venue.getId());
+	}
+	
+	public Collection getRelations(Artist artist) {
+		return (Collection)fArtistRelationMap.get(artist.getId());
+	}
+	
+	public Collection getRelations(Venue venue) {
+		return (Collection)fVenueRelationMap.get(venue.getId());
+	}
+	
+	public Collection getRelations(Label label) {
+		return (Collection)fLabelRelationMap.get(label.getId());
 	}
 }
