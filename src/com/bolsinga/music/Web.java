@@ -27,6 +27,7 @@ abstract class DocumentCreator {
 	
 	protected abstract boolean needNewDocument();
 	protected abstract Document createDocument();
+	protected abstract void finishDocument();
 	protected abstract String getCurrentPath();
 	protected abstract Element addIndexNavigator();
 	
@@ -54,6 +55,8 @@ abstract class DocumentCreator {
 	}
 	
 	private void writeDocument() {
+		finishDocument();
+		
 		Div footerDiv = new Div();
 		footerDiv.addElement(addIndexNavigator());
 		footerDiv.addElement(addWebNavigator());
@@ -121,6 +124,10 @@ class ArtistDocumentCreator extends DocumentCreator {
 		fDocArtist = fArtist;
 		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocArtist), "Artists"));
 	}
+
+	protected void finishDocument() {
+	
+	}
 	
 	protected String getCurrentPath() {
 		return fLinks.getPagePath(fDocArtist);
@@ -153,6 +160,10 @@ class VenueDocumentCreator extends DocumentCreator {
 		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocVenue), "Venues"));
 	}
 	
+	protected void finishDocument() {
+	
+	}
+
 	protected String getCurrentPath() {
 		return fLinks.getPagePath(fDocVenue);
 	}
@@ -166,6 +177,7 @@ class ShowDocumentCreator extends DocumentCreator {
 	Show fDocShow = null;
 	Show fShow = null;
 	com.bolsinga.music.data.Date fDate = null;
+	Div fMonthDiv = null;
 	
 	public ShowDocumentCreator(Music music, Links links, String outputDir, String program) {
 		super(music, links, outputDir, program);
@@ -175,16 +187,25 @@ class ShowDocumentCreator extends DocumentCreator {
 		Document doc = getDocument(item);
 		
 		com.bolsinga.music.data.Date d = item.getDate();
+		String month = Util.toMonth(d);
 		
-		if ((fDate == null) || (!Util.toMonth(d).equals(Util.toMonth(fDate)))) {
-			Body b = doc.getBody();
-
-			b.addElement(new H1().addElement(Util.toMonth(d)));
+		if ((fDate == null) || (!month.equals(Util.toMonth(fDate)))) {
+		
+			if (fMonthDiv != null) {
+				doc.getBody().addElement(fMonthDiv);
+			}
 			
 			fDate = d;
+			fMonthDiv = new Div();
+			
+			fMonthDiv.addElement(new H1().addElement(month));
 		}
 
-		Web.addItem(music, fLinks, item, doc);
+		Div showDiv = new Div();
+
+		Web.addItem(music, fLinks, item, showDiv);
+		
+		fMonthDiv.addElement(showDiv);
 	}
 	
 	public Document getDocument(Show show) {
@@ -199,7 +220,15 @@ class ShowDocumentCreator extends DocumentCreator {
 	protected Document createDocument() {
 		fDocShow = fShow;
 		fDate = null;
+		fMonthDiv = null;
 		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocShow), "Dates"));
+	}
+
+	protected void finishDocument() {
+		if (fMonthDiv != null) {
+			// Write out the last month's data if necessary
+			fDocument.getBody().addElement(fMonthDiv);
+		}
 	}
 	
 	protected String getCurrentPath() {
@@ -237,6 +266,10 @@ class StatisticsCreator extends DocumentCreator {
 	
 	protected Document createDocument() {
 		return Web.createHTMLDocument(fTitle);
+	}
+
+	protected void finishDocument() {
+	
 	}
 	
 	protected String getCurrentPath() {
@@ -307,6 +340,10 @@ class TracksDocumentCreator extends DocumentCreator {
 		return Web.createHTMLDocument(getTitle(fLinks.getPageFileName(fDocAlbum), "Tracks"));
 	}
 	
+	protected void finishDocument() {
+	
+	}
+
 	protected String getCurrentPath() {
 		return fLinks.getPagePath(fDocAlbum);
 	}
@@ -842,14 +879,11 @@ public class Web {
 		}
 	}
 	
-	public static void addItem(Music music, Links links, Show show, Document doc) {
-		Body b = doc.getBody();
-
-		UL showListing = new UL();
+	public static void addItem(Music music, Links links, Show show, Div showDiv) {
 		A a = new A();
 		a.setName(show.getId());
 		a.addElement("test", Util.toString(show.getDate()));
-		showListing.addElement(new LI(a));
+		showDiv.addElement(new H2().addElement(a));
 		
 		UL showInfo = new UL();
 		
@@ -871,14 +905,12 @@ public class Web {
 		Location l = (Location)venue.getLocation();
 		showInfo.addElement(new LI(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
 
+		showDiv.addElement(showInfo);
+
 		String comment = show.getComment();
 		if (comment != null) {
-			showInfo.addElement(new LI(getLinkedData(music, comment, true)));
+			showDiv.addElement(new Div().addElement(getLinkedData(music, comment, true)));
 		}
-
-		showListing.addElement(showInfo);
-		
-		b.addElement(showListing);
 	}
 
 	public static void addItem(Music music, Links links, Album album, Document doc) {
