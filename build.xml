@@ -42,7 +42,7 @@
 </target>
 
 <target name="jaxb" depends="prepare">
-	<xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music"/>
+	<xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data"/>
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
