@@ -1132,10 +1132,9 @@ public class Web {
 		capt.addElement(caption);
 		t.addElement(capt);
 		tr trow = new tr().addElement(new th(header)).addElement(new th("#")).addElement(new th("%"));
-		trow.setAlign("center");
 		trow.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		t.addElement(trow);
-		td tdd = null;
+		th thh = null;
 		
 		int total = 0;
 		int i;
@@ -1145,12 +1144,10 @@ public class Web {
 
 		for (i = 0; i < values.length; i++) {
 			trow = new tr();
-			trow.setAlign("center");
 			trow.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-			tdd = new td(names[i]);
-			tdd.setAlign("left");
-			tdd.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
-			trow.addElement(tdd);
+			thh = new th(names[i]);
+			thh.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+			trow.addElement(thh);
 			trow.addElement(new td(Integer.toString(values[i])).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 			trow.addElement(new td(Util.toString((double)values[i] / total * 100.0)).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 			
@@ -1158,8 +1155,8 @@ public class Web {
 		}
 		
 		trow = new tr();
-		trow.setAlign("center");
 		trow.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		trow.addElement(new td());
 		trow.addElement(new th(Integer.toString(names.length)));
 		trow.addElement(new th(Integer.toString(total)));
 		t.addElement(trow);
