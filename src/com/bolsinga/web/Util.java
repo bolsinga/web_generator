@@ -33,6 +33,18 @@ public class Util {
 		return img;
 	}
 	
+	public static UL convertToUnOrderedList(String data) {
+		UL ul = new UL();
+		
+		// Convert each line to a li tag.
+		String[] lines = data.split("\\n");
+		for (int i = 0; i < lines.length; i++) {
+			ul.addElement(new LI(lines[i]));
+		}
+		
+		return ul;
+	}
+	
 	public static String convertToParagraphs(String data) {
 		// Convert each line to <p> tags
 		StringBuffer tagged = new StringBuffer();

@@ -220,8 +220,17 @@ public class Web {
 
 	private static Div generateColumn1(Diary diary) {
 		Div mainCol1 = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_COL1);
-		mainCol1.addElement(diary.getStatic());
-		mainCol1.addElement(diary.getFriends());
+		
+		Div staticDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_STATIC);
+		// +++gdb Add a H2 element.
+		staticDiv.addElement(com.bolsinga.web.util.Util.convertToUnOrderedList(diary.getStatic()));
+		mainCol1.addElement(staticDiv);
+
+		Div linksDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.MAIN_LINKS);
+		// +++gdb Add a H2 element.
+		linksDiv.addElement(com.bolsinga.web.util.Util.convertToUnOrderedList(diary.getFriends()));
+		mainCol1.addElement(linksDiv);
+		
 		return mainCol1;
 	}
 	

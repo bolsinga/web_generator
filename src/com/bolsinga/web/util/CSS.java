@@ -22,6 +22,8 @@ public class CSS {
 	public static final String MAIN_DIARY		= "main_diary";
 	public static final String MAIN_HEADER		= "main_header";
 	public static final String MAIN_MAIN		= "main_main";
+	public static final String MAIN_STATIC		= "main_static";
+	public static final String MAIN_LINKS		= "main_links";
 
 	public static final String MUSIC_HEADER		= "music_header";
 	public static final String MUSIC_MAIN		= "music_main";
@@ -91,6 +93,8 @@ public class CSS {
 		writeCSSDeclaration(pw, MAIN_DIARY);
 		writeCSSDeclaration(pw, MAIN_HEADER);
 		writeCSSDeclaration(pw, MAIN_MAIN);
+		writeCSSDeclaration(pw, MAIN_STATIC);
+		writeCSSDeclaration(pw, MAIN_LINKS);
 		writeCSSDeclaration(pw, MUSIC_HEADER);
 		writeCSSDeclaration(pw, MUSIC_MAIN);
 		writeCSSDeclaration(pw, MUSIC_MENU);
