@@ -36,29 +36,40 @@
 <target name="prepare">
 	<tstamp/>
 	<mkdir dir="${build.dir}" />
+	<mkdir dir="${build.classes}" />
 	<mkdir dir="${build.lib}" />
 </target>
 
+<target name="jaxb" depends="prepare">
+	<mkdir dir="${build.gensrc}" />
+	<xjc schema="xml/music.xsd" target="${build.classes}" package="com.bolsinga.music"/>
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${build.classes}" />
+		<include name="com/bolsinga/music/**" />
+		<classpath refid="classpath" />
+	</javac>
+</target>
+
 <target name="converter" depends="prepare">
-	<mkdir dir="${build.classes}" />
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/shows/converter/**" />
+		<classpath refid="classpath" />
 	</javac>
-	<jar jarfile="${build.lib}/converter.jar"
-		basedir="${build.classes}" >
-		<include name="com/bolsinga/shows/converter/**" />
-		<manifest>
-			<attribute name="Main-Class" value="com.bolsinga.shows.converter.Convert" />
-		</manifest>
-	</jar>
 </target>
 
-<target name="jaxb" depends="prepare">
-	<mkdir dir="${build.gensrc}" />
-	<xjc schema="xml/shows.xsd" target="${build.gensrc}" package="com.bolsinga.shows.data"/>
+<target name="music" depends="converter">
+	<jar jarfile="${build.lib}/music.jar"
+		basedir="${build.classes}" >
+		<include name="com/bolsinga/**" />
+		<manifest>
+			<attribute name="Main-Class" value="com.bolsinga.shows.converter.Music" />
+		</manifest>
+	</jar>
 </target>
 
 </project>
