@@ -334,7 +334,12 @@ public class Web {
 			addItem(musicFile, item, tbody, false);
 		}
 		
-		addBanner(new A("archives/2004.html", "Archives").toString(), tbody);
+		StringBuffer archivesLink = new StringBuffer();
+		archivesLink.append("archives/");
+		archivesLink.append(Calendar.getInstance().get(Calendar.YEAR));
+		archivesLink.append(".html");
+		
+		addBanner(new A(archivesLink.toString(), "Archives").toString(), tbody);
 
 		td.addElement(new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10).addElement(tbody));
 	}
