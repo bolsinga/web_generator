@@ -833,6 +833,12 @@ public class Web {
 			sb.append(" - ");
 			sb.append(new A(links.getLinkTo(artist), artist.getName()));
 		}
+		com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
+		if (albumRelease != null) {
+			sb.append(" (");
+			sb.append(albumRelease.getYear());
+			sb.append(")");
+		}
 		
 		b.addElement(new Center().addElement(new Big().addElement(sb.toString())));
 		
@@ -849,6 +855,15 @@ public class Web {
 			}
 			
 			sb.append(song.getTitle());
+			
+			if (albumRelease == null) {
+				com.bolsinga.music.data.Date songRelease = song.getReleaseDate();
+				if (songRelease != null) {
+					sb.append(" (");
+					sb.append(songRelease.getYear());
+					sb.append(")");
+				}
+			}
 			
 			albumListing.addElement(new LI(sb.toString()));
 		}

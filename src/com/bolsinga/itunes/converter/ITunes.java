@@ -327,11 +327,14 @@ public class ITunes {
 		ListIterator li = music.getAlbum().listIterator();
 		int albumYear, songYear;
 		com.bolsinga.music.data.Date date;
-		while (li.hasNext()) {
-			albumYear = -1;
-			
+		while (li.hasNext()) {			
 			Album a = (Album)li.next();
+			if (a.getReleaseDate() != null) {
+				// The album already has a date; don't change it.
+				break;
+			}
 			
+			albumYear = -1;
 			ListIterator si = a.getSong().listIterator();
 			while (si.hasNext()) {
 				date = ((Song)si.next()).getReleaseDate();
