@@ -364,10 +364,10 @@
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<!--	Add the following property to any ecs using code to have the output be
-		pretty printed. This can assist in debugging the output.
+<!--	Add the following property to any web using code to have the output's
+		container tags be pretty printed. This can assist in debugging the output.
 
-		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
+		<sysproperty key="web.pretty_containers" value="true" />
 -->
 
 <target name="generateMusicWeb" depends="music_web, jar">

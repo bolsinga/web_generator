@@ -47,7 +47,7 @@ public class Links {
 	}
 	
 	public Element addWebNavigator(Music music, String program) {
-		Div div = new Div();
+		Div div = com.bolsinga.web.util.Util.createDiv();
 		
 		StringBuffer sb = new StringBuffer();
 		

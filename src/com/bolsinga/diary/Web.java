@@ -36,14 +36,14 @@ class DiaryDocumentCreator {
 			fDocument = Web.createDocument(title, fLinks);
 			fEntry = entry;
 
-			Div headerDiv = new Div();
+			Div headerDiv = com.bolsinga.web.util.Util.createDiv();
 			headerDiv.addElement(new H1().addElement(title));
 			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
 			headerDiv.addElement(addWebNavigator(fProgram));
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
 			
-			fMainDiv = new Div();
+			fMainDiv = com.bolsinga.web.util.Util.createDiv();
 		}
 		return fMainDiv;
 	}
@@ -74,7 +74,7 @@ class DiaryDocumentCreator {
 	private void writeDocument() {
 		fDocument.getBody().addElement(fMainDiv);
 		
-		Div footerDiv = new Div();
+		Div footerDiv = com.bolsinga.web.util.Util.createDiv();
 		footerDiv.addElement(addIndexNavigator());
 		footerDiv.addElement(addWebNavigator(fProgram));
 		fDocument.getBody().addElement(footerDiv);
@@ -98,7 +98,7 @@ class DiaryDocumentCreator {
 	}
 
 	private Element addIndexNavigator() {
-		Div div = new Div();
+		Div div = com.bolsinga.web.util.Util.createDiv();
 
 		java.util.Map m = new TreeMap();
 		Iterator li = fDiary.getEntry().iterator();
@@ -126,7 +126,7 @@ class DiaryDocumentCreator {
 	}
 	
 	private Element addWebNavigator(String program) {
-		Div div = new Div();
+		Div div = com.bolsinga.web.util.Util.createDiv();
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -210,8 +210,8 @@ public class Web {
 		sb.append("Updated ");
 		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append("!");
-		td.addElement(new Div().addElement(diary.getHeader()).addElement(sb.toString()));
-		td.addElement(new Div().addElement(links.getRSSLink()));
+		td.addElement(com.bolsinga.web.util.Util.createDiv().addElement(diary.getHeader()).addElement(sb.toString()));
+		td.addElement(com.bolsinga.web.util.Util.createDiv().addElement(links.getRSSLink()));
 		
 		generateDiary(music, diary, links, mainPageEntryCount, td);
 		tr.addElement(td);
@@ -287,11 +287,14 @@ public class Web {
 		
 	public static Document createDocument(String title, Links links) {
 		Document d = new Document(ECSDefaults.getDefaultCodeset());
-
+		
+		d.getHtml().setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+		
         d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
 		d.appendTitle(title);
 		
 		Head h = d.getHead();
+		h.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		h.addElement(com.bolsinga.web.util.Util.getIconLink());
 		
 		h.addElement(links.getAlternateRSSLink());
@@ -301,6 +304,8 @@ public class Web {
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
 		h.addElement(new Meta().setContent(getGenerator()).setName("Generator"));
 		h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
+
+		d.getBody().setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 						
 		return d;
 	}
@@ -309,7 +314,7 @@ public class Web {
 		List items = diary.getEntry();
 		Entry item = null;
 		
-		Div mainDiv = new Div();
+		Div mainDiv = com.bolsinga.web.util.Util.createDiv();
 		
 		Collections.sort(items, Util.ENTRY_COMPARATOR);
 		Collections.reverse(items);
@@ -351,14 +356,14 @@ public class Web {
 	}
 
 	public static void addItem(Music music, Entry entry, Div mainDiv, boolean upOneLevel, boolean cacheEncoding) {
-		Div diaryDiv = new Div();
+		Div diaryDiv = com.bolsinga.web.util.Util.createDiv();
 		
 		A a = new A();
 		a.setName(entry.getId());
 		a.addElement("test", Util.getTitle(entry));
 		
 		diaryDiv.addElement(new H2().addElement(a));
-		Div commentDiv = new Div();
+		Div commentDiv = com.bolsinga.web.util.Util.createDiv();
 		diaryDiv.addElement(commentDiv.addElement(Web.encodedComment(music, entry, upOneLevel, cacheEncoding)));
 		
 		mainDiv.addElement(diaryDiv);

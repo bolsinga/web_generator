@@ -48,14 +48,14 @@ abstract class DocumentCreator {
 			String title = getTitle();
 			fDocument = createDocument(title);
 			
-			Div headerDiv = new Div();
+			Div headerDiv = com.bolsinga.web.util.Util.createDiv();
 			headerDiv.addElement(new H1().addElement(title));
 			headerDiv.addElement(com.bolsinga.web.util.Util.getLogo());
 			headerDiv.addElement(addWebNavigator());
 			headerDiv.addElement(addIndexNavigator());
 			fDocument.getBody().addElement(headerDiv);
 			
-			fMainDiv = new Div();
+			fMainDiv = com.bolsinga.web.util.Util.createDiv();
 		}
 		return fMainDiv;
 	}
@@ -65,7 +65,7 @@ abstract class DocumentCreator {
 		
 		fDocument.getBody().addElement(fMainDiv);
 		
-		Div footerDiv = new Div();
+		Div footerDiv = com.bolsinga.web.util.Util.createDiv();
 		footerDiv.addElement(addIndexNavigator());
 		footerDiv.addElement(addWebNavigator());
 		fDocument.getBody().addElement(footerDiv);
@@ -208,7 +208,7 @@ class ShowDocumentCreator extends DocumentCreator {
 			}
 			
 			fDate = d;
-			fMonthDiv = new Div();
+			fMonthDiv = com.bolsinga.web.util.Util.createDiv();
 			
 			fMonthDiv.addElement(new H2().addElement(month));
 		}
@@ -321,7 +321,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
 	}
 
 	protected Element addIndexNavigator() {
-		Div div = new Div();
+		Div div = com.bolsinga.web.util.Util.createDiv();
 		
 		div.addElement("View: ");
 		if (fTracksStats) {
@@ -786,7 +786,7 @@ public class Web {
 	}
 	
 	public static Div addItem(Music music, Links links, Artist artist) {
-		Div artistDiv = new Div();
+		Div artistDiv = com.bolsinga.web.util.Util.createDiv();
 		
 		A a = new A();
 		a.setName(artist.getId());
@@ -810,7 +810,7 @@ public class Web {
 
 				String showLink = links.getLinkTo(show);
 			    
-				Div showDiv = new Div();
+				Div showDiv = com.bolsinga.web.util.Util.createDiv();
 				
 			    showDiv.addElement(new H3().addElement(new A(showLink, Util.toString(show.getDate()))));
 			    
@@ -853,7 +853,7 @@ public class Web {
 	}
 	
 	public static Div addItem(Music music, Links links, Venue venue) {
-		Div venueDiv = new Div();
+		Div venueDiv = com.bolsinga.web.util.Util.createDiv();
 		
 		A a = new A();
 		a.setName(venue.getId());
@@ -872,7 +872,7 @@ public class Web {
 			
 			String showLink = links.getLinkTo(show);
 			
-			Div showDiv = new Div();
+			Div showDiv = com.bolsinga.web.util.Util.createDiv();
 			
 			showDiv.addElement(new H3().addElement(new A(showLink, Util.toString(show.getDate()))));
 			
@@ -908,7 +908,7 @@ public class Web {
 	}
 	
 	public static Div addItem(Music music, Links links, Show show) {
-		Div showDiv = new Div();
+		Div showDiv = com.bolsinga.web.util.Util.createDiv();
 		
 		A a = new A();
 		a.setName(show.getId());
@@ -939,14 +939,14 @@ public class Web {
 
 		String comment = show.getComment();
 		if (comment != null) {
-			showDiv.addElement(new Div().addElement(getLinkedData(music, comment, true)));
+			showDiv.addElement(com.bolsinga.web.util.Util.createDiv().addElement(getLinkedData(music, comment, true)));
 		}
 		
 		return showDiv;
 	}
 
 	public static Div addItem(Music music, Links links, Album album) {
-		Div albumDiv = new Div();
+		Div albumDiv = com.bolsinga.web.util.Util.createDiv();
 		
 		StringBuffer sb;
 		Artist artist = null;
@@ -1006,7 +1006,7 @@ public class Web {
 	}
 	
 	public static Div addRelations(Music music, Links links, Artist artist) {
-		Div relDiv = new Div();
+		Div relDiv = com.bolsinga.web.util.Util.createDiv();
 			
 		relDiv.addElement(new H3().addElement("See Also"));
 		
@@ -1026,7 +1026,7 @@ public class Web {
 	}
 	
 	public static Div addRelations(Music music, Links links, Venue venue) {
-		Div relDiv = new Div();
+		Div relDiv = com.bolsinga.web.util.Util.createDiv();
 
 		relDiv.addElement(new H3().addElement("See Also"));
 		
@@ -1046,7 +1046,7 @@ public class Web {
 	}
 
 	public static Div addTracks(Music music, Links links, Artist artist) {
-		Div albumsDiv = new Div();
+		Div albumsDiv = com.bolsinga.web.util.Util.createDiv();
 			
 		albumsDiv.addElement(new H3().addElement("Albums"));
 		
@@ -1071,7 +1071,7 @@ public class Web {
 	}
 	
 	public static Element addIndexNavigator(Music music, Links links, Artist artist) {
-		Div div = new Div();
+		Div div = com.bolsinga.web.util.Util.createDiv();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getArtist().iterator();
@@ -1097,7 +1097,7 @@ public class Web {
 	}
 	
 	public static Element addIndexNavigator(Music music, Links links, Venue venue) {
-		Div div = new Div();
+		Div div = com.bolsinga.web.util.Util.createDiv();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getVenue().iterator();
@@ -1124,7 +1124,7 @@ public class Web {
 	}
 
 	public static Element addIndexNavigator(Music music, Links links, Album album) {
-		Div div = new Div();
+		Div div = com.bolsinga.web.util.Util.createDiv();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getAlbum().iterator();
@@ -1188,7 +1188,7 @@ public class Web {
 	}
 	
 	public static Element addIndexNavigator(Music music, Links links, Show show) {
-		Div div = new Div();
+		Div div = com.bolsinga.web.util.Util.createDiv();
 		
 		java.util.Map m = new TreeMap();
 		Iterator li = music.getShow().iterator();
@@ -1260,17 +1260,22 @@ public class Web {
 	
 	static Document createHTMLDocument(String title) {
 		Document d = new Document(ECSDefaults.getDefaultCodeset());
+
+		d.getHtml().setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		
         d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
 		d.appendTitle(title);
 		
 		Head h = d.getHead();
+		h.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		h.addElement(com.bolsinga.web.util.Util.getIconLink());
 		h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
 		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
 		h.addElement(new Meta().setContent(Web.getGenerator()).setName("Generator"));
 		h.addElement(new Meta().setContent(Web.getCopyright()).setName("Copyright"));
+
+		d.getBody().setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 
 		return d;
 	}

@@ -5,6 +5,19 @@ import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 public class Util {
+
+	private static boolean sPrettyPrint = false;
+	static {
+		String value = System.getProperty("web.pretty_containers");
+		if (value != null) {
+			sPrettyPrint = true;
+		}
+	}
+	
+	public static boolean getPrettyPrint() {
+		return sPrettyPrint;
+	}
+	
 	public static Link getIconLink() {
 		Link result = new Link();
 		result.setRel("SHORTCUT ICON");
@@ -29,5 +42,11 @@ public class Util {
 			tagged.append(lines[i]);
 		}
 		return tagged.toString();
+	}
+	
+	public static Div createDiv() {
+		Div div = new Div();
+		div.setPrettyPrint(Util.getPrettyPrint());
+		return div;
 	}
 }
