@@ -10,35 +10,35 @@ public class Statics {
     public String fData;
         
     public Statics(String location, String data) {
-	fLocation = location;
-	fData = data;
+        fLocation = location;
+        fData = data;
     }
         
     public String getLocation() {
-	return fLocation;
+        return fLocation;
     }
         
     public void setLocation(String location) {
-	fLocation = location;
+        fLocation = location;
     }
         
     public String getData() {
-	return fData;
+        return fData;
     }
         
     public void setData(String data) {
-	fData = data;
+        fData = data;
     }
         
     public String toString() {
-	StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
                 
-	sb.append(getClass().getName().toString());
-	sb.append(" Location: ");
-	sb.append(getLocation());
-	sb.append(" Data: ");
-	sb.append(getData());
+        sb.append(getClass().getName().toString());
+        sb.append(" Location: ");
+        sb.append(getLocation());
+        sb.append(" Data: ");
+        sb.append(getData());
                 
-	return sb.toString();
+        return sb.toString();
     }
 }

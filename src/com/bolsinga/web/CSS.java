@@ -54,80 +54,80 @@ public class CSS {
     public static final String TABLE_FOOTER     = "table_footer";
         
     public static void main(String[] args) {
-	if (args.length != 1) {
-	    System.out.println("Usage: CSS [output.dir]");
-	    System.exit(0);
-	}
+        if (args.length != 1) {
+            System.out.println("Usage: CSS [output.dir]");
+            System.exit(0);
+        }
                 
-	CSS.generate(args[0]);
+        CSS.generate(args[0]);
     }
         
     public static void generate(String outputDir) {
-	try {
-	    File f = new File(outputDir, "layout.css");
-	    File parent = new File(f.getParent());
-	    if (!parent.exists()) {
-		if (!parent.mkdirs()) {
-		    System.out.println("Can't: " + parent.getAbsolutePath());
-		}
-	    }
-	    PrintWriter pw = new PrintWriter(new FileOutputStream(f));
-	    generate(pw);
-	    pw.close();
-	} catch (IOException ioe) {
-	    System.err.println("Exception: " + ioe);
-	    ioe.printStackTrace();
-	    System.exit(1);
-	}
+        try {
+            File f = new File(outputDir, "layout.css");
+            File parent = new File(f.getParent());
+            if (!parent.exists()) {
+                if (!parent.mkdirs()) {
+                    System.out.println("Can't: " + parent.getAbsolutePath());
+                }
+            }
+            PrintWriter pw = new PrintWriter(new FileOutputStream(f));
+            generate(pw);
+            pw.close();
+        } catch (IOException ioe) {
+            System.err.println("Exception: " + ioe);
+            ioe.printStackTrace();
+            System.exit(1);
+        }
     }
         
     public static void generate(PrintWriter pw) {
-	writeCSSDeclaration(pw, ARTIST_INDEX);
-	writeCSSDeclaration(pw, ARTIST_ITEM);
-	writeCSSDeclaration(pw, ARTIST_RELATION);
-	writeCSSDeclaration(pw, ARTIST_SHOW);
-	writeCSSDeclaration(pw, ARTIST_TRACKS);
-	writeCSSDeclaration(pw, DIARY_ENTRY);
-	writeCSSDeclaration(pw, DIARY_HEADER);
-	writeCSSDeclaration(pw, DIARY_INDEX);
-	writeCSSDeclaration(pw, DIARY_MENU);
-	writeCSSDeclaration(pw, INTERNAL);
-	writeCSSDeclaration(pw, MAIN_COL1);
-	writeCSSDeclaration(pw, MAIN_COL2);
-	writeCSSDeclaration(pw, MAIN_DIARY);
-	writeCSSDeclaration(pw, MAIN_HEADER);
-	writeCSSDeclaration(pw, MAIN_MAIN);
-	writeCSSDeclaration(pw, MAIN_STATIC);
-	writeCSSDeclaration(pw, MAIN_LINKS);
-	writeCSSDeclaration(pw, DOC_MAIN);
-	writeCSSDeclaration(pw, DOC_SUB);
-	writeCSSDeclaration(pw, MUSIC_HEADER);
-	writeCSSDeclaration(pw, MUSIC_MENU);
-	writeCSSDeclaration(pw, PREVIEW_MAIN);
-	writeCSSDeclaration(pw, PREVIEW_MENU);
-	writeCSSDeclaration(pw, PREVIEW_RECENT);
-	writeCSSDeclaration(pw, PREVIEW_SHOW);
-	writeCSSDeclaration(pw, SHOW_COMMENT);
-	writeCSSDeclaration(pw, SHOW_INDEX);
-	writeCSSDeclaration(pw, SHOW_ITEM);
-	writeCSSDeclaration(pw, TRACKS_INDEX);
-	writeCSSDeclaration(pw, TRACKS_ITEM);
-	writeCSSDeclaration(pw, TRACKS_MENU);
-	writeCSSDeclaration(pw, VENUE_INDEX);
-	writeCSSDeclaration(pw, VENUE_ITEM);
-	writeCSSDeclaration(pw, VENUE_RELATION);
-	writeCSSDeclaration(pw, VENUE_SHOW);
-	writeCSSDeclaration(pw, TABLE_HEADER);
-	writeCSSDeclaration(pw, TABLE_ROW);
-	writeCSSDeclaration(pw, TABLE_ROW_ALT);
-	writeCSSDeclaration(pw, TABLE_FOOTER);
+        writeCSSDeclaration(pw, ARTIST_INDEX);
+        writeCSSDeclaration(pw, ARTIST_ITEM);
+        writeCSSDeclaration(pw, ARTIST_RELATION);
+        writeCSSDeclaration(pw, ARTIST_SHOW);
+        writeCSSDeclaration(pw, ARTIST_TRACKS);
+        writeCSSDeclaration(pw, DIARY_ENTRY);
+        writeCSSDeclaration(pw, DIARY_HEADER);
+        writeCSSDeclaration(pw, DIARY_INDEX);
+        writeCSSDeclaration(pw, DIARY_MENU);
+        writeCSSDeclaration(pw, INTERNAL);
+        writeCSSDeclaration(pw, MAIN_COL1);
+        writeCSSDeclaration(pw, MAIN_COL2);
+        writeCSSDeclaration(pw, MAIN_DIARY);
+        writeCSSDeclaration(pw, MAIN_HEADER);
+        writeCSSDeclaration(pw, MAIN_MAIN);
+        writeCSSDeclaration(pw, MAIN_STATIC);
+        writeCSSDeclaration(pw, MAIN_LINKS);
+        writeCSSDeclaration(pw, DOC_MAIN);
+        writeCSSDeclaration(pw, DOC_SUB);
+        writeCSSDeclaration(pw, MUSIC_HEADER);
+        writeCSSDeclaration(pw, MUSIC_MENU);
+        writeCSSDeclaration(pw, PREVIEW_MAIN);
+        writeCSSDeclaration(pw, PREVIEW_MENU);
+        writeCSSDeclaration(pw, PREVIEW_RECENT);
+        writeCSSDeclaration(pw, PREVIEW_SHOW);
+        writeCSSDeclaration(pw, SHOW_COMMENT);
+        writeCSSDeclaration(pw, SHOW_INDEX);
+        writeCSSDeclaration(pw, SHOW_ITEM);
+        writeCSSDeclaration(pw, TRACKS_INDEX);
+        writeCSSDeclaration(pw, TRACKS_ITEM);
+        writeCSSDeclaration(pw, TRACKS_MENU);
+        writeCSSDeclaration(pw, VENUE_INDEX);
+        writeCSSDeclaration(pw, VENUE_ITEM);
+        writeCSSDeclaration(pw, VENUE_RELATION);
+        writeCSSDeclaration(pw, VENUE_SHOW);
+        writeCSSDeclaration(pw, TABLE_HEADER);
+        writeCSSDeclaration(pw, TABLE_ROW);
+        writeCSSDeclaration(pw, TABLE_ROW_ALT);
+        writeCSSDeclaration(pw, TABLE_FOOTER);
     }
         
     private static void writeCSSDeclaration(PrintWriter pw, String name) {
-	pw.print(".");
-	pw.print(name);
-	pw.println(" {");
-	pw.println("}");
-	pw.println();
+        pw.print(".");
+        pw.print(name);
+        pw.println(" {");
+        pw.println("}");
+        pw.println();
     }
 }

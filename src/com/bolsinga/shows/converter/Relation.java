@@ -10,59 +10,59 @@ public class Relation {
     private List fMembers;
         
     public Relation(String type, String reason) {
-	fType = type;
-	fReason = reason;
-	fMembers = new Vector();
+        fType = type;
+        fReason = reason;
+        fMembers = new Vector();
     }
         
     public Relation(String type, String reason, List members) {
-	fType = type;
-	fReason = reason;
-	fMembers = members;
+        fType = type;
+        fReason = reason;
+        fMembers = members;
     }
         
     public String getType() {
-	return fType;
+        return fType;
     }
         
     public void setType(String type) {
-	fType = type;
+        fType = type;
     }
         
     public String getReason() {
-	return fReason;
+        return fReason;
     }
         
     public void setReason(String reason) {
-	fReason = reason;
+        fReason = reason;
     }
         
     public void addMember(String member) {
-	fMembers.add(member);
+        fMembers.add(member);
     }
         
     public List getMembers() {
-	return fMembers;
+        return fMembers;
     }
         
     public String toString() {
-	StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
                 
-	sb.append(getClass().getName().toString());
-	sb.append(" [");
-	sb.append(getType());
-	sb.append(", ");
-	sb.append(getReason());
-	sb.append(" (");
+        sb.append(getClass().getName().toString());
+        sb.append(" [");
+        sb.append(getType());
+        sb.append(", ");
+        sb.append(getReason());
+        sb.append(" (");
                 
-	ListIterator li = getMembers().listIterator();
-	while (li.hasNext()) {
-	    sb.append((String)(li.next()));
-	    sb.append(", ");
-	}
+        ListIterator li = getMembers().listIterator();
+        while (li.hasNext()) {
+            sb.append((String)(li.next()));
+            sb.append(", ");
+        }
                 
-	sb.append(")]");
+        sb.append(")]");
                 
-	return sb.toString();
+        return sb.toString();
     }
 }

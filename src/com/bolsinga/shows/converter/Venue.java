@@ -11,74 +11,74 @@ public class Venue {
     private String fURL;
         
     public Venue(String name, String city, String state, String address, String url) {
-	fName = name;
-	fCity = city;
-	fState = state;
-	fAddress = address;
-	fURL = url;
+        fName = name;
+        fCity = city;
+        fState = state;
+        fAddress = address;
+        fURL = url;
     }
         
     public Venue(String name, String city, String state) {
-	fName = name;
-	fCity = city;
-	fState = state;
+        fName = name;
+        fCity = city;
+        fState = state;
     }
         
     public String getName() {
-	return fName;
+        return fName;
     }
         
     public void setName(String name) {
-	fName = name;
+        fName = name;
     }
         
     public String getCity() {
-	return fCity;
+        return fCity;
     }
         
     public void setCity(String city) {
-	fCity = city;
+        fCity = city;
     }
         
     public String getState() {
-	return fState;
+        return fState;
     }
         
     public void setState(String state) {
-	fState = state;
+        fState = state;
     }
         
     public String getAddress() {
-	return fAddress;
+        return fAddress;
     }
         
     public void setAddress(String address) {
-	fAddress = address;
+        fAddress = address;
     }
         
     public String getURL() {
-	return fURL;
+        return fURL;
     }
         
     public void setURL(String url) {
-	fURL = url;
+        fURL = url;
     }
         
     public String toString() {
-	StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
                 
-	sb.append(getClass().getName().toString());
-	sb.append(" Name: ");
-	sb.append(getName());
-	sb.append(" City: ");
-	sb.append(getCity());
-	sb.append(" State: ");
-	sb.append(getState());
-	sb.append(" Address: ");
-	sb.append(getAddress());
-	sb.append(" URL: ");
-	sb.append(getURL());
+        sb.append(getClass().getName().toString());
+        sb.append(" Name: ");
+        sb.append(getName());
+        sb.append(" City: ");
+        sb.append(getCity());
+        sb.append(" State: ");
+        sb.append(getState());
+        sb.append(" Address: ");
+        sb.append(getAddress());
+        sb.append(" URL: ");
+        sb.append(getURL());
                 
-	return sb.toString();
+        return sb.toString();
     }
 }

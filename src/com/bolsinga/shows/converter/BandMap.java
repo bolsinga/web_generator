@@ -8,35 +8,35 @@ public class BandMap {
     private String fSortName;
         
     public BandMap(String name, String sortName) {
-	fName = name;
-	fSortName = sortName;
+        fName = name;
+        fSortName = sortName;
     }
         
     public String getName() {
-	return fName;
+        return fName;
     }
         
     public void setName(String name) {
-	fName = name;
+        fName = name;
     }
         
     public String getSortName() {
-	return fSortName;
+        return fSortName;
     }
         
     public void setSortName(String sortName) {
-	fSortName = sortName;
+        fSortName = sortName;
     }
         
     public String toString() {
-	StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
                 
-	sb.append(getClass().getName().toString());
-	sb.append(" ");
-	sb.append(getName());
-	sb.append(" -> ");
-	sb.append(getSortName());
+        sb.append(getClass().getName().toString());
+        sb.append(" ");
+        sb.append(getName());
+        sb.append(" -> ");
+        sb.append(getSortName());
                 
-	return sb.toString();
+        return sb.toString();
     }
 }
