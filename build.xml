@@ -2,10 +2,26 @@
 
 <project name="shows" default="generateAll" basedir=".">
 
-<!--	This assumes that jwsdp is installed at /usr/local/jwsdp-1_3/ 
+<!--	This assumes that jwsdp is installed at ${lib.dir}/jwsdp-1_3/ 
 		Otherwise can be set with "ant -Djwsdp.home=..." -->
 
-<property name="jwsdp.home" value="/usr/local/jwsdp-1_3" />
+<property name="legacy_data.dir" value="../data/" />
+<property name="itunes.dir" value="../data/" />
+<property name="data.dir" value="../data/" />
+<property name="output.dir" value="/tmp/web" />
+
+<property name="music.no_embedded_links" value="false" />
+
+<property name="src.dir" value="src" />
+<property name="lib.dir" value="lib" />
+<property name="dist.dir" value="dist" />
+
+<property name="build.dir" value="build" />
+<property name="build.classes" value="${build.dir}/classes" />
+<property name="build.lib" value="${build.dir}/lib" />
+<property name="build.gensrc" value="${build.dir}/gensrc" />
+
+<property name="jwsdp.home" value="${lib.dir}/jwsdp-1_3" />
 
 <path id="jaxb_xjc_classpath">
 	<pathelement path="." />
@@ -26,22 +42,6 @@
 <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
 	<classpath refid="jaxb_xjc_classpath" />
 </taskdef>
-
-<property name="legacy_data.dir" value="../data/" />
-<property name="itunes.dir" value="../data/" />
-<property name="data.dir" value="../data/" />
-<property name="output.dir" value="/tmp/web" />
-
-<property name="music.no_embedded_links" value="false" />
-
-<property name="src.dir" value="src" />
-<property name="lib.dir" value="lib" />
-<property name="dist.dir" value="dist" />
-
-<property name="build.dir" value="build" />
-<property name="build.classes" value="${build.dir}/classes" />
-<property name="build.lib" value="${build.dir}/lib" />
-<property name="build.gensrc" value="${build.dir}/gensrc" />
 
 <property name="javac.debug" value="no" />
 
