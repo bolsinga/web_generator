@@ -253,7 +253,7 @@ public class Links {
 		return sb.toString();
 	}
 
-	public String getArtistLink() {
+	public a getArtistLink() {
 		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
 			sb.append("..");
@@ -263,11 +263,10 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Bands");
-		return an.toString();
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Bands");
 	}
 		
-	public String getShowLink() {
+	public a getShowLink() {
 		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
 			sb.append("..");
@@ -277,11 +276,10 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Dates");
-		return an.toString();
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Dates");
 	}
 	
-	public String getTracksLink() {
+	public a getTracksLink() {
 		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
 			sb.append("..");
@@ -291,11 +289,10 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Tracks");
-		return an.toString();
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Tracks");
 	}
 
-	public String getAlbumsLink() {
+	public a getAlbumsLink() {
 		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
 			sb.append("..");
@@ -305,11 +302,10 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(ALBUM_STATS);
 		sb.append(HTML_EXT);
-		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Albums");
-		return an.toString();
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Albums");
 	}
 
-	public String getVenueLink() {
+	public a getVenueLink() {
 		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
 			sb.append("..");
@@ -319,11 +315,10 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Venues");
-		return an.toString();
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Venues");
 	}
 	
-	public String getCityLink() {
+	public a getCityLink() {
 		StringBuffer sb = new StringBuffer();
 		if (fUpOneLevel) {
 			sb.append("..");
@@ -333,8 +328,7 @@ public class Links {
 		sb.append(File.separator);
 		sb.append(STATS);
 		sb.append(HTML_EXT);
-		a an = com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Cities");
-		return an.toString();
+		return com.bolsinga.web.util.Util.createInternalA(sb.toString(), "Cities");
 	}
 
 	public a getICalLink() {
