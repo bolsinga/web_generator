@@ -695,8 +695,6 @@ public class Web {
 			showListing.addElement(showInfo);
 			
 			td.addElement(showListing);
-			
-			td.addElement(new P());
 		}
 		
 		recent.addElement(new TR().addElement(td));

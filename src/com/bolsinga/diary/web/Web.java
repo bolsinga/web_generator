@@ -69,7 +69,6 @@ class DiaryDocumentCreator {
 	}
 		
 	private void writeDocument() {
-		fDocument.getBody().addElement(new P());
 		fDocument.getBody().addElement(fTable);
 		addIndexNavigator();
 		addWebNavigator(fProgram);
@@ -209,7 +208,7 @@ public class Web {
 		sb.append(Util.sWebFormat.format(Calendar.getInstance().getTime()));
 		sb.append("!");
 		td.addElement(new Div().addElement(diary.getHeader()).addElement(sb.toString()));
-		td.addElement(new Div().addElement(links.getRSSLink()).addElement(new P()));
+		td.addElement(new Div().addElement(links.getRSSLink()));
 		
 		generateDiary(music, diary, links, mainPageEntryCount, td);
 		tr.addElement(td);
