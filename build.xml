@@ -364,7 +364,7 @@
 	</java>
 </target>
 
-<target name="music" depends="converter, music_web, diary_web, diary_rss, ical, jar" />
+<target name="music" depends="converter, music_web, diary_web, music_rss, diary_rss, ical, jar" />
 
 <target name="generateXML" depends="music, generateMusicXML, generateDiaryXML" />
 
