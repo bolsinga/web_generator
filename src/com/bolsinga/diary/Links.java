@@ -88,4 +88,21 @@ public class Links {
 		
 		return new A(link.toString(), img.toString()).toString();
 	}
+
+	public Link getAlternateRSSLink() {
+		Link result = new Link();
+		result.setRel("alternate");
+		result.setType("application/rss+xml");
+		result.setTitle("RSS");
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(System.getProperty("diary.root"));
+		sb.append(RSS_DIR);
+		sb.append(File.separator);
+		sb.append(System.getProperty("diary.rss.url"));
+
+		result.setHref(sb.toString());
+		
+		return result;
+	}
 }

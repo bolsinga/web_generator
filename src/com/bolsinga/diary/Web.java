@@ -33,7 +33,7 @@ class DiaryDocumentCreator {
 		if (needNewDocument(entry)) {
 			close();
 			
-			fDocument = Web.createDocument(getTitle(entry));
+			fDocument = Web.createDocument(getTitle(entry), fLinks);
 			fEntry = entry;
 
 			addHeader();
@@ -187,7 +187,9 @@ public class Web {
 	}
 	
 	public static void generateMainPage(Music music, int mainPageEntryCount, Diary diary, String outputDir) {
-		Document doc = createDocument(diary.getTitle());
+		Links links = Links.getLinks(false);
+
+		Document doc = createDocument(diary.getTitle(), links);
 
 		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
 		
@@ -208,7 +210,7 @@ public class Web {
 		sb.append("!");
 		td.addElement(new Center(diary.getHeader()).addElement(sb.toString()));
 		
-		generateDiary(music, diary, mainPageEntryCount, td);
+		generateDiary(music, diary, links, mainPageEntryCount, td);
 		tr.addElement(td);
 		
 		td = new TD();
@@ -279,8 +281,8 @@ public class Web {
 		
 		return sb.toString();
 	}
-	
-	public static Document createDocument(String title) {
+		
+	public static Document createDocument(String title, Links links) {
 		Document d = new Document(ECSDefaults.getDefaultCodeset());
 
         d.setDoctype(new org.apache.ecs.Doctype.Html401Transitional());
@@ -289,16 +291,20 @@ public class Web {
 		
 		Head h = d.getHead();
 		h.addElement(com.bolsinga.web.util.Util.getIconLink());
+		
+		h.addElement(links.getAlternateRSSLink());
+		h.addElement(com.bolsinga.music.web.Web.createAlternateRSSLink());
+		
 		h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
 		h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
 		h.addElement(new Meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
 		h.addElement(new Meta().setContent(getGenerator()).setName("Generator"));
 		h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
-				
+						
 		return d;
 	}
 	
-	private static void generateDiary(Music music, Diary diary, int mainPageEntryCount, TD td) {
+	private static void generateDiary(Music music, Diary diary, Links links, int mainPageEntryCount, TD td) {
 		List items = diary.getEntry();
 		Entry item = null;
 		Table table = new Table().setBorder(0).setWidth("100%").setCellSpacing(0).setCellPadding(10);
@@ -316,8 +322,6 @@ public class Web {
 		archivesLink.append("archives/");
 		archivesLink.append(Calendar.getInstance().get(Calendar.YEAR));
 		archivesLink.append(".html");
-
-		Links links = Links.getLinks(false);
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append(new A(archivesLink.toString(), "Archives").toString());

@@ -444,6 +444,11 @@ public class Web {
 		creator.close();
 	}
 	
+	public static Link createAlternateRSSLink() {
+		Links links = Links.getLinks(false);
+		return links.getAlternateRSSLink();
+	}
+	
 	public static String generatePreview(String sourceFile, int lastShowsCount) {
 		Music music = Util.createMusic(sourceFile);
 		return generatePreview(music, lastShowsCount);
