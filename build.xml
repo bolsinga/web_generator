@@ -87,7 +87,7 @@
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="utilities" depends="music_binding">
+<target name="music_utilities" depends="music_binding">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -97,7 +97,7 @@
 	</javac>
 </target>
 
-<target name="converter" depends="utilities, diary_binding">
+<target name="converter" depends="music_utilities, diary_binding">
 	<javac	destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -107,12 +107,23 @@
 	</javac>
 </target>
 
-<target name="web" depends="utilities">
+<target name="music_web" depends="music_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
 		<src path="${src.dir}" />
 		<include name="com/bolsinga/music/web/**" />
+		<classpath refid="web_classpath" />
+	</javac>
+</target>
+
+<target name="diary_web" depends="diary_binding">
+	<javac  destdir="${build.classes}"
+			debug="${javac.debug}"
+			deprecation="on">
+		<src path="${src.dir}" />
+		<include name="com/bolsinga/diary/web/**" />
+		<include name="com/bolsinga/diary/util/**" />
 		<classpath refid="web_classpath" />
 	</javac>
 </target>
@@ -126,7 +137,7 @@
 	</javac>
 </target>
 
-<target name="ical" depends="ical-gen, utilities">
+<target name="ical" depends="ical-gen, music_utilities">
 	<javac  destdir="${build.classes}"
 			debug="${javac.debug}"
 			deprecation="on">
@@ -173,7 +184,7 @@
 	<pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="generateMusicWeb" depends="web, music">
+<target name="generateMusicWeb" depends="music_web, music">
 	<mkdir dir="/tmp/web/" />
 	<java classname="com.bolsinga.music.web.Web" fork="true">
 		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
@@ -182,6 +193,21 @@
 		<sysproperty key="music.contact" value="bolsinga@hotmail.com" />
 		<sysproperty key="music.root" value="http://www.io.com/~bolsinga" />
 		<arg value="${data.dir}music.xml" />
+		<arg value="/tmp/web/" />
+		<classpath refid="generate_web_classpath" />
+	</java>
+</target>
+
+<target name="generateDiaryWeb" depends="diary_web, music">
+	<mkdir dir="/tmp/web/" />
+	<java classname="com.bolsinga.diary.web.Web" fork="true">
+		<sysproperty key="ecs.properties" value="${src.dir}/properties/web.ecs.properties" />
+		<sysproperty key="diary.program" value="DiaryWeb" />
+		<sysproperty key="diary.builddate" value="BUILD" />
+		<sysproperty key="diary.contact" value="bolsinga@hotmail.com" />
+		<sysproperty key="diary.root" value="http://www.io.com/~bolsinga" />
+		<arg value="3" />
+		<arg value="${data.dir}diary.xml" />
 		<arg value="/tmp/web/" />
 		<classpath refid="generate_web_classpath" />
 	</java>
