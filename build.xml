@@ -469,4 +469,27 @@
 
 <target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
 
+<target name="install">
+    <ftp    server="ftp.io.com"
+            userid="bolsinga"
+            password="${ftp.password}"
+            remotedir="public-web"
+            newer="yes"
+            timediffauto="yes"
+            verbose="yes" >
+        <fileset dir="${output.dir}">
+            <include name="index.html" />
+            <include name="archives/*" />
+            <include name="bands/*" />
+            <include name="cities/*" />
+            <include name="dates/*" />
+            <include name="ical/*" />
+            <include name="rss/*" />
+            <include name="styles/*" />
+            <include name="tracks/*" />
+            <include name="venues/*" />
+        </fileset>
+    </ftp>
+</target>
+
 </project>
