@@ -48,8 +48,7 @@ public class Music {
 		try {
 			com.bolsinga.music.data.Music music = objFactory.createMusic();
 		
-			List mVenues = music.getVenue();
-			createVenues(objFactory, music, venues, mVenues);
+			createVenues(objFactory, music, venues);
 			
 			createBandSort(objFactory, music, bands);
 		
@@ -79,7 +78,7 @@ public class Music {
 		}
 	}
 	
-	private static void createVenues(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List venues, List mVenues) throws JAXBException {
+	private static void createVenues(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List venues) throws JAXBException {
 		// Go through each venue.
 		//  Create a Venue for each		
 		// Make a hash of the Venue information by name
@@ -107,7 +106,7 @@ public class Music {
 			xVenue.setLocation(xLocation);
 			xVenue.setId("v" + index++);
 			
-			mVenues.add(xVenue);
+			music.getVenue().add(xVenue);
 			
 			sVenues.put(name, xVenue);
 		}
