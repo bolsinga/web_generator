@@ -1,0 +1,37 @@
+Location
+	- Street Address
+	- City
+	- State
+	- ZIP
+	- URL
+
+Relation
+	- ID(s)
+
+Artist
+	- Name
+	- Sort Name
+	- Location
+	- Albums(s)
+	- Relations(s)
+	- Comment
+
+Album
+	- Name
+	- Release Date
+	- Purchase Date
+	- Label
+	- Format
+	- isDigitized
+	- Song(s)
+	- Comment
+
+Venue
+	- Location
+	- Relations(s)
+
+Show
+	- Venue
+	- Date
+	- Artist(s)
+	- Comment
