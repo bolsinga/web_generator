@@ -87,6 +87,13 @@ public class Util {
 		}
 		return an;
 	}
+    
+    public static a createNamedTarget(String name, String value) {
+        a an = new a();
+        an.setName(name);
+        an.addElement("t", value);
+        return an;
+    }
 
     public synchronized static void createSettings(String sourceFile) {
         if (sSettings == null) {

@@ -60,10 +60,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 
     protected Element getSubsectionTitle() {
         String m = Util.getMonth(fCurEntry);
-        a an = new a(); // named target
-        an.setName(m);
-        an.addElement("t", m);
-        return new h2().addElement(an);
+        return new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(m, m));
     }
 
 	protected String getLastPath() {
@@ -330,11 +327,7 @@ public class Web {
 	public static div addItem(Music music, Entry entry, boolean upOneLevel) {
 		div diaryDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.DIARY_ENTRY);
 		
-		a an = new a(); // named target
-		an.setName(entry.getId());
-		an.addElement("test", Util.getTitle(entry));
-		
-		diaryDiv.addElement(new h2().addElement(an));
+		diaryDiv.addElement(new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
 		diaryDiv.addElement(Web.encodedComment(music, entry, upOneLevel));
 		
         return diaryDiv;

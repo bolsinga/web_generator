@@ -66,10 +66,7 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
     }
 
     protected Element getSubsectionTitle() {
-        a an = new a(); // named target
-        an.setName(fCurArtist.getId());
-        an.addElement("t", fCurArtist.getName());
-        return new h2().addElement(an);
+        return new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(fCurArtist.getId(), fCurArtist.getName()));
     }
 
 	protected String getLastPath() {
@@ -112,10 +109,7 @@ class VenueDocumentCreator extends MusicDocumentCreator {
     }
 
     protected Element getSubsectionTitle() {
-        a an = new a(); // named target
-        an.setName(fCurVenue.getId());
-        an.addElement("t", fCurVenue.getName());
-        return new h2().addElement(an);
+        return new h2().addElement(com.bolsinga.web.util.Util.createNamedTarget(fCurVenue.getId(), fCurVenue.getName()));
     }
 
 	protected String getLastPath() {
@@ -294,10 +288,7 @@ class TracksDocumentCreator extends MusicDocumentCreator {
     }
 
     protected Element getSubsectionTitle() {
-        a an = new a(); // named target
-        an.setName(fCurAlbum.getId());
-        an.addElement("t", fCurAlbum.getTitle());
-        return an;
+        return com.bolsinga.web.util.Util.createNamedTarget(fCurAlbum.getId(), fCurAlbum.getTitle());
     }
 
 	protected String getLastPath() {
@@ -848,10 +839,7 @@ public class Web {
 	public static div addItem(Music music, Links links, Show show) {
 		div showDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_ITEM);
 
-        a an = new a(); // named target
-        an.setName(show.getId());
-        an.addElement("t", Util.toString(show.getDate()));
-        showDiv.addElement(new h3().addElement(an));
+        showDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
 		
 		showDiv.addElement(getShowListing(links, show));
 
@@ -872,12 +860,8 @@ public class Web {
 		
 		boolean isCompilation = album.isCompilation();
 		
-		a an = new a(); // named target
-		an.setName(album.getId());
-		an.addElement("test", album.getTitle());
-		
 		sb = new StringBuffer();
-		sb.append(an);
+		sb.append(com.bolsinga.web.util.Util.createNamedTarget(album.getId(), album.getTitle()));
 		if (!isCompilation) {
 			artist = (Artist)album.getPerformer();
 			sb.append(" - ");
