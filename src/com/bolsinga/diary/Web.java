@@ -114,15 +114,8 @@ class DiaryDocumentCreator extends com.bolsinga.web.util.DocumentCreator {
 
 		ul list = new ul();
 		
-		StringBuffer sb = new StringBuffer();
-		sb.append("mailto:");
-		sb.append(com.bolsinga.web.util.Util.getSettings().getContact());
-		sb.append("?Subject=");
-		sb.append(program);
-		sb.append("%20Message&amp;Body=");
-		sb.append(program);
-		sb.append("%20Message%0A");
-		list.addElement(new li(new a(sb.toString(), com.bolsinga.web.util.Util.getResourceString("contact")))); // mailto: URL
+        Object[] args2 = { com.bolsinga.web.util.Util.getSettings().getContact(), program };
+		list.addElement(new li(new a(MessageFormat.format(com.bolsinga.web.util.Util.getResourceString("mailto"), args2), com.bolsinga.web.util.Util.getResourceString("contact")))); // mailto: URL
 
 		list.addElement(new li(links.getLinkToHome()));
 
