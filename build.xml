@@ -35,7 +35,7 @@
 <property name="build.lib" value="${build.dir}/lib" />
 <property name="build.gensrc" value="${build.dir}/gensrc" />
 
-<property name="javac.debug" value="yes" />
+<property name="javac.debug" value="no" />
 
 <target name="clean">
 	<delete dir="${build.dir}" />
