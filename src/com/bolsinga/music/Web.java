@@ -172,26 +172,51 @@ public class Web {
 
 		List shows = Lookup.getLookup(music).getShows(artist);
 		
-		b.addElement("----");
-		b.addElement(artist.getName());
-		b.addElement("----");
+		b.addElement(new HR());
+		A a = new A();
+		a.setName(artist.getId());
+		a.addElement("test", artist.getName());
+		b.addElement(new Center().addElement(new Big().addElement(a)));
 		
 		ListIterator li = shows.listIterator();
 		while (li.hasNext()) {
 			Show show = (Show)li.next();
 			
-			b.addElement(Util.toString(show.getDate()));
-			b.addElement(((Venue)show.getVenue()).getName());
+			UL showListing = new UL();
 			
+			showListing.addElement(new LI().addElement(new A(getLinkTo(show), Util.toString(show.getDate()))));
+			
+			UL showInfo = new UL();
+			
+			LI listItem = new LI();
 			ListIterator bi = show.getPerformance().listIterator();
 			while (bi.hasNext()) {
 				Performance p = (Performance)bi.next();
-				Artist a = (Artist)p.getArtist();
-				b.addElement(a.getName());
-				b.addElement(" - ");
+				Artist performer = (Artist)p.getArtist();
+				
+				if (artist.equals(performer)) {
+					listItem.addElement(new B(performer.getName()));
+				} else {
+					listItem.addElement(new A(getLinkTo(performer), performer.getName()));
+				}
+				
+				if (bi.hasNext()) {
+					listItem.addElement(", ");
+				}
 			}
-			b.addElement("");
-			b.addElement("----");
+			showInfo.addElement(listItem);
+			
+			Venue venue = (Venue)show.getVenue();
+			showInfo.addElement(new LI().addElement(new A(getLinkTo(venue), venue.getName())));
+			
+			String comment = show.getComment();
+			if (comment != null) {
+				showInfo.addElement(new LI().addElement(comment));
+			}
+			
+			showListing.addElement(showInfo);
+			
+			b.addElement(showListing);
 		}
 	}
 	
@@ -350,6 +375,7 @@ public class Web {
 	public static String getLinkTo(Artist artist) {
 		StringBuffer link = new StringBuffer();
 		
+		link.append("../");
 		link.append(Web.ARTIST_DIR);
 		link.append(SEPARATOR);
 		link.append(getPageFileName(artist));
@@ -363,6 +389,7 @@ public class Web {
 	public static String getLinkTo(Venue venue) {
 		StringBuffer link = new StringBuffer();
 		
+		link.append("../");
 		link.append(Web.VENUE_DIR);
 		link.append(SEPARATOR);
 		link.append(getPageFileName(venue));
@@ -376,6 +403,7 @@ public class Web {
 	public static String getLinkTo(Show show) {
 		StringBuffer link = new StringBuffer();
 		
+		link.append("../");
 		link.append(Web.SHOW_DIR);
 		link.append(SEPARATOR);
 		link.append(getPageFileName(show));
