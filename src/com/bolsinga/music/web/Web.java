@@ -1180,11 +1180,14 @@ public class Web {
 	
 	public static Table makeTable(String[] names, int[] values, String caption, String header) {
 		Table table = new Table();
+		table.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		Caption capt = new Caption();
+		capt.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		capt.addElement(caption);
 		table.addElement(capt);
 		TR tr = new TR(true).addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
 		tr.setAlign("center");
+		tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		table.addElement(tr);
 		TD td = null;
 		
@@ -1197,17 +1200,20 @@ public class Web {
 		for (i = 0; i < values.length; i++) {
 			tr = new TR(true);
 			tr.setAlign("center");
+			tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 			td = new TD(names[i]);
 			td.setAlign("left");
+			td.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 			tr.addElement(td);
-			tr.addElement(new TD(Integer.toString(values[i])));
-			tr.addElement(new TD(Util.toString((double)values[i] / total * 100.0)));
+			tr.addElement(new TD(Integer.toString(values[i])).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
+			tr.addElement(new TD(Util.toString((double)values[i] / total * 100.0)).setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint()));
 			
 			table.addElement(tr);
 		}
 		
 		tr = new TR(true);
 		tr.setAlign("center");
+		tr.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 		tr.addElement(new TH(Integer.toString(names.length)));
 		tr.addElement(new TH(Integer.toString(total)));
 		table.addElement(tr);
