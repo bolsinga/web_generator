@@ -937,7 +937,15 @@ public class Web {
 			while (li.hasNext()) {
 				Album a = (Album)li.next();
 				
-				related.addElement(new LI().addElement(new A(links.getLinkTo(a), a.getTitle())));
+				StringBuffer sb = new StringBuffer();
+				sb.append(new A(links.getLinkTo(a), a.getTitle()));
+				com.bolsinga.music.data.Date albumRelease = a.getReleaseDate();
+				if (albumRelease != null) {
+					sb.append(" (");
+					sb.append(albumRelease.getYear());
+					sb.append(")");
+				}
+				related.addElement(new LI().addElement(sb.toString()));
 			}
 			ul.addElement(related);
 			
