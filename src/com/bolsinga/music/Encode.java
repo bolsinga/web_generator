@@ -121,33 +121,41 @@ public class Encode {
 		}
 	}
 	
-	private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)", Pattern.CASE_INSENSITIVE);
+	private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	
 	public String addLinks(String source, boolean upOneLevel) {
 		String result = source;
 		Data data = null;
 		
-		StringBuffer sb = new StringBuffer();
-/*		
-		Matcher html = sHTMLTag.matcher(result);
-		while (html.find()) {
-			sb.append(addLinks(html.group(1), upOneLevel));
-			sb.append(html.group(2));
-		}
-		html.appendTail(sb);
-		
-		result = sb.toString();
-*/		
 		Iterator li = fEncodings.iterator();
 		while (li.hasNext()) {
 			data = (Data)li.next();
 			
-			sb = new StringBuffer();
-			Matcher m = data.getPattern().matcher(result);
-			while (m.find()) {
-				m.appendReplacement(sb, data.getLink(upOneLevel));
+			result = addLinks(data, result, upOneLevel);
+		}
+
+		return result;
+	}
+	
+	private String addLinks(Data data, String source, boolean upOneLevel) {
+		String result = source;
+						
+		Matcher entryMatch = data.getPattern().matcher(source);
+		if (entryMatch.find()) {			
+
+			StringBuffer sb = new StringBuffer();
+			
+			Matcher html = sHTMLTag.matcher(source);
+			if (html.find()) {
+				sb.append(addLinks(data, html.group(1), upOneLevel));
+				sb.append(html.group(2));
+				sb.append(addLinks(data, html.group(4), upOneLevel));
+			} else {
+				do {
+					entryMatch.appendReplacement(sb, data.getLink(upOneLevel));
+				} while (entryMatch.find());
+				entryMatch.appendTail(sb);
 			}
-			m.appendTail(sb);
 			
 			result = sb.toString();
 		}
