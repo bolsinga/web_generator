@@ -110,6 +110,21 @@ public class Util {
         return list;
     }
 
+    public static ol createOrderedList(Vector elements) {
+        ol list = new ol();
+        list.setPrettyPrint(Util.getPrettyPrint());
+
+        Iterator i = elements.iterator();
+        while (i.hasNext()) {
+            Element e = (Element)i.next();
+            li item = new li(e);
+            item.setPrettyPrint(Util.getPrettyPrint());
+            list.addElement(item);
+        }
+
+        return list;
+    }
+
     public static void createSettings(String sourceFile) {
         if (sSettings == null) {
             try {

@@ -906,9 +906,8 @@ public class Web {
         }
 
         e.add(new h2().addElement(sb.toString()));
-                
-        ol albumListing = new ol();
 
+        Vector ae = new Vector();
         ListIterator iterator = album.getSong().listIterator();
         while (iterator.hasNext()) {
             song = (Song)iterator.next();
@@ -929,10 +928,9 @@ public class Web {
                     sb.append(")");
                 }
             }
-            albumListing.addElement(new li(sb.toString()));
+            ae.add(new StringElement(sb.toString()));
         }
-
-        e.add(albumListing);
+        e.add(com.bolsinga.web.util.Util.createOrderedList(ae));
 
         return com.bolsinga.web.util.Util.createUnorderedList(e);
     }
