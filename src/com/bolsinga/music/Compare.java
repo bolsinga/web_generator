@@ -16,7 +16,7 @@ public class Compare {
 	private static final String A = "a ";
 	private static final String AN = "an ";
 	
-	private static String simplify(String s) {
+	public static String simplify(String s) {
 		String lower = s.toLowerCase();
 		int len = s.length();
 		if (lower.startsWith(THE)) {
