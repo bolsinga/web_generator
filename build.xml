@@ -165,16 +165,6 @@
         </javac>
 </target>
 
-<target name="diary_utilities" depends="diary_binding, settings_binding">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/diary/util/**" />
-                <classpath refid="web_classpath" />
-        </javac>
-</target>
-
 <target name="plist_utilities" depends="plist_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -245,17 +235,19 @@
         </javac>
 </target>
 
-<target name="diary_web" depends="web_utilities, diary_utilities, music_binding">
+<target name="diary" depends="web_utilities, diary_binding, settings_binding, music_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${src.dir}" />
+                <include name="com/bolsinga/diary/**" />
                 <include name="com/bolsinga/diary/web/**" />
+                <include name="com/bolsinga/diary/util/**" />
                 <classpath refid="web_classpath" />
         </javac>
 </target>
 
-<target name="rss" depends="music_utilities, diary_utilities, rss_binding">
+<target name="rss" depends="music_utilities, diary, rss_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -284,7 +276,7 @@
         </javac>
 </target>
 
-<target name="web_site" depends="music_web, diary_web, rss, ical">
+<target name="web_site" depends="music_web, diary, rss, ical">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -357,7 +349,7 @@
         </java>
 </target>
 
-<target name="generateDiaryWeb" depends="diary_web, jar">
+<target name="generateDiaryWeb" depends="diary, jar">
         <mkdir dir="${output.dir}" />
         <java classname="com.bolsinga.diary.web.Web" fork="true">
                 <arg value="${data.dir}diary.xml" />
