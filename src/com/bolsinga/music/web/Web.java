@@ -734,16 +734,24 @@ public class Web {
         return com.bolsinga.web.util.Util.convertToParagraphs(embedLinks(music, data, upOneLevel));
     }
         
-    public static div addItem(Music music, Links links, Artist artist) {
-        div artistDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.ARTIST_ITEM);
-                                
+    public static Element addItem(Music music, Links links, Artist artist) {
+        ul list = new ul();
+        list.setClass(com.bolsinga.web.util.CSS.ARTIST_ITEM);
+        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+
+        li i = null;
+
         if (artist.getAlbum().size() > 0) {
-            artistDiv.addElement(addTracks(music, links, artist));
+            i = new li(addTracks(music, links, artist));
+            i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+            list.addElement(i);
         }
                 
         Collection relations = Lookup.getLookup(music).getRelations(artist);
         if (relations != null) {
-            artistDiv.addElement(addRelations(music, links, artist));
+            i = new li(addRelations(music, links, artist));
+            i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+            list.addElement(i);
         }
 
         List shows = Lookup.getLookup(music).getShows(artist);
@@ -789,19 +797,27 @@ public class Web {
                             
                 showDiv.addElement(showInfo);
                             
-                artistDiv.addElement(showDiv);
+                i = new li(showDiv);
+                i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+                list.addElement(i);
             }
         }
                 
-        return artistDiv;
+        return list;
     }
         
-    public static div addItem(Music music, Links links, Venue venue) {
-        div venueDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.VENUE_ITEM);
+    public static Element addItem(Music music, Links links, Venue venue) {
+        ul list = new ul();
+        list.setClass(com.bolsinga.web.util.CSS.VENUE_ITEM);
+        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+
+        li i = null;
                 
         Collection relations = Lookup.getLookup(music).getRelations(venue);
         if (relations != null) {
-            venueDiv.addElement(addRelations(music, links, venue));
+            i = new li(addRelations(music, links, venue));
+            i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+            list.addElement(i);
         }
 
         List shows = Lookup.getLookup(music).getShows(venue);
@@ -840,10 +856,12 @@ public class Web {
                         
             showDiv.addElement(showInfo);
                         
-            venueDiv.addElement(showDiv);
+            i = new li(showDiv);
+            i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+            list.addElement(i);
         }
                 
-        return venueDiv;
+        return list;
     }
         
     private static ul getShowListing(Links links, Show show) {
@@ -870,23 +888,37 @@ public class Web {
         return showInfo;
     }
         
-    public static div addItem(Music music, Links links, Show show) {
-        div showDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_ITEM);
+    public static Element addItem(Music music, Links links, Show show) {
+        ul list = new ul();
+        list.setClass(com.bolsinga.web.util.CSS.SHOW_ITEM);
+        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
 
-        showDiv.addElement(new h3().addElement(com.bolsinga.web.util.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
-                
-        showDiv.addElement(getShowListing(links, show));
+        li i = null;
+
+        i = new li(new h3().addElement(com.bolsinga.web.util.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
+        i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+        list.addElement(i);
+
+        i = new li(getShowListing(links, show));
+        i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+        list.addElement(i);
 
         String comment = show.getComment();
         if (comment != null) {
-            showDiv.addElement(com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_COMMENT).addElement(getLinkedData(music, comment, true)));
+            i = new li(com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.SHOW_COMMENT).addElement(getLinkedData(music, comment, true)));
+            i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+            list.addElement(i);
         }
                 
-        return showDiv;
+        return list;
     }
 
-    public static div addItem(Music music, Links links, Album album) {
-        div albumDiv = com.bolsinga.web.util.Util.createDiv(com.bolsinga.web.util.CSS.TRACKS_ITEM);
+    public static Element addItem(Music music, Links links, Album album) {
+        ul list = new ul();
+        list.setClass(com.bolsinga.web.util.CSS.TRACKS_ITEM);
+        list.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+
+        li i = null;
                 
         StringBuffer sb;
         Artist artist = null;
@@ -907,8 +939,10 @@ public class Web {
             sb.append(albumRelease.getYear());
             sb.append(")");
         }
-                
-        albumDiv.addElement(new h2().addElement(sb.toString()));
+
+        i = new li(new h2().addElement(sb.toString()));
+        i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+        list.addElement(i);
                 
         ol albumListing = new ol();
 
@@ -935,10 +969,12 @@ public class Web {
                         
             albumListing.addElement(new li(sb.toString()));
         }
-                
-        albumDiv.addElement(albumListing);
-                
-        return albumDiv;
+
+        i = new li(albumListing);
+        i.setPrettyPrint(com.bolsinga.web.util.Util.getPrettyPrint());
+        list.addElement(i);
+
+        return list;
     }
         
     public static div addRelations(Music music, Links links, Artist artist) {
