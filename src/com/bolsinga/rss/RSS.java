@@ -53,29 +53,6 @@ public class RSS {
     generate(diary, music, os);
   }
 
-  private static String getGenerator() {
-    StringBuffer sb = new StringBuffer();
-
-    sb.append(com.bolsinga.web.Util.getResourceString("program"));
-
-    sb.append(" (built: ");
-    sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
-    sb.append(" running on jdk ");
-    sb.append(System.getProperty("java.runtime.version"));
-    sb.append(" - ");
-    sb.append(System.getProperty("os.name"));
-    sb.append(" ");
-    sb.append(System.getProperty("os.version"));
-
-    sb.append(" [");
-    sb.append(com.bolsinga.web.Util.getResourceString("copyright"));
-    sb.append("]");
-
-    sb.append(")");
-
-    return sb.toString();
-  }
-        
   public static void add(com.bolsinga.music.data.Show show, com.bolsinga.music.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
     TRssItem item = objFactory.createTRssItem();
     List itemElements = item.getTitleOrDescriptionOrLink();
@@ -134,7 +111,7 @@ public class RSS {
       channelElements.add(objFactory.createTRssChannelTitle(diary.getTitle()));
       channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRssRoot()));
       channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.Util.getSettings().getRssDescription()));
-      channelElements.add(objFactory.createTRssChannelGenerator(getGenerator()));
+      channelElements.add(objFactory.createTRssChannelGenerator(com.bolsinga.web.Util.getGenerator()));
       channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(Calendar.getInstance().getTime())));
       channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.Util.getSettings().getContact()));
 

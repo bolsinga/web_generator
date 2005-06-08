@@ -127,6 +127,31 @@ public class Util {
     return list;
   }
 
+  public static String getGenerator() {
+    StringBuffer sb = new StringBuffer();
+                
+    sb.append(com.bolsinga.web.Util.getResourceString("program"));
+                
+    sb.append(" (built: ");
+    sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
+    sb.append(" running on jdk ");
+    sb.append(System.getProperty("java.runtime.version"));
+    sb.append(" - ");
+    sb.append(System.getProperty("os.name"));
+    sb.append(" ");
+    sb.append(System.getProperty("os.version"));
+    sb.append(" ");
+    sb.append(System.getProperty("os.arch"));
+                
+    sb.append(" [");
+    sb.append(com.bolsinga.web.Util.getResourceString("copyright"));
+    sb.append("]");
+                
+    sb.append(")");
+                
+    return sb.toString();
+  }
+        
   public static void createSettings(String sourceFile) {
     if (sSettings == null) {
       try {

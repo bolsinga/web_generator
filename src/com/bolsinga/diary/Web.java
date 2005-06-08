@@ -226,29 +226,6 @@ public class Web {
     return cp.toString();
   }
         
-  private static String getGenerator() {
-    StringBuffer sb = new StringBuffer();
-                
-    sb.append(com.bolsinga.web.Util.getResourceString("program"));
-                
-    sb.append(" (built: ");
-    sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
-    sb.append(" running on jdk ");
-    sb.append(System.getProperty("java.runtime.version"));
-    sb.append(" - ");
-    sb.append(System.getProperty("os.name"));
-    sb.append(" ");
-    sb.append(System.getProperty("os.version"));
-                
-    sb.append(" [");
-    sb.append(com.bolsinga.web.Util.getResourceString("copyright"));
-    sb.append("]");
-                
-    sb.append(")");
-                
-    return sb.toString();
-  }
-                
   public static XhtmlDocument createDocument(String title, Links links) {
     XhtmlDocument d = new XhtmlDocument(ECSDefaults.getDefaultCodeset());
                 
@@ -266,7 +243,7 @@ public class Web {
     h.addElement(new meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new meta().setContent(System.getProperty("user.name")).setName("Author"));
     h.addElement(new meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
-    h.addElement(new meta().setContent(getGenerator()).setName("Generator"));
+    h.addElement(new meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
     h.addElement(new meta().setContent(getCopyright()).setName("Copyright"));
 
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
