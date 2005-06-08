@@ -54,15 +54,7 @@ public class RSS {
   }
 
   public static void add(com.bolsinga.music.data.Show show, com.bolsinga.music.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
-    TRssItem item = objFactory.createTRssItem();
-    List itemElements = item.getTitleOrDescriptionOrLink();
-                
-    itemElements.add(objFactory.createTRssItemTitle(getTitle(show)));
-    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.music.Util.toCalendar(show.getDate()).getTime())));
-    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRssRoot() + links.getLinkTo(show)));
-    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(show.getComment())));
-                
-    channel.getItem().add(item);
+    add(getTitle(show), com.bolsinga.music.Util.toCalendar(show.getDate()).getTime(), links.getLinkTo(show), show.getComment(), objFactory, channel);
   }
         
   private static String getTitle(Show show) {
@@ -89,13 +81,18 @@ public class RSS {
   }
 
   public static void add(com.bolsinga.diary.data.Entry entry, com.bolsinga.diary.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
+    add(com.bolsinga.diary.Util.getTitle(entry), entry.getTimestamp().getTime(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
+  }
+
+  public static void add(String title, java.util.Date date, String link, String description, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
     TRssItem item = objFactory.createTRssItem();
     List itemElements = item.getTitleOrDescriptionOrLink();
                 
-    itemElements.add(objFactory.createTRssItemTitle(com.bolsinga.diary.Util.getTitle(entry)));
-    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(entry.getTimestamp().getTime())));
-    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRssRoot() + links.getLinkTo(entry)));
-    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(entry.getComment())));
+    itemElements.add(objFactory.createTRssItemTitle(title));
+    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(date)));
+    itemElements.add(objFactory.createTRssItemAuthor(System.getProperty("user.name")));
+    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRssRoot() + link));
+    itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(description)));
                 
     channel.getItem().add(item);
   }
