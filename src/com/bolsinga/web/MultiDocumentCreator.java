@@ -19,7 +19,7 @@ public abstract class MultiDocumentCreator extends DocumentCreator {
   }
 
   private li getSubsection() {
-    if ((fSubsection == null) || needNewSubsection()) {
+    if ((fSubsection == null) || needNewSubsection() || needNewDocument()) {
       div mainDiv = getMain();
             
       ul list = new ul();
