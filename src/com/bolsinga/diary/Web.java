@@ -73,7 +73,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fMusic, fCurEntry, true);
+    return Web.addItem(fMusic, fCurEntry, fLinks, true);
   }
 
   protected Element addIndexNavigator() {
@@ -270,7 +270,7 @@ public class Web {
     for (int i = 0; i < mainPageEntryCount; i++) {
       item = (Entry)items.get(i);
                         
-      diaryDiv.addElement(Web.addItem(music, item, false));
+      diaryDiv.addElement(Web.addItem(music, item, links, false));
     }
                 
     StringBuffer sb = new StringBuffer();
@@ -303,10 +303,11 @@ public class Web {
     creator.close();
   }
 
-  public static ul addItem(Music music, Entry entry, boolean upOneLevel) {
+  public static ul addItem(Music music, Entry entry, Links links, boolean upOneLevel) {
     // CSS.DIARY_ENTRY
     Vector e = new Vector();
     e.add(new h2().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
+    e.add(new h4().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(entry), com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"))));
     e.add(new StringElement(Web.encodedComment(music, entry, upOneLevel)));
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
