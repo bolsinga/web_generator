@@ -87,10 +87,16 @@ public class RSS {
   public static void add(String title, java.util.Date date, String link, String description, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
     TRssItem item = objFactory.createTRssItem();
     List itemElements = item.getTitleOrDescriptionOrLink();
-                
+
+    StringBuffer sb = new StringBuffer();
+    sb.append(com.bolsinga.web.Util.getSettings().getContact());
+    sb.append(" (");
+    sb.append(System.getProperty("user.name"));
+    sb.append(")");
+
     itemElements.add(objFactory.createTRssItemTitle(title));
     itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(date)));
-    itemElements.add(objFactory.createTRssItemAuthor(System.getProperty("user.name")));
+    itemElements.add(objFactory.createTRssItemAuthor(sb.toString()));
     itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRssRoot() + link));
     itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(description)));
                 
