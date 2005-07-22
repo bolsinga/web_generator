@@ -134,9 +134,17 @@ public class Util {
                 
     sb.append(" (built: ");
     sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
-    sb.append(" running on jdk ");
+    sb.append(" running ");
+    sb.append(System.getProperty("java.runtime.name"));
+    sb.append(" (");
     sb.append(System.getProperty("java.runtime.version"));
-    sb.append(" - ");
+    sb.append(") ");
+    sb.append(System.getProperty("java.vm.name"));
+    sb.append(" (");
+    sb.append(System.getProperty("java.vm.version"));
+    sb.append(") - ");
+    sb.append(System.getProperty("java.vm.vendor"));
+    sb.append(" ");
     sb.append(System.getProperty("os.name"));
     sb.append(" ");
     sb.append(System.getProperty("os.version"));
