@@ -13,25 +13,26 @@
 
 <!-- Define Settings -->
 <xs:element name="settings">
-    <xs:complexType>
-		<xs:sequence>
-            <xs:element name="timestamp" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
-            <xs:element name="contact" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="ico" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
-            <xs:element name="logoImage" type="image" minOccurs="1" maxOccurs="1" />
-            <xs:element name="rssImage" type="image" minOccurs="1" maxOccurs="1" />
-            <xs:element name="icalImage" type="image" minOccurs="1" maxOccurs="1" />
-            <xs:element name="cssFile" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="rssFile" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="diaryCount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
-            <xs:element name="rssCount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
-            <xs:element name="rssRoot" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
-            <xs:element name="rssDescription" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="icalName" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="linksTitle" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="friendsTitle" type="xs:string" minOccurs="1" maxOccurs="1" />
-		</xs:sequence>
-    </xs:complexType>
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="timestamp" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
+      <xs:element name="contact" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="ico" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
+      <xs:element name="logoImage" type="image" minOccurs="1" maxOccurs="1" />
+      <xs:element name="rssImage" type="image" minOccurs="1" maxOccurs="1" />
+      <xs:element name="icalImage" type="image" minOccurs="1" maxOccurs="1" />
+      <xs:element name="cssFile" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="rssFile" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="diaryCount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
+      <xs:element name="rssCount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
+      <xs:element name="rssRoot" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
+      <xs:element name="rssDescription" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="icalName" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="linksTitle" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="friendsTitle" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="embedLinks" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
 </xs:element>
 
 </xs:schema>

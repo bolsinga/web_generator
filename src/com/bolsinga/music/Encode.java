@@ -157,13 +157,16 @@ public class Encode {
         
   public String addLinks(String source, boolean upOneLevel) {
     String result = source;
-    Data data = null;
-                
-    Iterator i = fEncodings.iterator();
-    while (i.hasNext()) {
-      data = (Data)i.next();
-                        
-      result = addLinks(data, result, upOneLevel);
+
+    if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
+      Data data = null;
+      
+      Iterator i = fEncodings.iterator();
+      while (i.hasNext()) {
+        data = (Data)i.next();
+        
+        result = addLinks(data, result, upOneLevel);
+      }
     }
 
     return result;
