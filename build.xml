@@ -205,7 +205,7 @@
         </javac>
 </target>
 
-<target name="music" depends="web, music_binding, settings_binding, ical_gen">
+<target name="music" depends="music_binding, settings_binding, ical_gen, web">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
