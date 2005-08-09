@@ -313,6 +313,6 @@ public class Web {
   }
         
   private static String encodedComment(Music music, Entry entry, boolean upOneLevel) {
-    return com.bolsinga.web.Util.convertToParagraphs(com.bolsinga.music.Web.embedLinks(music, entry.getComment(), upOneLevel));
+    return com.bolsinga.web.Util.convertToParagraphs(com.bolsinga.web.Encode.embedLinks(music, entry.getComment(), upOneLevel));
   }
 }

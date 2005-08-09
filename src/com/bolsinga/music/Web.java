@@ -706,18 +706,8 @@ public class Web {
     return d;
   }
         
-  public static String embedLinks(String sourceFile, String data, boolean upOneLevel) {
-    Music music = Util.createMusic(sourceFile);
-                
-    return embedLinks(music, data, upOneLevel);
-  }
-        
-  public static String embedLinks(Music music, String data, boolean upOneLevel) {
-    return com.bolsinga.web.Encode.getEncode(music).addLinks(data, upOneLevel);
-  }
-        
   public static String getLinkedData(Music music, String data, boolean upOneLevel) {
-    return com.bolsinga.web.Util.convertToParagraphs(embedLinks(music, data, upOneLevel));
+    return com.bolsinga.web.Util.convertToParagraphs(com.bolsinga.web.Encode.embedLinks(music, data, upOneLevel));
   }
         
   public static Element addItem(Music music, Links links, Artist artist) {

@@ -108,11 +108,15 @@ public class Encode {
       }
     };
         
-  public synchronized static Encode getEncode(Music music) {
+  private synchronized static Encode getEncode(Music music) {
     if (sEncode == null) {
       sEncode = new Encode(music);
     }
     return sEncode;
+  }
+
+  public static String embedLinks(Music music, String data, boolean upOneLevel) {
+    return Encode.getEncode(music).addLinks(data, upOneLevel);
   }
 
   private Encode(Music music) {
