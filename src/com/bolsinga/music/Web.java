@@ -713,7 +713,7 @@ public class Web {
   }
         
   public static String embedLinks(Music music, String data, boolean upOneLevel) {
-    return Encode.getEncode(music).addLinks(data, upOneLevel);
+    return com.bolsinga.web.Encode.getEncode(music).addLinks(data, upOneLevel);
   }
         
   public static String getLinkedData(Music music, String data, boolean upOneLevel) {
