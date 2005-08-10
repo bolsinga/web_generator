@@ -312,6 +312,6 @@ public class Web {
   }
         
   private static String encodedComment(com.bolsinga.web.Encode encoder, Entry entry, boolean upOneLevel) {
-    return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(entry.getComment(), upOneLevel));
+    return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(entry, upOneLevel));
   }
 }
