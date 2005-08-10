@@ -13,9 +13,23 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
-public class Encode {
+public abstract class Encode {
 
   private static Encode sEncode = null;
+
+  public synchronized static Encode getEncode(Music music, Diary diary) {
+    if (sEncode == null) {
+      sEncode = new RegexEncode(music);
+    }
+    return sEncode;
+  }
+
+  public abstract String embedLinks(Show show, boolean upOneLevel);
+
+  public abstract String embedLinks(Entry entry, boolean upOneLevel);
+}
+
+class RegexEncode extends Encode {
 
   static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
 
@@ -109,13 +123,6 @@ public class Encode {
       }
     };
         
-  public synchronized static Encode getEncode(Music music, Diary diary) {
-    if (sEncode == null) {
-      sEncode = new Encode(music, diary);
-    }
-    return sEncode;
-  }
-
   public String embedLinks(Show show, boolean upOneLevel) {
     return embedLinks(show.getComment(), upOneLevel);
   }
@@ -128,7 +135,7 @@ public class Encode {
     return addLinks(data, upOneLevel);
   }
 
-  private Encode(Music music, Diary diary) {
+  RegexEncode(Music music) {
     List items = music.getArtist();
     Artist item = null;
 
