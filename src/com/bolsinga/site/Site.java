@@ -18,16 +18,17 @@ public class Site {
   public static void generate(String diaryFile, String musicFile, String outputDir, String variant) {
     Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
-        
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+
     boolean musicOnly = variant.equals("music");
     boolean diaryOnly = variant.equals("diary");
     boolean webOnly = variant.equals("web");
         
     if (!musicOnly) {
-      com.bolsinga.diary.Web.generate(diary, music, outputDir);
+      com.bolsinga.diary.Web.generate(diary, music, encoder, outputDir);
     }
     if (!diaryOnly) {
-      com.bolsinga.music.Web.generate(music, outputDir);
+      com.bolsinga.music.Web.generate(music, encoder, outputDir);
       if (!webOnly) {
         com.bolsinga.music.ICal.generate(music, outputDir);
       }

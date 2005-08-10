@@ -1,6 +1,7 @@
 package com.bolsinga.web;
 
 import com.bolsinga.music.data.*;
+import com.bolsinga.diary.data.*;
 
 import com.bolsinga.music.*;
 
@@ -108,18 +109,18 @@ public class Encode {
       }
     };
         
-  private synchronized static Encode getEncode(Music music) {
+  public synchronized static Encode getEncode(Music music, Diary diary) {
     if (sEncode == null) {
-      sEncode = new Encode(music);
+      sEncode = new Encode(music, diary);
     }
     return sEncode;
   }
 
-  public static String embedLinks(Music music, String data, boolean upOneLevel) {
-    return Encode.getEncode(music).addLinks(data, upOneLevel);
+  public String embedLinks(String data, boolean upOneLevel) {
+    return addLinks(data, upOneLevel);
   }
 
-  private Encode(Music music) {
+  private Encode(Music music, Diary diary) {
     List items = music.getArtist();
     Artist item = null;
 

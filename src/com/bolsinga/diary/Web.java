@@ -13,17 +13,17 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
+  com.bolsinga.web.Encode fEncoder = null;
   Diary  fDiary     = null;
-  Music  fMusic     = null;
   Links  fLinks     = null;
   String fProgram   = null;
   Entry  fCurEntry  = null;
   Entry  fLastEntry = null;
         
-  public DiaryDocumentCreator(Diary diary, Music music, Links links, String outputDir, String program) {
+  public DiaryDocumentCreator(Diary diary, com.bolsinga.web.Encode encoder, Links links, String outputDir, String program) {
     super(outputDir);
+    fEncoder = encoder;
     fDiary = diary;
-    fMusic = music;
     fLinks = links;
     fProgram = program;
   }
@@ -73,7 +73,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fMusic, fCurEntry, fLinks, true);
+    return Web.addItem(fEncoder, fCurEntry, fLinks, true);
   }
 
   protected Element addIndexNavigator() {
@@ -134,23 +134,22 @@ public class Web {
 
   public static void generate(String sourceFile, String musicFile, String outputDir) {
     Diary diary = Util.createDiary(sourceFile);
-                
+
     generate(diary, musicFile, outputDir);
   }
         
   public static void generate(Diary diary, String musicFile, String outputDir) {
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
-                
-    generate(diary, music, outputDir);
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
+    generate(diary, music, encoder, outputDir);
   }
         
-  public static void generate(Diary diary, Music music, String outputDir) {
-    generateMainPage(music, diary, outputDir);
-                
-    generateArchivePages(music, diary, outputDir);
+  public static void generate(Diary diary, Music music, com.bolsinga.web.Encode encoder, String outputDir) {
+    generateMainPage(encoder, music, diary, outputDir);
+    generateArchivePages(diary, encoder, outputDir);
   }
         
-  public static void generateMainPage(Music music, Diary diary, String outputDir) {
+  public static void generateMainPage(com.bolsinga.web.Encode encoder, Music music, Diary diary, String outputDir) {
     Links links = Links.getLinks(false);
 
     XhtmlDocument doc = createDocument(diary.getTitle(), links);
@@ -161,7 +160,7 @@ public class Web {
     div header = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_HEADER);
     header.addElement(com.bolsinga.web.Util.convertToUnOrderedList(diary.getHeader()));
     main.addElement(header);
-    main.addElement(generateDiary(music, diary, links));
+    main.addElement(generateDiary(encoder, diary, links));
     doc.getBody().addElement(main);
                 
     div mainCol2 = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL2);
@@ -251,7 +250,7 @@ public class Web {
     return d;
   }
         
-  private static Element generateDiary(Music music, Diary diary, Links links) {
+  private static Element generateDiary(com.bolsinga.web.Encode encoder, Diary diary, Links links) {
     List items = diary.getEntry();
     Entry item = null;
 
@@ -270,7 +269,7 @@ public class Web {
     for (int i = 0; i < mainPageEntryCount; i++) {
       item = (Entry)items.get(i);
                         
-      diaryDiv.addElement(Web.addItem(music, item, links, false));
+      diaryDiv.addElement(Web.addItem(encoder, item, links, false));
     }
                 
     StringBuffer sb = new StringBuffer();
@@ -283,7 +282,7 @@ public class Web {
     return diaryDiv;
   }
         
-  public static void generateArchivePages(Music music, Diary diary, String outputDir) {
+  public static void generateArchivePages(Diary diary, com.bolsinga.web.Encode encoder, String outputDir) {
     List items = diary.getEntry();
     Entry item = null;
                 
@@ -291,7 +290,7 @@ public class Web {
                 
     Links links = Links.getLinks(true);
                 
-    DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
+    DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
                 
     ListIterator i = items.listIterator();
     while (i.hasNext()) {
@@ -303,16 +302,16 @@ public class Web {
     creator.close();
   }
 
-  public static ul addItem(Music music, Entry entry, Links links, boolean upOneLevel) {
+  public static ul addItem(com.bolsinga.web.Encode encoder, Entry entry, Links links, boolean upOneLevel) {
     // CSS.DIARY_ENTRY
     Vector e = new Vector();
     e.add(new h2().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
     e.add(new h4().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(entry), com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"))));
-    e.add(new StringElement(Web.encodedComment(music, entry, upOneLevel)));
+    e.add(new StringElement(Web.encodedComment(encoder, entry, upOneLevel)));
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  private static String encodedComment(Music music, Entry entry, boolean upOneLevel) {
-    return com.bolsinga.web.Util.convertToParagraphs(com.bolsinga.web.Encode.embedLinks(music, entry.getComment(), upOneLevel));
+  private static String encodedComment(com.bolsinga.web.Encode encoder, Entry entry, boolean upOneLevel) {
+    return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(entry.getComment(), upOneLevel));
   }
 }

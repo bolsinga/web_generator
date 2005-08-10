@@ -161,9 +161,11 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 class ShowDocumentCreator extends MusicDocumentCreator {
   Show fLastShow = null;
   Show fCurShow  = null;
-    
-  public ShowDocumentCreator(Music music, Links links, String outputDir, String program) {
+  com.bolsinga.web.Encode fEncoder = null;
+   
+  public ShowDocumentCreator(Music music, com.bolsinga.web.Encode encoder, Links links, String outputDir, String program) {
     super(music, links, outputDir, program);
+    fEncoder = encoder;
   }
         
   public void add(Show item) {
@@ -198,7 +200,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fMusic, fLinks, fCurShow);
+    return Web.addItem(fEncoder, fLinks, fCurShow);
   }
 
   protected Element addIndexNavigator() {
@@ -318,7 +320,7 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fMusic, fLinks, fCurAlbum);
+    return Web.addItem(fLinks, fCurAlbum);
   }
 
   protected Element addIndexNavigator() {
@@ -341,17 +343,18 @@ public class Web {
         
   public static void generate(String sourceFile, String outputDir) {
     Music music = Util.createMusic(sourceFile);
-    generate(music, outputDir);
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, null);
+    generate(music, encoder, outputDir);
   }
         
-  public static void generate(Music music, String outputDir) {
+  public static void generate(Music music, com.bolsinga.web.Encode encoder, String outputDir) {
     Links links = Links.getLinks(true);
                 
     generateArtistPages(music, links, outputDir);
                 
     generateVenuePages(music, links, outputDir);
                 
-    generateDatePages(music, links, outputDir);
+    generateDatePages(music, encoder, links, outputDir);
                 
     generateCityPages(music, links, outputDir);
                 
@@ -443,7 +446,7 @@ public class Web {
     stats.close();
   }
         
-  public static void generateDatePages(Music music, Links links, String outputDir) {
+  public static void generateDatePages(Music music, com.bolsinga.web.Encode encoder, Links links, String outputDir) {
     List items = music.getShow();
     Show item = null;
     Vector list = null;
@@ -451,7 +454,7 @@ public class Web {
                 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
-    ShowDocumentCreator creator = new ShowDocumentCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
+    ShowDocumentCreator creator = new ShowDocumentCreator(music, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
                 
     ListIterator iterator = items.listIterator();
     while (iterator.hasNext()) {
@@ -706,8 +709,8 @@ public class Web {
     return d;
   }
         
-  public static String getLinkedData(Music music, String data, boolean upOneLevel) {
-    return com.bolsinga.web.Util.convertToParagraphs(com.bolsinga.web.Encode.embedLinks(music, data, upOneLevel));
+  public static String getLinkedData(com.bolsinga.web.Encode encoder, String data, boolean upOneLevel) {
+    return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(data, upOneLevel));
   }
         
   public static Element addItem(Music music, Links links, Artist artist) {
@@ -715,7 +718,7 @@ public class Web {
     Vector e = new Vector();
 
     if (artist.getAlbum().size() > 0) {
-      e.add(Web.addTracks(music, links, artist));
+      e.add(Web.addTracks(links, artist));
     }
                 
     Collection relations = Lookup.getLookup(music).getRelations(artist);
@@ -838,7 +841,7 @@ public class Web {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  public static Element addItem(Music music, Links links, Show show) {
+  public static Element addItem(com.bolsinga.web.Encode encoder, Links links, Show show) {
     // CSS.SHOW_ITEM
     Vector e = new Vector();
 
@@ -848,13 +851,13 @@ public class Web {
 
     String comment = show.getComment();
     if (comment != null) {
-      e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(music, comment, true)));
+      e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(encoder, comment, true)));
     }
                 
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
 
-  public static Element addItem(Music music, Links links, Album album) {
+  public static Element addItem(Links links, Album album) {
     // CSS.TRACKS_ITEM
     Vector e = new Vector();
                 
@@ -944,7 +947,7 @@ public class Web {
     return d;
   }
 
-  public static div addTracks(Music music, Links links, Artist artist) {
+  public static div addTracks(Links links, Artist artist) {
     Vector e = new Vector();
     Iterator iterator = artist.getAlbum().iterator();
     while (iterator.hasNext()) {
