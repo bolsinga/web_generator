@@ -116,7 +116,15 @@ public class Encode {
     return sEncode;
   }
 
-  public String embedLinks(String data, boolean upOneLevel) {
+  public String embedLinks(Show show, boolean upOneLevel) {
+    return embedLinks(show.getComment(), upOneLevel);
+  }
+
+  public String embedLinks(Entry entry, boolean upOneLevel) {
+    return embedLinks(entry.getComment(), upOneLevel);
+  }
+
+  private String embedLinks(String data, boolean upOneLevel) {
     return addLinks(data, upOneLevel);
   }
 

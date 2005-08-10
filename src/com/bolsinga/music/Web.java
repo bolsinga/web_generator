@@ -709,8 +709,8 @@ public class Web {
     return d;
   }
         
-  public static String getLinkedData(com.bolsinga.web.Encode encoder, String data, boolean upOneLevel) {
-    return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(data, upOneLevel));
+  public static String getLinkedData(com.bolsinga.web.Encode encoder, Show show, boolean upOneLevel) {
+    return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel));
   }
         
   public static Element addItem(Music music, Links links, Artist artist) {
@@ -851,7 +851,7 @@ public class Web {
 
     String comment = show.getComment();
     if (comment != null) {
-      e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(encoder, comment, true)));
+      e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(encoder, show, true)));
     }
                 
     return com.bolsinga.web.Util.createUnorderedList(e);
