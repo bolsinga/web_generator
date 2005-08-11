@@ -5,6 +5,7 @@ import com.bolsinga.diary.data.*;
 
 import com.bolsinga.music.*;
 
+import java.io.*;
 import java.text.*;
 import java.util.*;
 import java.util.regex.*;
@@ -16,10 +17,88 @@ import org.apache.ecs.filter.*;
 public abstract class Encode {
 
   private static Encode sEncode = null;
+  
+  public static void main(String[] args) {
+    if (args.length != 4) {
+      System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir]>");
+      System.exit(0);
+    }
+
+    com.bolsinga.web.Util.createSettings(args[2]);
+                
+    Encode.generate(args[0], args[1], args[3]);
+  }
+
+  private static void generate(String diaryFile, String musicFile, String outputDir) {
+    Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
+    Music music = com.bolsinga.music.Util.createMusic(musicFile);
+
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+
+    generateDiary(diary, encoder, outputDir);
+
+    generateMusic(music, encoder, outputDir);
+  }
+
+  private static void generateDiary(Diary diary, Encode encoder, String outputDir) {
+    List items = diary.getEntry();
+    Entry item = null;
+    StringBuffer buffer = new StringBuffer();
+
+    Collections.sort(items, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
+
+    ListIterator i = items.listIterator();
+    while (i.hasNext()) {
+      item = (Entry)i.next();
+      
+      buffer.append(encoder.embedLinks(item, true));
+    }
+
+    writeDocument(buffer, outputDir, "diary_encoding.txt");
+  }
+
+  private static void generateMusic(Music music, Encode encoder, String outputDir) {
+    List items = music.getShow();
+    Show item = null;
+    StringBuffer buffer = new StringBuffer();
+
+    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
+
+    ListIterator i = items.listIterator();
+    while (i.hasNext()) {
+      item = (Show)i.next();
+
+      if (item.getComment() != null) {
+        buffer.append(encoder.embedLinks(item, true));
+      }
+    }
+
+    writeDocument(buffer, outputDir, "music_encoding.txt");
+  }
+
+  private static void writeDocument(StringBuffer buffer, String outputDir, String fileName) {
+    try {
+      File f = new File(outputDir, fileName);
+      File parent = new File(f.getParent());
+      if (!parent.exists()) {
+        if (!parent.mkdirs()) {
+          System.out.println("Can't: " + parent.getAbsolutePath());
+        }
+      }
+      OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+      w.write(buffer.toString());
+      w.close();
+    } catch (IOException ioe) {
+      System.err.println("Exception: " + ioe);
+      ioe.printStackTrace();
+      System.exit(1);
+    }
+  }
 
   public synchronized static Encode getEncode(Music music, Diary diary) {
     if (sEncode == null) {
       sEncode = new RegexEncode(music);
+      //      sEncode = new NullEncode();
     }
     return sEncode;
   }
@@ -218,5 +297,20 @@ class RegexEncode extends Encode {
     }
                 
     return result;
+  }
+}
+
+class NullEncode extends Encode {
+
+  NullEncode() {
+
+  }
+
+  public String embedLinks(Show show, boolean upOneLevel) {
+    return show.getComment();
+  }
+
+  public String embedLinks(Entry entry, boolean upOneLevel) {
+    return entry.getComment();
   }
 }

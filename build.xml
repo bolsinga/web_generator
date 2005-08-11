@@ -301,6 +301,17 @@
         </java>
 </target>
 
+<target name="encoding" depends="music, diary, jar">
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.web.Encode" fork="true">
+    <arg value="${data.dir}diary.xml" />
+    <arg value="${data.dir}music.xml" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <classpath refid="generate_web_classpath" />
+  </java>
+</target>
+
 <!--    Add the following property to any web using code to have the output's
                 container tags be pretty printed. This can assist in debugging the output.
 
@@ -350,15 +361,15 @@
 </target>
 
 <target name="Site" depends="site, jar">
-        <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.site.Site" fork="true">
-                <arg value="${data.dir}diary.xml" />
-                <arg value="${data.dir}music.xml" />
-                <arg value="${data.dir}settings.xml" />
-                <arg value="${output.dir}" />
-        <arg value="all" />
-                <classpath refid="generate_web_classpath" />
-        </java>
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.site.Site" fork="true">
+    <arg value="${data.dir}diary.xml" />
+    <arg value="${data.dir}music.xml" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <arg value="all" />
+    <classpath refid="generate_web_classpath" />
+  </java>
 </target>
 
 <target name="SiteWeb" depends="site, jar">
