@@ -209,54 +209,62 @@ class RegexEncode extends Encode {
     };
         
   public String embedLinks(Show show, boolean upOneLevel) {
-    return embedLinks(show.getComment(), upOneLevel);
+    return addLinks(show.getComment(), upOneLevel);
   }
 
   public String embedLinks(Entry entry, boolean upOneLevel) {
-    return embedLinks(entry.getComment(), upOneLevel);
-  }
-
-  private String embedLinks(String data, boolean upOneLevel) {
-    return addLinks(data, upOneLevel);
+    return addLinks(entry.getComment(), upOneLevel);
   }
 
   RegexEncode(Music music) {
-    List items = music.getArtist();
-    Artist item = null;
-
     Links standardLinks = Links.getLinks(false);
     Links upLinks = Links.getLinks(true);
                 
-    ListIterator i = items.listIterator();
+    List items = music.getArtist();
+    addArtistData(items, standardLinks, upLinks);
+                
+    items = music.getVenue();
+    addVenueData(items, standardLinks, upLinks);
+                
+    items = music.getAlbum();
+    addAlbumData(items, standardLinks, upLinks);
+  }
+
+  void addArtistData(List items, Links standardLinks, Links upLinks) {
+    Artist item = null;
+
+    Iterator i = items.listIterator();
     while (i.hasNext()) {
       item = (Artist)i.next();
                         
       fEncodings.add(new Data(item, standardLinks, upLinks));
     }
-                
-    items = music.getVenue();
-    Venue vitem = null;
+  }
+
+  void addVenueData(List items, Links standardLinks, Links upLinks) {
+    Venue item = null;
                 
     // Don't use venues with lower case names, these are 'vague' venues.
     Pattern startsLowerCase = Pattern.compile("\\p{Lower}.*");
                 
-    i = items.listIterator();
+    Iterator i = items.listIterator();
     while (i.hasNext()) {
-      vitem = (Venue)i.next();
+      item = (Venue)i.next();
                         
-      if (!startsLowerCase.matcher(vitem.getName()).matches()) {
-        fEncodings.add(new Data(vitem, standardLinks, upLinks));
+      if (!startsLowerCase.matcher(item.getName()).matches()) {
+        fEncodings.add(new Data(item, standardLinks, upLinks));
       }
     }
+  }
+
+  void addAlbumData(List items, Links standardLinks, Links upLinks) {
+    Album item = null;
                 
-    items = music.getAlbum();
-    Album aitem = null;
-                
-    i = items.listIterator();
+    Iterator i = items.listIterator();
     while (i.hasNext()) {
-      aitem = (Album)i.next();
+      item = (Album)i.next();
                         
-      fEncodings.add(new Data(aitem, standardLinks, upLinks));
+      fEncodings.add(new Data(item, standardLinks, upLinks));
     }
   }
         
