@@ -54,7 +54,10 @@ public abstract class Encode {
       buffer.append(encoder.embedLinks(item, true));
     }
 
-    writeDocument(buffer, outputDir, "diary_encoding.txt");
+    StringBuffer sb = new StringBuffer();
+    sb.append(encoder.getClass().getName() + "_diary.txt");
+
+    writeDocument(buffer, outputDir, sb.toString());
   }
 
   private static void generateMusic(Music music, Encode encoder, String outputDir) {
@@ -73,7 +76,10 @@ public abstract class Encode {
       }
     }
 
-    writeDocument(buffer, outputDir, "music_encoding.txt");
+    StringBuffer sb = new StringBuffer();
+    sb.append(encoder.getClass().getName() + "_music.txt");
+
+    writeDocument(buffer, outputDir, sb.toString());
   }
 
   private static void writeDocument(StringBuffer buffer, String outputDir, String fileName) {
