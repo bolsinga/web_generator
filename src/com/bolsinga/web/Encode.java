@@ -114,92 +114,20 @@ public abstract class Encode {
   public abstract String embedLinks(Entry entry, boolean upOneLevel);
 }
 
-class RegexEncode extends Encode {
-
+class Data {
+  
   static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
 
-  private TreeSet fEncodings = new TreeSet(DATA_COMPARATOR);
-
-  class Data {
-    String fName = null;
-    Pattern fPattern = null;
-    String fStandardLink = null;
-    String fUpLink = null;
-                
-    Data(Artist artist, Links standardLinks, Links upLinks) {
-      fName = artist.getName();
-      fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
-
-      Object[] args = { fName };
-      String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoartist"), args);
-                        
-      fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString();
-      fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
-    }
-                
-    Data(Venue venue, Links standardLinks, Links upLinks) {
-      fName = venue.getName();
-      fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
-
-      Object[] args = { fName };
-      String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfovenue"), args);
-
-      fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString();
-      fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
-    }
-
-    Data(Album album, Links standardLinks, Links upLinks) {
-      fName = album.getTitle();
-      fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
-
-      Object[] args = { fName };
-      String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoalbum"), args);
-
-      fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
-      fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
-    }
-                
-    String getName() {
-      // This is only used for sorting.
-      return fName;
-    }
-                
-    String createRegex(String name) {
-      StringBuffer sb = new StringBuffer();
-                        
-      sb.append("(^|\\W)(");
-                        
-      Matcher m = sSpecialChars.matcher(name);
-      while (m.find()) {
-        m.appendReplacement(sb, "\\\\$1");
-      }
-      m.appendTail(sb);
-
-      sb.append(")(\\W)");
-                        
-      return sb.toString();
-    }
-                
-    Pattern getPattern() {
-      return fPattern;
-    }
-                
-    String getLink(boolean upOneLevel) {
-      StringBuffer sb = new StringBuffer();
-                        
-      sb.append("$1");
-      sb.append(upOneLevel ? fUpLink : fStandardLink);
-      sb.append("$3");
-                        
-      return sb.toString();
-    }
-  }
-        
-  static final Comparator DATA_COMPARATOR = new Comparator() {
+  String fName = null;
+  Pattern fPattern = null;
+  String fStandardLink = null;
+  String fUpLink = null;
+  
+  public static final Comparator DATA_COMPARATOR = new Comparator() {
       public int compare(Object o1, Object o2) {
         Data d1 = (Data)o1;
         Data d2 = (Data)o2;
-                        
+        
         int result = d2.getName().length() - d1.getName().length();
         if (result == 0) {
           result = d2.getName().compareTo(d1.getName());
@@ -207,7 +135,80 @@ class RegexEncode extends Encode {
         return result;
       }
     };
-        
+  
+  Data(Artist artist, Links standardLinks, Links upLinks) {
+    fName = artist.getName();
+    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+    
+    Object[] args = { fName };
+    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoartist"), args);
+    
+    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString();
+    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
+  }
+  
+  Data(Venue venue, Links standardLinks, Links upLinks) {
+    fName = venue.getName();
+    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+    
+    Object[] args = { fName };
+    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfovenue"), args);
+    
+    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString();
+    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
+  }
+  
+  Data(Album album, Links standardLinks, Links upLinks) {
+    fName = album.getTitle();
+    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+    
+    Object[] args = { fName };
+    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoalbum"), args);
+    
+    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
+    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
+  }
+  
+  String getName() {
+    // This is only used for sorting.
+    return fName;
+  }
+  
+  String createRegex(String name) {
+    StringBuffer sb = new StringBuffer();
+    
+    sb.append("(^|\\W)(");
+    
+    Matcher m = sSpecialChars.matcher(name);
+    while (m.find()) {
+      m.appendReplacement(sb, "\\\\$1");
+    }
+    m.appendTail(sb);
+    
+    sb.append(")(\\W)");
+    
+    return sb.toString();
+  }
+  
+  Pattern getPattern() {
+    return fPattern;
+  }
+  
+  String getLink(boolean upOneLevel) {
+    StringBuffer sb = new StringBuffer();
+    
+    sb.append("$1");
+    sb.append(upOneLevel ? fUpLink : fStandardLink);
+    sb.append("$3");
+    
+    return sb.toString();
+  }
+}
+
+class RegexEncode extends Encode {
+
+  private TreeSet fEncodings = new TreeSet(Data.DATA_COMPARATOR);
+
   public String embedLinks(Show show, boolean upOneLevel) {
     return addLinks(show.getComment(), upOneLevel);
   }
