@@ -114,19 +114,21 @@ public abstract class Encode {
   public abstract String embedLinks(Entry entry, boolean upOneLevel);
 }
 
-class Data {
+class EncoderData {
   
   static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
-
+  
+  private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  
   String fName = null;
   Pattern fPattern = null;
   String fStandardLink = null;
   String fUpLink = null;
   
-  public static final Comparator DATA_COMPARATOR = new Comparator() {
+  public static final Comparator ENCODERDATA_COMPARATOR = new Comparator() {
       public int compare(Object o1, Object o2) {
-        Data d1 = (Data)o1;
-        Data d2 = (Data)o2;
+        EncoderData d1 = (EncoderData)o1;
+        EncoderData d2 = (EncoderData)o2;
         
         int result = d2.getName().length() - d1.getName().length();
         if (result == 0) {
@@ -136,7 +138,7 @@ class Data {
       }
     };
   
-  Data(Artist artist, Links standardLinks, Links upLinks) {
+  EncoderData(Artist artist, Links standardLinks, Links upLinks) {
     fName = artist.getName();
     fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
     
@@ -147,7 +149,7 @@ class Data {
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
   }
   
-  Data(Venue venue, Links standardLinks, Links upLinks) {
+  EncoderData(Venue venue, Links standardLinks, Links upLinks) {
     fName = venue.getName();
     fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
     
@@ -158,7 +160,7 @@ class Data {
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
   }
   
-  Data(Album album, Links standardLinks, Links upLinks) {
+  EncoderData(Album album, Links standardLinks, Links upLinks) {
     fName = album.getTitle();
     fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
     
@@ -169,6 +171,87 @@ class Data {
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
   }
   
+  public static void addArtistData(List items, Links standardLinks, Links upLinks, TreeSet encodings) {
+    Artist item = null;
+
+    Iterator i = items.listIterator();
+    while (i.hasNext()) {
+      item = (Artist)i.next();
+                        
+      encodings.add(new EncoderData(item, standardLinks, upLinks));
+    }
+  }
+
+  public static void addVenueData(List items, Links standardLinks, Links upLinks, TreeSet encodings) {
+    Venue item = null;
+                
+    // Don't use venues with lower case names, these are 'vague' venues.
+    Pattern startsLowerCase = Pattern.compile("\\p{Lower}.*");
+                
+    Iterator i = items.listIterator();
+    while (i.hasNext()) {
+      item = (Venue)i.next();
+                        
+      if (!startsLowerCase.matcher(item.getName()).matches()) {
+        encodings.add(new EncoderData(item, standardLinks, upLinks));
+      }
+    }
+  }
+
+  public static void addAlbumData(List items, Links standardLinks, Links upLinks, TreeSet encodings) {
+    Album item = null;
+                
+    Iterator i = items.listIterator();
+    while (i.hasNext()) {
+      item = (Album)i.next();
+                        
+      encodings.add(new EncoderData(item, standardLinks, upLinks));
+    }
+  }
+
+  public static String addLinks(String source, boolean upOneLevel, TreeSet encodings) {
+    String result = source;
+
+    if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
+      EncoderData data = null;
+      
+      Iterator i = encodings.iterator();
+      while (i.hasNext()) {
+        data = (EncoderData)i.next();
+        
+        result = addLinks(data, result, upOneLevel);
+      }
+    }
+
+    return result;
+  }
+        
+  private static String addLinks(EncoderData data, String source, boolean upOneLevel) {
+    String result = source;
+                                                
+    Matcher entryMatch = data.getPattern().matcher(source);
+    if (entryMatch.find()) {                        
+
+      StringBuffer sb = new StringBuffer();
+                        
+      Matcher html = sHTMLTag.matcher(source);
+      if (html.find()) {
+        sb.append(addLinks(data, html.group(1), upOneLevel));
+        sb.append(html.group(2));
+        sb.append(addLinks(data, html.group(4), upOneLevel));
+      } else {
+        do {
+          entryMatch.appendReplacement(sb, data.getLink(upOneLevel));
+        } while (entryMatch.find());
+        entryMatch.appendTail(sb);
+      }
+                        
+      result = sb.toString();
+    }
+                
+    return result;
+  }
+
   String getName() {
     // This is only used for sorting.
     return fName;
@@ -207,14 +290,14 @@ class Data {
 
 class RegexEncode extends Encode {
 
-  private TreeSet fEncodings = new TreeSet(Data.DATA_COMPARATOR);
+  private TreeSet fEncodings = new TreeSet(EncoderData.ENCODERDATA_COMPARATOR);
 
   public String embedLinks(Show show, boolean upOneLevel) {
-    return addLinks(show.getComment(), upOneLevel);
+    return EncoderData.addLinks(show.getComment(), upOneLevel, fEncodings);
   }
 
   public String embedLinks(Entry entry, boolean upOneLevel) {
-    return addLinks(entry.getComment(), upOneLevel);
+    return EncoderData.addLinks(entry.getComment(), upOneLevel, fEncodings);
   }
 
   RegexEncode(Music music) {
@@ -222,96 +305,13 @@ class RegexEncode extends Encode {
     Links upLinks = Links.getLinks(true);
                 
     List items = music.getArtist();
-    addArtistData(items, standardLinks, upLinks);
+    EncoderData.addArtistData(items, standardLinks, upLinks, fEncodings);
                 
     items = music.getVenue();
-    addVenueData(items, standardLinks, upLinks);
+    EncoderData.addVenueData(items, standardLinks, upLinks, fEncodings);
                 
     items = music.getAlbum();
-    addAlbumData(items, standardLinks, upLinks);
-  }
-
-  void addArtistData(List items, Links standardLinks, Links upLinks) {
-    Artist item = null;
-
-    Iterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Artist)i.next();
-                        
-      fEncodings.add(new Data(item, standardLinks, upLinks));
-    }
-  }
-
-  void addVenueData(List items, Links standardLinks, Links upLinks) {
-    Venue item = null;
-                
-    // Don't use venues with lower case names, these are 'vague' venues.
-    Pattern startsLowerCase = Pattern.compile("\\p{Lower}.*");
-                
-    Iterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Venue)i.next();
-                        
-      if (!startsLowerCase.matcher(item.getName()).matches()) {
-        fEncodings.add(new Data(item, standardLinks, upLinks));
-      }
-    }
-  }
-
-  void addAlbumData(List items, Links standardLinks, Links upLinks) {
-    Album item = null;
-                
-    Iterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Album)i.next();
-                        
-      fEncodings.add(new Data(item, standardLinks, upLinks));
-    }
-  }
-        
-  private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        
-  public String addLinks(String source, boolean upOneLevel) {
-    String result = source;
-
-    if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
-      Data data = null;
-      
-      Iterator i = fEncodings.iterator();
-      while (i.hasNext()) {
-        data = (Data)i.next();
-        
-        result = addLinks(data, result, upOneLevel);
-      }
-    }
-
-    return result;
-  }
-        
-  private String addLinks(Data data, String source, boolean upOneLevel) {
-    String result = source;
-                                                
-    Matcher entryMatch = data.getPattern().matcher(source);
-    if (entryMatch.find()) {                        
-
-      StringBuffer sb = new StringBuffer();
-                        
-      Matcher html = sHTMLTag.matcher(source);
-      if (html.find()) {
-        sb.append(addLinks(data, html.group(1), upOneLevel));
-        sb.append(html.group(2));
-        sb.append(addLinks(data, html.group(4), upOneLevel));
-      } else {
-        do {
-          entryMatch.appendReplacement(sb, data.getLink(upOneLevel));
-        } while (entryMatch.find());
-        entryMatch.appendTail(sb);
-      }
-                        
-      result = sb.toString();
-    }
-                
-    return result;
+    EncoderData.addAlbumData(items, standardLinks, upLinks, fEncodings);
   }
 }
 
