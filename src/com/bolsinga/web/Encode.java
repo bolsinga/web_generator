@@ -105,6 +105,7 @@ public abstract class Encode {
     if (sEncode == null) {
       sEncode = new RegexEncode(music);
       //      sEncode = new NullEncode();
+      //      sEncode = new HashEncode(music, diary);
     }
     return sEncode;
   }
@@ -116,9 +117,12 @@ public abstract class Encode {
 
 class EncoderData {
   
-  static private Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
+  private static final Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
   
   private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+
+  // Don't use venues with lower case names, these are 'vague' venues.
+  public static final Pattern sStartsLowerCase = Pattern.compile("\\p{Lower}.*");
   
   String fName = null;
   Pattern fPattern = null;
@@ -171,7 +175,7 @@ class EncoderData {
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
   }
   
-  public static void addArtistData(List items, Links standardLinks, Links upLinks, TreeSet encodings) {
+  public static void addArtistData(List items, Links standardLinks, Links upLinks, Collection encodings) {
     Artist item = null;
 
     Iterator i = items.listIterator();
@@ -182,23 +186,20 @@ class EncoderData {
     }
   }
 
-  public static void addVenueData(List items, Links standardLinks, Links upLinks, TreeSet encodings) {
+  public static void addVenueData(List items, Links standardLinks, Links upLinks, Collection encodings) {
     Venue item = null;
-                
-    // Don't use venues with lower case names, these are 'vague' venues.
-    Pattern startsLowerCase = Pattern.compile("\\p{Lower}.*");
                 
     Iterator i = items.listIterator();
     while (i.hasNext()) {
       item = (Venue)i.next();
                         
-      if (!startsLowerCase.matcher(item.getName()).matches()) {
+      if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
         encodings.add(new EncoderData(item, standardLinks, upLinks));
       }
     }
   }
 
-  public static void addAlbumData(List items, Links standardLinks, Links upLinks, TreeSet encodings) {
+  public static void addAlbumData(List items, Links standardLinks, Links upLinks, Collection encodings) {
     Album item = null;
                 
     Iterator i = items.listIterator();
@@ -209,7 +210,7 @@ class EncoderData {
     }
   }
 
-  public static String addLinks(String source, boolean upOneLevel, TreeSet encodings) {
+  public static String addLinks(String source, boolean upOneLevel, Collection encodings) {
     String result = source;
 
     if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
@@ -327,5 +328,211 @@ class NullEncode extends Encode {
 
   public String embedLinks(Entry entry, boolean upOneLevel) {
     return entry.getComment();
+  }
+}
+
+class HashEncode extends Encode {
+  // Assume average of 25 words per entry.
+  static final int WORDS_PER_ENTRY = 25;
+  // Assume average of 3 words per name
+  static final int WORDS_PER_NAME = 3;
+
+  // The key is the Show or Entry. The value is a TreeSet containing the EncoderData
+  //  that are applicable to the given key. Only these EncoderDatas will be used
+  //  to encode the key, saving some time.
+  HashMap fEncodables;
+
+  HashEncode(Music music, Diary diary) {
+    int numEncoded = music.getShow().size() + diary.getEntry().size();
+    HashMap encodedMap = new HashMap(numEncoded * WORDS_PER_ENTRY);
+
+    int numEncoder = music.getArtist().size() + music.getVenue().size() + music.getAlbum().size();
+    HashMap encoderMap = new HashMap(numEncoder * WORDS_PER_NAME);
+
+    // The the words for each; the key is the unique word
+    // For what will be encoded, the value is a HashSet of the Show and Entries that
+    //  contain the key
+    getEncodedWords(music, diary, encodedMap);
+    // For what will be encoding, the value is a HashSet of the Artist, Venue, Album that
+    //  contain the key.
+    getEncoderWords(music, encoderMap);
+
+    // get the intersection of the words between the encoded and the encoders.
+    //  These words serve as the base line to determine what work will need to be done.
+    HashSet keyWordsSet = new HashSet(encoderMap.keySet());
+    keyWordsSet.retainAll(encodedMap.keySet());
+
+    int capacity = keyWordsSet.size() / WORDS_PER_ENTRY;
+    fEncodables = new HashMap(capacity);
+
+    Collection c;
+    Iterator i = keyWordsSet.iterator();
+    while (i.hasNext()) {
+      Object keyWord = i.next();
+      
+      Iterator j = ((HashMap)encodedMap.get(keyWord)).values().iterator();
+      while (j.hasNext()) {
+        Object encodedItem = j.next();
+        
+        Iterator k = ((HashMap)encoderMap.get(keyWord)).values().iterator();
+        while (k.hasNext()) {
+          Object encoderItem = k.next();
+
+          if (fEncodables.containsKey(encodedItem)) {
+            c = (Collection)fEncodables.get(encodedItem);
+            c.add(encoderItem);
+          } else {
+            c = new TreeSet(EncoderData.ENCODERDATA_COMPARATOR);
+            c.add(encoderItem);
+            fEncodables.put(encodedItem, c);
+          }
+        }
+      }
+    }
+  }
+
+  private void getEncodedWords(Music music, Diary diary, HashMap encodedMap) {
+    getMusicWords(music, encodedMap);
+    getDiaryWords(diary, encodedMap);
+  }
+
+  interface EncodeItem { 
+    public Object encode(Object value);
+  }
+
+  private void addWords(String text, HashMap map, EncodeItem encoder, Object value, int capacity) {
+    HashMap encodeMap = null;
+    String[] words = text.split("\\W");
+    for (int j = 0; j < words.length; j++) {
+      String word = words[j].toLowerCase();
+      if (word.length() != 0) {
+        if (map.containsKey(word)) {
+           encodeMap = (HashMap)map.get(word);
+           if (!encodeMap.containsKey(value)) {
+             encodeMap.put(value, encoder.encode(value));
+           }
+        } else {
+          encodeMap = new HashMap(capacity);
+          encodeMap.put(value, encoder.encode(value));
+          map.put(word, encodeMap);
+        }
+      }
+    }
+  }
+
+  private void getMusicWords(Music music, HashMap encodedMap) {
+    List items = music.getShow();
+    Show item = null;
+
+    ListIterator i = items.listIterator();
+    while (i.hasNext()) {
+      item = (Show)i.next();
+
+      if (item.getComment() != null) {
+        addWords(item.getComment(), encodedMap, 
+                 new EncodeItem() {
+                   public Object encode(Object value) {
+                     return value;
+                   }
+                 },
+                 item, items.size());
+      }
+    }
+  }
+  
+  private void getDiaryWords(Diary diary, HashMap encodedMap) {
+    List items = diary.getEntry();
+    Entry item = null;
+    
+    ListIterator i = items.listIterator();
+    while (i.hasNext()) {
+      item = (Entry)i.next();
+
+      addWords(item.getComment(), encodedMap,
+               new EncodeItem() {
+                 public Object encode(Object value) {
+                   return value;
+                 }
+               },
+               item, items.size());
+    }
+  }
+
+  private void getEncoderWords(Music music, HashMap encoderMap) {
+    Links standardLinks = Links.getLinks(false);
+    Links upLinks = Links.getLinks(true);
+
+    getArtistWords(music, encoderMap, standardLinks, upLinks);
+    getVenueWords(music, encoderMap, standardLinks, upLinks);
+    getAlbumWords(music, encoderMap, standardLinks, upLinks);
+  }
+
+  private void getArtistWords(Music music, HashMap encoderMap, final Links standardLinks, final Links upLinks) {
+    List items = music.getArtist();
+
+    ListIterator i = items.listIterator();
+    while (i.hasNext()) {
+      final Artist item = (Artist)i.next();
+
+      addWords(item.getName(), encoderMap,
+               new EncodeItem() {
+                 public Object encode(Object value) {
+                   return new EncoderData(item, standardLinks, upLinks);
+                 }
+               },
+               item, items.size());
+    }
+  }
+
+  private void getVenueWords(Music music, HashMap encoderMap, final Links standardLinks, final Links upLinks) {
+    List items = music.getVenue();
+
+    ListIterator i = items.listIterator();
+    while (i.hasNext()) {
+      final Venue item = (Venue)i.next();
+
+      if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
+        addWords(item.getName(), encoderMap,
+                 new EncodeItem() {
+                   public Object encode(Object value) {
+                     return new EncoderData(item, standardLinks, upLinks);
+                   }
+                 },
+                 item, items.size());
+      }
+    }
+  }
+
+  private void getAlbumWords(Music music, HashMap encoderMap, final Links standardLinks, final Links upLinks) {
+    List items = music.getAlbum();
+
+    ListIterator i = items.listIterator();
+    while (i.hasNext()) {
+      final Album item = (Album)i.next();
+
+      addWords(item.getTitle(), encoderMap,
+               new EncodeItem() {
+                 public Object encode(Object value) {
+                   return new EncoderData(item, standardLinks, upLinks);
+                 }
+               },
+               item, items.size());
+    }
+  }
+
+  public String embedLinks(Show show, boolean upOneLevel) {
+    if (fEncodables.containsKey(show)) {
+      return EncoderData.addLinks(show.getComment(), upOneLevel, (Collection)fEncodables.get(show));
+    } else {
+      return show.getComment();
+    }
+  }
+
+  public String embedLinks(Entry entry, boolean upOneLevel) {
+    if (fEncodables.containsKey(entry)) {
+      return EncoderData.addLinks(entry.getComment(), upOneLevel, (Collection)fEncodables.get(entry));
+    } else {
+      return entry.getComment();
+    }
   }
 }
