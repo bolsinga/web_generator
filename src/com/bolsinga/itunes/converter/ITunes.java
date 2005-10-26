@@ -42,6 +42,8 @@ public class ITunes {
   private static final String TK_TRACK_NUMBER         = "Track Number";
   private static final String TK_TRACK_TYPE           = "Track Type";
   private static final String TK_YEAR                 = "Year";
+  private static final String TK_SEASON               = "Season";
+  private static final String TK_PERSISTENT_ID        = "Persistent ID";
     
   private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
   private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
@@ -134,6 +136,8 @@ public class ITunes {
     sITunesKeys.add(TK_TRACK_NUMBER);
     sITunesKeys.add(TK_TRACK_TYPE);
     sITunesKeys.add(TK_YEAR);
+    sITunesKeys.add(TK_SEASON);
+    sITunesKeys.add(TK_PERSISTENT_ID);
   }
         
   public static void addMusic(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String itunesFile) throws JAXBException {
