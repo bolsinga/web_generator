@@ -103,9 +103,9 @@ public abstract class Encode {
 
   public synchronized static Encode getEncode(Music music, Diary diary) {
     if (sEncode == null) {
-      sEncode = new RegexEncode(music);
+      //      sEncode = new RegexEncode(music);
       //      sEncode = new NullEncode();
-      //      sEncode = new HashEncode(music, diary);
+            sEncode = new HashEncode(music, diary);
     }
     return sEncode;
   }
@@ -506,17 +506,29 @@ class HashEncode extends Encode {
   private void getAlbumWords(Music music, HashMap encoderMap, final Links standardLinks, final Links upLinks) {
     List items = music.getAlbum();
 
+    // Create a HashSet of all Artist names. If an Album has the same name as an
+    //  Artist, prefer the Artist name over the Album.
+    List artistList = music.getArtist();
+    HashSet artists = new HashSet(artistList.size());
+    ListIterator ai = artistList.listIterator();
+    while (ai.hasNext()) {
+      Artist item = (Artist)ai.next();
+      artists.add(item.getName());
+    }
+
     ListIterator i = items.listIterator();
     while (i.hasNext()) {
       final Album item = (Album)i.next();
 
-      addWords(item.getTitle(), encoderMap,
-               new EncodeItem() {
-                 public Object encode(Object value) {
-                   return new EncoderData(item, standardLinks, upLinks);
-                 }
-               },
-               item, items.size());
+      if (!artists.contains(item.getTitle())) {
+        addWords(item.getTitle(), encoderMap,
+                 new EncodeItem() {
+                   public Object encode(Object value) {
+                     return new EncoderData(item, standardLinks, upLinks);
+                   }
+                 },
+                 item, items.size());
+      }
     }
   }
 
