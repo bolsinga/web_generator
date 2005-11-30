@@ -360,6 +360,11 @@
         </java>
 </target>
 
+<!--
+Here is the command line expanded.
+java -cp lib/ecs-1.4.2.jar:build/lib/music.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-impl.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-libs.jar:lib/jwsdp-1_3/jwsdp-shared/lib/jax-qname.jar:lib/jwsdp-1_3/jwsdp-shared/lib/namespace.jar:lib/jwsdp-1_3/jwsdp-shared/lib/relaxngDatatype.jar:lib/jwsdp-1_3/jwsdp-shared/lib/xsdlib.jar com.bolsinga.site.Site ../data/diary.xml ../data/music.xml ../data/settings.xml /Volumes/Home/bolsinga/Sites all
+-->
+
 <target name="Site" depends="site, jar">
   <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.site.Site" fork="true">
