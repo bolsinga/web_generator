@@ -428,7 +428,7 @@ java -cp lib/ecs-1.4.2.jar:build/lib/music.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.j
             <include name="cities/*" />
             <include name="dates/*" />
             <include name="ical/*" />
-            <include name="rss/*" />
+            <include name="rss/rss.xml" />
             <include name="styles/*" />
             <include name="tracks/*" />
             <include name="venues/*" />
@@ -445,7 +445,7 @@ java -cp lib/ecs-1.4.2.jar:build/lib/music.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.j
         <fileset dir="${output.dir}">
             <include name="index.html" />
             <include name="archives/*" />
-            <include name="rss/*" />
+            <include name="rss/rss.xml" />
         </fileset>
     </ftp>
 </target>
