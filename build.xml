@@ -174,12 +174,13 @@
         </javac>
         <tstamp>
                 <format property="web.builddate" pattern="EEE MMM dd HH:mm:ss z yyyy" />
+                <format property="web.buildyear" pattern="yyyy" />
         </tstamp>
         <copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/web.properties">
                 <filterset>
                         <filter token="builddate" value="${web.builddate}" />
                         <filter token="program" value="com.bolsinga.site" />
-                        <filter token="copyright" value="Program Copyright (c) 2004, 2005 Greg Bolsinga" />
+                        <filter token="copyright" value="Program Copyright (c) 2004-${web.buildyear} Greg Bolsinga" />
                 </filterset>
         </copy>
 </target>
