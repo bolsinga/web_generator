@@ -12,11 +12,14 @@
 
 <property name="src.dir" value="src" />
 <property name="lib.dir" value="lib" />
+<property name="dst.dir" value="dst" />
 
 <property name="build.dir" value="output" />
 <property name="build.classes" value="${build.dir}/classes" />
 <property name="build.lib" value="${build.dir}/lib" />
 <property name="build.gensrc" value="${build.dir}/gensrc" />
+
+<property name="dst.lib" value="${dst.dir}/lib" />
 
 <property name="jwsdp.home" value="${lib.dir}/jwsdp-1_3" />
 
@@ -448,6 +451,24 @@ java -cp lib/ecs-1.4.2.jar:build/lib/music.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.j
             <include name="rss/rss.xml" />
         </fileset>
     </ftp>
+</target>
+
+<target name="package" depends="site, music_converter, jar" >
+  <mkdir dir="${dst.dir}" />
+  <mkdir dir="${dst.lib}" />
+  <copy file="${build.lib}/music.jar" todir="${dst.lib}" />
+  <copy todir="${dst.lib}">
+    <fileset dir="${lib.dir}">
+      <include name="jwsdp-1_3/jaxb/lib/jaxb-api.jar" />
+      <include name="jwsdp-1_3/jaxb/lib/jaxb-impl.jar" />
+      <include name="jwsdp-1_3/jaxb/lib/jaxb-libs.jar" />
+      <include name="jwsdp-1_3/jwsdp-shared/lib/jax-qname.jar" />
+      <include name="jwsdp-1_3/jwsdp-shared/lib/namespace.jar" />
+      <include name="jwsdp-1_3/jwsdp-shared/lib/relaxngDatatype.jar" />
+      <include name="jwsdp-1_3/jwsdp-shared/lib/xsdlib.jar" />
+    </fileset>
+  </copy>
+  <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
 </target>
 
 </project>
