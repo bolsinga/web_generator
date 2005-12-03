@@ -283,7 +283,6 @@
 
 <target name="generateDiaryXML" depends="music_converter, jar">
         <java classname="com.bolsinga.shows.converter.Diary" fork="true">
-                <sysproperty key="diary.title" value="En Vogue Webmaster" />
                 <arg value="${legacy_data.dir}comments.txt" />
                 <arg value="${legacy_data.dir}statics.txt" />
                 <arg value="${data.dir}diary.xml" />

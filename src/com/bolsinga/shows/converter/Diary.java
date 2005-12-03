@@ -42,8 +42,6 @@ public class Diary {
                         
       createComments(objFactory, diary, comments);
                         
-      diary.setTitle(System.getProperty("diary.title"));
-                        
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
       Marshaller m = jc.createMarshaller();
@@ -75,13 +73,19 @@ public class Diary {
       oldStatic = (Statics)i.next();
                         
       xStatic = objFactory.createStatic();
+
+      String location = oldStatic.getLocation();
                         
-      if (oldStatic.getLocation().equalsIgnoreCase("left")) {
+      if (location.equalsIgnoreCase("left")) {
         diary.setStatic(oldStatic.getData());
-      } else if (oldStatic.getLocation().equalsIgnoreCase("header")) {
+      } else if (location.equalsIgnoreCase("header")) {
         diary.setHeader(oldStatic.getData());
-      } else if (oldStatic.getLocation().equalsIgnoreCase("links")) {
+      } else if (location.equalsIgnoreCase("links")) {
         diary.setFriends(oldStatic.getData());
+      } else if (location.equalsIgnoreCase("title")) {
+        diary.setTitle(oldStatic.getData());
+      } else {
+        System.err.println("Unknown statics location: " + location);
       }
     }
   }
