@@ -247,16 +247,6 @@
         </javac>
 </target>
 
-<target name="site" depends="music, diary, rss">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/site/*.java" />
-                <classpath refid="web_classpath" />
-        </javac>
-</target>
-
 <target name="jar">
         <jar jarfile="${build.lib}/music.jar"
                 basedir="${build.classes}" >
@@ -268,6 +258,16 @@
         <path refid="jaxb_binder_classpath" />
         <pathelement path="${build.lib}/music.jar" />
 </path>
+
+<target name="site" depends="music, diary, rss, music_converter">
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/site/*.java" />
+                <classpath refid="music_classpath" />
+        </javac>
+</target>
 
 <target name="generateMusicXML" depends="music_converter, jar">
         <java classname="com.bolsinga.shows.converter.Music" fork="true">
@@ -362,11 +362,6 @@
         </java>
 </target>
 
-<!--
-Here is the command line expanded.
-java -cp lib/ecs-1.4.2.jar:build/lib/music.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-impl.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-libs.jar:lib/jwsdp-1_3/jwsdp-shared/lib/jax-qname.jar:lib/jwsdp-1_3/jwsdp-shared/lib/namespace.jar:lib/jwsdp-1_3/jwsdp-shared/lib/relaxngDatatype.jar:lib/jwsdp-1_3/jwsdp-shared/lib/xsdlib.jar com.bolsinga.site.Site ../data/diary.xml ../data/music.xml ../data/settings.xml /Volumes/Home/bolsinga/Sites all
--->
-
 <target name="Site" depends="site, jar">
   <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.site.Site" fork="true">
@@ -452,10 +447,19 @@ java -cp lib/ecs-1.4.2.jar:build/lib/music.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.j
     </ftp>
 </target>
 
-<target name="package" depends="site, music_converter, jar" >
+<!--
+Here is the command line expanded.
+java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-impl.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-libs.jar:lib/jwsdp-1_3/jwsdp-shared/lib/jax-qname.jar:lib/jwsdp-1_3/jwsdp-shared/lib/namespace.jar:lib/jwsdp-1_3/jwsdp-shared/lib/relaxngDatatype.jar:lib/jwsdp-1_3/jwsdp-shared/lib/xsdlib.jar com.bolsinga.site.Main ~/Music/iTunes/iTunes\ Music\ Library.xml ../data/shows.txt ../data/venuemap.txt ../data/bandsort.txt ../data/relations.txt ../data/comments.txt ../data/statics.txt ../data/diary.xml ../data/music.xml ../data/settings.xml /Volumes/Home/bolsinga/Sites <xml|musicxml|diaryxml|site|musicsite|musicdiary>
+-->
+
+<target name="package" depends="site, jar" >
   <mkdir dir="${dst.dir}" />
   <mkdir dir="${dst.lib}" />
+  <exec executable="cp" >
+    <arg line="${src.dir}/scripts/site ${dst.dir}" />
+  </exec>
   <copy file="${build.lib}/music.jar" todir="${dst.lib}" />
+  <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
   <copy todir="${dst.lib}">
     <fileset dir="${lib.dir}">
       <include name="jwsdp-1_3/jaxb/lib/jaxb-api.jar" />
@@ -467,7 +471,6 @@ java -cp lib/ecs-1.4.2.jar:build/lib/music.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.j
       <include name="jwsdp-1_3/jwsdp-shared/lib/xsdlib.jar" />
     </fileset>
   </copy>
-  <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
 </target>
 
 </project>

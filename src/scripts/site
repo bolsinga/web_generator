@@ -1,0 +1,75 @@
+#!/bin/sh
+
+if [ -z "$JAVA_HOME" ] ; then
+    JAVA_HOME=/Library/Java/Home
+fi
+
+if [ -n "$JAVA_HOME" ] ; then
+    JAVA_CMD="$JAVA_HOME/bin/java"
+else
+    JAVA_CMD=`which java 2> /dev/null`
+fi
+
+PRG="$0"
+PROG_HOME=`dirname "$PRG"`
+PROG_HOME=`cd "$PROG_HOME" && pwd`
+
+SITE_LIB_DIR="$PROG_HOME/lib"
+if [ ! -d "${SITE_LIB_DIR}" ] ; then
+    echo "Can't find ${SITE_LIB_DIR}"
+    exit 1
+fi
+
+for i in \
+    "${SITE_LIB_DIR}" \
+    "${SITE_LIB_DIR}/jwsdp-1_3/jaxb/lib" \
+    "${SITE_LIB_DIR}/jwsdp-1_3/jwsdp-shared/lib" ; do
+    for j in "${i}"/*.jar; do
+        if [ -z "$LOCAL_CLASSPATH" ] ; then
+            LOCAL_CLASSPATH="$j"
+        else
+            LOCAL_CLASSPATH="$LOCAL_CLASSPATH:$j"
+        fi
+    done
+done
+
+DATA_DIR="$1"
+DATA_HOME=`cd "$DATA_DIR" && pwd`
+if [ ! -d "${DATA_HOME}" ] ; then
+    echo "Can't find ${DATA_HOME}"
+    exit 1
+fi
+
+for i in \
+    "${DATA_HOME}/iTunes Music Library.xml" \
+    "${DATA_HOME}/shows.txt" \
+    "${DATA_HOME}/venuemap.txt" \
+    "${DATA_HOME}/bandsort.txt" \
+    "${DATA_HOME}/relations.txt" \
+    "${DATA_HOME}/comments.txt" \
+    "${DATA_HOME}/statics.txt" \
+    "${DATA_HOME}/diary.xml" \
+    "${DATA_HOME}/music.xml" \
+    "${DATA_HOME}/settings.xml" ; do
+  if [ ! -f "$i" ] ; then
+      echo "Can't find $i"
+      exit 1
+  fi
+  DATA_FILES="$DATA_FILES \"$i\""
+done
+
+OUTPUT_DIR="$2"
+OUTPUT_HOME=`cd "$OUTPUT_DIR" && pwd`
+if [ ! -d "${OUTPUT_HOME}" ] ; then
+    echo "Can't find ${OUTPUT_HOME}"
+    exit 1
+fi
+
+ACTION="$3"
+
+COMMAND="exec \"$JAVA_CMD\" -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $DATA_FILES $OUTPUT_HOME $ACTION"
+
+if $DEBUG ; then
+    echo $COMMAND
+fi
+eval $COMMAND

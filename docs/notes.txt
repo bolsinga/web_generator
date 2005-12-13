@@ -191,3 +191,30 @@ Removing CVS tags:
 cvs log <file>
 <copy the tag names>
 pbpaste | cut -f1 -d':' | sed -e"s|.*S|S|g" | xargs -t -n1 -J % cvs tag -d % <file>
+
+-----
+
+Packaging for distribution:
+
+Known Directories:
+${OUTPUT_DIR}
+
+Known Files:
+${ITUNES_MUSIC_XML}
+shows.txt
+venuemap.txt
+bandsort.txt
+relations.txt
+comments.txt
+statics.txt
+diary.xml
+music.xml
+settings.xml
+
+Known flags:
+XML
+MusicXML
+DiaryXML
+Site
+MusicSite
+DiarySite

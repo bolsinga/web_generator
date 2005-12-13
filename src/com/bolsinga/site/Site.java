@@ -10,9 +10,12 @@ public class Site {
       System.exit(0);
     }
 
-    com.bolsinga.web.Util.createSettings(args[2]);
-                
-    Site.generate(args[0], args[1], args[3], args[4]);
+    Site.generate(args[0], args[1], args[2], args[3], args[4]);
+  }
+
+    public static void generate(String diaryFile, String musicFile, String settingsFile, String outputDir, String variant) {
+    com.bolsinga.web.Util.createSettings(settingsFile);
+    Site.generate(diaryFile, musicFile, outputDir, variant);
   }
     
   public static void generate(String diaryFile, String musicFile, String outputDir, String variant) {
