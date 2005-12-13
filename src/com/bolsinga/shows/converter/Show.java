@@ -7,14 +7,12 @@ public class Show {
   private String fDate;
   private List fBands;
   private String fVenue;
-  private String fImages;
   private String fComment;
 
-  public Show(String date, List bands, String venue, String images, String comment) {
+  public Show(String date, List bands, String venue, String comment) {
     fDate = date;
     fBands = bands;
     fVenue = venue;
-    fImages = images;
     fComment = comment;
   }
 
@@ -42,14 +40,6 @@ public class Show {
     fVenue = venue;
   }
         
-  public String getImages() {
-    return fImages;
-  }
-        
-  public void setImages(String images) {
-    fImages = images;
-  }
-        
   public String getComment() {
     return fComment;
   }
@@ -75,8 +65,6 @@ public class Show {
                 
     sb.append(" Venue: ");
     sb.append(getVenue());
-    sb.append(" Images: ");
-    sb.append(getImages());
     sb.append(" Comment: ");
     sb.append(getComment());
                 

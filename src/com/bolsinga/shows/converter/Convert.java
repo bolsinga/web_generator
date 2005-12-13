@@ -127,30 +127,19 @@ public class Convert {
     while ((l = in.readLine()) != null) {
       st = new StringTokenizer(l, SHOW_DELIMITER, true);
 
-      String date = st.nextToken();                   // date
-      st.nextToken();                                                 // delim
-      String bandstring = st.nextToken();             // delimited bands
-      st.nextToken();                                                 // delim
-      String venue = st.nextToken();                  // venue
-      String images = null;
+      String date = st.nextToken();       // date
+      st.nextToken();                     // delim
+      String bandstring = st.nextToken(); // delimited bands
+      st.nextToken();                     // delim
+      String venue = st.nextToken();      // venue
       String comment = null;
       // The rest is optional
       if (st.hasMoreElements()) {
         st.nextToken();                                         // delim
                                 
-        // Need to see if there are images
+        // Need to see if there are comments
         if (st.hasMoreElements()) {
-          images = st.nextToken();
-          if (images.equals(SHOW_DELIMITER)) {
-            images = null;
-          } else {
-            if (st.hasMoreElements()) {
-              st.nextToken();
-            }
-          }
-          if (st.hasMoreElements()) {
             comment = st.nextToken();
-          }
         }
       }
                         
@@ -160,7 +149,7 @@ public class Convert {
         bands.add(bt.nextToken());
       }
                         
-      shows.add(new Show(date, bands, venue, images, comment));
+      shows.add(new Show(date, bands, venue, comment));
     }
                 
     return shows;
