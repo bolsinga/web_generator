@@ -6,46 +6,48 @@ public class Main {
       Main.usage(args, "Wrong number of arguments");
     }
 
+    // General arguments
     String command = args[11];
     String diary = args[7];
     String music = args[8];
     String output = args[10];
 
-    if (command.matches("xml")) {
-      String itunes = args[0];
-      String shows = args[1];
-      String venue = args[2];
-      String sort = args[3];
-      String relations = args[4];
-      String comments = args[5];
-      String statics = args[6];
+    // XML conversion arguments
+    String itunes = args[0];
+    String shows = args[1];
+    String venue = args[2];
+    String sort = args[3];
+    String relations = args[4];
+    String comments = args[5];
+    String statics = args[6];
+    
+    // Site generation arguments
+    String settings = args[9];
 
-      boolean musicXML = command.equals("musicxml") || command.equals("xml");
-      boolean diaryXML = command.equals("diaryxml") || command.equals("xml");
+    boolean musicXML = command.equals("musicxml") || command.equals("xml");
+    boolean diaryXML = command.equals("diaryxml") || command.equals("xml");
+    boolean site = command.equals("site");
+    boolean musicsite = command.equals("musicsite");
+    boolean diarysite = command.equals("diarysite");
 
-      if (!musicXML && !diaryXML) {
-        Main.usage(args, "Invalid XML action");
-      } else {
-        if (musicXML) {
-          com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, music);
-        }
-        if (diaryXML) {
-          com.bolsinga.shows.converter.Diary.convert(comments, statics, diary);
-        }
-      }
-    } else if (command.matches("site")) {
-      String settings = args[9];
-      if (command.equals("site")) {
-        com.bolsinga.site.Site.generate(diary, music, settings, output, "all");
-      } else if (command.equals("musicsite")) {
-        com.bolsinga.site.Site.generate(diary, music, settings, output, "music");
-      } else if (command.equals("diarysite")) {
-        com.bolsinga.site.Site.generate(diary, music, settings, output, "diary");
-      } else {
-        Main.usage(args, "Invalid site action");
-      }
-    } else {
+    if (!(musicXML | diaryXML | site | musicsite | diarysite)) {
       Main.usage(args, "Invalid action");
+    }
+
+    if (musicXML) {
+      com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, music);
+    }
+    if (diaryXML) {
+      com.bolsinga.shows.converter.Diary.convert(comments, statics, diary);
+    }
+    if (site) {
+      com.bolsinga.site.Site.generate(diary, music, settings, output, "all");
+    }
+    if (musicsite) {
+      com.bolsinga.site.Site.generate(diary, music, settings, output, "music");
+    }
+    if (diarysite) {
+      com.bolsinga.site.Site.generate(diary, music, settings, output, "diary");
     }
   }
 
