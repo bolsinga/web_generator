@@ -69,7 +69,4 @@ ACTION="$3"
 
 COMMAND="exec \"$JAVA_CMD\" \"$JAVA_OPTS\" -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $DATA_FILES $OUTPUT_HOME $ACTION"
 
-if $DEBUG ; then
-    echo $COMMAND
-fi
 eval $COMMAND
