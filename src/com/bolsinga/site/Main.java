@@ -3,7 +3,7 @@ package com.bolsinga.site;
 public class Main {
   public static void main(String[] args) {
     if (args.length != 12) {
-      Main.usage(args);
+      Main.usage(args, "Wrong number of arguments");
     }
 
     String command = args[11];
@@ -24,7 +24,7 @@ public class Main {
       boolean diaryXML = command.equals("diaryxml") || command.equals("xml");
 
       if (!musicXML && !diaryXML) {
-        Main.usage(args);
+        Main.usage(args, "Invalid XML action");
       } else {
         if (musicXML) {
           com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, music);
@@ -42,16 +42,21 @@ public class Main {
       } else if (command.equals("diarysite")) {
         com.bolsinga.site.Site.generate(diary, music, settings, output, "diary");
       } else {
-        Main.usage(args);
+        Main.usage(args, "Invalid site action");
       }
     } else {
-      Main.usage(args);
+      Main.usage(args, "Invalid action");
     }
   }
 
-  private static void usage(String[] badargs) {
+  private static void usage(String[] badargs, String reason) {
     System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [output.dir] <xml|musicxml|diaryxml|site|musicsite|diarysite>");
-    System.out.println("");
+    System.out.println(reason);
+    System.out.println("Arguments:");
+    for (int i = 0; i < badargs.length; i++) {
+      System.out.print(badargs[i] + " ");
+    }
+    System.out.println();
     System.exit(0);
   }
 
