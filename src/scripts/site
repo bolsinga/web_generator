@@ -80,7 +80,7 @@ if [ -z "$ACTION" ] ; then
     usage "No action"
 fi
 
-COMMAND="exec \"$JAVA_CMD\""
+COMMAND="exec \"$JAVA_CMD\" -Xms64m"
 if [ ! -z "$JAVA_OPTS" ] ; then
     COMMAND="$COMMAND \"$JAVA_OPTS\""
 fi
