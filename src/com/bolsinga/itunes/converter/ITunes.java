@@ -44,11 +44,11 @@ public class ITunes {
   private static final String TK_YEAR                 = "Year";
   private static final String TK_SEASON               = "Season";
   private static final String TK_PERSISTENT_ID        = "Persistent ID";
-  private static final String TK_SERIES_ID            = "Series";
-  private static final String TK_EPISODE_ID           = "Episode";
-  private static final String TK_EPISODE_ORDER_ID     = "Episode Order";
-  private static final String TK_HAS_VIDEO_ID         = "Has Video";
-  private static final String TK_TV_SHOW_ID           = "TV Show";
+  private static final String TK_SERIES               = "Series";
+  private static final String TK_EPISODE              = "Episode";
+  private static final String TK_EPISODE_ORDER        = "Episode Order";
+  private static final String TK_HAS_VIDEO            = "Has Video";
+  private static final String TK_TV_SHOW              = "TV Show";
     
   private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
   private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
@@ -143,11 +143,11 @@ public class ITunes {
     sITunesKeys.add(TK_YEAR);
     sITunesKeys.add(TK_SEASON);
     sITunesKeys.add(TK_PERSISTENT_ID);
-    sITunesKeys.add(TK_SERIES_ID);
-    sITunesKeys.add(TK_EPISODE_ID);
-    sITunesKeys.add(TK_EPISODE_ORDER_ID);
-    sITunesKeys.add(TK_HAS_VIDEO_ID);
-    sITunesKeys.add(TK_TV_SHOW_ID);
+    sITunesKeys.add(TK_SERIES);
+    sITunesKeys.add(TK_EPISODE);
+    sITunesKeys.add(TK_EPISODE_ORDER);
+    sITunesKeys.add(TK_HAS_VIDEO);
+    sITunesKeys.add(TK_TV_SHOW);
   }
         
   public static void addMusic(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String itunesFile) throws JAXBException {
@@ -197,6 +197,7 @@ public class ITunes {
     String albumTitle = null;
     int index = -1, year = -1;
     boolean compilation = false;
+    boolean isVideo = false;
             
     while (i.hasNext()) {
       String key = ((com.bolsinga.plist.data.Key)i.next()).getValue();
@@ -234,6 +235,11 @@ public class ITunes {
         compilation = (i.next() != null);
         continue;
       }
+      if (key.equals(TK_HAS_VIDEO)) {
+        // Ignore the value, but it needs to be pulled.
+        isVideo = (i.next() != null);
+        continue;
+      }
 
       // This key isn't used, so pass over its value.
       Object o = i.next();
@@ -242,8 +248,10 @@ public class ITunes {
         System.out.println("iTunes added a new key: " + key);
       }
     }
-            
-    ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, compilation);
+
+    if (!isVideo) {
+      ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, compilation);
+    }
   }
         
   private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, boolean compilation) throws JAXBException {
