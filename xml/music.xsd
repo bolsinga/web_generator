@@ -73,6 +73,7 @@
 			<xs:element name="producer" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="releaseDate" type="date" minOccurs="0" />
 			<xs:element name="lastPlayed" type="xs:dateTime" minOccurs="0" />
+                        <xs:element name="playCount" type="xs:positiveInteger" minOccurs="1" />
 			<xs:element name="genre" type="xs:string" minOccurs="0" />
 			<xs:element name="track" type="xs:positiveInteger" minOccurs="0" />
 		</xs:sequence>

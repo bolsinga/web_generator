@@ -193,6 +193,7 @@ public class ITunes {
     String songTitle = null;
     String artist = null;
     Calendar lastPlayed = null;
+    int playCount = 0;
     String genre = null;
     String albumTitle = null;
     int index = -1, year = -1;
@@ -230,6 +231,10 @@ public class ITunes {
         lastPlayed = ((com.bolsinga.plist.data.Date)i.next()).getValue();
         continue;
       }
+      if (key.equals(TK_PLAY_COUNT)) {
+        playCount = ((com.bolsinga.plist.data.Integer)i.next()).getValue().intValue();
+        continue;
+      }
       if (key.equals(TK_COMPILATION)) {
         // Ignore the value, but it needs to be pulled.
         compilation = (i.next() != null);
@@ -250,11 +255,11 @@ public class ITunes {
     }
 
     if (!isVideo) {
-      ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, compilation);
+      ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
         
-  private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, boolean compilation) throws JAXBException {
+  private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, int playCount, boolean compilation) throws JAXBException {
     // Get or create the artist
     Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
                 
@@ -262,7 +267,7 @@ public class ITunes {
     Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
                 
     // The song is always the new item. The artist and album may already be known.
-    ITunes.addAlbumTrack(objFactory, music, artist, album, songTitle, year, index, genre, lastPlayed);
+    ITunes.addAlbumTrack(objFactory, music, artist, album, songTitle, year, index, genre, lastPlayed, playCount);
   }
         
   private static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {
@@ -296,9 +301,9 @@ public class ITunes {
     return result;
   }
         
-  private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, Calendar lastPlayed) throws JAXBException {
+  private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, Calendar lastPlayed, int playCount) throws JAXBException {
     // Create the song
-    Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed);
+    Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed, playCount);
             
     // Add the song to the album
     List songs = album.getSong();
@@ -311,7 +316,7 @@ public class ITunes {
     }
   }
         
-  private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, Calendar lastPlayed) throws JAXBException {
+  private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, Calendar lastPlayed, int playCount) throws JAXBException {
     List songs = music.getSong();
             
     Song result = null;
@@ -320,6 +325,7 @@ public class ITunes {
     result.setTitle(songTitle);
     result.setPerformer(artist);
     result.setLastPlayed(lastPlayed);
+    result.setPlayCount(java.math.BigInteger.valueOf(playCount));
     result.setGenre(genre);
             
     if (year != -1) {
