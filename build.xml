@@ -183,7 +183,7 @@
                 <filterset>
                         <filter token="builddate" value="${web.builddate}" />
                         <filter token="program" value="com.bolsinga.site" />
-                        <filter token="copyright" value="Program Copyright (c) 2004-${web.buildyear} Greg Bolsinga" />
+                        <filter token="copyright" value="Program Copyright (c) 2004 - ${web.buildyear} Greg Bolsinga" />
                 </filterset>
         </copy>
 </target>
