@@ -29,6 +29,17 @@ public class Util {
   public static String getMonth(Entry entry) {
     return sMonthFormat.format(entry.getTimestamp().getTime());
   }
+
+  public static int getStartYear(Diary diary) {
+    List items = diary.getEntry();
+    Entry item = null;
+
+    Collections.sort(items, Util.ENTRY_COMPARATOR);
+
+    item = (Entry)items.get(0);
+
+    return item.getTimestamp().get(Calendar.YEAR);
+  }
     
   public static com.bolsinga.diary.data.Diary createDiary(String sourceFile) {
     com.bolsinga.diary.data.Diary diary = null;

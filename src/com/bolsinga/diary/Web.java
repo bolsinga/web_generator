@@ -19,13 +19,15 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   String fProgram   = null;
   Entry  fCurEntry  = null;
   Entry  fLastEntry = null;
+  int fStartYear = -1;
         
-  public DiaryDocumentCreator(Diary diary, com.bolsinga.web.Encode encoder, Links links, String outputDir, String program) {
+  public DiaryDocumentCreator(Diary diary, com.bolsinga.web.Encode encoder, Links links, String outputDir, String program, int startYear) {
     super(outputDir);
     fEncoder = encoder;
     fDiary = diary;
     fLinks = links;
     fProgram = program;
+    fStartYear = startYear;
   }
 
   public void add(Entry entry) {
@@ -43,7 +45,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected XhtmlDocument createDocument() {
-    return Web.createDocument(getTitle(), fLinks);
+    return Web.createDocument(getTitle(), fStartYear, fLinks);
   }
 
   protected div getHeaderDiv() {
@@ -145,14 +147,15 @@ public class Web {
   }
         
   public static void generate(Diary diary, Music music, com.bolsinga.web.Encode encoder, String outputDir) {
-    generateMainPage(encoder, music, diary, outputDir);
-    generateArchivePages(diary, encoder, outputDir);
+    int startYear = Util.getStartYear(diary);
+    generateMainPage(encoder, music, diary, startYear, outputDir);
+    generateArchivePages(diary, encoder, startYear, outputDir);
   }
         
-  public static void generateMainPage(com.bolsinga.web.Encode encoder, Music music, Diary diary, String outputDir) {
+  public static void generateMainPage(com.bolsinga.web.Encode encoder, Music music, Diary diary, int startYear, String outputDir) {
     Links links = Links.getLinks(false);
 
-    XhtmlDocument doc = createDocument(diary.getTitle(), links);
+    XhtmlDocument doc = createDocument(diary.getTitle(), startYear, links);
 
     doc.getBody().addElement(generateColumn1(diary));
                 
@@ -206,17 +209,16 @@ public class Web {
     return d;
   }
         
-  private static String getCopyright() {
+  private static String getCopyright(int startYear) {
     StringBuffer cp = new StringBuffer();
                 
-    int year = 2003; // This is the first year of this data.
     int cur_year = Calendar.getInstance().get(Calendar.YEAR);
                 
     cp.append("Contents Copyright (c) ");
-    cp.append(year++);
-    for ( ; year <= cur_year; ++year) {
-      cp.append(", ");
-      cp.append(year);
+    cp.append(startYear);
+    if (startYear != cur_year) {
+      cp.append(" - ");
+      cp.append(cur_year);
     }
                 
     cp.append(" ");
@@ -225,7 +227,7 @@ public class Web {
     return cp.toString();
   }
         
-  public static XhtmlDocument createDocument(String title, Links links) {
+  public static XhtmlDocument createDocument(String title, int startYear, Links links) {
     XhtmlDocument d = new XhtmlDocument(ECSDefaults.getDefaultCodeset());
                 
     d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
@@ -243,7 +245,7 @@ public class Web {
     h.addElement(new meta().setContent(System.getProperty("user.name")).setName("Author"));
     h.addElement(new meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
     h.addElement(new meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
-    h.addElement(new meta().setContent(getCopyright()).setName("Copyright"));
+    h.addElement(new meta().setContent(getCopyright(startYear)).setName("Copyright"));
 
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
                                                 
@@ -282,7 +284,7 @@ public class Web {
     return diaryDiv;
   }
         
-  public static void generateArchivePages(Diary diary, com.bolsinga.web.Encode encoder, String outputDir) {
+  public static void generateArchivePages(Diary diary, com.bolsinga.web.Encode encoder, int startYear, String outputDir) {
     List items = diary.getEntry();
     Entry item = null;
                 
@@ -290,7 +292,7 @@ public class Web {
                 
     Links links = Links.getLinks(true);
                 
-    DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
+    DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
                 
     ListIterator i = items.listIterator();
     while (i.hasNext()) {
