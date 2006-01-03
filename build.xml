@@ -323,6 +323,8 @@
 <target name="generateDiaryDB" depends="diary_importer, jar">
   <java classname="com.bolsinga.diary.importer.Import" fork="true">
     <arg value="${data.dir}diary.xml" />
+    <arg value="${db.user}" />
+    <arg value="${db.password}" />
     <classpath refid="exe_db_classpath" />
   </java>
 </target>
@@ -330,6 +332,8 @@
 <target name="generateMusicDB" depends="music_importer, jar">
   <java classname="com.bolsinga.music.importer.Import" fork="true">
     <arg value="${data.dir}music.xml" />
+    <arg value="${db.user}" />
+    <arg value="${db.password}" />
     <classpath refid="exe_db_classpath" />
   </java>
 </target>

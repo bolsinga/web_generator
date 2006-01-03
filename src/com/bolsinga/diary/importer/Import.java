@@ -1,9 +1,25 @@
 package com.bolsinga.diary.importer;
 
+import com.bolsinga.diary.data.*;
+
 import java.sql.*;
 
 public class Import {
   public static void main(String[] args) {
+    if (args.length != 3) {
+      System.out.println("Usage: Web [diary.xml] [user] [password]");
+      System.exit(0);
+    }
+
+    Import.importData(args[0], args[1], args[2]);
+  }
+
+  public static void importData(String sourceFile, String user, String password) {
+    Diary diary = com.bolsinga.diary.Util.createDiary(sourceFile);
+    importData(diary, user, password);
+  }
+
+  public static void importData(Diary diary, String user, String password) {
 
     try {
       // Load the driver class
@@ -19,11 +35,7 @@ public class Import {
       // password to connect. This should always
       // work for the "test" database.
       //
-      Connection conn = DriverManager.getConnection(
-                                                    "jdbc:mysql:///test",
-                                                    "",
-                                                    "anon"
-                                                    );
+      Connection conn = DriverManager.getConnection("jdbc:mysql:///diary", user, password);
       
       // Set up and run a query that fetches
       // the current date using the "now()" SQL function.
@@ -45,7 +57,9 @@ public class Import {
       stmt.close();
       conn.close();
     } catch (Exception e) {
-
+      System.err.println("Exception: " + e);
+      e.printStackTrace();
+      System.exit(1);
     }
   }
 }
