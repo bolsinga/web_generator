@@ -188,6 +188,16 @@
         </copy>
 </target>
 
+<target name="itunes_converter" depends="plist_utilities, music">
+        <javac  destdir="${build.classes}"
+                        debug="${javac.debug}"
+                        deprecation="on">
+                <src path="${src.dir}" />
+                <include name="com/bolsinga/itunes/converter/*.java" />
+                <classpath refid="jaxb_binder_classpath" />
+        </javac>
+</target>
+
 <target name="music_converter" depends="music, itunes_converter, diary_binding">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -198,14 +208,29 @@
         </javac>
 </target>
 
-<target name="itunes_converter" depends="plist_utilities, music">
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on">
-                <src path="${src.dir}" />
-                <include name="com/bolsinga/itunes/converter/*.java" />
-                <classpath refid="jaxb_binder_classpath" />
-        </javac>
+<path id="generate_db_classpath">
+  <path refid="jaxb_binder_classpath" />
+  <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
+</path>
+
+<target name="diary_importer" depends="diary">
+  <javac destdir="${build.classes}"
+         debug="${javac.debug}"
+         deprecation="on">
+    <src path="${src.dir}" />
+    <include name="com/bolsinga/diary/importer/*.java" />
+    <classpath refid="generate_db_classpath" />
+  </javac>
+</target>
+
+<target name="music_importer" depends="music">
+  <javac destdir="${build.classes}"
+         debug="${javac.debug}"
+         deprecation="on">
+    <src path="${src.dir}" />
+    <include name="com/bolsinga/music/importer/*.java" />
+    <classpath refid="generate_db_classpath" />
+  </javac>
 </target>
 
 <target name="music" depends="ical_gen, web">
@@ -288,6 +313,25 @@
                 <arg value="${data.dir}diary.xml" />
                 <classpath refid="music_classpath" />
         </java>
+</target>
+
+<path id="exe_db_classpath">
+  <path refid="music_classpath" />
+  <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
+</path>
+
+<target name="generateDiaryDB" depends="diary_importer, jar">
+  <java classname="com.bolsinga.diary.importer.Import" fork="true">
+    <arg value="${data.dir}diary.xml" />
+    <classpath refid="exe_db_classpath" />
+  </java>
+</target>
+
+<target name="generateMusicDB" depends="music_importer, jar">
+  <java classname="com.bolsinga.music.importer.Import" fork="true">
+    <arg value="${data.dir}music.xml" />
+    <classpath refid="exe_db_classpath" />
+  </java>
 </target>
 
 <path id="generate_web_classpath">
