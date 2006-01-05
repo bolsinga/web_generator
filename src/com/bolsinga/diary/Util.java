@@ -2,6 +2,7 @@ package com.bolsinga.diary;
 
 import com.bolsinga.diary.data.*;
 
+import java.sql.*;
 import java.text.*;
 import java.util.*;
 
@@ -52,6 +53,58 @@ public class Util {
       System.err.println("Exception: " + ume);
       ume.printStackTrace();
       System.exit(1);
+    }
+    return diary;
+  }
+
+  public static com.bolsinga.diary.data.Diary createDiary(String user, String password) {
+    Diary diary = null;
+    Entry entry = null;
+    Connection conn = null;
+    Statement stmt = null;
+    ResultSet rset = null;
+
+    ObjectFactory objFactory = new ObjectFactory();
+    try {
+      diary = objFactory.createDiary();
+
+      Class.forName("org.gjt.mm.mysql.Driver");
+
+      conn = DriverManager.getConnection("jdbc:mysql:///diary", user, password);
+      stmt = conn.createStatement();
+      rset = stmt.executeQuery("SELECT * FROM entry ORDER BY id;");
+
+      while (rset.next()) {
+        entry = objFactory.createEntry();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new java.util.Date(rset.getTimestamp("timestamp").getTime()));
+        entry.setTimestamp(cal);
+        entry.setComment(rset.getString("comment"));
+        entry.setId("e" + (rset.getLong("id") - 1));
+
+        diary.getEntry().add(entry);
+      }
+    } catch (Exception e) {
+      System.err.println("Exception: " + e);
+      e.printStackTrace();
+      System.exit(1);
+    } finally {
+      try {
+        if (rset != null) {
+          rset.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (Exception e) {
+        System.err.println("Exception: " + e);
+        e.printStackTrace();
+        System.exit(1);
+      }
     }
     return diary;
   }
