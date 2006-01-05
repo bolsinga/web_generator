@@ -343,48 +343,50 @@ class HashEncode extends Encode {
   HashMap fEncodables;
 
   HashEncode(Music music, Diary diary) {
-    int numEncoded = music.getShow().size() + diary.getEntry().size();
-    HashMap encodedMap = new HashMap(numEncoded * WORDS_PER_ENTRY);
-
-    int numEncoder = music.getArtist().size() + music.getVenue().size() + music.getAlbum().size();
-    HashMap encoderMap = new HashMap(numEncoder * WORDS_PER_NAME);
-
-    // The the words for each; the key is the unique word
-    // For what will be encoded, the value is a HashSet of the Show and Entries that
-    //  contain the key
-    getEncodedWords(music, diary, encodedMap);
-    // For what will be encoding, the value is a HashSet of the Artist, Venue, Album that
-    //  contain the key.
-    getEncoderWords(music, encoderMap);
-
-    // get the intersection of the words between the encoded and the encoders.
-    //  These words serve as the base line to determine what work will need to be done.
-    HashSet keyWordsSet = new HashSet(encoderMap.keySet());
-    keyWordsSet.retainAll(encodedMap.keySet());
-
-    int capacity = keyWordsSet.size() / WORDS_PER_ENTRY;
-    fEncodables = new HashMap(capacity);
-
-    Collection c;
-    Iterator i = keyWordsSet.iterator();
-    while (i.hasNext()) {
-      Object keyWord = i.next();
+    if (music != null) {
+      int numEncoded = music.getShow().size() + diary.getEntry().size();
+      HashMap encodedMap = new HashMap(numEncoded * WORDS_PER_ENTRY);
       
-      Iterator j = ((HashMap)encodedMap.get(keyWord)).values().iterator();
-      while (j.hasNext()) {
-        Object encodedItem = j.next();
-        
-        Iterator k = ((HashMap)encoderMap.get(keyWord)).values().iterator();
-        while (k.hasNext()) {
-          Object encoderItem = k.next();
+      int numEncoder = music.getArtist().size() + music.getVenue().size() + music.getAlbum().size();
+      HashMap encoderMap = new HashMap(numEncoder * WORDS_PER_NAME);
+      
+      // The the words for each; the key is the unique word
+      // For what will be encoded, the value is a HashSet of the Show and Entries that
+      //  contain the key
+      getEncodedWords(music, diary, encodedMap);
+      // For what will be encoding, the value is a HashSet of the Artist, Venue, Album that
+      //  contain the key.
+      getEncoderWords(music, encoderMap);
+      
+      // get the intersection of the words between the encoded and the encoders.
+      //  These words serve as the base line to determine what work will need to be done.
+      HashSet keyWordsSet = new HashSet(encoderMap.keySet());
+      keyWordsSet.retainAll(encodedMap.keySet());
+      
+      int capacity = keyWordsSet.size() / WORDS_PER_ENTRY;
+      fEncodables = new HashMap(capacity);
 
-          if (fEncodables.containsKey(encodedItem)) {
-            c = (Collection)fEncodables.get(encodedItem);
-            c.add(encoderItem);
-          } else {
-            c = new TreeSet(EncoderData.ENCODERDATA_COMPARATOR);
-            c.add(encoderItem);
-            fEncodables.put(encodedItem, c);
+      Collection c;
+      Iterator i = keyWordsSet.iterator();
+      while (i.hasNext()) {
+        Object keyWord = i.next();
+        
+        Iterator j = ((HashMap)encodedMap.get(keyWord)).values().iterator();
+        while (j.hasNext()) {
+          Object encodedItem = j.next();
+          
+          Iterator k = ((HashMap)encoderMap.get(keyWord)).values().iterator();
+          while (k.hasNext()) {
+            Object encoderItem = k.next();
+            
+            if (fEncodables.containsKey(encodedItem)) {
+              c = (Collection)fEncodables.get(encodedItem);
+              c.add(encoderItem);
+            } else {
+              c = new TreeSet(EncoderData.ENCODERDATA_COMPARATOR);
+              c.add(encoderItem);
+              fEncodables.put(encodedItem, c);
+            }
           }
         }
       }
@@ -533,7 +535,7 @@ class HashEncode extends Encode {
   }
 
   public String embedLinks(Show show, boolean upOneLevel) {
-    if (fEncodables.containsKey(show)) {
+    if ((fEncodables != null) && (fEncodables.containsKey(show))) {
       return EncoderData.addLinks(show.getComment(), upOneLevel, (Collection)fEncodables.get(show));
     } else {
       return show.getComment();
@@ -541,7 +543,7 @@ class HashEncode extends Encode {
   }
 
   public String embedLinks(Entry entry, boolean upOneLevel) {
-    if (fEncodables.containsKey(entry)) {
+    if ((fEncodables != null) && (fEncodables.containsKey(entry))) {
       return EncoderData.addLinks(entry.getComment(), upOneLevel, (Collection)fEncodables.get(entry));
     } else {
       return entry.getComment();
