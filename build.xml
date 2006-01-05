@@ -410,6 +410,55 @@
         </java>
 </target>
 
+<path id="generate_db_web_classpath">
+  <path refid="generate_web_classpath" />
+  <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
+</path>
+
+<target name="generateDBMusicWeb" depends="music, jar">
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.music.WebDB" fork="true">
+    <arg value="${db.user}" />
+    <arg value="${db.password}" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <classpath refid="generate_db_web_classpath" />
+  </java>
+</target>
+
+<target name="generateDBDiaryWeb" depends="diary, jar">
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.diary.WebDB" fork="true">
+    <arg value="${db.user}" />
+    <arg value="${db.password}" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <classpath refid="generate_db_web_classpath" />
+  </java>
+</target>
+
+<target name="generateDBRSS" depends="rss, jar" >
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.rss.RSSDB" fork="true" >
+    <arg value="${db.user}" />
+    <arg value="${db.password}" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <classpath refid="generate_db_web_classpath" />
+  </java>
+</target>
+
+<target name="generateDBICal" depends="music, jar">
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.music.ICalDB" fork="true">
+    <arg value="${db.user}" />
+    <arg value="${db.password}" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <classpath refid="generate_db_web_classpath" />
+  </java>
+</target>
+
 <target name="Site" depends="site, jar">
   <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.site.Site" fork="true">
