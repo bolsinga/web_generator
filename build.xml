@@ -188,6 +188,15 @@
         </copy>
 </target>
 
+<target name="sql" depends="prepare">
+  <javac destdir="${build.classes}"
+         debug="${javac.debug}"
+         deprecation="on">
+    <src path="${src.dir}" />
+    <include name="com/bolsinga/sql/*.java" />
+  </javac>
+</target>
+
 <target name="itunes_converter" depends="plist_utilities, music">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -213,7 +222,7 @@
   <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
 </path>
 
-<target name="diary_importer" depends="diary">
+<target name="diary_importer" depends="diary, sql">
   <javac destdir="${build.classes}"
          debug="${javac.debug}"
          deprecation="on">
@@ -223,7 +232,7 @@
   </javac>
 </target>
 
-<target name="music_importer" depends="music">
+<target name="music_importer" depends="music, sql">
   <javac destdir="${build.classes}"
          debug="${javac.debug}"
          deprecation="on">

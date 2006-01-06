@@ -8,13 +8,6 @@ import com.bolsinga.diary.*;
 import com.bolsinga.diary.data.*;
 
 public class Import {
-
-  private static Pattern sSQL = Pattern.compile("'");
-
-  private static String sPrefix = "INSERT INTO entry VALUES (NULL, '";
-  private static String sSuffix = "');";
-  private static String sNext = "', '";
-
   public static void main(String[] args) {
     if (args.length != 3) {
       System.out.println("Usage: Web [diary.xml] [user] [password]");
@@ -55,22 +48,18 @@ public class Import {
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
 
+    String[] rowItems = new String[4];
     ListIterator i = items.listIterator();
     while (i.hasNext()) {
       item = (Entry)i.next();
 
-      StringBuffer sb = new StringBuffer(sPrefix);
-      sb.append(Import.encodeSQLString(item.getComment()));
-      sb.append(sNext);
-      sb.append(Import.encodeSQLString(Util.getTitle(item)));
-      sb.append(sNext);
-      sb.append(new Timestamp(item.getTimestamp().getTime().getTime()).toString());
-      sb.append(sSuffix);
+      rowItems[0] = null;
+      rowItems[1] = item.getComment();
+      rowItems[2] = Util.getTitle(item);
+      rowItems[3] = new Timestamp(item.getTimestamp().getTime().getTime()).toString();
       
-      boolean result = false;
       try {
-        result = stmt.execute(sb.toString());
-        // true means there is a result to read, false means there isn't
+        com.bolsinga.sql.Util.insert(stmt, "entry", rowItems);
       } catch (SQLException e) {
         System.err.println("Exception: " + e);
         e.printStackTrace();
@@ -88,11 +77,5 @@ public class Import {
       e.printStackTrace();
       System.exit(1);
     }
-  }
-  
-  private static String encodeSQLString(String s) {
-    Matcher m = sSQL.matcher(s);
-    String result = m.replaceAll("''");
-    return result;
   }
 }
