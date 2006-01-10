@@ -344,10 +344,21 @@ class HashEncode extends Encode {
 
   HashEncode(Music music, Diary diary) {
     if (music != null) {
-      int numEncoded = music.getShow().size() + diary.getEntry().size();
+      List items = music.getShow();
+      int numShows = (items != null) ? items.size() : 0;
+      items = (diary != null) ? diary.getEntry() : null;
+      int numDiary = (items != null) ? items.size() : 0;
+      int numEncoded = numShows + numDiary;
       HashMap encodedMap = new HashMap(numEncoded * WORDS_PER_ENTRY);
       
-      int numEncoder = music.getArtist().size() + music.getVenue().size() + music.getAlbum().size();
+      items = music.getArtist();
+      int numArtist = (items != null) ? items.size() : 0;
+      items = music.getVenue();
+      int numVenue = (items != null) ? items.size() : 0;
+      items = music.getAlbum();
+      int numAlbum = (items != null) ? items.size() : 0;
+      int numEncoder = numArtist + numVenue + numAlbum;
+
       HashMap encoderMap = new HashMap(numEncoder * WORDS_PER_NAME);
       
       // The the words for each; the key is the unique word
@@ -443,20 +454,22 @@ class HashEncode extends Encode {
   }
   
   private void getDiaryWords(Diary diary, HashMap encodedMap) {
-    List items = diary.getEntry();
-    Entry item = null;
-    
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Entry)i.next();
-
-      addWords(item.getComment(), encodedMap,
-               new EncodeItem() {
-                 public Object encode(Object value) {
-                   return value;
-                 }
-               },
-               item, items.size());
+    if (diary != null) {
+      List items = diary.getEntry();
+      Entry item = null;
+      
+      ListIterator i = items.listIterator();
+      while (i.hasNext()) {
+        item = (Entry)i.next();
+        
+        addWords(item.getComment(), encodedMap,
+                 new EncodeItem() {
+                   public Object encode(Object value) {
+                     return value;
+                   }
+                 },
+                 item, items.size());
+      }
     }
   }
 
