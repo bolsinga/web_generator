@@ -72,7 +72,7 @@ public class Util {
 
       conn = DriverManager.getConnection("jdbc:mysql:///diary", user, password);
       stmt = conn.createStatement();
-      rset = stmt.executeQuery("SELECT * FROM entry ORDER BY id;");
+      rset = stmt.executeQuery("SELECT * FROM entry;");
 
       while (rset.next()) {
         entry = objFactory.createEntry();
