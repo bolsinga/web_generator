@@ -6,7 +6,7 @@ import java.util.regex.*;
 public class Util {
   private static Pattern sSQL = Pattern.compile("'");
 
-  public static void insert(Statement stmt, String table, String[] rowItems) throws SQLException {
+  private static String constructInsert(String table, String[] rowItems) {
     StringBuffer sb = new StringBuffer("INSERT INTO ");
     sb.append(table);
     sb.append(" VALUES (");
@@ -19,8 +19,12 @@ public class Util {
     }
 
     sb.append(");");
+    
+    return sb.toString();
+  }
 
-    stmt.execute(sb.toString());
+  public static void insert(Statement stmt, String table, String[] rowItems) throws SQLException {
+    stmt.execute(Util.constructInsert(table, rowItems));
   }
   
   private static String quote(String s) {
