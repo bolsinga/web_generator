@@ -71,13 +71,20 @@ public class Lookup {
     }
                 
     Relation rel = null;
+    List ritems = null;
     ListIterator ri = null;
                 
     i = music.getRelation().listIterator();
     while (i.hasNext()) {
       rel = (Relation)i.next();
-                        
-      ri = rel.getMember().listIterator();
+      if (rel == null) {
+        continue;
+      }
+      ritems = rel.getMember();
+      if (ritems == null) {
+        continue;
+      }
+      ri = ritems.listIterator();
       while (ri.hasNext()) {
         Object o = ri.next();
         if (o instanceof Artist) {
@@ -102,7 +109,7 @@ public class Lookup {
           while (nri.hasNext()) {
             Venue venue = (Venue)nri.next();
             set = (Set)fVenueRelationMap.get(id);
-            set.add(venue);
+              set.add(venue);
           }
         } else if (o instanceof Label) {
           id = ((Label)o).getId();

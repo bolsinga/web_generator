@@ -91,9 +91,11 @@ public class Compare {
       public int compare(Object o1, Object o2) {
         Venue r1 = (Venue)o1;
         Venue r2 = (Venue)o2;
-                        
-        int sets1 = Lookup.getLookup(fMusic).getShows(r1).size();
-        int sets2 = Lookup.getLookup(fMusic).getShows(r2).size();
+
+        List shows1 = Lookup.getLookup(fMusic).getShows(r1);
+        int sets1 = (shows1 != null) ? shows1.size() : 0;
+        List shows2 = Lookup.getLookup(fMusic).getShows(r2);
+        int sets2 = (shows2 != null) ? shows2.size() : 0;
                         
         int result = sets2 - sets1;
         if (result == 0) {

@@ -431,7 +431,8 @@ public class Web {
       item = (Venue)iterator.next();
 
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
-      values[index] = Lookup.getLookup(music).getShows(item).size();
+      List shows = Lookup.getLookup(music).getShows(item);
+      values[index] = (shows != null) ? shows.size() : 0;
                         
       index++;
     }
@@ -782,37 +783,39 @@ public class Web {
     }
 
     List shows = Lookup.getLookup(music).getShows(venue);
-    ListIterator iterator = shows.listIterator();
-    while (iterator.hasNext()) {
-      Show show = (Show)iterator.next();
-                        
-      String showLink = links.getLinkTo(show);
-                        
-      Vector se = new Vector();
-      StringBuffer sb = new StringBuffer();
-      ListIterator bi = show.getArtist().listIterator();
-      while (bi.hasNext()) {
-        Artist performer = (Artist)bi.next();
-        sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
-                                
-        if (bi.hasNext()) {
-          sb.append(", ");
+    if (shows != null) {
+      ListIterator iterator = shows.listIterator();
+      while (iterator.hasNext()) {
+        Show show = (Show)iterator.next();
+        
+        String showLink = links.getLinkTo(show);
+        
+        Vector se = new Vector();
+        StringBuffer sb = new StringBuffer();
+        ListIterator bi = show.getArtist().listIterator();
+        while (bi.hasNext()) {
+          Artist performer = (Artist)bi.next();
+          sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
+          
+          if (bi.hasNext()) {
+            sb.append(", ");
+          }
         }
+        se.add(new StringElement(sb.toString()));
+        
+        Location l = (Location)venue.getLocation();
+        se.add(new StringElement(venue.getName() + ", " + l.getCity() + ", " + l.getState()));
+        
+        String comment = show.getComment();
+        if (comment != null) {
+          se.add(com.bolsinga.web.Util.createInternalA(showLink, com.bolsinga.web.Util.getResourceString("showsummary")));
+        }
+        
+        div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_SHOW);
+        d.addElement(new h3().addElement(com.bolsinga.web.Util.createInternalA(showLink, Util.toString(show.getDate()))));
+        d.addElement(com.bolsinga.web.Util.createUnorderedList(se));
+        e.add(d);                        
       }
-      se.add(new StringElement(sb.toString()));
-                        
-      Location l = (Location)venue.getLocation();
-      se.add(new StringElement(venue.getName() + ", " + l.getCity() + ", " + l.getState()));
-                        
-      String comment = show.getComment();
-      if (comment != null) {
-        se.add(com.bolsinga.web.Util.createInternalA(showLink, com.bolsinga.web.Util.getResourceString("showsummary")));
-      }
-                        
-      div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_SHOW);
-      d.addElement(new h3().addElement(com.bolsinga.web.Util.createInternalA(showLink, Util.toString(show.getDate()))));
-      d.addElement(com.bolsinga.web.Util.createUnorderedList(se));
-      e.add(d);                        
     }
                 
     return com.bolsinga.web.Util.createUnorderedList(e);
