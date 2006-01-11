@@ -114,7 +114,10 @@ public class Import {
     rowItems[2] = artist.getSortname();
     rowItems[3] = (locationID != -1) ? Long.toString(locationID) : null;
     rowItems[4] = artist.getComment();
-    rowItems[5] = Boolean.toString(artist.isActive());
+    // The active state isn't tracked in the text files. Only
+    //  use it coming out of the DB.
+    //    rowItems[5] = Boolean.toString(artist.isActive());
+    rowItems[5] = null;
 
     com.bolsinga.sql.Util.insert(stmt, "artist", rowItems);
   }
@@ -148,7 +151,10 @@ public class Import {
     rowItems[1] = venue.getName();
     rowItems[2] = (locationID != -1) ? Long.toString(locationID) : null;
     rowItems[3] = venue.getComment();
-    rowItems[4] = Boolean.toString(venue.isActive());
+    // The active state isn't tracked in the text files. Only
+    //  use it coming out of the DB.
+    //    rowItems[4] = Boolean.toString(venue.isActive());
+    rowItems[4] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "venue", rowItems);
   }
