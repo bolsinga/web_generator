@@ -49,6 +49,7 @@ public class ITunes {
   private static final String TK_EPISODE_ORDER        = "Episode Order";
   private static final String TK_HAS_VIDEO            = "Has Video";
   private static final String TK_TV_SHOW              = "TV Show";
+  private static final String TK_PROTECTED            = "Protected";
     
   private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
   private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
@@ -148,6 +149,7 @@ public class ITunes {
     sITunesKeys.add(TK_EPISODE_ORDER);
     sITunesKeys.add(TK_HAS_VIDEO);
     sITunesKeys.add(TK_TV_SHOW);
+    sITunesKeys.add(TK_PROTECTED);
   }
         
   public static void addMusic(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String itunesFile) throws JAXBException {
