@@ -349,8 +349,6 @@ public class Util {
 
       Util.createRelations(stmt, music, objFactory);
 
-      Util.createTracks(stmt, music, objFactory);
-
       music.setTimestamp(Calendar.getInstance());
     } catch (Exception e) {
       System.err.println("Exception: " + e);
