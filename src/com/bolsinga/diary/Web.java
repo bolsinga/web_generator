@@ -161,7 +161,10 @@ public class Web {
                 
     div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
     div header = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_HEADER);
-    header.addElement(com.bolsinga.web.Util.convertToUnOrderedList(diary.getHeader()));
+    String headerText = diary.getHeader();
+    if (headerText != null) {
+      header.addElement(com.bolsinga.web.Util.convertToUnOrderedList(headerText));
+    }
     main.addElement(header);
     main.addElement(generateDiary(encoder, diary, links));
     doc.getBody().addElement(main);
@@ -191,14 +194,20 @@ public class Web {
   private static div createMainStatics(Diary diary) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_STATIC);
     d.addElement(new h4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
-    d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(diary.getStatic()));
+    String statics = diary.getStatic();
+    if (statics != null) {
+      d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(statics));
+    }
     return d;
   }
 
   private static div createMainLinks(Diary diary) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_LINKS);
     d.addElement(new h4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
-    d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(diary.getFriends()));
+    String friends = diary.getFriends();
+    if (friends != null) {
+      d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(friends));
+    }
     return d;
   }
 
