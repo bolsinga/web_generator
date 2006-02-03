@@ -115,16 +115,37 @@ public class Util {
   private static HashMap sVenues = new HashMap();
   private static Object sVenuesLock = new Object();
 
+  private static Venue getVenue(String xmlID, Music music, ObjectFactory objFactory) throws JAXBException {
+    Venue item = null;
+    synchronized (sVenuesLock) {
+      if (sVenues.containsKey(xmlID)) {
+        item = (Venue)sVenues.get(xmlID);
+      }
+    }
+    if (item == null) {
+      item = objFactory.createVenue();
+
+      item.setId(xmlID);
+      
+      synchronized (sVenuesLock) {
+        sVenues.put(xmlID, item);
+      }
+
+      music.getVenue().add(item);
+    }
+    return item;
+  }
+
   private static void createVenues(Connection conn, Statement stmt, Music music, ObjectFactory objFactory) throws SQLException, JAXBException {
     ResultSet rset = null;
     Venue venue = null;
 
     rset = stmt.executeQuery("SELECT * FROM venue;");
     while (rset.next()) {
-      venue = objFactory.createVenue();
-      
       String xmlID = Util.toXMLID("v", rset.getLong("id"));
-      venue.setId(xmlID);
+
+      venue = Util.getVenue(xmlID, music, objFactory);
+      
       venue.setName(rset.getString("name"));
       venue.setComment(rset.getString("comment"));
       long location_id = rset.getLong("location_id");
@@ -135,16 +156,32 @@ public class Util {
       if (!rset.wasNull()) {
         venue.setActive(active);
       }
-      music.getVenue().add(venue);
-      
-      synchronized (sVenuesLock) {
-        sVenues.put(xmlID, venue);
-      }
     }
   }
 
   private static HashMap sArtists = new HashMap();
   private static Object sArtistsLock = new Object();
+
+  private static Artist getArtist(String xmlID, Music music, ObjectFactory objFactory) throws JAXBException {
+    Artist item = null;
+    synchronized (sArtistsLock) {
+      if (sArtists.containsKey(xmlID)) {
+        item = (Artist)sArtists.get(xmlID);
+      }
+    }
+    if (item == null) {
+      item = objFactory.createArtist();
+
+      item.setId(xmlID);
+      
+      music.getArtist().add(item);
+
+      synchronized (sArtistsLock) {
+        sArtists.put(xmlID, item);
+      }
+    }
+    return item;
+  }
 
   private static void createArtists(Connection conn, Statement stmt, Music music, ObjectFactory objFactory) throws SQLException, JAXBException {
     ResultSet rset = null;
@@ -152,10 +189,12 @@ public class Util {
 
     rset = stmt.executeQuery("SELECT * FROM artist;");
     while (rset.next()) {
-      artist = objFactory.createArtist();
+      
+      long artistID = rset.getLong("id");
+      String xmlID = Util.toXMLID("ar", artistID);
 
-      String xmlID = Util.toXMLID("ar", rset.getLong("id"));
-      artist.setId(xmlID);
+      artist = Util.getArtist(xmlID, music, objFactory);
+
       artist.setName(rset.getString("name"));
       artist.setSortname(rset.getString("sortname"));
       artist.setComment(rset.getString("comment"));
@@ -167,11 +206,189 @@ public class Util {
       if (!rset.wasNull()) {
         artist.setActive(active);
       }
+    }
+  }
 
-      music.getArtist().add(artist);
+  private static HashMap sAlbums = new HashMap();
+  private static Object sAlbumsLock = new Object();
+
+  private static Album getAlbum(String xmlID, long album_id, Connection conn, Music music, ObjectFactory objFactory) throws SQLException, JAXBException {
+    Album item = null;
+    synchronized (sAlbumsLock) {
+      if (sAlbums.containsKey(xmlID)) {
+        item = (Album)sAlbums.get(xmlID);
+      }
+    }
+    if (item == null) {
+      item = objFactory.createAlbum();
+
+      item.setId(xmlID);
+
+      Statement stmt = null;
+      ResultSet rset = null;
+      try {
+        stmt = conn.createStatement();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("SELECT * FROM album WHERE id=");
+        sb.append(album_id);
+        sb.append(";");
+        
+        rset = stmt.executeQuery(sb.toString());
+        if (rset.first()) {
+          item.setTitle(rset.getString("title"));
+          boolean compilation = rset.getBoolean("compilation");
+          if (!rset.wasNull()) {
+            item.setCompilation(compilation);
+          }
+          item.setComment(rset.getString("comment"));
+          // ToDo: label
+        }
+
+        sb = new StringBuffer();
+        sb.append("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, COUNT(DISTINCT purchase), purchase, COUNT(DISTINCT format, format) FROM song WHERE album_id=");
+        sb.append(album_id);
+        sb.append(" GROUP BY album_id;");
+
+        rset = stmt.executeQuery(sb.toString());
+        if (rset.first()) {
+          boolean distinct = (rset.getLong(2) == 1);
+          if (distinct) {
+            item.setPerformer(Util.getArtist(Util.toXMLID("ar", rset.getLong("performer_id")), music, objFactory));
+          }
+          distinct = (rset.getLong(4) == 1);
+          if (distinct) {
+            item.getProducer().add(Util.getArtist(Util.toXMLID("ar", rset.getLong("producer_id")), music, objFactory));
+          }
+          distinct = (rset.getLong(6) == 1);
+          if (distinct) {
+            byte[] sqlDateBytes = rset.getBytes("release");
+            if (!rset.wasNull()) {
+              item.setReleaseDate(Util.createDate(new String(sqlDateBytes), objFactory));
+            }
+          }
+          distinct = (rset.getLong(8) == 1);
+          if (distinct) {
+            byte[] sqlDateBytes = rset.getBytes("purchase");
+            if (!rset.wasNull()) {
+              item.setPurchaseDate(Util.createDate(new String(sqlDateBytes), objFactory));
+            }
+          }
+          distinct = (rset.getLong(10) == 1);
+          if (distinct) {
+            //            item.setFormat();
+          }
+        }
+      } finally {
+        if (rset != null) {
+          rset.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+      }
       
-      synchronized (sArtistsLock) {
-        sArtists.put(xmlID, artist);
+      synchronized (sAlbumsLock) {
+        sAlbums.put(xmlID, item);
+      }
+
+      music.getAlbum().add(item);
+    }
+    return item;
+  }
+
+  // songs per album:
+  // SELECT album_id, COUNT(*) FROM song GROUP BY album_id;
+  
+  // songs per artist:
+  // SELECT performer_id, COUNT(*) FROM song GROUP BY performer_id;
+  
+  // songs per artist specifically
+  // SELECT performer_id, COUNT(*) FROM song WHERE performer_id=101 GROUP BY performer_id;
+  
+  // albums per artist with track count
+  // SELECT album_id, COUNT(*) FROM song WHERE performer_id=101 GROUP BY album_id;
+
+  // # performers per album:
+  // SELECT album_id, COUNT(DISTINCT performer_id) FROM song GROUP BY album_id;
+
+  private static void createSongs(Connection conn, Statement stmt, Music music, ObjectFactory objFactory) throws SQLException, JAXBException {
+    ResultSet rset = null;
+    Artist artist = null;
+    Album album = null;
+    Song song = null;
+
+    try {
+      StringBuffer sb = new StringBuffer();
+      sb.append("SELECT * FROM song ORDER BY release, album_id, track;");
+
+      rset = stmt.executeQuery(sb.toString());
+      while (rset.next()) {
+        
+        String perfID = Util.toXMLID("ar", rset.getLong("performer_id"));
+        artist = Util.getArtist(perfID, music, objFactory);
+        
+        long album_id = rset.getLong("album_id");
+        String albumXMLID = Util.toXMLID("a", album_id);
+        album = Util.getAlbum(albumXMLID, album_id, conn, music, objFactory);
+
+        List albums = artist.getAlbum();
+        if (!albums.contains(album)) {
+          albums.add(album);
+        }
+        
+        String songID = Util.toXMLID("s", rset.getLong("id"));
+
+        song = objFactory.createSong();
+
+        song.setId(songID);
+        song.setTitle(rset.getString("title"));
+        song.setPerformer(artist);
+        long composer_id = rset.getLong("composer_id");
+        if (!rset.wasNull()) {
+          song.getComposer().add(Util.getArtist(Util.toXMLID("ar", composer_id), music, objFactory));
+        }
+        long producer_id = rset.getLong("producer_id");
+        if (!rset.wasNull()) {
+          song.getProducer().add(Util.getArtist(Util.toXMLID("ar", producer_id), music, objFactory));
+        }
+        byte[] sqlDateBytes = rset.getBytes("release");
+        com.bolsinga.music.data.Date releaseDate = null;
+        if (!rset.wasNull()) {
+          releaseDate = Util.createDate(new String(sqlDateBytes), objFactory);
+          song.setReleaseDate(releaseDate);
+        }
+        java.sql.Timestamp lastPlayed = rset.getTimestamp("last_played");
+        if (!rset.wasNull()) {
+          Calendar cal = Calendar.getInstance();
+          cal.setTime(new java.util.Date(lastPlayed.getTime()));
+          song.setLastPlayed(cal);
+        }
+        long playCount = rset.getLong("playcount");
+        if (!rset.wasNull()) {
+          song.setPlayCount(BigInteger.valueOf(playCount));
+        }
+        song.setGenre(rset.getString("genre"));
+        long track = rset.getLong("track");
+        if (!rset.wasNull()) {
+          song.setTrack(BigInteger.valueOf(track));
+        }
+
+        sqlDateBytes = rset.getBytes("purchase");
+        com.bolsinga.music.data.Date purchaseDate = null;
+        if (!rset.wasNull()) {
+          purchaseDate = Util.createDate(new String(sqlDateBytes), objFactory);
+        }
+        // format
+
+        // digitized
+
+        album.getSong().add(song);
+        music.getSong().add(song);
+      }
+    } finally {
+      if (rset != null) {
+        rset.close();
       }
     }
   }
@@ -189,10 +406,8 @@ public class Util {
       rset = stmt.executeQuery(sb.toString());
       while (rset.next()) {
         String xmlID = Util.toXMLID("ar", rset.getLong("artist_id"));
-        Artist artist = null;
-        synchronized (sArtistsLock) {
-          artist = (Artist)sArtists.get(xmlID);
-        }
+        // Pass null since this artist already should have been created.
+        Artist artist = Util.getArtist(xmlID, null, null);
         show.getArtist().add(artist);
       }
     } finally {
@@ -251,10 +466,7 @@ public class Util {
       show.setId(Util.toXMLID("sh", rset.getLong("id")));
 
       String xmlID = Util.toXMLID("v", rset.getLong("venue_id"));
-      Venue venue = null;
-      synchronized (sVenuesLock) {
-        venue = (Venue)sVenues.get(xmlID);
-      }
+      Venue venue = Util.getVenue(xmlID, music, objFactory);
       show.setVenue(venue);
 
       addPerformances(conn, show, rset.getLong("performance_id"));
@@ -273,22 +485,18 @@ public class Util {
     }
   }
 
-  private static void addMemberToRelation(Relation relation, String type, long id) {
+  private static void addMemberToRelation(Relation relation, String type, long id) throws JAXBException {
     if (type.equals("artist")) {
       relation.setType(type);
       String xmlID = Util.toXMLID("ar", id);
-      Artist artist = null;
-      synchronized (sArtistsLock) {
-        artist = (Artist)sArtists.get(xmlID);
-      }
+      // Pass null since this artist already should have been created.
+      Artist artist = Util.getArtist(xmlID, null, null);
       relation.getMember().add(artist);
     } else if (type.equals("venue")) {
       relation.setType(type);
       String xmlID = Util.toXMLID("v", id);
-      Venue venue = null;
-      synchronized (sVenuesLock) {
-        venue = (Venue)sVenues.get(xmlID);
-      }
+      // Pass null since this venue already should have been created.
+      Venue venue = Util.getVenue(xmlID, null, null);
       relation.getMember().add(venue);
     } else {
       System.err.println("Unknown Relation type: " + type);
@@ -342,6 +550,8 @@ public class Util {
       stmt = conn.createStatement();
 
       Util.createArtists(conn, stmt, music, objFactory);
+
+      Util.createSongs(conn, stmt, music, objFactory);
       
       Util.createVenues(conn, stmt, music, objFactory);
 
