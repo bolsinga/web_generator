@@ -24,9 +24,6 @@ public class WebDB {
   public static void generate(Diary diary, String user, String password, String outputDir) {
     Music music = com.bolsinga.music.Util.createMusic(user, password);
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
-    int startYear = Util.getStartYear(diary);
-
-    Web.generateArchivePages(diary, encoder, startYear, outputDir);
-    //    Web.generate(diary, music, encoder, outputDir);
+    Web.generate(diary, music, encoder, outputDir);
   }
 }
