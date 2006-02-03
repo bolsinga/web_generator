@@ -1,0 +1,3 @@
+use diary;
+TRUNCATE category;
+TRUNCATE entry;
