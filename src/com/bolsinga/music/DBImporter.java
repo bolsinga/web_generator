@@ -221,7 +221,7 @@ public class Import {
     rowItems[2] = (label != null) ? Import.toSQLID(label) : null;
     rowItems[3] = album.getComment();
     boolean isCompilation = album.isCompilation();
-    rowItems[4] = (isCompilation) ? "1" : "0";
+    rowItems[4] = (isCompilation) ? "1" : null;
     
     com.bolsinga.sql.Util.insert(stmt, "album", rowItems);
 
