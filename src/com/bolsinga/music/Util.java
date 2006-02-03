@@ -96,7 +96,10 @@ public class Util {
         location.setStreet(rset.getString("street"));
         location.setCity(rset.getString("city"));
         location.setState(rset.getString("state"));
-        location.setZip(BigInteger.valueOf(rset.getLong("zip")));
+        long zip = rset.getLong("zip");
+        if (!rset.wasNull()) {
+          location.setZip(BigInteger.valueOf(zip));
+        }
         location.setWeb(rset.getString("url"));
       } else {
         System.err.println("Can't find Location ID: " + locationID);
@@ -491,12 +494,20 @@ public class Util {
       String xmlID = Util.toXMLID("ar", id);
       // Pass null since this artist already should have been created.
       Artist artist = Util.getArtist(xmlID, null, null);
+      if (artist == null) {
+        System.err.println("Relation: Unknown Artist ID: " + id);
+        System.exit(1);
+      }
       relation.getMember().add(artist);
     } else if (type.equals("venue")) {
       relation.setType(type);
       String xmlID = Util.toXMLID("v", id);
       // Pass null since this venue already should have been created.
       Venue venue = Util.getVenue(xmlID, null, null);
+      if (venue == null) {
+        System.err.println("Relation: Unknown Venue ID: " + id);
+        System.exit(1);
+      }
       relation.getMember().add(venue);
     } else {
       System.err.println("Unknown Relation type: " + type);
@@ -513,13 +524,18 @@ public class Util {
       relationID = rset.getLong("id");
       if (relationID != lastRelationID) {
         // Add the last relation
-        music.getRelation().add(relation);
+        if (relation != null) {
+          music.getRelation().add(relation);
+        }
 
         // Create a new relation
         relation = objFactory.createRelation();
 
         relation.setId(Util.toXMLID("r", relationID));
-        relation.setReason(rset.getString("reason"));
+        String reason = rset.getString("reason");
+        if (!rset.wasNull()) {
+          relation.setReason(reason);
+        }
 
         String type = rset.getString("type");
         long id = rset.getLong("related_id");
@@ -532,7 +548,9 @@ public class Util {
         addMemberToRelation(relation, type, id);
       }
     }
-    music.getRelation().add(relation);
+    if (relation != null) {
+      music.getRelation().add(relation);
+    }
   }
 
   public static Music createMusic(String user, String password) {
