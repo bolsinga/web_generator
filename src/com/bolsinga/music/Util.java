@@ -327,7 +327,8 @@ public class Util {
 
     try {
       StringBuffer sb = new StringBuffer();
-      sb.append("SELECT * FROM song ORDER BY release, album_id, track;");
+      //      sb.append("SELECT * FROM song ORDER BY release, album_id, track;");
+      sb.append("SELECT * FROM song ORDER BY track, album_id;");
 
       rset = stmt.executeQuery(sb.toString());
       while (rset.next()) {
