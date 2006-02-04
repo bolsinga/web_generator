@@ -249,7 +249,7 @@ public class Util {
         }
 
         sb = new StringBuffer();
-        sb.append("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, COUNT(DISTINCT purchase), purchase, COUNT(DISTINCT format, format) FROM song WHERE album_id=");
+        sb.append("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, COUNT(DISTINCT purchase), purchase, COUNT(DISTINCT format), format FROM song WHERE album_id=");
         sb.append(album_id);
         sb.append(" GROUP BY album_id;");
 
@@ -279,7 +279,11 @@ public class Util {
           }
           distinct = (rset.getLong(10) == 1);
           if (distinct) {
-            //            item.setFormat();
+            String formatSQLenum = rset.getString("format");
+            String[] formats = formatSQLenum.split(",");
+            for (int i = 0; i < formats.length; i++) {
+              item.getFormat().add(formats[0]);
+            }
           }
         }
       } finally {
@@ -376,15 +380,10 @@ public class Util {
         if (!rset.wasNull()) {
           song.setTrack(BigInteger.valueOf(track));
         }
-
-        sqlDateBytes = rset.getBytes("purchase");
-        com.bolsinga.music.data.Date purchaseDate = null;
-        if (!rset.wasNull()) {
-          purchaseDate = Util.createDate(new String(sqlDateBytes), objFactory);
+        String sqlFormat = rset.getString("format");
+        if (sqlFormat.matches("Digital File")) {
+          song.setDigitized(true);
         }
-        // format
-
-        // digitized
 
         album.getSong().add(song);
         music.getSong().add(song);

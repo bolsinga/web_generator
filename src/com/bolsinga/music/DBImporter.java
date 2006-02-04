@@ -149,6 +149,19 @@ public class Import {
     return toSQLID(1, song.getId());
   }
 
+  private static String toSQLenum(java.util.List strings) {
+    StringBuffer sb = new StringBuffer();
+    Iterator i = strings.iterator();
+    while (i.hasNext()) {
+      String s = (String)i.next();
+      if (s.length() != 0) {
+        sb.append(",");
+      }
+      sb.append(s);
+    }
+    return sb.toString();
+  }
+
   private static void importSong(Statement stmt, Song song, Album album) throws SQLException {
     String[] rowItems = new String[14];
     
@@ -185,7 +198,7 @@ public class Import {
     //    rowItems[10] = Boolean.toString(song.isLive());
     rowItems[10] = null;
     rowItems[11] = Import.toSQLID(album);
-    rowItems[12] = "Digital File";
+    rowItems[12] = Import.toSQLenum(album.getFormat());
     rowItems[13] = song.getPlayCount().toString();
     
     com.bolsinga.sql.Util.insert(stmt, "song", rowItems);
