@@ -59,6 +59,54 @@ public class Compare {
 
     return lower;
   }
+
+  private static final Comparator ARTIST_ID_COMPARATOR = new Comparator() {
+      public int compare(Object o1, Object o2) {
+        Artist i1 = (Artist)o1;
+        Artist i2 = (Artist)o2;
+
+        return i1.getId().compareTo(i2.getId());
+      }
+    };
+
+  private static final Comparator ALBUM_ID_COMPARATOR = new Comparator() {
+      public int compare(Object o1, Object o2) {
+        Album i1 = (Album)o1;
+        Album i2 = (Album)o2;
+
+        return i1.getId().compareTo(i2.getId());
+      }
+    };
+
+  private static final Comparator VENUE_ID_COMPARATOR = new Comparator() {
+      public int compare(Object o1, Object o2) {
+        Venue i1 = (Venue)o1;
+        Venue i2 = (Venue)o2;
+
+        return i1.getId().compareTo(i2.getId());
+      }
+    };
+
+  private static final Comparator SONG_ID_COMPARATOR = new Comparator() {
+      public int compare(Object o1, Object o2) {
+        Song i1 = (Song)o1;
+        Song i2 = (Song)o2;
+
+        return i1.getId().compareTo(i2.getId());
+      }
+    };
+
+  public static void tidy(Music music) {
+    Collections.sort(music.getArtist(), Compare.ARTIST_ID_COMPARATOR);
+    Iterator i = music.getArtist().iterator();
+    while (i.hasNext()) {
+      Artist a = (Artist)i.next();
+      Collections.sort(a.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
+    }
+    Collections.sort(music.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
+    Collections.sort(music.getVenue(), Compare.VENUE_ID_COMPARATOR);
+    Collections.sort(music.getSong(), Compare.SONG_ID_COMPARATOR);
+  }
         
   public static final Comparator LIBRARY_COMPARATOR = new Comparator() {
       public int compare(Object o1, Object o2) {

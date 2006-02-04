@@ -14,6 +14,8 @@ public class Music {
   private static HashMap sVenues = new HashMap();
   private static HashMap sBandSorts = new HashMap();
   private static HashMap sArtists = new HashMap();
+
+  private static final boolean TIDY_XML = false;
         
   public static void main(String[] args) {
     if (args.length != 6) {
@@ -34,6 +36,10 @@ public class Music {
       com.bolsinga.itunes.converter.ITunes.addMusic(objFactory, music, iTunesFile);
 
       music.setTimestamp(Calendar.getInstance());
+
+      if (Music.TIDY_XML) {
+        com.bolsinga.music.Compare.tidy(music);
+      }
                         
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");

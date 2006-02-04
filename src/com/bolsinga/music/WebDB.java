@@ -34,6 +34,7 @@ public class WebDB {
   }
 
   private static void export(Music music) {
+    com.bolsinga.music.Compare.tidy(music);
     try {
       File outputFile = new File("/tmp", "music_db.xml");
 
