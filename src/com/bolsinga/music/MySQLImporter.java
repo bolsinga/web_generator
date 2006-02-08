@@ -162,6 +162,8 @@ public class Import {
     return sb.toString();
   }
 
+  private static DateFormat sSQLDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
   private static void importSong(Statement stmt, Song song, Album album) throws SQLException {
     String[] rowItems = new String[14];
     
@@ -192,7 +194,11 @@ public class Import {
     java.math.BigInteger track = song.getTrack();
     rowItems[8] = (track != null) ? track.toString() : null;
     Calendar lastPlayed = song.getLastPlayed();
-    rowItems[9] = (lastPlayed != null) ? new Timestamp(lastPlayed.getTime().getTime()).toString() : null;
+    String lastPlayedString = null;
+    if (lastPlayed != null) {
+      lastPlayedString = sSQLDateTimeFormat.format(lastPlayed.getTime());
+    }
+    rowItems[9] = lastPlayedString;
     // Live isn't currently tracked in the raw text files.
     //  Only use it coming out of the DB.
     //    rowItems[10] = Boolean.toString(song.isLive());
