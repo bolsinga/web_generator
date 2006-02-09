@@ -8,6 +8,10 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
+/*
+ * http://www.imc.org/pdi/vcal-10.txt
+ */
+
 public class ICal {
 
   public static void main(String[] args) {

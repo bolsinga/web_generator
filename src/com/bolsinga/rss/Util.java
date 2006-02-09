@@ -2,6 +2,10 @@ package com.bolsinga.rss;
 
 import java.text.*;
 
+/*
+ * http://blogs.law.harvard.edu/tech/rss
+ */
+
 public class Util {
   private static DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         
