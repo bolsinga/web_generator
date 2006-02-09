@@ -42,6 +42,9 @@ public class Diary {
                         
       createComments(objFactory, diary, comments);
                         
+      Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+      diary.setTimestamp(now);
+
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
       Marshaller m = jc.createMarshaller();
@@ -109,7 +112,7 @@ public class Diary {
   }
         
   private static Calendar createTimestamp(String date) {
-    Calendar result = Calendar.getInstance();
+    Calendar result = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 
     String monthString, dayString, yearString = null;
     int month, day, year = 0;
