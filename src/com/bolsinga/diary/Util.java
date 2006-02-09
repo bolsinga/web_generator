@@ -77,7 +77,7 @@ public class Util {
       while (rset.next()) {
         entry = objFactory.createEntry();
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         cal.setTime(new java.util.Date(rset.getTimestamp("timestamp").getTime()));
         entry.setTimestamp(cal);
         entry.setComment(rset.getString("comment"));
