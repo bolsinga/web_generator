@@ -54,7 +54,7 @@ public class RSS {
   }
 
   public static void add(com.bolsinga.music.data.Show show, com.bolsinga.music.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
-    add(getTitle(show), com.bolsinga.music.Util.toCalendar(show.getDate()).getTime(), links.getLinkTo(show), show.getComment(), objFactory, channel);
+    add(getTitle(show), com.bolsinga.music.Util.toCalendar(show.getDate()), links.getLinkTo(show), show.getComment(), objFactory, channel);
   }
         
   private static String getTitle(Show show) {
@@ -81,10 +81,10 @@ public class RSS {
   }
 
   public static void add(com.bolsinga.diary.data.Entry entry, com.bolsinga.diary.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
-    add(com.bolsinga.diary.Util.getTitle(entry), entry.getTimestamp().getTime(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
+    add(com.bolsinga.diary.Util.getTitle(entry), entry.getTimestamp(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
   }
 
-  public static void add(String title, java.util.Date date, String link, String description, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
+  public static void add(String title, java.util.Calendar cal, String link, String description, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
     TRssItem item = objFactory.createTRssItem();
     List itemElements = item.getTitleOrDescriptionOrLink();
 
@@ -95,7 +95,7 @@ public class RSS {
     sb.append(")");
 
     itemElements.add(objFactory.createTRssItemTitle(title));
-    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(date)));
+    itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(cal)));
     itemElements.add(objFactory.createTRssItemAuthor(sb.toString()));
     itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRssRoot() + link));
     itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(description)));
@@ -115,7 +115,7 @@ public class RSS {
       channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRssRoot()));
       channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.Util.getSettings().getRssDescription()));
       channelElements.add(objFactory.createTRssChannelGenerator(com.bolsinga.web.Util.getGenerator()));
-      channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(Calendar.getInstance().getTime())));
+      channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(Calendar.getInstance())));
       channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.Util.getSettings().getContact()));
 
       TRssChannel.Image logo = com.bolsinga.rss.Util.createLogo(objFactory);
@@ -189,7 +189,7 @@ public class RSS {
         } else if (o2 instanceof com.bolsinga.diary.data.Entry) {
           c2 = ((Entry)o2).getTimestamp();
         }
-                        
+        
         return c1.getTime().compareTo(c2.getTime());
       }
     };

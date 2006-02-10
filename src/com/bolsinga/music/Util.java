@@ -366,11 +366,10 @@ public class Util {
           releaseDate = Util.createDate(new String(sqlDateBytes), objFactory);
           song.setReleaseDate(releaseDate);
         }
-        java.sql.Timestamp lastPlayed = rset.getTimestamp("last_played");
+        String sqlDATETIME = rset.getString("last_played");
         if (!rset.wasNull()) {
-          Calendar cal = Calendar.getInstance();
-          cal.setTime(new java.util.Date(lastPlayed.getTime()));
-          song.setLastPlayed(cal);
+          Calendar utcCal = com.bolsinga.sql.Util.toUTCCalendar(sqlDATETIME);
+          song.setLastPlayed(utcCal);
         }
         long playCount = rset.getLong("playcount");
         if (!rset.wasNull()) {
@@ -577,7 +576,7 @@ public class Util {
 
       Util.createRelations(stmt, music, objFactory);
 
-      music.setTimestamp(Calendar.getInstance());
+      music.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();

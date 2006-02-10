@@ -42,8 +42,7 @@ public class Diary {
                         
       createComments(objFactory, diary, comments);
                         
-      Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-      diary.setTimestamp(now);
+      diary.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");

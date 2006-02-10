@@ -10,8 +10,6 @@ import com.bolsinga.diary.data.*;
 
 public class Import {
 
-  private static DateFormat sSQLDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
   public static void main(String[] args) {
     if (args.length != 3) {
       System.out.println("Usage: Web [diary.xml] [user] [password]");
@@ -60,7 +58,7 @@ public class Import {
       rowItems[0] = null;
       rowItems[1] = item.getComment();
       rowItems[2] = Util.getTitle(item);
-      rowItems[3] = sSQLDateTimeFormat.format(item.getTimestamp().getTime());
+      rowItems[3] = com.bolsinga.sql.Util.toDATETIME(item.getTimestamp());
       
       try {
         com.bolsinga.sql.Util.insert(stmt, "entry", rowItems);

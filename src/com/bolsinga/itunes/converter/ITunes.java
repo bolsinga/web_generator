@@ -77,7 +77,7 @@ public class ITunes {
     try {
       com.bolsinga.music.data.Music music = ITunes.convert(itunesFile);
 
-      music.setTimestamp(Calendar.getInstance());
+      music.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
                                 
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
@@ -230,7 +230,9 @@ public class ITunes {
         continue;
       }
       if (key.equals(TK_PLAY_DATE_UTC)) {
-        lastPlayed = ((com.bolsinga.plist.data.Date)i.next()).getValue();
+        Calendar itunesCal = ((com.bolsinga.plist.data.Date)i.next()).getValue();
+        lastPlayed = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        lastPlayed.setTime(itunesCal.getTime());
         continue;
       }
       if (key.equals(TK_PLAY_COUNT)) {

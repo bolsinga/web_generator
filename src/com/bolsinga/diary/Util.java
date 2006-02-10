@@ -77,9 +77,9 @@ public class Util {
       while (rset.next()) {
         entry = objFactory.createEntry();
 
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.setTime(new java.util.Date(rset.getTimestamp("timestamp").getTime()));
-        entry.setTimestamp(cal);
+        String sqlDATETIME = rset.getString("timestamp");
+        Calendar utcCal = com.bolsinga.sql.Util.toUTCCalendar(sqlDATETIME);
+        entry.setTimestamp(utcCal);
         entry.setComment(rset.getString("comment"));
         entry.setId("e" + (rset.getLong("id") - 1));
 

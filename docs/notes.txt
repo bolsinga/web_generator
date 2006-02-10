@@ -218,3 +218,20 @@ DiaryXML
 Site
 MusicSite
 DiarySite
+
+-------
+
+How to store Date (inc. Time zone info.)
+
+MySQL - When using DATETIME, the Time Zone isn't applicable. However this will write and
+      read them as UTC.
+
+XML / JAXB classes - All UTC, All the time.
+
+When dates/times are in XML or MySQL storage or in classes in memory, they should be UTC.
+
+RSS is UTC
+
+iCal can be UTC
+
+Only convert TZ when displaying the value on a web page.

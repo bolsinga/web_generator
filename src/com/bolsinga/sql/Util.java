@@ -1,10 +1,19 @@
 package com.bolsinga.sql;
 
 import java.sql.*;
+import java.text.*;
+import java.util.*;
 import java.util.regex.*;
 
 public class Util {
   private static Pattern sSQL = Pattern.compile("'");
+
+  private static DateFormat sSQLDateTimeFormat = null;
+
+  static {
+    sSQLDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    sSQLDateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+  }
 
   private static String constructInsert(String table, String[] rowItems) {
     StringBuffer sb = new StringBuffer("INSERT INTO ");
@@ -25,6 +34,24 @@ public class Util {
 
   public static void insert(Statement stmt, String table, String[] rowItems) throws SQLException {
     stmt.execute(Util.constructInsert(table, rowItems));
+  }
+
+  public static Calendar toUTCCalendar(String sqlDATETIME) {
+    java.util.Date d = null;
+    try {
+      d = sSQLDateTimeFormat.parse(sqlDATETIME);
+    } catch (ParseException e) {
+      System.err.println("Exception: " + e);
+      e.printStackTrace();
+      System.exit(1);
+    }
+    Calendar c = Calendar.getInstance(sSQLDateTimeFormat.getTimeZone());
+    c.setTime(d);
+    return c;
+  }
+
+  public static String toDATETIME(Calendar c) {
+    return sSQLDateTimeFormat.format(c.getTime());
   }
   
   private static String quote(String s) {

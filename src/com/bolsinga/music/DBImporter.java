@@ -162,8 +162,6 @@ public class Import {
     return sb.toString();
   }
 
-  private static DateFormat sSQLDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
   private static void importSong(Statement stmt, Song song, Album album) throws SQLException {
     String[] rowItems = new String[14];
     
@@ -196,7 +194,7 @@ public class Import {
     Calendar lastPlayed = song.getLastPlayed();
     String lastPlayedString = null;
     if (lastPlayed != null) {
-      lastPlayedString = sSQLDateTimeFormat.format(lastPlayed.getTime());
+      lastPlayedString = com.bolsinga.sql.Util.toDATETIME(lastPlayed);
     }
     rowItems[9] = lastPlayedString;
     // Live isn't currently tracked in the raw text files.
@@ -411,7 +409,7 @@ public class Import {
     long performanceID = Import.importPerformance(stmt, show);
     
     String[] rowItems = new String[5];
-    
+
     rowItems[0] = Import.toSQLID(show);
     rowItems[1] = Import.toSQLString(show.getDate());
     rowItems[2] = Import.toSQLID((Venue)show.getVenue());
