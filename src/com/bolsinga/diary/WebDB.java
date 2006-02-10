@@ -25,11 +25,13 @@ public class WebDB {
 
   public static void generate(String user, String password, String outputDir) {
     Diary diary = Util.createDiary(user, password);
-    WebDB.generate(diary, user, password, outputDir);
 
     if (WebDB.GENERATE_XML) {
       WebDB.export(diary);
+      System.exit(0);
     }
+
+    WebDB.generate(diary, user, password, outputDir);
   }
 
   public static void generate(Diary diary, String user, String password, String outputDir) {
