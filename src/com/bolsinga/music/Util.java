@@ -142,22 +142,28 @@ public class Util {
   private static void createVenues(Connection conn, Statement stmt, Music music, ObjectFactory objFactory) throws SQLException, JAXBException {
     ResultSet rset = null;
     Venue venue = null;
-
-    rset = stmt.executeQuery("SELECT * FROM venue;");
-    while (rset.next()) {
-      String xmlID = Util.toXMLID("v", rset.getLong("id"));
-
-      venue = Util.getVenue(xmlID, music, objFactory);
-      
-      venue.setName(rset.getString("name"));
-      venue.setComment(rset.getString("comment"));
-      long location_id = rset.getLong("location_id");
-      if (!rset.wasNull()) {
-        venue.setLocation(Util.createLocation(conn, location_id, objFactory));
+    
+    try {
+      rset = stmt.executeQuery("SELECT * FROM venue;");
+      while (rset.next()) {
+        String xmlID = Util.toXMLID("v", rset.getLong("id"));
+        
+        venue = Util.getVenue(xmlID, music, objFactory);
+        
+        venue.setName(rset.getString("name"));
+        venue.setComment(rset.getString("comment"));
+        long location_id = rset.getLong("location_id");
+        if (!rset.wasNull()) {
+          venue.setLocation(Util.createLocation(conn, location_id, objFactory));
+        }
+        boolean active = rset.getBoolean("active");
+        if (!rset.wasNull()) {
+          venue.setActive(active);
+        }
       }
-      boolean active = rset.getBoolean("active");
-      if (!rset.wasNull()) {
-        venue.setActive(active);
+    } finally {
+      if (rset != null) {
+        rset.close();
       }
     }
   }
@@ -190,24 +196,30 @@ public class Util {
     ResultSet rset = null;
     Artist artist = null;
 
-    rset = stmt.executeQuery("SELECT * FROM artist;");
-    while (rset.next()) {
-      
-      long artistID = rset.getLong("id");
-      String xmlID = Util.toXMLID("ar", artistID);
-
-      artist = Util.getArtist(xmlID, music, objFactory);
-
-      artist.setName(rset.getString("name"));
-      artist.setSortname(rset.getString("sortname"));
-      artist.setComment(rset.getString("comment"));
-      long location_id = rset.getLong("location_id");
-      if (!rset.wasNull()) {
-        artist.setLocation(Util.createLocation(conn, location_id, objFactory));
+    try {
+      rset = stmt.executeQuery("SELECT * FROM artist;");
+      while (rset.next()) {
+        
+        long artistID = rset.getLong("id");
+        String xmlID = Util.toXMLID("ar", artistID);
+        
+        artist = Util.getArtist(xmlID, music, objFactory);
+        
+        artist.setName(rset.getString("name"));
+        artist.setSortname(rset.getString("sortname"));
+        artist.setComment(rset.getString("comment"));
+        long location_id = rset.getLong("location_id");
+        if (!rset.wasNull()) {
+          artist.setLocation(Util.createLocation(conn, location_id, objFactory));
+        }
+        boolean active = rset.getBoolean("active");
+        if (!rset.wasNull()) {
+          artist.setActive(active);
+        }
       }
-      boolean active = rset.getBoolean("active");
-      if (!rset.wasNull()) {
-        artist.setActive(active);
+    } finally {
+      if (rset != null) {
+        rset.close();
       }
     }
   }
@@ -461,29 +473,35 @@ public class Util {
     ResultSet rset = null;
     Show show = null;
 
-    rset = stmt.executeQuery("SELECT * FROM shows;");
-    while (rset.next()) {
-      show = objFactory.createShow();
-
-      show.setId(Util.toXMLID("sh", rset.getLong("id")));
-
-      String xmlID = Util.toXMLID("v", rset.getLong("venue_id"));
-      Venue venue = Util.getVenue(xmlID, music, objFactory);
-      show.setVenue(venue);
-
-      addPerformances(conn, show, rset.getLong("performance_id"));
-
-      // Need to use raw bytes for the date. MySQL allows 'illegal' dates that
-      //  this program takes advantage of in the DB. Unfortunately, getting at
-      //  these with java.sql.Date or even getting it as a java.lang.String
-      //  will not work. Get the byte array, create the String and parse it
-      //  ourselves.
-      String sqlDate = new String(rset.getBytes("date"));
-      show.setDate(Util.createDate(sqlDate, objFactory));
-
-      show.setComment(rset.getString("comment"));
-
-      music.getShow().add(show);
+    try {
+      rset = stmt.executeQuery("SELECT * FROM shows;");
+      while (rset.next()) {
+        show = objFactory.createShow();
+        
+        show.setId(Util.toXMLID("sh", rset.getLong("id")));
+        
+        String xmlID = Util.toXMLID("v", rset.getLong("venue_id"));
+        Venue venue = Util.getVenue(xmlID, music, objFactory);
+        show.setVenue(venue);
+        
+        addPerformances(conn, show, rset.getLong("performance_id"));
+        
+        // Need to use raw bytes for the date. MySQL allows 'illegal' dates that
+        //  this program takes advantage of in the DB. Unfortunately, getting at
+        //  these with java.sql.Date or even getting it as a java.lang.String
+        //  will not work. Get the byte array, create the String and parse it
+        //  ourselves.
+        String sqlDate = new String(rset.getBytes("date"));
+        show.setDate(Util.createDate(sqlDate, objFactory));
+        
+        show.setComment(rset.getString("comment"));
+        
+        music.getShow().add(show);
+      }
+    } finally {
+      if (rset != null) {
+        rset.close();
+      }
     }
   }
 
@@ -518,37 +536,43 @@ public class Util {
     Relation relation = null;
     long relationID = -1, lastRelationID = -1;
 
-    rset = stmt.executeQuery("SELECT * FROM relation ORDER BY id;");
-    while (rset.next()) {
-      relationID = rset.getLong("id");
-      if (relationID != lastRelationID) {
-        // Add the last relation
-        if (relation != null) {
-          music.getRelation().add(relation);
+    try {
+      rset = stmt.executeQuery("SELECT * FROM relation ORDER BY id;");
+      while (rset.next()) {
+        relationID = rset.getLong("id");
+        if (relationID != lastRelationID) {
+          // Add the last relation
+          if (relation != null) {
+            music.getRelation().add(relation);
+          }
+          
+          // Create a new relation
+          relation = objFactory.createRelation();
+          
+          relation.setId(Util.toXMLID("r", relationID));
+          String reason = rset.getString("reason");
+          if (!rset.wasNull()) {
+            relation.setReason(reason);
+          }
+          
+          String type = rset.getString("type");
+          long id = rset.getLong("related_id");
+          addMemberToRelation(relation, type, id);
+          
+          lastRelationID = relationID;
+        } else {
+          String type = rset.getString("type");
+          long id = rset.getLong("related_id");
+          addMemberToRelation(relation, type, id);
         }
-
-        // Create a new relation
-        relation = objFactory.createRelation();
-
-        relation.setId(Util.toXMLID("r", relationID));
-        String reason = rset.getString("reason");
-        if (!rset.wasNull()) {
-          relation.setReason(reason);
-        }
-
-        String type = rset.getString("type");
-        long id = rset.getLong("related_id");
-        addMemberToRelation(relation, type, id);
-
-        lastRelationID = relationID;
-      } else {
-        String type = rset.getString("type");
-        long id = rset.getLong("related_id");
-        addMemberToRelation(relation, type, id);
       }
-    }
-    if (relation != null) {
-      music.getRelation().add(relation);
+      if (relation != null) {
+        music.getRelation().add(relation);
+      }
+    } finally {
+      if (rset != null) {
+        rset.close();
+      }
     }
   }
 

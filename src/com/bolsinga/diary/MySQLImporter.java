@@ -56,17 +56,19 @@ public class Import {
       System.err.println("Exception: " + e);
       e.printStackTrace();
       System.exit(1);
-    }
-
-    try {
-      // Close statement and DB connection
-      //
-      stmt.close();
-      conn.close();
-    } catch (SQLException e) {
-      System.err.println("Exception: " + e);
-      e.printStackTrace();
-      System.exit(1);
+    } finally {
+      try {
+        if (stmt != null) {
+          stmt.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (SQLException e) {
+        System.err.println("Exception: " + e);
+        e.printStackTrace();
+        System.exit(1);
+      }
     }
   }
 

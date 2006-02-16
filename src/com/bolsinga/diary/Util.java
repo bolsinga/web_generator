@@ -59,75 +59,99 @@ public class Util {
 
   private static void createEntries(Statement stmt, Diary diary, ObjectFactory objFactory) throws SQLException, JAXBException {
     ResultSet rset = null;
-    Entry entry = null;
+    try {
+      Entry entry = null;
 
-    rset = stmt.executeQuery("SELECT * FROM entry;");
-    
-    while (rset.next()) {
-      entry = objFactory.createEntry();
-      
-      String sqlDATETIME = rset.getString("timestamp");
-      Calendar utcCal = com.bolsinga.sql.Util.toUTCCalendar(sqlDATETIME);
-      entry.setTimestamp(utcCal);
-      entry.setComment(rset.getString("comment"));
-      entry.setId("e" + (rset.getLong("id") - 1));
-      
-      diary.getEntry().add(entry);
+      rset = stmt.executeQuery("SELECT * FROM entry;");
+      while (rset.next()) {
+        entry = objFactory.createEntry();
+        
+        String sqlDATETIME = rset.getString("timestamp");
+        Calendar utcCal = com.bolsinga.sql.Util.toUTCCalendar(sqlDATETIME);
+        entry.setTimestamp(utcCal);
+        entry.setComment(rset.getString("comment"));
+        entry.setId("e" + (rset.getLong("id") - 1));
+        
+        diary.getEntry().add(entry);
       }
+    } finally {
+      if (rset != null) {
+        rset.close();
+      }
+    }
   }
 
   private static void createHeaders(Statement stmt, Diary diary) throws SQLException {
     ResultSet rset = null;
-    StringBuffer data = new StringBuffer();
-
-    rset = stmt.executeQuery("SELECT * FROM header;");
-
-    while (rset.next()) {
-      data.append(rset.getString("data"));
-      data.append("\n");
+    try {
+      StringBuffer data = new StringBuffer();
+      
+      rset = stmt.executeQuery("SELECT * FROM header;");
+      while (rset.next()) {
+        data.append(rset.getString("data"));
+        data.append("\n");
+      }
+      
+      diary.setHeader(data.toString());
+    } finally {
+      if (rset != null) {
+        rset.close();
+      }
     }
-
-    diary.setHeader(data.toString());
   }
 
   private static void createSides(Statement stmt, Diary diary) throws SQLException {
     ResultSet rset = null;
-    StringBuffer data = new StringBuffer();
-
-    rset = stmt.executeQuery("SELECT * FROM side;");
-
-    while (rset.next()) {
-      data.append(rset.getString("data"));
-      data.append("\n");
+    try {
+      StringBuffer data = new StringBuffer();
+      
+      rset = stmt.executeQuery("SELECT * FROM side;");
+      while (rset.next()) {
+        data.append(rset.getString("data"));
+        data.append("\n");
+      }
+      
+      diary.setStatic(data.toString());
+    } finally {
+      if (rset != null) {
+        rset.close();
+      }
     }
-
-    diary.setStatic(data.toString());
   }
 
   private static void createFriends(Statement stmt, Diary diary) throws SQLException {
     ResultSet rset = null;
-    StringBuffer data = new StringBuffer();
-
-    rset = stmt.executeQuery("SELECT * FROM friend;");
-
-    while (rset.next()) {
-      data.append("<a href=\"");
-      data.append(rset.getString("url"));
-      data.append("\">");
-      data.append(rset.getString("display_name"));
-      data.append("</a>\n");
+    try {
+      StringBuffer data = new StringBuffer();
+      
+      rset = stmt.executeQuery("SELECT * FROM friend;");
+      while (rset.next()) {
+        data.append("<a href=\"");
+        data.append(rset.getString("url"));
+        data.append("\">");
+        data.append(rset.getString("display_name"));
+        data.append("</a>\n");
+      }
+      
+      diary.setFriends(data.toString());
+    } finally {
+      if (rset != null) {
+        rset.close();
+      }
     }
-
-    diary.setFriends(data.toString());
   }
   
   private static void createTitle(Statement stmt, Diary diary) throws SQLException {
     ResultSet rset = null;
-
-    rset = stmt.executeQuery("SELECT * FROM title;");
-    
-    if (rset.first()) {
-      diary.setTitle(rset.getString("title"));
+    try {
+      rset = stmt.executeQuery("SELECT * FROM title;");
+      if (rset.first()) {
+        diary.setTitle(rset.getString("title"));
+      }
+    } finally {
+      if (rset != null) {
+        rset.close();
+      }
     }
   }
 
