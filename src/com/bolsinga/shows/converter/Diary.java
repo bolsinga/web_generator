@@ -68,14 +68,11 @@ public class Diary {
         
   private static void createStatics(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List statics) throws JAXBException {
     Statics oldStatic = null;
-    com.bolsinga.diary.data.Static xStatic = null;
                 
     ListIterator i = statics.listIterator();
     while (i.hasNext()) {
       oldStatic = (Statics)i.next();
                         
-      xStatic = objFactory.createStatic();
-
       String location = oldStatic.getLocation();
                         
       if (location.equalsIgnoreCase("left")) {
