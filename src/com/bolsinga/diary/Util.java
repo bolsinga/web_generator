@@ -57,12 +57,84 @@ public class Util {
     return diary;
   }
 
+  private static void createEntries(Statement stmt, Diary diary, ObjectFactory objFactory) throws SQLException, JAXBException {
+    ResultSet rset = null;
+    Entry entry = null;
+
+    rset = stmt.executeQuery("SELECT * FROM entry;");
+    
+    while (rset.next()) {
+      entry = objFactory.createEntry();
+      
+      String sqlDATETIME = rset.getString("timestamp");
+      Calendar utcCal = com.bolsinga.sql.Util.toUTCCalendar(sqlDATETIME);
+      entry.setTimestamp(utcCal);
+      entry.setComment(rset.getString("comment"));
+      entry.setId("e" + (rset.getLong("id") - 1));
+      
+      diary.getEntry().add(entry);
+      }
+  }
+
+  private static void createHeaders(Statement stmt, Diary diary) throws SQLException {
+    ResultSet rset = null;
+    StringBuffer data = new StringBuffer();
+
+    rset = stmt.executeQuery("SELECT * FROM header;");
+
+    while (rset.next()) {
+      data.append(rset.getString("data"));
+      data.append("\n");
+    }
+
+    diary.setHeader(data.toString());
+  }
+
+  private static void createSides(Statement stmt, Diary diary) throws SQLException {
+    ResultSet rset = null;
+    StringBuffer data = new StringBuffer();
+
+    rset = stmt.executeQuery("SELECT * FROM side;");
+
+    while (rset.next()) {
+      data.append(rset.getString("data"));
+      data.append("\n");
+    }
+
+    diary.setStatic(data.toString());
+  }
+
+  private static void createFriends(Statement stmt, Diary diary) throws SQLException {
+    ResultSet rset = null;
+    StringBuffer data = new StringBuffer();
+
+    rset = stmt.executeQuery("SELECT * FROM friend;");
+
+    while (rset.next()) {
+      data.append("<a href=\"");
+      data.append(rset.getString("url"));
+      data.append("\">");
+      data.append(rset.getString("display_name"));
+      data.append("</a>\n");
+    }
+
+    diary.setFriends(data.toString());
+  }
+  
+  private static void createTitle(Statement stmt, Diary diary) throws SQLException {
+    ResultSet rset = null;
+
+    rset = stmt.executeQuery("SELECT * FROM title;");
+    
+    if (rset.first()) {
+      diary.setTitle(rset.getString("title"));
+    }
+  }
+
   public static com.bolsinga.diary.data.Diary createDiary(String user, String password) {
     Diary diary = null;
-    Entry entry = null;
     Connection conn = null;
     Statement stmt = null;
-    ResultSet rset = null;
 
     ObjectFactory objFactory = new ObjectFactory();
     try {
@@ -72,28 +144,25 @@ public class Util {
 
       conn = DriverManager.getConnection("jdbc:mysql:///diary", user, password);
       stmt = conn.createStatement();
-      rset = stmt.executeQuery("SELECT * FROM entry;");
 
-      while (rset.next()) {
-        entry = objFactory.createEntry();
+      Util.createEntries(stmt, diary, objFactory);
 
-        String sqlDATETIME = rset.getString("timestamp");
-        Calendar utcCal = com.bolsinga.sql.Util.toUTCCalendar(sqlDATETIME);
-        entry.setTimestamp(utcCal);
-        entry.setComment(rset.getString("comment"));
-        entry.setId("e" + (rset.getLong("id") - 1));
+      Util.createHeaders(stmt, diary);
 
-        diary.getEntry().add(entry);
-      }
+      Util.createSides(stmt, diary);
+
+      Util.createFriends(stmt, diary);
+
+      Util.createTitle(stmt, diary);
+
+      // timestamp
+      diary.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();
       System.exit(1);
     } finally {
       try {
-        if (rset != null) {
-          rset.close();
-        }
         if (stmt != null) {
           stmt.close();
         }

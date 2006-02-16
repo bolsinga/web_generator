@@ -37,11 +37,11 @@ public class Diary {
                 
     try {
       com.bolsinga.diary.data.Diary diary = objFactory.createDiary();
-                        
+
       createStatics(objFactory, diary, statics);
-                        
+
       createComments(objFactory, diary, comments);
-                        
+
       diary.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 
       // Write out to the output file.
@@ -105,6 +105,8 @@ public class Diary {
                         
       diary.getEntry().add(xEntry);
     }
+
+    java.util.Collections.sort(diary.getEntry(), com.bolsinga.diary.Util.ENTRY_COMPARATOR);
   }
         
   private static Calendar createTimestamp(String date) {
@@ -124,7 +126,7 @@ public class Diary {
     year = Integer.parseInt(yearString);
                 
     result.set(year, month - 1, day);
-                
+
     return result;
   }
 }

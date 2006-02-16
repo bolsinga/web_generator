@@ -39,36 +39,25 @@ public class Import {
       conn = DriverManager.getConnection("jdbc:mysql:///diary", user, password);
       
       stmt = conn.createStatement();
+
+      importEntries(stmt, diary);
+
+      importHeaders(stmt, diary);
+
+      importSides(stmt, diary);
+
+      importFriends(stmt, diary);
+
+      String[] title = { diary.getTitle() };
+      com.bolsinga.sql.Util.insert(stmt, "title", title);
+
+      diary.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();
       System.exit(1);
     }
 
-    List items = diary.getEntry();
-    Entry item = null;
-                
-    Collections.sort(items, Util.ENTRY_COMPARATOR);
-
-    String[] rowItems = new String[4];
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Entry)i.next();
-
-      rowItems[0] = null;
-      rowItems[1] = item.getComment();
-      rowItems[2] = Util.getTitle(item);
-      rowItems[3] = com.bolsinga.sql.Util.toDATETIME(item.getTimestamp());
-      
-      try {
-        com.bolsinga.sql.Util.insert(stmt, "entry", rowItems);
-      } catch (SQLException e) {
-        System.err.println("Exception: " + e);
-        e.printStackTrace();
-        System.exit(1);
-      }
-    }
-    
     try {
       // Close statement and DB connection
       //
@@ -78,6 +67,130 @@ public class Import {
       System.err.println("Exception: " + e);
       e.printStackTrace();
       System.exit(1);
+    }
+  }
+
+  private static void importEntry(Statement stmt, Entry entry) throws SQLException {
+    String[] rowItems = new String[4];
+    
+    rowItems[0] = null;
+    rowItems[1] = entry.getComment();
+    rowItems[2] = Util.getTitle(entry);
+    rowItems[3] = com.bolsinga.sql.Util.toDATETIME(entry.getTimestamp());
+    
+    com.bolsinga.sql.Util.insert(stmt, "entry", rowItems);
+  }
+
+  private static void importEntries(Statement stmt, Diary diary) throws SQLException {
+    List items = diary.getEntry();
+    Entry item = null;
+                
+    Collections.sort(items, Util.ENTRY_COMPARATOR);
+
+    ListIterator i = items.listIterator();
+    while (i.hasNext()) {
+      item = (Entry)i.next();
+
+      try {
+        importEntry(stmt, item);
+      } catch (SQLException e) {
+        System.err.println("SQLException importing: " + Util.getTitle(item));
+        throw e;
+      }
+    }
+  }
+
+  private static void importHeader(Statement stmt, String header) throws SQLException {
+    String[] rowItems = new String[2];
+
+    rowItems[0] = null;
+    rowItems[1] = header;
+
+    com.bolsinga.sql.Util.insert(stmt, "header", rowItems);
+  }
+
+  private static void importHeaders(Statement stmt, Diary diary) throws SQLException {
+    String data = diary.getHeader();
+
+    if (data == null) {
+      return;
+    }
+
+    String[] lines = data.split("\\n");
+    for (int i = 0; i < lines.length; i++) {
+      try {
+        Import.importHeader(stmt, lines[i]);
+      } catch (SQLException e) {
+        System.err.println("SQLException importing: " + lines[i]);
+        throw e;
+      }
+    }
+  }
+
+  private static void importSide(Statement stmt, String side) throws SQLException {
+    String[] rowItems = new String[2];
+
+    rowItems[0] = null;
+    rowItems[1] = side;
+
+    com.bolsinga.sql.Util.insert(stmt, "side", rowItems);
+  }
+
+  private static void importSides(Statement stmt, Diary diary) throws SQLException {
+    String data = diary.getStatic();
+
+    if (data == null) {
+      return;
+    }
+
+    String[] lines = data.split("\\n");
+    for (int i = 0; i < lines.length; i++) {
+      try {
+        Import.importSide(stmt, lines[i]);
+      } catch (SQLException e) {
+        System.err.println("SQLException importing: " + lines[i]);
+        throw e;
+      }
+    }
+  }
+
+  private static void importFriend(Statement stmt, String name, String displayName, String url) throws SQLException {
+    String [] rowItems = new String[4];
+
+    rowItems[0] = null;
+    rowItems[1] = name;
+    rowItems[2] = displayName;
+    rowItems[3] = url;
+
+    com.bolsinga.sql.Util.insert(stmt, "friend", rowItems);
+  }
+
+  private static Pattern sFriends = Pattern.compile("\"(.*)\">(.*)<");
+
+  private static void importFriends(Statement stmt, Diary diary) throws SQLException {
+    String data = diary.getFriends();
+    String name = null, displayName = null, url = null;
+
+    if (data == null) {
+      return;
+    }
+
+    String[] lines = data.split("\\n");
+    for (int i = 0; i < lines.length; i++) {
+      Matcher m = sFriends.matcher(lines[i]);
+      if (m.find()) {
+        try {
+          name = displayName = m.group(2);
+          url = m.group(1);
+          Import.importFriend(stmt, name, displayName, url);
+        } catch (SQLException e) {
+          System.err.println("SQLException importing: " + lines[i]);
+          throw e;
+        }
+      } else {
+        System.err.println("Can't match: " + lines[i]);
+        System.exit(1);
+      }
     }
   }
 }
