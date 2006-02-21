@@ -112,15 +112,15 @@ class DBCreator {
     return location;
   }
 
-  private HashMap sArtists = new HashMap();
-  private Object sArtistsLock = new Object();
+  private HashMap artists = new HashMap();
+  private Object artistsLock = new Object();
 
   private Artist getArtist(String xmlID) throws JAXBException {
     Artist item = null;
 
-    synchronized (sArtistsLock) {
-      if (sArtists.containsKey(xmlID)) {
-        item = (Artist)sArtists.get(xmlID);
+    synchronized (artistsLock) {
+      if (artists.containsKey(xmlID)) {
+        item = (Artist)artists.get(xmlID);
         return item;
       }
     }
@@ -131,20 +131,20 @@ class DBCreator {
     
     music.getArtist().add(item);
     
-    synchronized (sArtistsLock) {
-      sArtists.put(xmlID, item);
+    synchronized (artistsLock) {
+      artists.put(xmlID, item);
     }
     return item;
   }
 
-  private HashMap sAlbums = new HashMap();
-  private Object sAlbumsLock = new Object();
+  private HashMap albums = new HashMap();
+  private Object albumsLock = new Object();
 
   private Album getAlbum(String xmlID, long album_id) throws SQLException, JAXBException {
     Album item = null;
-    synchronized (sAlbumsLock) {
-      if (sAlbums.containsKey(xmlID)) {
-        item = (Album)sAlbums.get(xmlID);
+    synchronized (albumsLock) {
+      if (albums.containsKey(xmlID)) {
+        item = (Album)albums.get(xmlID);
         return item;
       }
     }
@@ -221,8 +221,8 @@ class DBCreator {
       }
     }
     
-    synchronized (sAlbumsLock) {
-      sAlbums.put(xmlID, item);
+    synchronized (albumsLock) {
+      albums.put(xmlID, item);
     }
     
     music.getAlbum().add(item);
@@ -230,14 +230,14 @@ class DBCreator {
     return item;
   }
 
-  private HashMap sVenues = new HashMap();
-  private Object sVenuesLock = new Object();
+  private HashMap venues = new HashMap();
+  private Object venuesLock = new Object();
 
   private Venue getVenue(String xmlID) throws JAXBException {
     Venue item = null;
-    synchronized (sVenuesLock) {
-      if (sVenues.containsKey(xmlID)) {
-        item = (Venue)sVenues.get(xmlID);
+    synchronized (venuesLock) {
+      if (venues.containsKey(xmlID)) {
+        item = (Venue)venues.get(xmlID);
         return item;
       }
     }
@@ -246,8 +246,8 @@ class DBCreator {
     
     item.setId(xmlID);
     
-    synchronized (sVenuesLock) {
-      sVenues.put(xmlID, item);
+    synchronized (venuesLock) {
+      venues.put(xmlID, item);
     }
     
     music.getVenue().add(item);
@@ -358,9 +358,9 @@ class DBCreator {
         String albumXMLID = toXMLID("a", album_id);
         album = getAlbum(albumXMLID, album_id);
 
-        List albums = artist.getAlbum();
-        if (!albums.contains(album)) {
-          albums.add(album);
+        List albumList = artist.getAlbum();
+        if (!albumList.contains(album)) {
+          albumList.add(album);
         }
         
         String songID = toXMLID("s", rset.getLong("id"));
