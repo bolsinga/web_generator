@@ -235,3 +235,5 @@ RSS is UTC
 iCal can be UTC
 
 Only convert TZ when displaying the value on a web page.
+
+Use PreparedStatement for: Location, Album, Performance, Song

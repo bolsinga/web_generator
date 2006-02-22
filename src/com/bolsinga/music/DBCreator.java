@@ -19,6 +19,7 @@ class DBCreator {
   PreparedStatement locationStmt;
   PreparedStatement albumStmt;
   PreparedStatement albumDistinctStmt;
+  PreparedStatement performanceStmt;
 
   public DBCreator(ObjectFactory objFactory, Connection conn) {
     try {
@@ -33,9 +34,10 @@ class DBCreator {
       this.conn = conn;
       this.stmt = conn.createStatement();
 
-      this.locationStmt = conn.prepareStatement("SELECT * FROM location WHERE id = ?;");
+      this.locationStmt = conn.prepareStatement("SELECT * FROM location WHERE id= ?;");
       this.albumStmt = conn.prepareStatement("SELECT * FROM album WHERE id= ?;");
       this.albumDistinctStmt = conn.prepareStatement("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, COUNT(DISTINCT purchase), purchase, COUNT(DISTINCT format), format FROM song WHERE album_id= ? GROUP BY album_id;");
+      this.performanceStmt = conn.prepareStatement("SELECT * FROM performance WHERE id= ? ORDER BY playorder;");
     } catch (SQLException se) {
       System.err.println("Exception: " + se);
       se.printStackTrace();
@@ -241,16 +243,11 @@ class DBCreator {
   }
 
   private void addPerformances(Show show, long performanceID) throws SQLException, JAXBException {
-    Statement mstmt = null;
     ResultSet rset = null;
 
     try {
-      mstmt = conn.createStatement();
-      StringBuffer sb = new StringBuffer();
-      sb.append("SELECT * FROM performance WHERE id = '");
-      sb.append(performanceID);
-      sb.append("' ORDER BY playorder;");
-      rset = mstmt.executeQuery(sb.toString());
+      performanceStmt.setLong(1, performanceID);
+      rset = performanceStmt.executeQuery();
       while (rset.next()) {
         String xmlID = toXMLID("ar", rset.getLong("artist_id"));
         Artist artist = getArtist(xmlID);
@@ -259,9 +256,6 @@ class DBCreator {
     } finally {
       if (rset != null) {
         rset.close();
-      }
-      if (mstmt != null) {
-        mstmt.close();
       }
     }
   }
@@ -530,6 +524,12 @@ class DBCreator {
       }
       if (albumStmt != null) {
         albumStmt.close();
+      }
+      if (albumDistinctStmt != null) {
+        albumDistinctStmt.close();
+      }
+      if (performanceStmt != null) {
+        performanceStmt.close();
       }
       if (conn != null) {
         conn.close();
