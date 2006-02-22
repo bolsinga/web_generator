@@ -17,6 +17,7 @@ class DBCreator {
   Statement stmt;
 
   PreparedStatement locationStmt;
+  PreparedStatement albumStmt;
 
   public DBCreator(ObjectFactory objFactory, Connection conn) {
     try {
@@ -32,6 +33,7 @@ class DBCreator {
       this.stmt = conn.createStatement();
 
       this.locationStmt = conn.prepareStatement("SELECT * FROM location WHERE id = ?;");
+      this.albumStmt = conn.prepareStatement("SELECT * FROM album WHERE id= ?;");
 
     } catch (SQLException se) {
       System.err.println("Exception: " + se);
@@ -148,18 +150,14 @@ class DBCreator {
     item = objFactory.createAlbum();
     
     item.setId(xmlID);
-    
+
     Statement stmt = null;
     ResultSet rset = null;
     try {
       stmt = conn.createStatement();
-      
-      StringBuffer sb = new StringBuffer();
-      sb.append("SELECT * FROM album WHERE id=");
-      sb.append(album_id);
-      sb.append(";");
-      
-      rset = stmt.executeQuery(sb.toString());
+
+      albumStmt.setLong(1, album_id);
+      rset = albumStmt.executeQuery();
       if (rset.first()) {
         item.setTitle(rset.getString("title"));
         boolean compilation = rset.getBoolean("compilation");
@@ -170,7 +168,7 @@ class DBCreator {
         // ToDo: label
       }
       
-      sb = new StringBuffer();
+      StringBuffer sb = new StringBuffer();
       sb.append("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, COUNT(DISTINCT purchase), purchase, COUNT(DISTINCT format), format FROM song WHERE album_id=");
       sb.append(album_id);
       sb.append(" GROUP BY album_id;");
@@ -358,7 +356,7 @@ class DBCreator {
         if (!albumList.contains(album)) {
           albumList.add(album);
         }
-        
+
         String songID = toXMLID("s", rset.getLong("id"));
 
         song = objFactory.createSong();
@@ -538,6 +536,9 @@ class DBCreator {
       }
       if (locationStmt != null) {
         locationStmt.close();
+      }
+      if (albumStmt != null) {
+        albumStmt.close();
       }
       if (conn != null) {
         conn.close();
