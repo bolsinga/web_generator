@@ -124,8 +124,10 @@ public class Diary {
     month = Integer.parseInt(monthString);
     day = Integer.parseInt(dayString);
     year = Integer.parseInt(yearString);
-                
-    result.set(year, month - 1, day);
+
+    // When reading them from the text files, assume noon.
+    result.clear();
+    result.set(year, month - 1, day, 12, 0);
 
     return result;
   }
