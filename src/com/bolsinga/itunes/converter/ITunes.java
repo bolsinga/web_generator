@@ -268,6 +268,9 @@ public class ITunes {
     Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
                 
     // Get or create the album.
+    if (albumTitle == null) {
+      albumTitle = songTitle + " - Single";
+    }
     Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
                 
     // The song is always the new item. The artist and album may already be known.
@@ -276,9 +279,6 @@ public class ITunes {
         
   private static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {
     Album result = null;
-    if (name == null) {
-      name = "Unknown - " + artist.getName();
-    }
     StringBuffer keyBuffer = new StringBuffer();
     keyBuffer.append(name);
     if (artist != null) {
@@ -396,6 +396,8 @@ public class ITunes {
               break;
             }
           }
+        } else {
+          albumYear = -1;
         }
       }
                         
