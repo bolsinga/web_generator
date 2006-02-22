@@ -82,7 +82,7 @@ public class Util {
     try {
       Class.forName("org.gjt.mm.mysql.Driver");
 
-      conn = DriverManager.getConnection("jdbc:mysql:///music", user, password);
+      conn = DriverManager.getConnection("jdbc:mysql:///music?useUnicode=true&characterEncoding=utf-8", user, password);
 
       DBCreator c = new DBCreator(objFactory, conn);
       music = c.createMusic();

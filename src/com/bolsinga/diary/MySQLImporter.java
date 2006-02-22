@@ -36,7 +36,7 @@ public class Import {
       // We tell JDBC to use the "mysql" driver
       // and to connect to the "diary" database
       //
-      conn = DriverManager.getConnection("jdbc:mysql:///diary", user, password);
+      conn = DriverManager.getConnection("jdbc:mysql:///diary?useUnicode=true&characterEncoding=utf-8", user, password);
       
       stmt = conn.createStatement();
 

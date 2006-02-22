@@ -34,7 +34,7 @@ public class Import {
       // We tell JDBC to use the "mysql" driver
       // and to connect to the "music" database
       //
-      conn = DriverManager.getConnection("jdbc:mysql:///music", user, password);
+      conn = DriverManager.getConnection("jdbc:mysql:///music?useUnicode=true&characterEncoding=utf-8", user, password);
 
       stmt = conn.createStatement();
 

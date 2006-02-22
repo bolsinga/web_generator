@@ -166,7 +166,7 @@ public class Util {
 
       Class.forName("org.gjt.mm.mysql.Driver");
 
-      conn = DriverManager.getConnection("jdbc:mysql:///diary", user, password);
+      conn = DriverManager.getConnection("jdbc:mysql:///diary?useUnicode=true&characterEncoding=utf-8", user, password);
       stmt = conn.createStatement();
 
       Util.createEntries(stmt, diary, objFactory);
