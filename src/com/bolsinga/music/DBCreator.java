@@ -18,6 +18,7 @@ class DBCreator {
 
   PreparedStatement locationStmt;
   PreparedStatement albumStmt;
+  PreparedStatement albumDistinctStmt;
 
   public DBCreator(ObjectFactory objFactory, Connection conn) {
     try {
@@ -34,7 +35,7 @@ class DBCreator {
 
       this.locationStmt = conn.prepareStatement("SELECT * FROM location WHERE id = ?;");
       this.albumStmt = conn.prepareStatement("SELECT * FROM album WHERE id= ?;");
-
+      this.albumDistinctStmt = conn.prepareStatement("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, COUNT(DISTINCT purchase), purchase, COUNT(DISTINCT format), format FROM song WHERE album_id= ? GROUP BY album_id;");
     } catch (SQLException se) {
       System.err.println("Exception: " + se);
       se.printStackTrace();
@@ -151,11 +152,8 @@ class DBCreator {
     
     item.setId(xmlID);
 
-    Statement stmt = null;
     ResultSet rset = null;
     try {
-      stmt = conn.createStatement();
-
       albumStmt.setLong(1, album_id);
       rset = albumStmt.executeQuery();
       if (rset.first()) {
@@ -168,12 +166,8 @@ class DBCreator {
         // ToDo: label
       }
       
-      StringBuffer sb = new StringBuffer();
-      sb.append("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, COUNT(DISTINCT purchase), purchase, COUNT(DISTINCT format), format FROM song WHERE album_id=");
-      sb.append(album_id);
-      sb.append(" GROUP BY album_id;");
-      
-      rset = stmt.executeQuery(sb.toString());
+      albumDistinctStmt.setLong(1, album_id);
+      rset = albumDistinctStmt.executeQuery();
       if (rset.first()) {
         boolean distinct = (rset.getLong(2) == 1);
         if (distinct) {
@@ -209,9 +203,6 @@ class DBCreator {
     } finally {
       if (rset != null) {
         rset.close();
-      }
-      if (stmt != null) {
-        stmt.close();
       }
     }
     
