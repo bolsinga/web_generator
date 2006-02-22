@@ -16,6 +16,8 @@ class DBCreator {
   Connection conn;
   Statement stmt;
 
+  PreparedStatement locationStmt;
+
   public DBCreator(ObjectFactory objFactory, Connection conn) {
     try {
       this.objFactory = objFactory;
@@ -28,6 +30,9 @@ class DBCreator {
     try {
       this.conn = conn;
       this.stmt = conn.createStatement();
+
+      this.locationStmt = conn.prepareStatement("SELECT * FROM location WHERE id = ?;");
+
     } catch (SQLException se) {
       System.err.println("Exception: " + se);
       se.printStackTrace();
@@ -80,15 +85,9 @@ class DBCreator {
   private Location createLocation(long locationID) throws SQLException, JAXBException {
     Location location = objFactory.createLocation();
     ResultSet rset = null;
-    Statement mstmt = null;
-    StringBuffer sb = null;
     try {
-      mstmt = conn.createStatement();
-      sb = new StringBuffer();
-      sb.append("SELECT * FROM location WHERE id ='");
-      sb.append(locationID);
-      sb.append("';");
-      rset = mstmt.executeQuery(sb.toString());
+      locationStmt.setLong(1, locationID);
+      rset = locationStmt.executeQuery();
       if (rset.first()) {
         location.setStreet(rset.getString("street"));
         location.setCity(rset.getString("city"));
@@ -104,9 +103,6 @@ class DBCreator {
     } finally {
       if (rset != null) {
         rset.close();
-      }
-      if (mstmt != null) {
-        mstmt.close();
       }
     }
     return location;
@@ -539,6 +535,9 @@ class DBCreator {
     try {
       if (stmt != null) {
         stmt.close();
+      }
+      if (locationStmt != null) {
+        locationStmt.close();
       }
       if (conn != null) {
         conn.close();
