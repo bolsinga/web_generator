@@ -463,7 +463,7 @@ class DBCreator {
     long relationID = -1, lastRelationID = -1;
 
     try {
-      rset = stmt.executeQuery("SELECT * FROM relation ORDER BY id;");
+      rset = stmt.executeQuery("SELECT * FROM relation ORDER BY id, related_id;");
       while (rset.next()) {
         relationID = rset.getLong("id");
         if (relationID != lastRelationID) {

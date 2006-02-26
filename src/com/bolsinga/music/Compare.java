@@ -1,5 +1,6 @@
 package com.bolsinga.music;
 
+import java.math.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -96,6 +97,47 @@ public class Compare {
       }
     };
 
+  private static int convert(int index, String id) {
+    return Integer.valueOf(id.substring(index)).intValue();
+  }
+
+  private static final Comparator RELATION_ID_COMPARATOR = new Comparator() {
+      public int compare(Object o1, Object o2) {
+        int id1 = -1;
+        int id2 = -1;
+
+        if (o1 instanceof Artist) {
+          if (o2 instanceof Artist) {
+            Artist a1 = (Artist)o1;
+            Artist a2 = (Artist)o2;
+            
+            // 'ar'
+            id1 = convert(2, a1.getId());
+            id2 = convert(2, a2.getId());
+          } else {
+            System.err.println("Relation not Artist: " + o2);
+            System.exit(1);
+          }
+        } else if (o1 instanceof Venue) {
+          if (o2 instanceof Venue) {
+            Venue v1 = (Venue)o1;
+            Venue v2 = (Venue)o2;
+
+            // 'v'
+            id1 = convert(1, v1.getId());
+            id2 = convert(1, v2.getId());
+          } else {
+            System.err.println("Relation not Venue: " + o2);
+            System.exit(1);
+          }
+        } else {
+          System.err.println("Unknown Relation: " + o1);
+          System.exit(1);
+        }
+        return id1 - id2;
+      }
+    };
+
   public static void tidy(Music music) {
     Collections.sort(music.getArtist(), Compare.ARTIST_ID_COMPARATOR);
     Iterator i = music.getArtist().iterator();
@@ -106,13 +148,18 @@ public class Compare {
     Collections.sort(music.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
     Collections.sort(music.getVenue(), Compare.VENUE_ID_COMPARATOR);
     Collections.sort(music.getSong(), Compare.SONG_ID_COMPARATOR);
+    i = music.getRelation().iterator();
+    while (i.hasNext()) {
+      Relation r = (Relation)i.next();
+      Collections.sort(r.getMember(), Compare.RELATION_ID_COMPARATOR);
+    }
   }
         
   public static final Comparator LIBRARY_COMPARATOR = new Comparator() {
       public int compare(Object o1, Object o2) {
         String s1 = (String)o1;
         String s2 = (String)o2;
-                        
+        
         return simplify(s1).compareToIgnoreCase(simplify(s2));
       }
     };
