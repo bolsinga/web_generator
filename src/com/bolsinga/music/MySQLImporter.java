@@ -156,7 +156,7 @@ public class Import {
     Iterator i = strings.iterator();
     while (i.hasNext()) {
       String s = (String)i.next();
-      if (s.length() != 0) {
+      if (sb.length() != 0) {
         sb.append(",");
       }
       sb.append(s);
