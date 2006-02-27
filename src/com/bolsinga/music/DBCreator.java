@@ -36,7 +36,7 @@ class DBCreator {
 
       this.locationStmt = conn.prepareStatement("SELECT * FROM location WHERE id= ?;");
       this.albumStmt = conn.prepareStatement("SELECT * FROM album WHERE id= ?;");
-      this.albumDistinctStmt = conn.prepareStatement("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, COUNT(DISTINCT purchase), purchase, COUNT(DISTINCT format), format FROM song WHERE album_id= ? GROUP BY album_id;");
+      this.albumDistinctStmt = conn.prepareStatement("SELECT album_id, COUNT(DISTINCT performer_id), performer_id, COUNT(DISTINCT producer_id), producer_id, COUNT(DISTINCT release), release, release_vague, COUNT(DISTINCT purchase), purchase, purchase_vague, COUNT(DISTINCT format), format FROM song WHERE album_id= ? GROUP BY album_id;");
       this.performanceStmt = conn.prepareStatement("SELECT * FROM performance WHERE id= ? ORDER BY playorder;");
     } catch (SQLException se) {
       System.err.println("Exception: " + se);
@@ -52,7 +52,8 @@ class DBCreator {
     return sb.toString();
   }
 
-  private com.bolsinga.music.data.Date createDate(String sqlDate, ObjectFactory objFactory) throws JAXBException {
+  private com.bolsinga.music.data.Date createDate(String sqlDate, boolean dateVague, ObjectFactory objFactory) throws JAXBException {
+
     com.bolsinga.music.data.Date result = objFactory.createDate();
     
     String monthString, dayString, yearString = null;
@@ -68,20 +69,38 @@ class DBCreator {
     day = Integer.parseInt(dayString);
     year = Integer.parseInt(yearString);
     
-    if ((month == 0) || (day == 0) || (year == 1900)) {
+    // Vague dates have broken when changing underlying MySQL releases with JDBC.
+    // This is because JDBC doesn't handle vagues dates as MySQL supports.
+    if (dateVague) {
+      // JDBC / MySQL will mangle dates that aren't complete (1977-00-00) becomes
+      // (1976-11-30). This handles this situation.
+      if ((month == 11) && (day == 30)) {
+        year++;
+        month = 0;
+        day = 0;
+      } else {
+        if (year != 1900) {
+          // This case occurs when the month but not the day is known.
+          month++;
+          day = 0;
+        }
+      }
+    }
+
+    if ((month == 0) || (day == 0) || (year == 1900) || dateVague) {
       result.setUnknown(true);
     }
     
     if (month != 0) {
-      result.setMonth(new java.math.BigInteger(monthString));
+      result.setMonth(BigInteger.valueOf(month));
     }
     
     if (day != 0) {
-      result.setDay(new java.math.BigInteger(dayString));
+      result.setDay(BigInteger.valueOf(day));
     }
     
     if (year != 1900) {
-      result.setYear(new java.math.BigInteger(yearString));
+      result.setYear(BigInteger.valueOf(year));
     } 
     
     return result;
@@ -181,19 +200,21 @@ class DBCreator {
         }
         distinct = (rset.getLong(6) == 1);
         if (distinct) {
-          byte[] sqlDateBytes = rset.getBytes("release");
+          String sqlDate = rset.getString("release");
           if (!rset.wasNull()) {
-            item.setReleaseDate(createDate(new String(sqlDateBytes), objFactory));
+            boolean dateVague = (rset.getInt("release_vague") == 1);
+            item.setReleaseDate(createDate(sqlDate, dateVague, objFactory));
           }
         }
-        distinct = (rset.getLong(8) == 1);
+        distinct = (rset.getLong(9) == 1);
         if (distinct) {
-          byte[] sqlDateBytes = rset.getBytes("purchase");
+          String sqlDate = rset.getString("purchase");
           if (!rset.wasNull()) {
-            item.setPurchaseDate(createDate(new String(sqlDateBytes), objFactory));
+            boolean dateVague = (rset.getInt("purchase_vague") == 1);
+            item.setPurchaseDate(createDate(sqlDate, dateVague, objFactory));
           }
         }
-        distinct = (rset.getLong(10) == 1);
+        distinct = (rset.getLong(12) == 1);
         if (distinct) {
           String formatSQLenum = rset.getString("format");
           String[] formats = formatSQLenum.split(",");
@@ -357,10 +378,11 @@ class DBCreator {
         if (!rset.wasNull()) {
           song.getProducer().add(getArtist(toXMLID("ar", producer_id)));
         }
-        byte[] sqlDateBytes = rset.getBytes("release");
+        String sqlDate = rset.getString("release");
         com.bolsinga.music.data.Date releaseDate = null;
         if (!rset.wasNull()) {
-          releaseDate = createDate(new String(sqlDateBytes), objFactory);
+          boolean dateVague = (rset.getInt("release_vague") == 1);
+          releaseDate = createDate(sqlDate, dateVague, objFactory);
           song.setReleaseDate(releaseDate);
         }
         String sqlDATETIME = rset.getString("last_played");
@@ -437,14 +459,10 @@ class DBCreator {
         show.setVenue(venue);
         
         addPerformances(show, rset.getLong("performance_id"));
-        
-        // Need to use raw bytes for the date. MySQL allows 'illegal' dates that
-        //  this program takes advantage of in the DB. Unfortunately, getting at
-        //  these with java.sql.Date or even getting it as a java.lang.String
-        //  will not work. Get the byte array, create the String and parse it
-        //  ourselves.
-        String sqlDate = new String(rset.getBytes("date"));
-        show.setDate(createDate(sqlDate, objFactory));
+
+        String sqlDate = rset.getString("date");
+        boolean dateVague = (rset.getInt("date_vague") == 1);
+        show.setDate(createDate(sqlDate, dateVague, objFactory));
         
         show.setComment(rset.getString("comment"));
         

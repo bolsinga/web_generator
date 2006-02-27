@@ -124,7 +124,7 @@ public class Import {
     rowItems[3] = label.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[4] = Boolean.toString(label.isActive());
+    //    rowItems[4] = Integer.toString((label.isActive() ? 1 : 0));
     rowItems[4] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "label", rowItems);
@@ -165,47 +165,50 @@ public class Import {
   }
 
   private static void importSong(Statement stmt, Song song, Album album) throws SQLException {
-    String[] rowItems = new String[14];
-    
-    rowItems[0] = Import.toSQLID(song);
-    rowItems[1] = song.getTitle();
+    String[] rowItems = new String[16];
+    int index = 0;
+
+    rowItems[index++] = Import.toSQLID(song);
+    rowItems[index++] = song.getTitle();
     Artist performer = (Artist)song.getPerformer();
     if (performer == null) {
       performer = (Artist)album.getPerformer();
     }
-    rowItems[2] = Import.toSQLID(performer);
+    rowItems[index++] = Import.toSQLID(performer);
     //     Artist composer = (Artist)song.getComposer();
-    //     rowItems[3] = (composer != null) ? Import.toSQLID(composer) : null;
-    rowItems[3] = null;
+    //     rowItems[index++] = (composer != null) ? Import.toSQLID(composer) : null;
+    rowItems[index++] = null;
     //     Artist producer = (Artist)song.getProducer();
     //     if (producer == null) {
     //       producer = (Artist)album.getProducer();
     //     }
-    //     rowItems[4] = (producer != null) ? Import.toSQLID(producer) : null;
-    rowItems[4] = null;
+    //     rowItems[index++] = (producer != null) ? Import.toSQLID(producer) : null;
+    rowItems[index++] = null;
     com.bolsinga.music.data.Date releaseDate = song.getReleaseDate();
     if (releaseDate == null) {
       releaseDate = album.getReleaseDate();
     }
-    rowItems[5] = (releaseDate != null) ? Import.toSQLString(releaseDate) : null;
+    rowItems[index++] = (releaseDate != null) ? Import.toSQLString(releaseDate) : null;
+    rowItems[index++] = Integer.toString(((releaseDate == null || releaseDate.isUnknown()) ? 1 : 0));
     com.bolsinga.music.data.Date purchaseDate = album.getPurchaseDate();
-    rowItems[6] = (purchaseDate != null) ? Import.toSQLString(purchaseDate) : null;
-    rowItems[7] = song.getGenre();
+    rowItems[index++] = (purchaseDate != null) ? Import.toSQLString(purchaseDate) : null;
+    rowItems[index++] = Integer.toString(((purchaseDate == null || purchaseDate.isUnknown()) ? 1 : 0));
+    rowItems[index++] = song.getGenre();
     java.math.BigInteger track = song.getTrack();
-    rowItems[8] = (track != null) ? track.toString() : null;
+    rowItems[index++] = (track != null) ? track.toString() : null;
     Calendar lastPlayed = song.getLastPlayed();
     String lastPlayedString = null;
     if (lastPlayed != null) {
       lastPlayedString = com.bolsinga.sql.Util.toDATETIME(lastPlayed);
     }
-    rowItems[9] = lastPlayedString;
+    rowItems[index++] = lastPlayedString;
     // Live isn't currently tracked in the raw text files.
     //  Only use it coming out of the DB.
-    //    rowItems[10] = Boolean.toString(song.isLive());
-    rowItems[10] = null;
-    rowItems[11] = Import.toSQLID(album);
-    rowItems[12] = Import.toSQLenum(album.getFormat());
-    rowItems[13] = song.getPlayCount().toString();
+    //    rowItems[index++] = Integer.toString((song.isLive() ? 1 : 0));
+    rowItems[index++] = null;
+    rowItems[index++] = Import.toSQLID(album);
+    rowItems[index++] = Import.toSQLenum(album.getFormat());
+    rowItems[index++] = song.getPlayCount().toString();
     
     com.bolsinga.sql.Util.insert(stmt, "song", rowItems);
   }
@@ -289,7 +292,7 @@ public class Import {
     rowItems[4] = artist.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[5] = Boolean.toString(artist.isActive());
+    //    rowItems[5] = Integer.toString((artist.isActive() ? 1 : 0));
     rowItems[5] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "artist", rowItems);
@@ -336,7 +339,7 @@ public class Import {
     rowItems[3] = venue.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[4] = Boolean.toString(venue.isActive());
+    //    rowItems[4] = Integer.toString((venue.isActive() ? 1 : 0));
     rowItems[4] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "venue", rowItems);
@@ -410,13 +413,16 @@ public class Import {
   private static void importShow(Statement stmt, Show show) throws SQLException {
     long performanceID = Import.importPerformance(stmt, show);
     
-    String[] rowItems = new String[5];
+    String[] rowItems = new String[6];
+    int index = 0;
 
-    rowItems[0] = Import.toSQLID(show);
-    rowItems[1] = Import.toSQLString(show.getDate());
-    rowItems[2] = Import.toSQLID((Venue)show.getVenue());
-    rowItems[3] = show.getComment();
-    rowItems[4] = Long.toString(performanceID);
+    rowItems[index++] = Import.toSQLID(show);
+    com.bolsinga.music.data.Date showDate = show.getDate();
+    rowItems[index++] = (showDate != null) ? Import.toSQLString(showDate) : null;
+    rowItems[index++] = Integer.toString(((showDate == null || showDate.isUnknown()) ? 1 : 0));
+    rowItems[index++] = Import.toSQLID((Venue)show.getVenue());
+    rowItems[index++] = show.getComment();
+    rowItems[index++] = Long.toString(performanceID);
     
     com.bolsinga.sql.Util.insert(stmt, "shows", rowItems);
   }

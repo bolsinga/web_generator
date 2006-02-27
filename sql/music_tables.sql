@@ -112,6 +112,7 @@ DROP TABLE IF EXISTS `shows`;
 CREATE TABLE `shows` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `date` date NOT NULL default '0000-00-00',
+  `date_vague` tinyint(1) default '0',
   `venue_id` int(10) unsigned NOT NULL default '0',
   `comment` text,
   `performance_id` int(10) unsigned NOT NULL default '0',
@@ -130,7 +131,9 @@ CREATE TABLE `song` (
   `composer_id` int(10) unsigned default '0',
   `producer_id` int(10) unsigned default '0',
   `release` date default '0000-00-00',
+  `release_vague` tinyint(1) default '0',
   `purchase` date default '0000-00-00',
+  `purchase_vague` tinyint(1) default '0',
   `genre` varchar(255) default '',
   `track` tinyint(3) unsigned default '0',
   `last_played` datetime default NULL,
