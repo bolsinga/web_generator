@@ -9,7 +9,7 @@ import javax.xml.bind.Marshaller;
 import com.bolsinga.music.data.*;
 
 public class WebDB {
-  private static final boolean GENERATE_XML = false;
+  private static final boolean GENERATE_XML = true;
 
   public static void main(String[] args) {
     if (args.length != 4) {

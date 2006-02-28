@@ -15,7 +15,7 @@ public class Music {
   private static HashMap sBandSorts = new HashMap();
   private static HashMap sArtists = new HashMap();
 
-  private static final boolean TIDY_XML = false;
+  private static final boolean TIDY_XML = true;
         
   public static void main(String[] args) {
     if (args.length != 6) {

@@ -217,18 +217,13 @@
         </javac>
 </target>
 
-<path id="generate_db_classpath">
-  <path refid="jaxb_binder_classpath" />
-  <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
-</path>
-
 <target name="diary_importer" depends="diary, sql">
   <javac destdir="${build.classes}"
          debug="${javac.debug}"
          deprecation="on">
     <src path="${src.dir}" />
     <include name="com/bolsinga/diary/importer/*.java" />
-    <classpath refid="generate_db_classpath" />
+    <classpath refid="web_classpath" />
   </javac>
 </target>
 
@@ -238,7 +233,7 @@
          deprecation="on">
     <src path="${src.dir}" />
     <include name="com/bolsinga/music/importer/*.java" />
-    <classpath refid="generate_db_classpath" />
+    <classpath refid="web_classpath" />
   </javac>
 </target>
 
