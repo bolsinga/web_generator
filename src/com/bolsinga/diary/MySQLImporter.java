@@ -1,4 +1,4 @@
-package com.bolsinga.diary.importer;
+package com.bolsinga.diary;
 
 import java.sql.*;
 import java.text.*;
@@ -8,7 +8,7 @@ import java.util.regex.*;
 import com.bolsinga.diary.*;
 import com.bolsinga.diary.data.*;
 
-public class Import {
+public class DBImporter {
 
   public static void main(String[] args) {
     if (args.length != 3) {
@@ -16,7 +16,7 @@ public class Import {
       System.exit(0);
     }
 
-    Import.importData(args[0], args[1], args[2]);
+    DBImporter.importData(args[0], args[1], args[2]);
   }
 
   public static void importData(String sourceFile, String user, String password) {
@@ -121,7 +121,7 @@ public class Import {
     String[] lines = data.split("\\n");
     for (int i = 0; i < lines.length; i++) {
       try {
-        Import.importHeader(stmt, lines[i]);
+        DBImporter.importHeader(stmt, lines[i]);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + lines[i]);
         throw e;
@@ -148,7 +148,7 @@ public class Import {
     String[] lines = data.split("\\n");
     for (int i = 0; i < lines.length; i++) {
       try {
-        Import.importSide(stmt, lines[i]);
+        DBImporter.importSide(stmt, lines[i]);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + lines[i]);
         throw e;
@@ -184,7 +184,7 @@ public class Import {
         try {
           name = displayName = m.group(2);
           url = m.group(1);
-          Import.importFriend(stmt, name, displayName, url);
+          DBImporter.importFriend(stmt, name, displayName, url);
         } catch (SQLException e) {
           System.err.println("SQLException importing: " + lines[i]);
           throw e;

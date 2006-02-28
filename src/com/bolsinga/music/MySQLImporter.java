@@ -1,4 +1,4 @@
-package com.bolsinga.music.importer;
+package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
 
@@ -7,14 +7,14 @@ import java.sql.*;
 import java.text.*;
 import java.util.*;
 
-public class Import {
+public class DBImporter {
   public static void main(String[] args) {
     if (args.length != 3) {
       System.out.println("Usage: Web [music.xml] [user] [password]");
       System.exit(0);
     }
 
-    Import.importData(args[0], args[1], args[2]);
+    DBImporter.importData(args[0], args[1], args[2]);
   }
 
   public static void importData(String sourceFile, String user, String password) {
@@ -109,7 +109,7 @@ public class Import {
     long locationID = -1;
     if (location != null) {
       try {
-        locationID = Import.importLocation(stmt, location);
+        locationID = DBImporter.importLocation(stmt, location);
       } catch (SQLException e) {
         System.err.println("SQLException importing location for: " + label.getName());
         throw e;
@@ -118,7 +118,7 @@ public class Import {
     
     String[] rowItems = new String[5];
     
-    rowItems[0] = Import.toSQLID(label);
+    rowItems[0] = DBImporter.toSQLID(label);
     rowItems[1] = label.getName();
     rowItems[2] = (locationID != -1) ? Long.toString(locationID) : null;
     rowItems[3] = label.getComment();
@@ -138,7 +138,7 @@ public class Import {
     while (iterator.hasNext()) {
       item = (Label)iterator.next();
       try {
-        Import.importLabel(stmt, item);
+        DBImporter.importLabel(stmt, item);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + item.getName());
         throw e;
@@ -168,30 +168,30 @@ public class Import {
     String[] rowItems = new String[16];
     int index = 0;
 
-    rowItems[index++] = Import.toSQLID(song);
+    rowItems[index++] = DBImporter.toSQLID(song);
     rowItems[index++] = song.getTitle();
     Artist performer = (Artist)song.getPerformer();
     if (performer == null) {
       performer = (Artist)album.getPerformer();
     }
-    rowItems[index++] = Import.toSQLID(performer);
+    rowItems[index++] = DBImporter.toSQLID(performer);
     //     Artist composer = (Artist)song.getComposer();
-    //     rowItems[index++] = (composer != null) ? Import.toSQLID(composer) : null;
+    //     rowItems[index++] = (composer != null) ? DBImporter.toSQLID(composer) : null;
     rowItems[index++] = null;
     //     Artist producer = (Artist)song.getProducer();
     //     if (producer == null) {
     //       producer = (Artist)album.getProducer();
     //     }
-    //     rowItems[index++] = (producer != null) ? Import.toSQLID(producer) : null;
+    //     rowItems[index++] = (producer != null) ? DBImporter.toSQLID(producer) : null;
     rowItems[index++] = null;
     com.bolsinga.music.data.Date releaseDate = song.getReleaseDate();
     if (releaseDate == null) {
       releaseDate = album.getReleaseDate();
     }
-    rowItems[index++] = (releaseDate != null) ? Import.toSQLString(releaseDate) : null;
+    rowItems[index++] = (releaseDate != null) ? DBImporter.toSQLString(releaseDate) : null;
     rowItems[index++] = Integer.toString(((releaseDate == null || releaseDate.isUnknown()) ? 1 : 0));
     com.bolsinga.music.data.Date purchaseDate = album.getPurchaseDate();
-    rowItems[index++] = (purchaseDate != null) ? Import.toSQLString(purchaseDate) : null;
+    rowItems[index++] = (purchaseDate != null) ? DBImporter.toSQLString(purchaseDate) : null;
     rowItems[index++] = Integer.toString(((purchaseDate == null || purchaseDate.isUnknown()) ? 1 : 0));
     rowItems[index++] = song.getGenre();
     java.math.BigInteger track = song.getTrack();
@@ -206,8 +206,8 @@ public class Import {
     //  Only use it coming out of the DB.
     //    rowItems[index++] = Integer.toString((song.isLive() ? 1 : 0));
     rowItems[index++] = null;
-    rowItems[index++] = Import.toSQLID(album);
-    rowItems[index++] = Import.toSQLenum(album.getFormat());
+    rowItems[index++] = DBImporter.toSQLID(album);
+    rowItems[index++] = DBImporter.toSQLenum(album.getFormat());
     rowItems[index++] = song.getPlayCount().toString();
     
     com.bolsinga.sql.Util.insert(stmt, "song", rowItems);
@@ -237,10 +237,10 @@ public class Import {
   private static void importAlbum(Statement stmt, Album album) throws SQLException {
     String[] rowItems = new String[5];
     
-    rowItems[0] = Import.toSQLID(album);
+    rowItems[0] = DBImporter.toSQLID(album);
     rowItems[1] = album.getTitle();
     Label label = (Label)album.getLabel();
-    rowItems[2] = (label != null) ? Import.toSQLID(label) : null;
+    rowItems[2] = (label != null) ? DBImporter.toSQLID(label) : null;
     rowItems[3] = album.getComment();
     boolean isCompilation = album.isCompilation();
     rowItems[4] = (isCompilation) ? "1" : null;
@@ -258,7 +258,7 @@ public class Import {
     while (iterator.hasNext()) {
       item = (Album)iterator.next();
       try {
-        Import.importAlbum(stmt, item);
+        DBImporter.importAlbum(stmt, item);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + item.getTitle());
         throw e;
@@ -276,7 +276,7 @@ public class Import {
     long locationID = -1;
     if (location != null) {
       try {
-        locationID = Import.importLocation(stmt, location);
+        locationID = DBImporter.importLocation(stmt, location);
       } catch (SQLException e) {
         System.err.println("SQLException importing location for: " + artist.getName());
         throw e;
@@ -285,7 +285,7 @@ public class Import {
     
     String[] rowItems = new String[6];
     
-    rowItems[0] = Import.toSQLID(artist);
+    rowItems[0] = DBImporter.toSQLID(artist);
     rowItems[1] = artist.getName();
     rowItems[2] = artist.getSortname();
     rowItems[3] = (locationID != -1) ? Long.toString(locationID) : null;
@@ -306,7 +306,7 @@ public class Import {
     while (iterator.hasNext()) {
       item = (Artist)iterator.next();
       try {
-        Import.importArtist(stmt, item);
+        DBImporter.importArtist(stmt, item);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + item.getName());
         throw e;
@@ -324,7 +324,7 @@ public class Import {
     long locationID = -1;
     if (location != null) {
       try {
-        locationID = Import.importLocation(stmt, location);
+        locationID = DBImporter.importLocation(stmt, location);
       } catch (SQLException e) {
         System.err.println("SQLException importing location for: " + venue.getName());
         throw e;
@@ -333,7 +333,7 @@ public class Import {
     
     String[] rowItems = new String[5];
     
-    rowItems[0] = Import.toSQLID(venue);
+    rowItems[0] = DBImporter.toSQLID(venue);
     rowItems[1] = venue.getName();
     rowItems[2] = (locationID != -1) ? Long.toString(locationID) : null;
     rowItems[3] = venue.getComment();
@@ -353,7 +353,7 @@ public class Import {
     while (iterator.hasNext()) {
       item = (Venue)iterator.next();
       try {
-        Import.importVenue(stmt, item);
+        DBImporter.importVenue(stmt, item);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + item.getName());
         throw e;
@@ -382,7 +382,7 @@ public class Import {
     while (iterator.hasNext()) {
       item = (Artist)iterator.next();
       
-      rowItems[1] = Import.toSQLID(item);
+      rowItems[1] = DBImporter.toSQLID(item);
       rowItems[2] = Integer.toString(playOrder++);
       
       com.bolsinga.sql.Util.insert(stmt, "performance", rowItems);
@@ -411,16 +411,16 @@ public class Import {
   }
 
   private static void importShow(Statement stmt, Show show) throws SQLException {
-    long performanceID = Import.importPerformance(stmt, show);
+    long performanceID = DBImporter.importPerformance(stmt, show);
     
     String[] rowItems = new String[6];
     int index = 0;
 
-    rowItems[index++] = Import.toSQLID(show);
+    rowItems[index++] = DBImporter.toSQLID(show);
     com.bolsinga.music.data.Date showDate = show.getDate();
-    rowItems[index++] = (showDate != null) ? Import.toSQLString(showDate) : null;
+    rowItems[index++] = (showDate != null) ? DBImporter.toSQLString(showDate) : null;
     rowItems[index++] = Integer.toString(((showDate == null || showDate.isUnknown()) ? 1 : 0));
-    rowItems[index++] = Import.toSQLID((Venue)show.getVenue());
+    rowItems[index++] = DBImporter.toSQLID((Venue)show.getVenue());
     rowItems[index++] = show.getComment();
     rowItems[index++] = Long.toString(performanceID);
     
@@ -435,7 +435,7 @@ public class Import {
     while (iterator.hasNext()) {
       item = (Show)iterator.next();
       try {
-        Import.importShow(stmt, item);
+        DBImporter.importShow(stmt, item);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + item.getDate());
         throw e;
@@ -463,10 +463,10 @@ public class Import {
     while (iterator.hasNext()) {
       item = iterator.next();
       if (item instanceof Artist) {
-        rowItems[1] = Import.toSQLID((Artist)item);
+        rowItems[1] = DBImporter.toSQLID((Artist)item);
         rowItems[2] = "artist";
       } else if (item instanceof Venue) {
-        rowItems[1] = Import.toSQLID((Venue)item);
+        rowItems[1] = DBImporter.toSQLID((Venue)item);
         rowItems[2] = "venue";
       } else {
         System.err.println("Unknown Relation: " + item);
@@ -488,7 +488,7 @@ public class Import {
     while (iterator.hasNext()) {
       item = (Relation)iterator.next();
       try {
-        Import.importRelation(stmt, item);
+        DBImporter.importRelation(stmt, item);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + item.toString());
         throw e;

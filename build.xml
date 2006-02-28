@@ -217,27 +217,7 @@
         </javac>
 </target>
 
-<target name="diary_importer" depends="diary, sql">
-  <javac destdir="${build.classes}"
-         debug="${javac.debug}"
-         deprecation="on">
-    <src path="${src.dir}" />
-    <include name="com/bolsinga/diary/importer/*.java" />
-    <classpath refid="web_classpath" />
-  </javac>
-</target>
-
-<target name="music_importer" depends="music, sql">
-  <javac destdir="${build.classes}"
-         debug="${javac.debug}"
-         deprecation="on">
-    <src path="${src.dir}" />
-    <include name="com/bolsinga/music/importer/*.java" />
-    <classpath refid="web_classpath" />
-  </javac>
-</target>
-
-<target name="music" depends="ical_gen, web">
+<target name="music" depends="ical_gen, web, sql">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -247,7 +227,7 @@
         </javac>
 </target>
 
-<target name="diary" depends="music, web, diary_binding">
+<target name="diary" depends="music, web, diary_binding, sql">
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -324,8 +304,8 @@
   <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
 </path>
 
-<target name="generateDiaryDB" depends="diary_importer, jar">
-  <java classname="com.bolsinga.diary.importer.Import" fork="true">
+<target name="generateDiaryDB" depends="diary, jar">
+  <java classname="com.bolsinga.diary.DBImporter" fork="true">
     <arg value="${data.dir}diary.xml" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
@@ -333,8 +313,8 @@
   </java>
 </target>
 
-<target name="generateMusicDB" depends="music_importer, jar">
-  <java classname="com.bolsinga.music.importer.Import" fork="true">
+<target name="generateMusicDB" depends="music, jar">
+  <java classname="com.bolsinga.music.DBImporter" fork="true">
     <arg value="${data.dir}music.xml" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
