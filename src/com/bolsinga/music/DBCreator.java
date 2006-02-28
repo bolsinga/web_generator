@@ -74,12 +74,12 @@ class DBCreator {
     if (dateVague) {
       // JDBC / MySQL will mangle dates that aren't complete (1977-00-00) becomes
       // (1976-11-30). This handles this situation.
-      if ((month == 11) && (day == 30)) {
-        year++;
-        month = 0;
-        day = 0;
-      } else {
-        if (year != 1900) {
+      if (year != 1900) {
+        if ((month == 11) && (day == 30)) {
+          year++;
+          month = 0;
+          day = 0;
+        } else {
           // This case occurs when the month but not the day is known.
           month++;
           day = 0;
