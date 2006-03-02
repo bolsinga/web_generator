@@ -18,15 +18,19 @@ public class Util {
   private static DecimalFormat sPercentFormat = new DecimalFormat("##.##");
         
   public static Calendar toCalendar(com.bolsinga.music.data.Date date) {
-    Calendar d = Calendar.getInstance();
+    Calendar localTime = Calendar.getInstance();
     if (!date.isUnknown()) {
-      d.clear();
-      d.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue());
+      // Set shows to 9 PM local time.
+      localTime.clear();
+      localTime.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue(), 12 + 9, 0);
     } else {
       System.err.println("Can't convert Unknown com.bolsinga.music.data.Date");
       System.exit(1);
     }
-    return d;
+    // Convert to UTC
+    Calendar result = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    result.setTimeInMillis(localTime.getTimeInMillis());
+    return result;
   }
 
   public static String toString(com.bolsinga.music.data.Date date) {
