@@ -110,7 +110,7 @@ public class Diary {
   }
         
   private static Calendar createTimestamp(String date) {
-    Calendar result = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    Calendar localTime = Calendar.getInstance();
                 
     String monthString, dayString, yearString = null;
     int month, day, year = 0;
@@ -125,10 +125,13 @@ public class Diary {
     day = Integer.parseInt(dayString);
     year = Integer.parseInt(yearString);
 
-    // When reading them from the text files, assume noon.
-    result.clear();
-    result.set(year, month - 1, day, 12, 0);
+    // When reading them from the text files, assume noon local time.
+    localTime.clear();
+    localTime.set(year, month - 1, day, 12, 0);
 
+    // Convert to UTC.
+    Calendar result = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    result.setTimeInMillis(localTime.getTimeInMillis());
     return result;
   }
 }
