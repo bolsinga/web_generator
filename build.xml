@@ -306,6 +306,8 @@
 
 <target name="generateDiaryDB" depends="diary, jar">
   <java classname="com.bolsinga.diary.DBImporter" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
     <arg value="${data.dir}diary.xml" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
@@ -315,6 +317,8 @@
 
 <target name="generateMusicDB" depends="music, jar">
   <java classname="com.bolsinga.music.DBImporter" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
     <arg value="${data.dir}music.xml" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
@@ -355,6 +359,8 @@
 <target name="generateMusicWeb" depends="music, jar">
         <mkdir dir="${output.dir}" />
         <java classname="com.bolsinga.music.Web" fork="true">
+                <jvmarg value="-Xms96m" />
+                <jvmarg value="-Xmx96m" />
                 <arg value="${data.dir}music.xml" />
                 <arg value="${data.dir}settings.xml" />
                 <arg value="${output.dir}" />
@@ -365,6 +371,8 @@
 <target name="generateDiaryWeb" depends="diary, jar">
         <mkdir dir="${output.dir}" />
         <java classname="com.bolsinga.diary.Web" fork="true">
+                <jvmarg value="-Xms96m" />
+                <jvmarg value="-Xmx96m" />
                 <arg value="${data.dir}diary.xml" />
                 <arg value="${data.dir}music.xml" />
                 <arg value="${data.dir}settings.xml" />
@@ -376,6 +384,8 @@
 <target name="generateRSS" depends="rss, jar" >
         <mkdir dir="${output.dir}" />
         <java classname="com.bolsinga.rss.RSS" fork="true" >
+                <jvmarg value="-Xms96m" />
+                <jvmarg value="-Xmx96m" />
                 <arg value="${data.dir}diary.xml" />
                 <arg value="${data.dir}music.xml" />
                 <arg value="${data.dir}settings.xml" />
@@ -387,6 +397,8 @@
 <target name="generateICal" depends="music, jar">
         <mkdir dir="${output.dir}" />
         <java classname="com.bolsinga.music.ICal" fork="true">
+                <jvmarg value="-Xms96m" />
+                <jvmarg value="-Xmx96m" />
                 <arg value="${data.dir}music.xml" />
                 <arg value="${data.dir}settings.xml" />
                 <arg value="${output.dir}" />
@@ -402,6 +414,8 @@
 <target name="generateDBMusicWeb" depends="music, jar">
   <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.music.WebDB" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
     <arg value="${data.dir}settings.xml" />
@@ -413,6 +427,8 @@
 <target name="generateDBDiaryWeb" depends="diary, jar">
   <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.diary.WebDB" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
     <arg value="${data.dir}settings.xml" />
@@ -424,6 +440,8 @@
 <target name="generateDBRSS" depends="rss, jar" >
   <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.rss.RSSDB" fork="true" >
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
     <arg value="${data.dir}settings.xml" />
@@ -435,6 +453,8 @@
 <target name="generateDBICal" depends="music, jar">
   <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.music.ICalDB" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
     <arg value="${data.dir}settings.xml" />
@@ -446,6 +466,8 @@
 <target name="Site" depends="site, jar">
   <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.site.Site" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
     <arg value="${data.dir}diary.xml" />
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
@@ -456,39 +478,45 @@
 </target>
 
 <target name="SiteWeb" depends="site, jar">
-        <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.site.Site" fork="true">
-                <arg value="${data.dir}diary.xml" />
-                <arg value="${data.dir}music.xml" />
-                <arg value="${data.dir}settings.xml" />
-                <arg value="${output.dir}" />
-        <arg value="web" />
-                <classpath refid="generate_web_classpath" />
-        </java>
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.site.Site" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
+    <arg value="${data.dir}diary.xml" />
+    <arg value="${data.dir}music.xml" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <arg value="web" />
+    <classpath refid="generate_web_classpath" />
+  </java>
 </target>
 
 <target name="SiteMusic" depends="site, jar">
-        <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.site.Site" fork="true">
-                <arg value="${data.dir}diary.xml" />
-                <arg value="${data.dir}music.xml" />
-                <arg value="${data.dir}settings.xml" />
-                <arg value="${output.dir}" />
-        <arg value="music" />
-                <classpath refid="generate_web_classpath" />
-        </java>
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.site.Site" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
+    <arg value="${data.dir}diary.xml" />
+    <arg value="${data.dir}music.xml" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <arg value="music" />
+    <classpath refid="generate_web_classpath" />
+  </java>
 </target>
 
 <target name="SiteDiary" depends="site, jar">
-        <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.site.Site" fork="true">
-                <arg value="${data.dir}diary.xml" />
-                <arg value="${data.dir}music.xml" />
-                <arg value="${data.dir}settings.xml" />
-                <arg value="${output.dir}" />
-        <arg value="diary" />
-                <classpath refid="generate_web_classpath" />
-        </java>
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.site.Site" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
+    <arg value="${data.dir}diary.xml" />
+    <arg value="${data.dir}music.xml" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <arg value="diary" />
+    <classpath refid="generate_web_classpath" />
+  </java>
 </target>
 
 <target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
