@@ -357,15 +357,16 @@
 -->
 
 <target name="generateMusicWeb" depends="music, jar">
-        <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.music.Web" fork="true">
-                <jvmarg value="-Xms96m" />
-                <jvmarg value="-Xmx96m" />
-                <arg value="${data.dir}music.xml" />
-                <arg value="${data.dir}settings.xml" />
-                <arg value="${output.dir}" />
-                <classpath refid="generate_web_classpath" />
-        </java>
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.music.Web" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
+    <arg value="xml" />
+    <arg value="${data.dir}music.xml" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <classpath refid="generate_web_classpath" />
+  </java>
 </target>
 
 <target name="generateDiaryWeb" depends="diary, jar">
@@ -414,9 +415,10 @@
 
 <target name="generateDBMusicWeb" depends="music, jar">
   <mkdir dir="${output.dir}" />
-  <java classname="com.bolsinga.music.WebDB" fork="true">
+  <java classname="com.bolsinga.music.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
+    <arg value="db" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
     <arg value="${data.dir}settings.xml" />

@@ -12,6 +12,9 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   Music  fMusic   = null;
   Links  fLinks   = null;
@@ -329,18 +332,89 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
 }
 
 public class Web {
+
+  private static final boolean GENERATE_XML = false;
         
   public static void main(String[] args) {
-    if (args.length != 3) {
-      System.out.println("Usage: Web [source.xml] [settings.xml] [output.dir]");
+    if ((args.length != 4) && (args.length != 5)) {
+      Web.usage();
+    }
+
+    String type = args[0];
+
+    String settings = null;
+    String output = null;
+
+    Music music = null;
+
+    if (type.equals("xml")) {
+      if (args.length != 4) {
+        Web.usage();
+      }
+      
+      String musicFile = args[1];
+      settings = args[2];
+      output = args[3];
+
+      music = Util.createMusic(musicFile);
+    } else if (type.equals("db")) {
+      if (args.length != 5) {
+        Web.usage();
+      }
+
+      String user = args[1];
+      String password = args[2];
+      settings = args[3];
+      output = args[4];
+
+      music = com.bolsinga.music.Util.createMusic(user, password);
+    } else {
+      Web.usage();
+    }
+
+    com.bolsinga.web.Util.createSettings(settings);
+
+    if (Web.GENERATE_XML) {
+      Web.export(music);
       System.exit(0);
     }
 
-    com.bolsinga.web.Util.createSettings(args[1]);
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, null);
                 
-    Web.generate(args[0], args[2]);
+    Web.generate(music, encoder, output);
+  }
+  
+  private static void usage() {
+    System.out.println("Usage: Web xml [source.xml] [settings.xml] [output.dir]");
+    System.out.println("Usage: Web db [user] [password] [settings.xml] [output.dir]");
+    System.exit(0);
   }
         
+  private static void export(Music music) {
+    com.bolsinga.music.Compare.tidy(music);
+    try {
+      File outputFile = new File("/tmp", "music_db.xml");
+
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
+      Marshaller m = jc.createMarshaller();
+      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                        
+      OutputStream os = null;
+      try {
+        os = new FileOutputStream(outputFile);
+      } catch (IOException ioe) {
+        System.err.println(ioe);
+        ioe.printStackTrace();
+        System.exit(1);
+      }
+      m.marshal(music, os);
+    } catch (Exception e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
+    }
+  }
+
   public static void generate(String sourceFile, String outputDir) {
     Music music = Util.createMusic(sourceFile);
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, null);
