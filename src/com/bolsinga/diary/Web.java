@@ -12,6 +12,9 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   com.bolsinga.web.Encode fEncoder = null;
   Diary  fDiary     = null;
@@ -123,15 +126,74 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
 
 public class Web {
 
+  private static final boolean GENERATE_XML = false;
+
   public static void main(String[] args) {
-    if (args.length != 4) {
-      System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir]");
+    if (args.length != 5) {
+      Web.usage();
+    }
+
+    String settings = args[3];
+    String output = args[4];
+
+    Diary diary = null;
+    Music music = null;
+
+    if (args[0].equals("xml")) {
+      String diaryFile = args[1];
+      String musicFile = args[2];
+      
+      diary = Util.createDiary(diaryFile);
+      music = com.bolsinga.music.Util.createMusic(musicFile);
+    } else if (args[0].equals("db")) {
+      String user = args[1];
+      String password = args[2];
+
+      diary = Util.createDiary(user, password);
+      music = com.bolsinga.music.Util.createMusic(user, password);
+    } else {
+      Web.usage();
+    }
+
+    com.bolsinga.web.Util.createSettings(settings);
+    
+    if (Web.GENERATE_XML) {
+      Web.export(diary);
       System.exit(0);
     }
 
-    com.bolsinga.web.Util.createSettings(args[2]);
-                
-    Web.generate(args[0], args[1], args[3]);
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
+    generate(diary, music, encoder, output);
+  }
+
+  private static void usage() {
+    System.out.println("Usage: Web xml [diary.xml] [music.xml] [settings.xml] [output.dir]");
+    System.out.println("Usage: Web db [user] [password] [settings.xml] [output.dir]");
+    System.exit(0);
+  }
+
+  private static void export(Diary diary) {
+    try {
+      File outputFile = new File("/tmp", "diary_db.xml");
+
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
+      Marshaller m = jc.createMarshaller();
+      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                        
+      OutputStream os = null;
+      try {
+        os = new FileOutputStream(outputFile);
+      } catch (IOException ioe) {
+        System.err.println(ioe);
+        ioe.printStackTrace();
+        System.exit(1);
+      }
+      m.marshal(diary, os);
+    } catch (Exception e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
+    }
   }
 
   public static void generate(String sourceFile, String musicFile, String outputDir) {
