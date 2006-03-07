@@ -398,15 +398,16 @@
 </target>
 
 <target name="generateICal" depends="music, jar">
-        <mkdir dir="${output.dir}" />
-        <java classname="com.bolsinga.music.ICal" fork="true">
-                <jvmarg value="-Xms96m" />
-                <jvmarg value="-Xmx96m" />
-                <arg value="${data.dir}music.xml" />
-                <arg value="${data.dir}settings.xml" />
-                <arg value="${output.dir}" />
-                <classpath refid="generate_web_classpath" />
-        </java>
+  <mkdir dir="${output.dir}" />
+  <java classname="com.bolsinga.music.ICal" fork="true">
+    <jvmarg value="-Xms96m" />
+    <jvmarg value="-Xmx96m" />
+    <arg value="xml" />
+    <arg value="${data.dir}music.xml" />
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${output.dir}" />
+    <classpath refid="generate_web_classpath" />
+  </java>
 </target>
 
 <path id="generate_db_web_classpath">
@@ -444,7 +445,7 @@
 
 <target name="generateDBRSS" depends="rss, jar" >
   <mkdir dir="${output.dir}" />
-  <java classname="com.bolsinga.rss.RSSDB" fork="true" >
+  <java classname="com.bolsinga.rss.RSS" fork="true" >
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
     <arg value="db" />
@@ -458,9 +459,10 @@
 
 <target name="generateDBICal" depends="music, jar">
   <mkdir dir="${output.dir}" />
-  <java classname="com.bolsinga.music.ICalDB" fork="true">
+  <java classname="com.bolsinga.music.ICal" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
+    <arg value="db" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
     <arg value="${data.dir}settings.xml" />

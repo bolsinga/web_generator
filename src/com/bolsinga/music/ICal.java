@@ -15,14 +15,51 @@ import java.util.*;
 public class ICal {
 
   public static void main(String[] args) {
-    if (args.length != 3) {
-      System.out.println("Usage: ICal [source.xml] [settings.xml] [output.dir]");
-      System.exit(0);
+    if ((args.length != 4) && (args.length != 5)) {
+      ICal.usage();
     }
 
-    com.bolsinga.web.Util.createSettings(args[1]);
+    String type = args[0];
+
+    String settings = null;
+    String output = null;
+
+    Music music = null;
+
+    if (type.equals("xml")) {
+      if (args.length != 4) {
+        ICal.usage();
+      }
+      
+      String musicFile = args[1];
+      settings = args[2];
+      output = args[3];
+
+      music = Util.createMusic(musicFile);
+    } else if (type.equals("db")) {
+      if (args.length != 5) {
+        ICal.usage();
+      }
+
+      String user = args[1];
+      String password = args[2];
+      settings = args[3];
+      output = args[4];
+      
+      music = com.bolsinga.music.Util.createMusic(user, password);
+    } else {
+      ICal.usage();
+    }
+
+    com.bolsinga.web.Util.createSettings(settings);
         
-    ICal.generate(args[0], args[2]);
+    ICal.generate(music, output);
+  }
+
+  private static void usage() {
+    System.out.println("Usage: ICal xml [source.xml] [settings.xml] [output.dir]");
+    System.out.println("Usage: ICal db [user] [password] [settings.xml] [output.dir]");
+    System.exit(0);
   }
 
   public static void generate(String sourceFile, String outputDir) {
