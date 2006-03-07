@@ -16,14 +16,43 @@ import javax.xml.bind.Marshaller;
 public class RSS {
 
   public static void main(String[] args) {
-    if (args.length != 4) {
-      System.out.println("Usage: RSS [diary.xml] [music.xml] [settings.xml] [output.dir]");
-      System.exit(0);
+    if (args.length != 5) {
+      RSS.usage();
     }
 
-    com.bolsinga.web.Util.createSettings(args[2]);
+    String type = args[0];
+
+    String settings = args[3];
+    String output = args[4];
+
+    Diary diary = null;
+    Music music = null;
+
+    if (type.equals("xml")) {
+      String diaryFile = args[1];
+      String musicFile = args[2];
+
+      diary = com.bolsinga.diary.Util.createDiary(diaryFile);
+      music = com.bolsinga.music.Util.createMusic(musicFile);
+    } else if (type.equals("db")) {
+      String user = args[1];
+      String password = args[2];
+
+      music = com.bolsinga.music.Util.createMusic(user, password);
+      diary = com.bolsinga.diary.Util.createDiary(user, password);
+    } else {
+      RSS.usage();
+    }
+
+    com.bolsinga.web.Util.createSettings(settings);
                         
-    RSS.generate(args[0], args[1], args[3]);
+    RSS.generate(diary, music, output);
+  }
+
+  private static void usage() {
+    System.out.println("Usage: RSS xml [diary.xml] [music.xml] [settings.xml] [output.dir]");
+    System.out.println("Usage: RSS db [user] [password] [settings.xml] [output.dir]");
+    System.exit(0);
   }
 
   public static void generate(String diaryFile, String musicFile, String outputDir) {
