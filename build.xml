@@ -476,6 +476,7 @@
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
+    <arg value="xml" />
     <arg value="${data.dir}diary.xml" />
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
@@ -490,6 +491,7 @@
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
+    <arg value="xml" />
     <arg value="${data.dir}diary.xml" />
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
@@ -504,6 +506,7 @@
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
+    <arg value="xml" />
     <arg value="${data.dir}diary.xml" />
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
@@ -518,6 +521,7 @@
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
+    <arg value="xml" />
     <arg value="${data.dir}diary.xml" />
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
@@ -530,38 +534,38 @@
 <target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
 
 <target name="install">
-    <ftp    server="ftp.io.com"
-            userid="bolsinga"
-            password="${ftp.password}"
-            remotedir="public-web"
-            verbose="yes" >
-        <fileset dir="${output.dir}">
-            <include name="index.html" />
-            <include name="archives/*" />
-            <include name="bands/*" />
-            <include name="cities/*" />
-            <include name="dates/*" />
-            <include name="ical/*" />
-            <include name="rss/rss.xml" />
-            <include name="styles/*" />
-            <include name="tracks/*" />
-            <include name="venues/*" />
-        </fileset>
-    </ftp>
+  <ftp    server="ftp.io.com"
+          userid="bolsinga"
+          password="${ftp.password}"
+          remotedir="public-web"
+          verbose="yes" >
+    <fileset dir="${output.dir}">
+      <include name="index.html" />
+      <include name="archives/*" />
+      <include name="bands/*" />
+      <include name="cities/*" />
+      <include name="dates/*" />
+      <include name="ical/*" />
+      <include name="rss/rss.xml" />
+      <include name="styles/*" />
+      <include name="tracks/*" />
+      <include name="venues/*" />
+    </fileset>
+  </ftp>
 </target>
 
 <target name="installDiary">
-    <ftp    server="ftp.io.com"
-            userid="bolsinga"
-            password="${ftp.password}"
-            remotedir="public-web"
-            verbose="yes" >
-        <fileset dir="${output.dir}">
-            <include name="index.html" />
-            <include name="archives/*" />
-            <include name="rss/rss.xml" />
-        </fileset>
-    </ftp>
+  <ftp    server="ftp.io.com"
+          userid="bolsinga"
+          password="${ftp.password}"
+          remotedir="public-web"
+          verbose="yes" >
+    <fileset dir="${output.dir}">
+      <include name="index.html" />
+      <include name="archives/*" />
+      <include name="rss/rss.xml" />
+    </fileset>
+  </ftp>
 </target>
 
 <!--
@@ -577,6 +581,7 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
   </exec>
   <copy file="${build.lib}/music.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
+  <copy file="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" todir="${dst.lib}" />
   <copy todir="${dst.lib}">
     <fileset dir="${lib.dir}">
       <include name="jwsdp-1_3/jaxb/lib/jaxb-api.jar" />
