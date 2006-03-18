@@ -1026,6 +1026,9 @@ public class Web {
 
   public static div addTracks(Links links, Artist artist) {
     Vector e = new Vector();
+
+    Collections.sort(artist.getAlbum(), com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
+
     Iterator iterator = artist.getAlbum().iterator();
     while (iterator.hasNext()) {
       Album alb = (Album)iterator.next();
