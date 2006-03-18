@@ -36,6 +36,13 @@ public class Util {
     stmt.execute(Util.constructInsert(table, rowItems));
   }
 
+  public static void truncate(Statement stmt, String table) throws SQLException {
+    StringBuffer sb = new StringBuffer("TRUNCATE ");
+    sb.append(table);
+
+    stmt.execute(sb.toString());
+  }
+
   public static Calendar toUTCCalendar(String sqlDATETIME) {
     java.util.Date d = null;
     try {

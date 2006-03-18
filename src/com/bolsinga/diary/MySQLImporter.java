@@ -11,20 +11,29 @@ import com.bolsinga.diary.data.*;
 public class DBImporter {
 
   public static void main(String[] args) {
-    if (args.length != 3) {
-      System.out.println("Usage: Web [diary.xml] [user] [password]");
-      System.exit(0);
+    if ((args.length != 3) && (args.length != 4)) {
+      DBImporter.usage();
     }
 
-    DBImporter.importData(args[0], args[1], args[2]);
+    boolean clearDB = false;
+    if (args.length == 4) {
+      clearDB = args[3].equals("clear");
+    }
+
+    DBImporter.importData(args[0], args[1], args[2], clearDB);
   }
 
-  public static void importData(String sourceFile, String user, String password) {
+  private static void usage() {
+    System.out.println("Usage: DBImporter [diary.xml] [user] [password] <clear>");
+    System.exit(0);
+  }
+
+  public static void importData(String sourceFile, String user, String password, boolean clearDB) {
     Diary diary = Util.createDiary(sourceFile);
-    importData(diary, user, password);
+    importData(diary, user, password, clearDB);
   }
 
-  public static void importData(Diary diary, String user, String password) {
+  public static void importData(Diary diary, String user, String password, boolean clearDB) {
     Connection conn = null;
     Statement stmt = null;
     try {
@@ -39,6 +48,10 @@ public class DBImporter {
       conn = DriverManager.getConnection("jdbc:mysql:///diary?useUnicode=true&characterEncoding=utf-8", user, password);
       
       stmt = conn.createStatement();
+
+      if (clearDB) {
+        clearDB(stmt);
+      }
 
       importEntries(stmt, diary);
 
@@ -70,6 +83,15 @@ public class DBImporter {
         System.exit(1);
       }
     }
+  }
+
+  private static void clearDB(Statement stmt) throws SQLException {
+    com.bolsinga.sql.Util.truncate(stmt, "category");
+    com.bolsinga.sql.Util.truncate(stmt, "entry");
+    com.bolsinga.sql.Util.truncate(stmt, "friend");
+    com.bolsinga.sql.Util.truncate(stmt, "header");
+    com.bolsinga.sql.Util.truncate(stmt, "side");
+    com.bolsinga.sql.Util.truncate(stmt, "title");
   }
 
   private static void importEntry(Statement stmt, Entry entry) throws SQLException {

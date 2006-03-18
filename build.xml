@@ -311,6 +311,7 @@
     <arg value="${data.dir}diary.xml" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
+    <arg value="clear" />
     <classpath refid="exe_db_classpath" />
   </java>
 </target>
@@ -322,6 +323,7 @@
     <arg value="${data.dir}music.xml" />
     <arg value="${db.user}" />
     <arg value="${db.password}" />
+    <arg value="clear" />
     <classpath refid="exe_db_classpath" />
   </java>
 </target>

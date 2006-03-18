@@ -9,20 +9,29 @@ import java.util.*;
 
 public class DBImporter {
   public static void main(String[] args) {
-    if (args.length != 3) {
-      System.out.println("Usage: Web [music.xml] [user] [password]");
-      System.exit(0);
+    if ((args.length != 3) && (args.length != 4)) {
+      DBImporter.usage();
     }
 
-    DBImporter.importData(args[0], args[1], args[2]);
+    boolean clearDB = false;
+    if (args.length == 4) {
+      clearDB = args[3].equals("clear");
+    }
+
+    DBImporter.importData(args[0], args[1], args[2], clearDB);
   }
 
-  public static void importData(String sourceFile, String user, String password) {
+  private static void usage() {
+    System.out.println("Usage: DBImporter [music.xml] [user] [password] <clear>");
+    System.exit(0);
+  }
+
+  public static void importData(String sourceFile, String user, String password, boolean clearDB) {
     Music music = com.bolsinga.music.Util.createMusic(sourceFile);
-    importData(music, user, password);
+    importData(music, user, password, clearDB);
   }
 
-  public static void importData(Music music, String user, String password) {
+  public static void importData(Music music, String user, String password, boolean clearDB) {
     Connection conn = null;
     Statement stmt = null;
     try {
@@ -37,6 +46,10 @@ public class DBImporter {
       conn = DriverManager.getConnection("jdbc:mysql:///music?useUnicode=true&characterEncoding=utf-8", user, password);
 
       stmt = conn.createStatement();
+
+      if (clearDB) {
+        clearDB(stmt);
+      }
 
       importVenues(stmt, music);
 
@@ -69,6 +82,18 @@ public class DBImporter {
         System.exit(1);
       }
     }
+  }
+
+  private static void clearDB(Statement stmt) throws SQLException {
+    com.bolsinga.sql.Util.truncate(stmt, "album");
+    com.bolsinga.sql.Util.truncate(stmt, "artist");
+    com.bolsinga.sql.Util.truncate(stmt, "label");
+    com.bolsinga.sql.Util.truncate(stmt, "location");
+    com.bolsinga.sql.Util.truncate(stmt, "performance");
+    com.bolsinga.sql.Util.truncate(stmt, "relation");
+    com.bolsinga.sql.Util.truncate(stmt, "shows");
+    com.bolsinga.sql.Util.truncate(stmt, "song");
+    com.bolsinga.sql.Util.truncate(stmt, "venue");
   }
 
   private static long sLocationID = 0;
