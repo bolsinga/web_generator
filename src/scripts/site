@@ -70,6 +70,9 @@ OUTPUT_DIR="$2"
 if [ -z "$OUTPUT_DIR" ] ; then
     usage "No output_dir"
 fi
+if [ ! -d "$OUTPUT_DIR" ] ; then
+    mkdir -p "$OUTPUT_DIR"
+fi
 OUTPUT_HOME=`cd "$OUTPUT_DIR" && pwd`
 if [ ! -d "${OUTPUT_HOME}" ] ; then
     usage "Can't find ${OUTPUT_HOME}"
@@ -101,8 +104,6 @@ else
  fi
 fi
 
-DUMP=1
-
 COMMAND="exec \"$JAVA_CMD\" -Xms96m -Xmx96m"
 if [ ! -z "$JAVA_OPTS" ] ; then
     COMMAND="$COMMAND \"$JAVA_OPTS\""
@@ -111,7 +112,7 @@ COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $DATA_F
 
 if [ ! -z "$DUMP" ] ; then
     echo "$COMMAND"
-#    exit 0
+    exit 0
 fi
 
 eval $COMMAND
