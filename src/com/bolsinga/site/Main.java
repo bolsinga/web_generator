@@ -30,11 +30,13 @@ public class Main {
 
     boolean musicXML = command.equals("musicxml") || command.equals("xml");
     boolean diaryXML = command.equals("diaryxml") || command.equals("xml");
+    boolean musicImport = command.equals("musicimport") || command.equals("import");
+    boolean diaryImport = command.equals("diaryimport") || command.equals("import");
     boolean site = command.matches("^site.*");
     boolean musicsite = command.matches("^musicsite.*");
     boolean diarysite = command.matches("^diarysite.*");
 
-    if (!(musicXML | diaryXML | site | musicsite | diarysite)) {
+    if (!(musicXML | diaryXML | musicImport | diaryImport | site | musicsite | diarysite)) {
       Main.usage(args, "Invalid action");
     }
 
@@ -44,6 +46,16 @@ public class Main {
       }
       if (diaryXML) {
         com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
+      }
+      System.exit(0);
+    }
+
+    if (musicImport || diaryImport) {
+      if (musicImport) {
+        com.bolsinga.music.DBImporter.importData(musicFile, user, password, true);
+      }
+      if (diaryImport) {
+        com.bolsinga.diary.DBImporter.importData(diaryFile, user, password, true);
       }
       System.exit(0);
     }
@@ -75,7 +87,7 @@ public class Main {
   }
 
   private static void usage(String[] badargs, String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [user] [password] [output.dir] <xml|musicxml|diaryxml|site|musicsite|diarysite|site-ddb|musicsite-db|diarysite-db>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [user] [password] [output.dir] <xml|musicxml|diaryxml|import|musicimport|diaryimport|site|musicsite|diarysite|site-ddb|musicsite-db|diarysite-db>");
     System.out.println(reason);
     System.out.println("Arguments:");
     for (int i = 0; i < badargs.length; i++) {

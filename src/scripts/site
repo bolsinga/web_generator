@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "site data_dir output_dir user password  xml | musicxml | diaryxml | site | musicsite | diarysite"
+    echo "site data_dir output_dir user password  xml | musicxml | diaryxml | import | musicimport | diaryimport | site | musicsite | diarysite"
     echo $1
     exit 1
 }
@@ -95,8 +95,13 @@ else
  if [ -z "$ACTION" ] ; then
      usage "No action"
  fi
- ACTION="$ACTION-db"
+ TESTIMPORT=`echo $ACTION | sed -e's|import||'`
+ if [ "$ACTION" = "$TESTIMPORT" ] ; then
+     ACTION="$ACTION-db"
+ fi
 fi
+
+DUMP=1
 
 COMMAND="exec \"$JAVA_CMD\" -Xms96m -Xmx96m"
 if [ ! -z "$JAVA_OPTS" ] ; then
@@ -106,7 +111,7 @@ COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $DATA_F
 
 if [ ! -z "$DUMP" ] ; then
     echo "$COMMAND"
-    exit 0
+#    exit 0
 fi
 
 eval $COMMAND
