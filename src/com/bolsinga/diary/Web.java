@@ -280,24 +280,6 @@ public class Web {
     return d;
   }
         
-  private static String getCopyright(int startYear) {
-    StringBuffer cp = new StringBuffer();
-                
-    int cur_year = Calendar.getInstance().get(Calendar.YEAR);
-                
-    cp.append("Contents Copyright (c) ");
-    cp.append(startYear);
-    if (startYear != cur_year) {
-      cp.append(" - ");
-      cp.append(cur_year);
-    }
-                
-    cp.append(" ");
-    cp.append(System.getProperty("user.name"));
-                
-    return cp.toString();
-  }
-        
   public static XhtmlDocument createDocument(String title, int startYear, Links links) {
     XhtmlDocument d = new XhtmlDocument(ECSDefaults.getDefaultCodeset());
                 
@@ -316,7 +298,7 @@ public class Web {
     h.addElement(new meta().setContent(System.getProperty("user.name")).setName("Author"));
     h.addElement(new meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
     h.addElement(new meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
-    h.addElement(new meta().setContent(getCopyright(startYear)).setName("Copyright"));
+    h.addElement(new meta().setContent(com.bolsinga.web.Util.getCopyright(startYear)).setName("Copyright"));
 
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
                                                 

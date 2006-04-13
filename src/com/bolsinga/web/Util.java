@@ -159,6 +159,24 @@ public class Util {
                 
     return sb.toString();
   }
+
+  public static String getCopyright(int startYear) {
+    StringBuffer cp = new StringBuffer();
+                
+    int cur_year = Calendar.getInstance().get(Calendar.YEAR);
+                
+    cp.append("Contents Copyright (c) ");
+    cp.append(startYear);
+    if (startYear != cur_year) {
+      cp.append(" - ");
+      cp.append(cur_year);
+    }
+                
+    cp.append(" ");
+    cp.append(System.getProperty("user.name"));
+                
+    return cp.toString();
+  }
         
   public static void createSettings(String sourceFile) {
     if (sSettings == null) {

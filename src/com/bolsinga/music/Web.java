@@ -334,7 +334,10 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
 public class Web {
 
   private static final boolean GENERATE_XML = false;
-        
+       
+  // This is the first year of this data.
+  private static int START_YEAR = 2003;
+ 
   public static void main(String[] args) {
     if ((args.length != 4) && (args.length != 5)) {
       Web.usage();
@@ -1201,25 +1204,6 @@ public class Web {
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
-
-  private static String getCopyright() {
-    StringBuffer cp = new StringBuffer();
-                
-    int year = 2003; // This is the first year of this data.
-    int cur_year = Calendar.getInstance().get(Calendar.YEAR);
-                
-    cp.append("Contents Copyright (c) ");
-    cp.append(year++);
-    for ( ; year <= cur_year; ++year) {
-      cp.append(", ");
-      cp.append(year);
-    }
-                
-    cp.append(" ");
-    cp.append(System.getProperty("user.name"));
-                
-    return cp.toString();
-  }
         
   static XhtmlDocument createHTMLDocument(Links links, String title) {
     XhtmlDocument d = new XhtmlDocument(ECSDefaults.getDefaultCodeset());
@@ -1238,7 +1222,7 @@ public class Web {
     h.addElement(new meta().setContent(System.getProperty("user.name")).setName("Author"));
     h.addElement(new meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
     h.addElement(new meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
-    h.addElement(new meta().setContent(Web.getCopyright()).setName("Copyright"));
+    h.addElement(new meta().setContent(com.bolsinga.web.Util.getCopyright(START_YEAR)).setName("Copyright"));
 
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
 
