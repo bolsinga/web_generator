@@ -10,7 +10,7 @@ import javax.xml.bind.Unmarshaller;
 
 import com.bolsinga.music.data.*;
 
-class DBCreator {
+class MySQLCreator {
   ObjectFactory objFactory;
   Music music;
   Connection conn;
@@ -21,7 +21,7 @@ class DBCreator {
   PreparedStatement albumDistinctStmt;
   PreparedStatement performanceStmt;
 
-  public DBCreator(ObjectFactory objFactory, Connection conn) {
+  public MySQLCreator(ObjectFactory objFactory, Connection conn) {
     try {
       this.objFactory = objFactory;
       this.music = objFactory.createMusic();

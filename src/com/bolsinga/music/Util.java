@@ -88,7 +88,7 @@ public class Util {
 
       conn = DriverManager.getConnection("jdbc:mysql:///music?useUnicode=true&characterEncoding=utf-8", user, password);
 
-      DBCreator c = new DBCreator(objFactory, conn);
+      MySQLCreator c = new MySQLCreator(objFactory, conn);
       music = c.createMusic();
       c.close();
     } catch (Exception e) {

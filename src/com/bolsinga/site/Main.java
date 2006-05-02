@@ -52,10 +52,10 @@ public class Main {
 
     if (musicImport || diaryImport) {
       if (musicImport) {
-        com.bolsinga.music.DBImporter.importData(musicFile, user, password, true);
+        com.bolsinga.music.MySQLImporter.importData(musicFile, user, password, true);
       }
       if (diaryImport) {
-        com.bolsinga.diary.DBImporter.importData(diaryFile, user, password, true);
+        com.bolsinga.diary.MySQLImporter.importData(diaryFile, user, password, true);
       }
       System.exit(0);
     }

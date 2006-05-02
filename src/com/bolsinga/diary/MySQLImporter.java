@@ -8,11 +8,11 @@ import java.util.regex.*;
 import com.bolsinga.diary.*;
 import com.bolsinga.diary.data.*;
 
-public class DBImporter {
+public class MySQLImporter {
 
   public static void main(String[] args) {
     if ((args.length != 3) && (args.length != 4)) {
-      DBImporter.usage();
+      MySQLImporter.usage();
     }
 
     boolean clearDB = false;
@@ -20,11 +20,11 @@ public class DBImporter {
       clearDB = args[3].equals("clear");
     }
 
-    DBImporter.importData(args[0], args[1], args[2], clearDB);
+    MySQLImporter.importData(args[0], args[1], args[2], clearDB);
   }
 
   private static void usage() {
-    System.out.println("Usage: DBImporter [diary.xml] [user] [password] <clear>");
+    System.out.println("Usage: MySQLImporter [diary.xml] [user] [password] <clear>");
     System.exit(0);
   }
 
@@ -143,7 +143,7 @@ public class DBImporter {
     String[] lines = data.split("\\n");
     for (int i = 0; i < lines.length; i++) {
       try {
-        DBImporter.importHeader(stmt, lines[i]);
+        MySQLImporter.importHeader(stmt, lines[i]);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + lines[i]);
         throw e;
@@ -170,7 +170,7 @@ public class DBImporter {
     String[] lines = data.split("\\n");
     for (int i = 0; i < lines.length; i++) {
       try {
-        DBImporter.importSide(stmt, lines[i]);
+        MySQLImporter.importSide(stmt, lines[i]);
       } catch (SQLException e) {
         System.err.println("SQLException importing: " + lines[i]);
         throw e;
@@ -206,7 +206,7 @@ public class DBImporter {
         try {
           name = displayName = m.group(2);
           url = m.group(1);
-          DBImporter.importFriend(stmt, name, displayName, url);
+          MySQLImporter.importFriend(stmt, name, displayName, url);
         } catch (SQLException e) {
           System.err.println("SQLException importing: " + lines[i]);
           throw e;
