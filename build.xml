@@ -44,7 +44,7 @@
 </taskdef>
 
 <property name="javac.debug" value="no" />
-<property name="javac.lint" value="-Xlint:unchecked" />
+<property name="javac.lint" value="-Xlint:none" />
 
 <target name="clean">
         <delete dir="${build.dir}" />
