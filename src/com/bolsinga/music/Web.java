@@ -473,7 +473,7 @@ public class Web {
     }
                 
     String typeString = com.bolsinga.web.Util.getResourceString("artist");
-    String typeArgs[] = { typeString };
+    Object typeArgs[] = { typeString };
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
@@ -515,7 +515,7 @@ public class Web {
     }
                 
     String typeString = com.bolsinga.web.Util.getResourceString("venue");
-    String typeArgs[] = { typeString };
+    Object typeArgs[] = { typeString };
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
@@ -566,7 +566,7 @@ public class Web {
     }
                 
     String typeString = com.bolsinga.web.Util.getResourceString("year");
-    String typeArgs[] = { typeString };
+    Object typeArgs[] = { typeString };
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
@@ -622,7 +622,7 @@ public class Web {
     }
                 
     String typeString = com.bolsinga.web.Util.getResourceString("city");
-    String typeArgs[] = { typeString };
+    Object typeArgs[] = { typeString };
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
@@ -667,9 +667,9 @@ public class Web {
                 
     {
       String typeString = com.bolsinga.web.Util.getResourceString("artist");
-      String typeArgs[] = { typeString };
+      Object typeArgs[] = { typeString };
       String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("tracksby"), typeArgs);
-      String statsArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
+      Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
 
       StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
@@ -695,9 +695,9 @@ public class Web {
 
     {
       String typeString = com.bolsinga.web.Util.getResourceString("artist");
-      String typeArgs[] = { typeString };
+      Object typeArgs[] = { typeString };
       String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumsby"), typeArgs);
-      String statsArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
+      Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
 
       StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
