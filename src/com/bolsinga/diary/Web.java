@@ -232,7 +232,8 @@ public class Web {
     doc.getBody().addElement(main);
                 
     div mainCol2 = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL2);
-    mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music, 5));
+    int previewCount = com.bolsinga.web.Util.getSettings().getPreviewCount().intValue();
+    mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music, previewCount));
     doc.getBody().addElement(mainCol2);
                 
     try {
