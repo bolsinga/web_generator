@@ -156,7 +156,9 @@ public class RSS {
       com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(false);
       com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(false);
 
-      List recentItems = com.bolsinga.web.Util.getRecentItems(music, diary);
+      int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
+
+      List recentItems = com.bolsinga.web.Util.getRecentItems(entryCount, music, diary);
       Iterator i = recentItems.iterator();
       while (i.hasNext()) {
         Object o = i.next();

@@ -178,7 +178,7 @@ public class Util {
     return cp.toString();
   }
 
-  public static List getRecentItems(com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary) {
+  public static List getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary) {
       List shows = music.getShow();
       Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
       Collections.reverse(shows);
@@ -187,16 +187,14 @@ public class Util {
       Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
       Collections.reverse(entries);
 
-      int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
-
-      Vector items = new Vector(entryCount * 2);
-      items.addAll(shows.subList(0, entryCount));
-      items.addAll(entries.subList(0, entryCount));
+      Vector items = new Vector(count * 2);
+      items.addAll(shows.subList(0, count));
+      items.addAll(entries.subList(0, count));
 
       Collections.sort(items, CHANNEL_ITEM_COMPARATOR);
       Collections.reverse(items);
             
-      return items.subList(0, entryCount);
+      return items.subList(0, count);
   }
 
   public static final Comparator CHANNEL_ITEM_COMPARATOR = new Comparator() {
