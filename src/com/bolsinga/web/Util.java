@@ -177,6 +177,48 @@ public class Util {
                 
     return cp.toString();
   }
+
+  public static List getRecentItems(com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary) {
+      List shows = music.getShow();
+      Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
+      Collections.reverse(shows);
+
+      List entries = diary.getEntry();
+      Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
+      Collections.reverse(entries);
+
+      int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
+
+      Vector items = new Vector(entryCount * 2);
+      items.addAll(shows.subList(0, entryCount));
+      items.addAll(entries.subList(0, entryCount));
+
+      Collections.sort(items, CHANNEL_ITEM_COMPARATOR);
+      Collections.reverse(items);
+            
+      return items.subList(0, entryCount);
+  }
+
+  public static final Comparator CHANNEL_ITEM_COMPARATOR = new Comparator() {
+      public int compare(Object o1, Object o2) {
+        Calendar c1 = null;
+        Calendar c2 = null;
+                        
+        if (o1 instanceof com.bolsinga.music.data.Show) {
+          c1 = com.bolsinga.music.Util.toCalendar(((com.bolsinga.music.data.Show)o1).getDate());
+        } else if (o1 instanceof com.bolsinga.diary.data.Entry) {
+          c1 = ((com.bolsinga.diary.data.Entry)o1).getTimestamp();
+        }
+
+        if (o2 instanceof com.bolsinga.music.data.Show) {
+          c2 = com.bolsinga.music.Util.toCalendar(((com.bolsinga.music.data.Show)o2).getDate());
+        } else if (o2 instanceof com.bolsinga.diary.data.Entry) {
+          c2 = ((com.bolsinga.diary.data.Entry)o2).getTimestamp();
+        }
+        
+        return c1.getTime().compareTo(c2.getTime());
+      }
+    };
         
   public static void createSettings(String sourceFile) {
     if (sSettings == null) {
