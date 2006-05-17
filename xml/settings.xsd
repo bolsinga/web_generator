@@ -32,6 +32,7 @@
       <xs:element name="friendsTitle" type="xs:string" minOccurs="1" maxOccurs="1" />
       <xs:element name="embedLinks" type="xs:boolean" minOccurs="1" maxOccurs="1" />
       <xs:element name="previewCount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
+      <xs:element name="mainPageHasMusic" type="xs:boolean" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
   </xs:complexType>
 </xs:element>

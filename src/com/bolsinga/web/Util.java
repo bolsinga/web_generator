@@ -179,22 +179,31 @@ public class Util {
   }
 
   public static List getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary) {
-      List shows = music.getShow();
+    return Util.getRecentItems(count, music, diary, true);
+  }
+ 
+  public static List getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary, boolean includeMusic) {
+    List shows = null;
+    if (includeMusic) {
+      shows = music.getShow();
       Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
       Collections.reverse(shows);
+    }
 
-      List entries = diary.getEntry();
-      Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
-      Collections.reverse(entries);
-
-      Vector items = new Vector(count * 2);
+    List entries = diary.getEntry();
+    Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
+    Collections.reverse(entries);
+    
+    Vector items = new Vector(count * 2);
+    if (shows != null) {
       items.addAll(shows.subList(0, count));
-      items.addAll(entries.subList(0, count));
-
-      Collections.sort(items, CHANNEL_ITEM_COMPARATOR);
-      Collections.reverse(items);
-            
-      return items.subList(0, count);
+    }
+    items.addAll(entries.subList(0, count));
+    
+    Collections.sort(items, CHANNEL_ITEM_COMPARATOR);
+    Collections.reverse(items);
+    
+    return items.subList(0, count);
   }
 
   public static final Comparator CHANNEL_ITEM_COMPARATOR = new Comparator() {

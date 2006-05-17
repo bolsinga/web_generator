@@ -315,8 +315,9 @@ public class Web {
     diaryDiv.addElement(links.getRSSLink());
 
     int mainPageEntryCount = com.bolsinga.web.Util.getSettings().getDiaryCount().intValue();
-                
-    List items = com.bolsinga.web.Util.getRecentItems(mainPageEntryCount, music, diary);
+    boolean includeMusic = com.bolsinga.web.Util.getSettings().isMainPageHasMusic();
+
+    List items = com.bolsinga.web.Util.getRecentItems(mainPageEntryCount, music, diary, includeMusic);
     Iterator i = items.iterator();
     while (i.hasNext()) {
       Object o = i.next();
