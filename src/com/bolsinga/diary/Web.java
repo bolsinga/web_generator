@@ -228,7 +228,7 @@ public class Web {
       header.addElement(com.bolsinga.web.Util.convertToUnOrderedList(headerText));
     }
     main.addElement(header);
-    main.addElement(generateDiary(encoder, diary, links));
+    main.addElement(generateDiary(encoder, diary, music, links));
     doc.getBody().addElement(main);
                 
     div mainCol2 = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL2);
@@ -306,26 +306,30 @@ public class Web {
     return d;
   }
         
-  private static Element generateDiary(com.bolsinga.web.Encode encoder, Diary diary, Links links) {
-    List items = diary.getEntry();
-    Entry item = null;
-
+  private static Element generateDiary(com.bolsinga.web.Encode encoder, Diary diary, Music music, Links links) {
     div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
                 
     Object[] args = { Calendar.getInstance().getTime() };
     diaryDiv.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
                 
     diaryDiv.addElement(links.getRSSLink());
-                                
-    Collections.sort(items, Util.ENTRY_COMPARATOR);
-    Collections.reverse(items);
 
     int mainPageEntryCount = com.bolsinga.web.Util.getSettings().getDiaryCount().intValue();
                 
-    for (int i = 0; i < mainPageEntryCount; i++) {
-      item = (Entry)items.get(i);
-                        
-      diaryDiv.addElement(Web.addItem(encoder, item, links, false));
+    List items = com.bolsinga.web.Util.getRecentItems(mainPageEntryCount, music, diary);
+    Iterator i = items.iterator();
+    while (i.hasNext()) {
+      Object o = i.next();
+
+      if (o instanceof com.bolsinga.diary.data.Entry) {
+        diaryDiv.addElement(Web.addItem(encoder, (com.bolsinga.diary.data.Entry)o, links, false));
+      } else if (o instanceof com.bolsinga.music.data.Show) {
+        diaryDiv.addElement(com.bolsinga.music.Web.addItem(encoder, (com.bolsinga.music.data.Show)o));
+      } else {
+        System.err.println("Unknown recent item." + o.toString());
+        Thread.dumpStack();
+        System.exit(1);
+      }
     }
                 
     StringBuffer sb = new StringBuffer();

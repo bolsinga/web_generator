@@ -920,7 +920,13 @@ public class Web {
                 
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
-        
+
+  public static Element addItem(com.bolsinga.web.Encode encoder, Show show) {
+    Links links = Links.getLinks(false);
+
+    return Web.addItem(encoder, links, show);
+  }
+
   public static Element addItem(com.bolsinga.web.Encode encoder, Links links, Show show) {
     // CSS.SHOW_ITEM
     Vector e = new Vector();
