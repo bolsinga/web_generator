@@ -49,6 +49,16 @@ if [ ! -d "${DATA_HOME}" ] ; then
     usage "No $DATA_HOME"
 fi
 
+# These files are required. If this is the 'first time' these will not be 
+#  present. It is sufficient to make empty files.
+for i in \
+    "${DATA_HOME}/diary.xml" \
+    "${DATA_HOME}/music.xml" ; do
+  if [ ! -f "$i" ] ; then
+      touch "$i"
+  fi
+done
+
 for i in \
     "${DATA_HOME}/iTunes Music Library.xml" \
     "${DATA_HOME}/shows.txt" \
