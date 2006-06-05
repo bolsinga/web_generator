@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="shows" default="Site" basedir=".">
+<project name="web_generator" default="package" basedir=".">
 
 <!--    This assumes that jwsdp is installed at ${lib.dir}/jwsdp-1_3/ 
                 Otherwise can be set with "ant -Djwsdp.home=..." -->
@@ -48,6 +48,7 @@
 
 <target name="clean">
         <delete dir="${build.dir}" />
+        <delete dir="${dst.dir}" />
 </target>
 
 <target name="prepare">
@@ -267,7 +268,7 @@
 </target>
 
 <target name="jar">
-        <jar jarfile="${build.lib}/music.jar"
+        <jar jarfile="${build.lib}/${ant.project.name}.jar"
                 basedir="${build.classes}" >
                 <include name="com/bolsinga/**" />
         </jar>
@@ -275,7 +276,7 @@
 
 <path id="music_classpath">
         <path refid="jaxb_binder_classpath" />
-        <pathelement path="${build.lib}/music.jar" />
+        <pathelement path="${build.lib}/${ant.project.name}.jar" />
 </path>
 
 <target name="site" depends="music, diary, rss, music_converter">
@@ -546,7 +547,7 @@
 
 <target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
 
-<target name="install">
+<target name="upload">
   <ftp    server="ftp.io.com"
           userid="bolsinga"
           password="${ftp.password}"
@@ -567,7 +568,7 @@
   </ftp>
 </target>
 
-<target name="installDiary">
+<target name="uploadDiary">
   <ftp    server="ftp.io.com"
           userid="bolsinga"
           password="${ftp.password}"
@@ -592,7 +593,7 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
   <exec executable="cp" >
     <arg line="${src.dir}/scripts/site ${dst.dir}" />
   </exec>
-  <copy file="${build.lib}/music.jar" todir="${dst.lib}" />
+  <copy file="${build.lib}/${ant.project.name}.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" todir="${dst.lib}" />
   <copy todir="${dst.lib}">
