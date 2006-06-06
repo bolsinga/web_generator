@@ -27,6 +27,17 @@
 
 <property name="jwsdp.home" value="${lib.dir}/jwsdp-1_3" />
 
+<target name="build_version" unless="build.version" >
+  <property name="svn.vers.file" value="${obj.dir}/svnvers" />
+  <exec executable="svnversion" output="${svn.vers.file}" >
+    <arg value="-c" />
+  </exec>
+  <exec executable="cut" input="${svn.vers.file}" outputproperty="build.version" >
+    <arg value="-f2" />
+    <arg value="-d:" />
+  </exec>
+</target>
+
 <path id="jaxb_xjc_classpath">
         <pathelement path="." />
         <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-xjc.jar" />
@@ -174,7 +185,7 @@
         </javac>
 </target>
 
-<target name="web" depends="settings_binding, music_binding, diary_binding">
+<target name="web" depends="settings_binding, music_binding, diary_binding, build_version">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
@@ -190,7 +201,7 @@
         <copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/web.properties">
                 <filterset>
                         <filter token="builddate" value="${web.builddate}" />
-                        <filter token="program" value="com.bolsinga.site" />
+                        <filter token="program" value="com.bolsinga.site-${build.version}" />
                         <filter token="copyright" value="Program Copyright (c) 2004 - ${web.buildyear} Greg Bolsinga" />
                 </filterset>
         </copy>
@@ -601,16 +612,8 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
   </copy>
 </target>
 
-<target name="publish" depends="package" >
-  <property name="svn.vers.file" value="${obj.dir}/svnvers" />
-  <exec executable="svnversion" output="${svn.vers.file}" >
-    <arg value="-c" />
-  </exec>
-  <exec executable="cut" input="${svn.vers.file}" outputproperty="svn.version" >
-    <arg value="-f2" />
-    <arg value="-d:" />
-  </exec>
-  <property name="vers.name" value="${ant.project.name}-${svn.version}" />
+<target name="publish" depends="package, build_version" >
+  <property name="vers.name" value="${ant.project.name}-${build.version}" />
   <property name="vers.dir" value="${build.dir}/${vers.name}" />
   <move file="${dst.dir}" tofile="${vers.dir}" />
   <property name="vers.tar" value="${vers.name}.tar" />
