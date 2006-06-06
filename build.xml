@@ -597,4 +597,26 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
   </copy>
 </target>
 
+<target name="publish" depends="package" >
+  <property name="svn.vers.file" value="${obj.dir}/svnvers" />
+  <exec executable="svnversion" output="${svn.vers.file}" >
+    <arg value="-c" />
+  </exec>
+  <exec executable="cut" input="${svn.vers.file}" outputproperty="svn.version" >
+    <arg value="-f2" />
+    <arg value="-d:" />
+  </exec>
+  <property name="vers.name" value="${ant.project.name}-${svn.version}" />
+  <property name="vers.dir" value="${build.dir}/${vers.name}" />
+  <move file="${dst.dir}" tofile="${vers.dir}" />
+  <property name="vers.tar" value="${vers.name}.tar" />
+  <tar tarfile="${build.dir}/${vers.tar}" >
+    <tarfileset dir="${vers.dir}" prefix="${vers.name}" >
+      <exclude name="site" />
+    </tarfileset>
+    <tarfileset file="${vers.dir}/site" prefix="${vers.name}" mode="755" />
+  </tar>
+  <gzip zipfile="${build.dir}/${vers.tar}.gz" src="${build.dir}/${vers.tar}" />
+</target>
+
 </project>
