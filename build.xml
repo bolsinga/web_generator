@@ -349,7 +349,11 @@
         <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
-<target name="generateCSSTemplate" depends="web, jar">
+<target name="prepare_output" >
+  <mkdir dir="${output.dir}" />
+</target>
+
+<target name="generateCSSTemplate" depends="web, jar, prepare_output">
         <java classname="com.bolsinga.web.CSS" fork="true">
                 <arg value="${output.dir}/styles/" />
                 <classpath refid="music_classpath" />
@@ -372,7 +376,7 @@
                 <sysproperty key="web.pretty_containers" value="true" />
 -->
 
-<target name="generateMusicWeb" depends="music, jar">
+<target name="generateMusicWeb" depends="music, jar, prepare_output">
   <java classname="com.bolsinga.music.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -384,7 +388,7 @@
   </java>
 </target>
 
-<target name="generateDiaryWeb" depends="diary, jar">
+<target name="generateDiaryWeb" depends="diary, jar, prepare_output">
   <java classname="com.bolsinga.diary.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -397,7 +401,7 @@
   </java>
 </target>
 
-<target name="generateRSS" depends="rss, jar" >
+<target name="generateRSS" depends="rss, jar, prepare_output" >
   <java classname="com.bolsinga.rss.RSS" fork="true" >
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -410,7 +414,7 @@
   </java>
 </target>
 
-<target name="generateICal" depends="music, jar">
+<target name="generateICal" depends="music, jar, prepare_output">
   <java classname="com.bolsinga.music.ICal" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -427,7 +431,7 @@
   <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
 </path>
 
-<target name="generateDBMusicWeb" depends="music, jar">
+<target name="generateDBMusicWeb" depends="music, jar, prepare_output">
   <java classname="com.bolsinga.music.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -440,7 +444,7 @@
   </java>
 </target>
 
-<target name="generateDBDiaryWeb" depends="diary, jar">
+<target name="generateDBDiaryWeb" depends="diary, jar, prepare_output">
   <java classname="com.bolsinga.diary.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -453,7 +457,7 @@
   </java>
 </target>
 
-<target name="generateDBRSS" depends="rss, jar" >
+<target name="generateDBRSS" depends="rss, jar, prepare_output" >
   <java classname="com.bolsinga.rss.RSS" fork="true" >
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -466,7 +470,7 @@
   </java>
 </target>
 
-<target name="generateDBICal" depends="music, jar">
+<target name="generateDBICal" depends="music, jar, prepare_output">
   <java classname="com.bolsinga.music.ICal" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -479,7 +483,7 @@
   </java>
 </target>
 
-<target name="Site" depends="site, jar">
+<target name="Site" depends="site, jar, prepare_output">
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -493,7 +497,7 @@
   </java>
 </target>
 
-<target name="SiteWeb" depends="site, jar">
+<target name="SiteWeb" depends="site, jar, prepare_output">
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -507,7 +511,7 @@
   </java>
 </target>
 
-<target name="SiteMusic" depends="site, jar">
+<target name="SiteMusic" depends="site, jar, prepare_output">
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -521,7 +525,7 @@
   </java>
 </target>
 
-<target name="SiteDiary" depends="site, jar">
+<target name="SiteDiary" depends="site, jar, prepare_output">
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
