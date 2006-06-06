@@ -12,13 +12,17 @@
 
 <property name="src.dir" value="src" />
 <property name="lib.dir" value="lib" />
-<property name="dst.dir" value="dst" />
 
 <property name="build.dir" value="output" />
-<property name="build.classes" value="${build.dir}/classes" />
-<property name="build.lib" value="${build.dir}/lib" />
-<property name="build.gensrc" value="${build.dir}/gensrc" />
 
+<property name="obj.dir" value="${build.dir}/obj" />
+<property name="build.classes" value="${obj.dir}/classes" />
+<property name="build.gensrc" value="${obj.dir}/gensrc" />
+
+<property name="sym.dir" value="${build.dir}/sym" />
+<property name="build.lib" value="${sym.dir}/lib" />
+
+<property name="dst.dir" value="${build.dir}/dst" />
 <property name="dst.lib" value="${dst.dir}/lib" />
 
 <property name="jwsdp.home" value="${lib.dir}/jwsdp-1_3" />
@@ -47,16 +51,16 @@
 <property name="javac.lint" value="-Xlint:none" />
 
 <target name="clean">
-        <delete dir="${build.dir}" />
-        <delete dir="${dst.dir}" />
+  <delete dir="${build.dir}" />
 </target>
 
 <target name="prepare">
-        <tstamp/>
-        <mkdir dir="${build.dir}" />
-        <mkdir dir="${build.classes}" />
-        <mkdir dir="${build.lib}" />
-        <mkdir dir="${build.gensrc}" />
+  <tstamp/>
+  <mkdir dir="${build.dir}" />
+  <mkdir dir="${build.classes}" />
+  <mkdir dir="${build.lib}" />
+  <mkdir dir="${build.gensrc}" />
+  <mkdir dir="${dst.lib}" />
 </target>
 
 <target name="music_binding" depends="prepare">
@@ -346,7 +350,6 @@
 </path>
 
 <target name="generateCSSTemplate" depends="web, jar">
-        <mkdir dir="${output.dir}" />
         <java classname="com.bolsinga.web.CSS" fork="true">
                 <arg value="${output.dir}/styles/" />
                 <classpath refid="music_classpath" />
@@ -354,7 +357,6 @@
 </target>
 
 <target name="encoding" depends="music, diary, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.web.Encode" fork="true">
     <arg value="${data.dir}diary.xml" />
     <arg value="${data.dir}music.xml" />
@@ -371,7 +373,6 @@
 -->
 
 <target name="generateMusicWeb" depends="music, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.music.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -384,7 +385,6 @@
 </target>
 
 <target name="generateDiaryWeb" depends="diary, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.diary.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -398,7 +398,6 @@
 </target>
 
 <target name="generateRSS" depends="rss, jar" >
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.rss.RSS" fork="true" >
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -412,7 +411,6 @@
 </target>
 
 <target name="generateICal" depends="music, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.music.ICal" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -430,7 +428,6 @@
 </path>
 
 <target name="generateDBMusicWeb" depends="music, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.music.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -444,7 +441,6 @@
 </target>
 
 <target name="generateDBDiaryWeb" depends="diary, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.diary.Web" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -458,7 +454,6 @@
 </target>
 
 <target name="generateDBRSS" depends="rss, jar" >
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.rss.RSS" fork="true" >
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -472,7 +467,6 @@
 </target>
 
 <target name="generateDBICal" depends="music, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.music.ICal" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -486,7 +480,6 @@
 </target>
 
 <target name="Site" depends="site, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -501,7 +494,6 @@
 </target>
 
 <target name="SiteWeb" depends="site, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -516,7 +508,6 @@
 </target>
 
 <target name="SiteMusic" depends="site, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -531,7 +522,6 @@
 </target>
 
 <target name="SiteDiary" depends="site, jar">
-  <mkdir dir="${output.dir}" />
   <java classname="com.bolsinga.site.Site" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -588,8 +578,6 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
 -->
 
 <target name="package" depends="site, jar" >
-  <mkdir dir="${dst.dir}" />
-  <mkdir dir="${dst.lib}" />
   <exec executable="cp" >
     <arg line="${src.dir}/scripts/site ${dst.dir}" />
   </exec>
