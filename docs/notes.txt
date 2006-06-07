@@ -237,3 +237,7 @@ iCal can be UTC
 Only convert TZ when displaying the value on a web page.
 
 Use PreparedStatement for: Location, Album, Performance, Song
+
+-------
+
+Java6 has JAXB built-in!
