@@ -37,4 +37,8 @@ else
   fi
 fi
 
-ant -Doutput.dir=$SITEDIR -Dftp.password=$FTP_PASSWORD $TYPE
+PRG="$0"
+PROG_HOME=`dirname "$PRG"`
+PROG_HOME=`cd "$PROG_HOME" && pwd`
+
+ant -f $PROG_HOME/lib/upload.xml -Doutput.dir=$SITEDIR -Dftp.password=$FTP_PASSWORD $TYPE

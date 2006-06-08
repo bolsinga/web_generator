@@ -562,9 +562,13 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
   <exec executable="cp" >
     <arg line="${src.dir}/scripts/site ${dst.dir}" />
   </exec>
+  <exec executable="cp" >
+    <arg line="${src.dir}/scripts/upload ${dst.dir}" />
+  </exec>
   <copy file="${build.lib}/${ant.project.name}.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" todir="${dst.lib}" />
+  <copy file="${src.dir}/scripts/upload.xml" todir="${dst.lib}" />
   <copy todir="${dst.lib}">
     <fileset dir="${lib.dir}">
       <include name="jwsdp-1_3/jaxb/lib/jaxb-api.jar" />
