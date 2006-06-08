@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+
+<project name="web_upload" default="upload" basedir=".">
+
+<property name="output.dir" value="/tmp/web" />
+
+<target name="upload">
+  <ftp    server="ftp.io.com"
+          userid="bolsinga"
+          password="${ftp.password}"
+          remotedir="public-web"
+          verbose="yes" >
+    <fileset dir="${output.dir}">
+      <include name="index.html" />
+      <include name="archives/*" />
+      <include name="bands/*" />
+      <include name="cities/*" />
+      <include name="dates/*" />
+      <include name="ical/*" />
+      <include name="rss/rss.xml" />
+      <include name="styles/*" />
+      <include name="tracks/*" />
+      <include name="venues/*" />
+    </fileset>
+  </ftp>
+</target>
+
+<target name="uploadDiary">
+  <ftp    server="ftp.io.com"
+          userid="bolsinga"
+          password="${ftp.password}"
+          remotedir="public-web"
+          verbose="yes" >
+    <fileset dir="${output.dir}">
+      <include name="index.html" />
+      <include name="archives/*" />
+      <include name="rss/rss.xml" />
+    </fileset>
+  </ftp>
+</target>
+
+</project>
