@@ -13,6 +13,7 @@
 <property name="src.dir" value="src" />
 <property name="lib.dir" value="lib" />
 
+<!-- This property is the root build dir property. -->
 <property name="build.dir" value="output" />
 
 <property name="obj.dir" value="${build.dir}/obj" />
@@ -552,41 +553,6 @@
 
 <target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
 
-<target name="upload">
-  <ftp    server="ftp.io.com"
-          userid="bolsinga"
-          password="${ftp.password}"
-          remotedir="public-web"
-          verbose="yes" >
-    <fileset dir="${output.dir}">
-      <include name="index.html" />
-      <include name="archives/*" />
-      <include name="bands/*" />
-      <include name="cities/*" />
-      <include name="dates/*" />
-      <include name="ical/*" />
-      <include name="rss/rss.xml" />
-      <include name="styles/*" />
-      <include name="tracks/*" />
-      <include name="venues/*" />
-    </fileset>
-  </ftp>
-</target>
-
-<target name="uploadDiary">
-  <ftp    server="ftp.io.com"
-          userid="bolsinga"
-          password="${ftp.password}"
-          remotedir="public-web"
-          verbose="yes" >
-    <fileset dir="${output.dir}">
-      <include name="index.html" />
-      <include name="archives/*" />
-      <include name="rss/rss.xml" />
-    </fileset>
-  </ftp>
-</target>
-
 <!--
 Here is the command line expanded.
 java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-impl.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-libs.jar:lib/jwsdp-1_3/jwsdp-shared/lib/jax-qname.jar:lib/jwsdp-1_3/jwsdp-shared/lib/namespace.jar:lib/jwsdp-1_3/jwsdp-shared/lib/relaxngDatatype.jar:lib/jwsdp-1_3/jwsdp-shared/lib/xsdlib.jar com.bolsinga.site.Main ~/Music/iTunes/iTunes\ Music\ Library.xml ../data/shows.txt ../data/venuemap.txt ../data/bandsort.txt ../data/relations.txt ../data/comments.txt ../data/statics.txt ../data/diary.xml ../data/music.xml ../data/settings.xml /Volumes/Home/bolsinga/Sites <xml|musicxml|diaryxml|site|musicsite|musicdiary>
@@ -610,20 +576,6 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
       <include name="jwsdp-1_3/jwsdp-shared/lib/xsdlib.jar" />
     </fileset>
   </copy>
-</target>
-
-<target name="publish" depends="package, build_version" >
-  <property name="vers.name" value="${ant.project.name}-${build.version}" />
-  <property name="vers.dir" value="${build.dir}/${vers.name}" />
-  <move file="${dst.dir}" tofile="${vers.dir}" />
-  <property name="vers.tar" value="${vers.name}.tar" />
-  <tar tarfile="${build.dir}/${vers.tar}" >
-    <tarfileset dir="${vers.dir}" prefix="${vers.name}" >
-      <exclude name="site" />
-    </tarfileset>
-    <tarfileset file="${vers.dir}/site" prefix="${vers.name}" mode="755" />
-  </tar>
-  <gzip zipfile="${build.dir}/${vers.tar}.gz" src="${build.dir}/${vers.tar}" />
 </target>
 
 </project>
