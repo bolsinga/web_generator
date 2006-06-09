@@ -44,7 +44,7 @@ GET_PROJ=$PROG_HOME/get_project.sh
 REPOS_PROJ=`$GET_PROJ_DIR $REPOS $REVIS`
 if_failure "Can't get project dir for $REPOS $REVIS"
 PROJ_NAME=`$GET_PROJ $REPOS_PROJ`
-if_failure "Can't get projecdt name for $REPOS_PROJ"
+if_failure "Can't get project name for $REPOS_PROJ"
 BUILD_DIR=$PROJ_NAME-$REVIS
 
 cd $BUILD_ROOT_DIR
