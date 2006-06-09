@@ -7,6 +7,14 @@ usage ()
   exit 1
 }
 
+if_failure()
+{
+  if [ "$?" -ne 0 ] ; then
+    echo "Error: $1"
+    exit 1
+  fi
+}
+
 REPOS=$1
 if [ -z "$REPOS" ] ; then
   usage "No repository."
@@ -26,6 +34,7 @@ SVNLOOK=/usr/local/bin/svnlook
 SVNREVIS="-r $REVIS"
 
 CHANGED_DIRS=`$SVNLOOK dirs-changed $REPOS $SVNREVIS`
+if_failure "Can't $SVNLOOOK dirs-changed $REPOS $SVNREVIS"
 
 # Test each preferred top level directory name
 for style in trunk branches tags ; do
