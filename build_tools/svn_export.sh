@@ -2,7 +2,7 @@
 
 usage()
 {
-  echo "svn_export.sh repository project_dir revision src_dir"
+  echo "$0 repository project_dir revision src_dir"
   echo "Error: $1"
   exit 1
 }

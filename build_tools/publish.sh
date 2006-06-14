@@ -2,7 +2,7 @@
 
 usage()
 {
-  echo "publish src_dir dest_dir project_name version"
+  echo "$0 src_dir dest_dir project_name version"
   echo $1
   exit 1
 }

@@ -2,7 +2,7 @@
 
 usage ()
 {
-  echo "svn_project_description.sh repository revision"
+  echo "$0 repository revision"
   echo "Error: $1"
   exit 1
 }
