@@ -12,7 +12,10 @@ usage ()
 TEST_FILES="$@"
 
 for word in $TEST_FILES ; do
+  # Get extension
   XCODE=${word#*.*}
+  # Strip trailing '/'
+  XCODE=${XCODE%/}
   if [ $XCODE = "xcodeproj" ] ; then
     echo xcode
     exit 0
