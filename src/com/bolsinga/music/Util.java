@@ -13,9 +13,9 @@ import com.bolsinga.music.data.*;
 
 public class Util {
 
-  private static DateFormat sMonthFormat      = new SimpleDateFormat("MMMM");
-  public  static DateFormat sWebFormat        = new SimpleDateFormat("M/d/yyyy");
-  private static DecimalFormat sPercentFormat = new DecimalFormat("##.##");
+  private static final DateFormat sMonthFormat      = new SimpleDateFormat("MMMM");
+  public  static final DateFormat sWebFormat        = new SimpleDateFormat("M/d/yyyy");
+  private static final DecimalFormat sPercentFormat = new DecimalFormat("##.##");
         
   public static Calendar toCalendar(com.bolsinga.music.data.Date date) {
     Calendar localTime = Calendar.getInstance();
