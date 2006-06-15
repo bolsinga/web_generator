@@ -764,7 +764,6 @@ public class Web {
                 
     div dr = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_RECENT);
                 
-    sb = new StringBuffer();
     Object[] countArgs = { new Integer(lastShowsCount) };
     dr.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("lastshows"), countArgs)));
 

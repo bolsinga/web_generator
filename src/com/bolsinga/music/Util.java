@@ -80,7 +80,6 @@ public class Util {
   public static Music createMusic(String user, String password) {
     Music music = null;
     Connection conn = null;
-    Statement stmt = null;
 
     ObjectFactory objFactory = new ObjectFactory();
     try {
@@ -97,9 +96,6 @@ public class Util {
       System.exit(1);
     } finally {
       try {
-        if (stmt != null) {
-          stmt.close();
-        }
         if (conn != null) {
           conn.close();
         }
