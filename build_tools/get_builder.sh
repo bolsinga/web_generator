@@ -16,28 +16,20 @@ if [ ! -d "${SRC_DIR}" ] ; then
   usage "No $SRC_DIR"
 fi
 
-# The preferred order is *.xcodeproj, build.xml, Makefile
+PRG="$0"
+PROG_HOME=`dirname "$PRG"`
+PROG_HOME=`cd "$PROG_HOME" && pwd`
 
-BUILD_FILE=`ls -1d $SRC_DIR/*.xcodeproj &> /dev/null`
+GET_BUILDER_TYPE=$PROG_HOME/get_builder_type.sh
+
+TEST_FILES=`ls -1 $SRC_DIR`
 if [ "$?" -eq 0 ] ; then
-    COUNT=`echo $BUILD_FILE | wc -l`
-    if [ "$COUNT" -eq 1 ] ; then
-        echo xcode
-        exit 0
+    TYPE=`$GET_BUILDER_TYPE $TEST_FILES`
+    if [ "$?" -eq 0 ] ; then
+      echo $TYPE
+      exit 0
     fi
     exit 1
-fi
-
-BUILD_FILE=`ls -1d $SRC_DIR/build.xml &> /dev/null`
-if [ "$?" -eq 0 ] ; then
-    echo ant
-    exit 0
-fi
-
-BUILD_FILE=`ls -1d $SRC_DIR/Makefile &> /dev/null`
-if [ "$?" -eq 0 ] ; then
-    echo make
-    exit 0
 fi
 
 exit 1
