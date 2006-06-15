@@ -33,7 +33,7 @@ public class Statics {
   public String toString() {
     StringBuffer sb = new StringBuffer();
                 
-    sb.append(getClass().getName().toString());
+    sb.append(getClass().getName());
     sb.append(" Location: ");
     sb.append(getLocation());
     sb.append(" Data: ");

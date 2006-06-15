@@ -48,7 +48,7 @@ public class Relation {
   public String toString() {
     StringBuffer sb = new StringBuffer();
                 
-    sb.append(getClass().getName().toString());
+    sb.append(getClass().getName());
     sb.append(" [");
     sb.append(getType());
     sb.append(", ");

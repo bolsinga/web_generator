@@ -33,7 +33,7 @@ public class Comments {
   public String toString() {
     StringBuffer sb = new StringBuffer();
                 
-    sb.append(getClass().getName().toString());
+    sb.append(getClass().getName());
     sb.append(" Date: ");
     sb.append(getDate());
     sb.append(" Data: ");

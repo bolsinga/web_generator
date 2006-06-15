@@ -67,7 +67,7 @@ public class Venue {
   public String toString() {
     StringBuffer sb = new StringBuffer();
                 
-    sb.append(getClass().getName().toString());
+    sb.append(getClass().getName());
     sb.append(" Name: ");
     sb.append(getName());
     sb.append(" City: ");

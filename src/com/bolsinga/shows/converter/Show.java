@@ -51,7 +51,7 @@ public class Show {
   public String toString() {
     StringBuffer sb = new StringBuffer();
                 
-    sb.append(getClass().getName().toString());
+    sb.append(getClass().getName());
     sb.append(" Date: ");
     sb.append(getDate());
 
