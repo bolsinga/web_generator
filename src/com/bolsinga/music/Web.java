@@ -1162,7 +1162,7 @@ public class Web {
     for (i = 0; i < values.length; i++) {
       trow = new tr();
       trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
-      trow.setClass((((i + 1) % 2) == 1) ? com.bolsinga.web.CSS.TABLE_ROW : com.bolsinga.web.CSS.TABLE_ROW_ALT);
+      trow.setClass((((i + 1) % 2) != 0) ? com.bolsinga.web.CSS.TABLE_ROW : com.bolsinga.web.CSS.TABLE_ROW_ALT);
       thh = new th(names[i]);
       thh.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
       trow.addElement(thh);
