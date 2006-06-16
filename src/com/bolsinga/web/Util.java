@@ -215,12 +215,18 @@ public class Util {
           c1 = com.bolsinga.music.Util.toCalendar(((com.bolsinga.music.data.Show)o1).getDate());
         } else if (o1 instanceof com.bolsinga.diary.data.Entry) {
           c1 = ((com.bolsinga.diary.data.Entry)o1).getTimestamp();
+        } else {
+          System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
+          System.exit(1);
         }
 
         if (o2 instanceof com.bolsinga.music.data.Show) {
           c2 = com.bolsinga.music.Util.toCalendar(((com.bolsinga.music.data.Show)o2).getDate());
         } else if (o2 instanceof com.bolsinga.diary.data.Entry) {
           c2 = ((com.bolsinga.diary.data.Entry)o2).getTimestamp();
+        } else {
+          System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
+          System.exit(1);
         }
         
         return c1.getTime().compareTo(c2.getTime());
