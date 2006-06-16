@@ -35,7 +35,7 @@ public class Site {
 
     com.bolsinga.web.Util.createSettings(settingsFile);
 
-    Site.generate(args[0], args[1], outputDir, variant);
+    Site.generate(diary, music, outputDir, variant);
   }
 
   private static void usage() {
