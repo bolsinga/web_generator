@@ -72,5 +72,5 @@ for style in ${KNOWN_STYLES} ; do
   fi
 done
 
-echo "$REPOS $PROJ_DIR $PROJ_NAME $REVIS"
+echo "$REPOS $REVIS $PROJ_DIR $PROJ_NAME"
 exit 0
