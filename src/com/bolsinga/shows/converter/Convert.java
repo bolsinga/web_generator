@@ -57,20 +57,27 @@ public class Convert {
 
   public static List relation(String filename) throws IOException {
     Vector relations = new Vector();
-                
-    LineNumberReader in = new LineNumberReader(new FileReader(filename));
-    String s = null;
-    StringTokenizer st = null;
-    while ((s = in.readLine()) != null) {
-      st = new StringTokenizer(s, "|");
 
-      Relation r = new Relation(st.nextToken(), st.nextToken());
-
-      while (st.hasMoreElements()) {
-        r.addMember(st.nextToken());
+    LineNumberReader in = null;
+    try {
+      in = new LineNumberReader(new FileReader(filename));
+      String s = null;
+      StringTokenizer st = null;
+      while ((s = in.readLine()) != null) {
+        st = new StringTokenizer(s, "|");
+        
+        Relation r = new Relation(st.nextToken(), st.nextToken());
+        
+        while (st.hasMoreElements()) {
+          r.addMember(st.nextToken());
+        }
+        
+        relations.add(r);
       }
-                        
-      relations.add(r);
+    } finally {
+      if (in != null) {
+        in.close();
+      }
     }
                 
     return relations;
@@ -79,13 +86,20 @@ public class Convert {
   public static List bandsort(String filename) throws IOException {
     Vector bandMaps = new Vector();
                 
-    LineNumberReader in = new LineNumberReader(new FileReader(filename));
-    String s = null;
-    StringTokenizer st = null;
-    while ((s = in.readLine()) != null) {
-      st = new StringTokenizer(s, "*");
-                        
-      bandMaps.add(new BandMap(st.nextToken(), st.nextToken()));
+    LineNumberReader in = null;
+    try {
+      in = new LineNumberReader(new FileReader(filename));
+      String s = null;
+      StringTokenizer st = null;
+      while ((s = in.readLine()) != null) {
+        st = new StringTokenizer(s, "*");
+        
+        bandMaps.add(new BandMap(st.nextToken(), st.nextToken()));
+      }
+    } finally {
+      if (in != null) {
+        in.close();
+      }
     }
 
     return bandMaps;
@@ -94,25 +108,32 @@ public class Convert {
   public static List venuemap(String filename) throws IOException {
     Vector venues = new Vector();
                 
-    LineNumberReader in = new LineNumberReader(new FileReader(filename));
-    String s = null;
-    StringTokenizer st = null;
-    while ((s = in.readLine()) != null) {
-      st = new StringTokenizer(s, "*");
-                        
-      Venue v = new Venue(st.nextToken(), st.nextToken(), st.nextToken());
-                        
-      if (st.hasMoreElements()) {
-        v.setAddress(st.nextToken());
+    LineNumberReader in = null;
+    try {
+      in = new LineNumberReader(new FileReader(filename));
+      String s = null;
+      StringTokenizer st = null;
+      while ((s = in.readLine()) != null) {
+        st = new StringTokenizer(s, "*");
+        
+        Venue v = new Venue(st.nextToken(), st.nextToken(), st.nextToken());
+        
+        if (st.hasMoreElements()) {
+          v.setAddress(st.nextToken());
+        }
+        
+        if (st.hasMoreElements()) {
+          v.setURL(st.nextToken());
+        }
+        
+        venues.add(v);
       }
-                        
-      if (st.hasMoreElements()) {
-        v.setURL(st.nextToken());
+    } finally {
+      if (in != null) {
+        in.close();
       }
-                        
-      venues.add(v);
     }
-                
+
     return venues;
   }
         
@@ -121,35 +142,42 @@ public class Convert {
         
     Vector shows = new Vector();
 
-    LineNumberReader in = new LineNumberReader(new FileReader(filename));
-    String l = null;
-    StringTokenizer st = null, bt = null;
-    while ((l = in.readLine()) != null) {
-      st = new StringTokenizer(l, SHOW_DELIMITER, true);
-
-      String date = st.nextToken();       // date
-      st.nextToken();                     // delim
-      String bandstring = st.nextToken(); // delimited bands
-      st.nextToken();                     // delim
-      String venue = st.nextToken();      // venue
-      String comment = null;
-      // The rest is optional
-      if (st.hasMoreElements()) {
-        st.nextToken();                                         // delim
-                                
-        // Need to see if there are comments
+    LineNumberReader in = null;
+    try {
+      in = new LineNumberReader(new FileReader(filename));
+      String l = null;
+      StringTokenizer st = null, bt = null;
+      while ((l = in.readLine()) != null) {
+        st = new StringTokenizer(l, SHOW_DELIMITER, true);
+        
+        String date = st.nextToken();       // date
+        st.nextToken();                     // delim
+        String bandstring = st.nextToken(); // delimited bands
+        st.nextToken();                     // delim
+        String venue = st.nextToken();      // venue
+        String comment = null;
+        // The rest is optional
         if (st.hasMoreElements()) {
+          st.nextToken();                                         // delim
+          
+          // Need to see if there are comments
+          if (st.hasMoreElements()) {
             comment = st.nextToken();
+          }
         }
+        
+        bt = new StringTokenizer(bandstring, "|");
+        Vector bands = new Vector();
+        while (bt.hasMoreElements()) {
+          bands.add(bt.nextToken());
+        }
+        
+        shows.add(new Show(date, bands, venue, comment));
       }
-                        
-      bt = new StringTokenizer(bandstring, "|");
-      Vector bands = new Vector();
-      while (bt.hasMoreElements()) {
-        bands.add(bt.nextToken());
+    } finally {
+      if (in != null) {
+        in.close();
       }
-                        
-      shows.add(new Show(date, bands, venue, comment));
     }
                 
     return shows;
@@ -162,19 +190,34 @@ public class Convert {
   public static List statics(String filename) throws IOException {
     Vector statics = new Vector();
 
-    FileChannel fc = new FileInputStream(new File(filename)).getChannel();
-    ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-    CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
-                
-    Matcher staticMatcher = sStaticPattern.matcher(cb);
-    while (staticMatcher.find()) {
-      String entry = staticMatcher.group(1);
-      Matcher locationMatcher = sLocationPattern.matcher(entry);
-      if (locationMatcher.find()) {
-        Matcher dataMatcher = sDataPattern.matcher(entry);
-        if (dataMatcher.find()) {
-          statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
+    FileInputStream fis = null;
+    try {
+      fis = new FileInputStream(new File(filename));
+      FileChannel fc = null;
+      try {
+        fc = fis.getChannel();
+        ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+        CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
+        
+        Matcher staticMatcher = sStaticPattern.matcher(cb);
+        while (staticMatcher.find()) {
+          String entry = staticMatcher.group(1);
+          Matcher locationMatcher = sLocationPattern.matcher(entry);
+          if (locationMatcher.find()) {
+            Matcher dataMatcher = sDataPattern.matcher(entry);
+          if (dataMatcher.find()) {
+            statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
+          }
+          }
         }
+      } finally {
+        if (fc != null) {
+          fc.close();
+        }
+      }
+    } finally {
+      if (fis != null) {
+        fis.close();
       }
     }
 
@@ -187,19 +230,34 @@ public class Convert {
   public static List comments(String filename) throws IOException {
     Vector comments = new Vector();
 
-    FileChannel fc = new FileInputStream(new File(filename)).getChannel();
-    ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-    CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
-
-    Matcher commentMatcher = sCommentPattern.matcher(cb);
-    while (commentMatcher.find()) {
-      String entry = commentMatcher.group(1);
-      Matcher dateMatcher = sDatePattern.matcher(entry);
-      if (dateMatcher.find()) {
-        Matcher dataMatcher = sDataPattern.matcher(entry);
-        if (dataMatcher.find()) {
-          comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
+    FileInputStream fis = null;
+    try {
+      fis = new FileInputStream(new File(filename));
+      FileChannel fc = null;
+      try {
+        fc = fis.getChannel();
+        ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+        CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
+        
+        Matcher commentMatcher = sCommentPattern.matcher(cb);
+        while (commentMatcher.find()) {
+          String entry = commentMatcher.group(1);
+          Matcher dateMatcher = sDatePattern.matcher(entry);
+          if (dateMatcher.find()) {
+            Matcher dataMatcher = sDataPattern.matcher(entry);
+            if (dataMatcher.find()) {
+              comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
+            }
+          }
         }
+      } finally {
+        if (fc != null) {
+          fc.close();
+        }
+      }
+    } finally {
+      if (fis != null) {
+        fis.close();
       }
     }
                 
