@@ -2,8 +2,8 @@
 
 usage ()
 {
-  echo "$0 src_dir"
-  echo "Error: $1"
+  echo "$0 src_dir" 1>&2
+  echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
 

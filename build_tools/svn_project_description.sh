@@ -2,15 +2,15 @@
 
 usage ()
 {
-  echo "$0 repository revision"
-  echo "Error: $1"
+  echo "$0 repository revision" 1>&2
+  echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
 
 if_failure()
 {
   if [ "$?" -ne 0 ] ; then
-    echo "Error: $1"
+    echo "$0: Failure Error: $1" 1>&2
     exit 1
   fi
 }
@@ -57,9 +57,9 @@ done
 
 proj_count=`echo $PROJ_DIR | wc -l`
 if [ $proj_count -ne 1 ] ; then
-  echo "Error: In Repository $REPOS Revision $REVIS:"
-  echo "There is more than one project changed. Projects:"
-  echo "$PROJ_DIR"
+  echo "Error: In Repository $REPOS Revision $REVIS:" 1>&2
+  echo "There is more than one project changed. Projects:" 1>&2
+  echo "$PROJ_DIR" 1>&2
   exit 1
 fi
 

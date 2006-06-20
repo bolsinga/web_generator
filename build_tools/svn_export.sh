@@ -2,15 +2,15 @@
 
 usage()
 {
-  echo "$0 repository project_dir revision src_dir"
-  echo "Error: $1"
+  echo "$0 repository project_dir revision src_dir" 1>&2
+  echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
 
 if_failure()
 {
   if [ "$?" -ne 0 ] ; then
-    echo "Error: $1"
+    echo "$0: Failure Error: $1" 1>&2
     exit 1
   fi
 }
@@ -32,7 +32,7 @@ fi
 
 SRC_DIR=$4
 if [ -z "$SRC_DIR" ] ; then
-    usage "No build_root_dir"
+    usage "No src_dir"
 fi
 NAMED_DIR=`basename $SRC_DIR`
 SRC_DIR=`dirname $SRC_DIR`

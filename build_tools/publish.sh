@@ -2,8 +2,8 @@
 
 usage()
 {
-  echo "$0 src_dir dest_dir project_name version"
-  echo $1
+  echo "$0 src_dir dest_dir project_name version" 1>&2
+  echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
 
