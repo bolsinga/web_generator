@@ -36,10 +36,13 @@ TEST_FILES=`$SVNLOOK tree $SVNREVIS $REPOS $PROJ_DIR | grep "^ \w"`
 if [ "$?" -eq 0 ] ; then
     TYPE=`$GET_BUILDER_TYPE $TEST_FILES`
     if [ "$?" -eq 0 ] ; then
+      echo "SVN Builder for $REPOS:$REVIS:$PROJ_DIR is $TYPE" 1>&2
       echo $TYPE
       exit 0
     fi
+    echo "Error: SVN Builder for $REPOS:$REVIS:$PROJ_DIR unknown for $TEST_FILES" 1>&2
     exit 1
 fi
 
+echo "Error: SVN Builder for $REPOS:$REVIS:$PROJ_DIR unknown" 1>&2
 exit 1

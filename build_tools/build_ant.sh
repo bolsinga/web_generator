@@ -36,7 +36,10 @@ if [ -z "$BUILD_NUMBER" ] ; then
   BUILD_NUMBER=999999
 fi
 
-cd $SRC_DIR ; ant -Dsrc.dir=$SRC_DIR -Dobj.dir=$OBJ_DIR -Ddst.dir=$DST_DIR -Dbuild.number=$BUILD_NUMBER 1>&2
+ARGS="-Dsrc.dir=$SRC_DIR -Dobj.dir=$OBJ_DIR -Ddst.dir=$DST_DIR -Dbuild.number=$BUILD_NUMBER"
+echo "ant build.xml $ARGS" 1>&2
+
+cd $SRC_DIR ; ant $ARGS 1>&2
 if_failure "Ant Build Failure!"
 
 exit 0

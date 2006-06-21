@@ -41,5 +41,7 @@ if [ ! -d "$SRC_DIR" ] ; then
 fi
 SRC_DIR=`cd "$SRC_DIR" && pwd`
 
-cd $SRC_DIR ; svn export -q -r $REVIS file://$REPOS/$PROJ_DIR $NAMED_DIR
+echo "SVN Export $REPOS/$PROJ_DIR -r $REVIS to $SRC_DIR/$NAMED_DIR" 1>&2
+
+cd $SRC_DIR ; svn export -r $REVIS file://$REPOS/$PROJ_DIR $NAMED_DIR 1>&2
 if_failure "Can't export $PROJ_DIR"

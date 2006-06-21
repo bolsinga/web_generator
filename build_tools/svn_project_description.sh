@@ -72,5 +72,7 @@ for style in ${KNOWN_STYLES} ; do
   fi
 done
 
+echo "SVN Project Description for $REPOS:$REVIS is $REPOS $REVIS $PROJ_DIR $PROJ_NAME" 1>&2
+
 echo "$REPOS $REVIS $PROJ_DIR $PROJ_NAME"
 exit 0

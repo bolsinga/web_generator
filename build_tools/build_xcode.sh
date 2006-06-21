@@ -36,7 +36,10 @@ if [ -z "$BUILD_NUMBER" ] ; then
   BUILD_NUMBER=999999
 fi
 
-cd $SRC_DIR ; xcodebuild SRC_DIR=$SRC_DIR OBJ_DIR=$OBJ_DIR DST_DIR=$DST_DIR BUILD_NUMBER=$BUILD_NUMBER 1>&2
+ARGS="SRC_DIR=$SRC_DIR OBJ_DIR=$OBJ_DIR DST_DIR=$DST_DIR BUILD_NUMBER=$BUILD_NUMBER"
+echo "xcodebuild $ARGS" 1>&2
+
+cd $SRC_DIR ; xcodebuild $ARGS 1>&2
 if_failure "Xcode Build Failure!"
 
 exit 0
