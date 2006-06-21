@@ -11,9 +11,8 @@ SITE_DIR=$1
 if [ -z "$SITE_DIR" ] ; then
   usage "No site_dir."
 fi
-
-SITE_TEST_DIR=`cd "$SITE_DIR" && pwd`
-if [ ! -d "${SITE_TEST_DIR}" ] ; then
+SITE_DIR=`cd "$SITE_DIR" && pwd`
+if [ ! -d "${SITE_DIR}" ] ; then
   usage "No $SITE_DIR"
 fi
 
@@ -41,4 +40,4 @@ PRG="$0"
 PROG_HOME=`dirname "$PRG"`
 PROG_HOME=`cd "$PROG_HOME" && pwd`
 
-ant -f $PROG_HOME/lib/upload.xml -Doutput.dir=$SITEDIR -Dftp.password=$FTP_PASSWORD $TYPE
+ant -f $PROG_HOME/lib/upload.xml -Doutput.dir=$SITE_DIR -Dftp.password=$FTP_PASSWORD $TYPE
