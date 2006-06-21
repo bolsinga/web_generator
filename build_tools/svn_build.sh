@@ -66,7 +66,7 @@ EXPORT=$PROG_HOME/svn_export.sh
 if_failure "Can't export $REPOS $REVIS $PROJ_DIR into $SRC_DIR"
 
 `$BUILDER $SRC_DIR $OBJ_DIR $DST_DIR`
-if_failure "Can't build $BUILDER $SRC_DIR $OBJ_DIR $DST_DIR"
+if_failure "Can't build $BUILDER $SRC_DIR $OBJ_DIR $DST_DIR $REVIS"
 
 echo "Build $BUILD_DIR Succeeded!"
 
