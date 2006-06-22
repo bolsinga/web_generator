@@ -2,7 +2,7 @@
 
 usage ()
 {
-  echo "$0 src_dir obj_dir dst_dir build_number" 1>&2
+  echo "$0 src_dir obj_dir dst_dir build_id" 1>&2
   echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
@@ -31,12 +31,12 @@ DST_DIR=$3
 if [ -z "$DST_DIR" ] ; then
   usage "No destination directory."
 fi
-BUILD_NUMBER=$4
-if [ -z "$BUILD_NUMBER" ] ; then
-  BUILD_NUMBER=999999
+BUILD_ID=$4
+if [ -z "$BUILD_ID" ] ; then
+  BUILD_ID=$USER-internal
 fi
 
-ARGS="SRC_DIR=$SRC_DIR OBJ_DIR=$OBJ_DIR DST_DIR=$DST_DIR BUILD_NUMBER=$BUILD_NUMBER"
+ARGS="SRC_DIR=$SRC_DIR OBJ_DIR=$OBJ_DIR DST_DIR=$DST_DIR BUILD_ID=$BUILD_ID"
 echo "make $ARGS" 1>&2
 
 cd $SRC_DIR ; make $ARGS 1>&2
