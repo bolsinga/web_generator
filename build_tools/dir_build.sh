@@ -34,7 +34,7 @@ BUILD_DIR=$SRC_DIR/build-$REVIS/
 
 mkdir -p $BUILD_DIR
 
-GET_BUILDER=$PROG_HOME/get_builder.sh
+GET_BUILDER=$PROG_HOME/dir_get_builder.sh
 BUILD_TYPE=`$GET_BUILDER $SRC_DIR`
 if_failure "Can't get build type for $REPOS $REVIS $PROJ_DIR"
 
