@@ -44,8 +44,8 @@ TMP_DIR=$UNIQUE_DIR/$TAR_NAME
 mkdir -p $TMP_DIR
 cp -r $SRC_DIR/ $TMP_DIR
 
-echo "Creating $DEST_DIR/$TAR_NAME.tar.gz"
+echo "Creating $DEST_DIR/$TAR_NAME.tar.gz" 1>&2
 
-cd $UNIQUE_DIR ; tar czf $DEST_DIR/$TAR_NAME.tar.gz $TAR_NAME
+cd $UNIQUE_DIR ; tar czfv $DEST_DIR/$TAR_NAME.tar.gz $TAR_NAME 1>&2
 
 rm -rf $UNIQUE_DIR
