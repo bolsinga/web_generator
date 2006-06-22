@@ -1,8 +1,5 @@
 #!/bin/sh
 
-TMP_LOG_FILE=/tmp/build_log_$$.txt
-exec > $TMP_LOG_FILE 2>&1
-
 usage ()
 {
   echo "$0 repository revision" 1>&2
@@ -17,6 +14,10 @@ if_failure ()
     exit 1
   fi
 }
+
+LOG_FILE=/tmp/build-$USER-$$.log
+(
+exec 2>&1
 
 REPOS=$1
 if [ -z "$REPOS" ] ; then
@@ -54,10 +55,11 @@ fi
 BUILD_DIR=$BUILD_DIR/$PROJ_NAME-$REVIS
 mkdir -p $BUILD_DIR
 
-# Now that we know more about the project, start logging to the real location
-LOG_FILE=$BUILD_DIR/build_log.txt
-mv $TMP_LOG_FILE $LOG_FILE
-exec >> $LOG_FILE 2>&1
+# This will start logging to a unique log file, but once we know
+#  our build location we want it to log there. The following
+#  command makes these two files the same, and the 'tmp' log
+#  file location is removed at the end of the script.
+ln $LOG_FILE $BUILD_DIR/build_log.txt
 
 GET_BUILDER=$PROG_HOME/svn_get_builder.sh
 BUILD_TYPE=`$GET_BUILDER $REPOS $PROJ_DIR $REVIS`
@@ -81,5 +83,8 @@ PUBLISH=$PROG_HOME/publish.sh
 if_failure "Can't publish $PUBLISH $DST_DIR $BUILD_DIR $PROJ_NAME $REVIS"
 
 echo "Build $BUILD_DIR Succeeded!"
+) | tee -a $LOG_FILE
+
+rm $LOG_FILE
 
 exit 0
