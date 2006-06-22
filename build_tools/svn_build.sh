@@ -78,7 +78,7 @@ if_failure "Can't build $BUILDER $SRC_DIR $OBJ_DIR $DST_DIR $REVIS"
 
 PUBLISH=$PROG_HOME/publish.sh
 `$PUBLISH $DST_DIR $BUILD_DIR $PROJ_NAME $REVIS`
-if_failure "Can't publish $PUBLISH $SRC_DIR $OBJ_DIR $DST_DIR $REVIS"
+if_failure "Can't publish $PUBLISH $DST_DIR $BUILD_DIR $PROJ_NAME $REVIS"
 
 echo "Build $BUILD_DIR Succeeded!"
 
