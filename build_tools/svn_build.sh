@@ -76,6 +76,10 @@ if_failure "Can't export $REPOS $REVIS $PROJ_DIR into $SRC_DIR"
 `$BUILDER $SRC_DIR $OBJ_DIR $DST_DIR`
 if_failure "Can't build $BUILDER $SRC_DIR $OBJ_DIR $DST_DIR $REVIS"
 
+PUBLISH=$PROG_HOME/publish.sh
+`$PUBLISH $DST_DIR $BUILD_DIR $PROJ_NAME $REVIS`
+if_failure "Can't publish $PUBLISH $SRC_DIR $OBJ_DIR $DST_DIR $REVIS"
+
 echo "Build $BUILD_DIR Succeeded!"
 
 exit 0
