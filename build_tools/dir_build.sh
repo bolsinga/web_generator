@@ -15,6 +15,10 @@ if_failure ()
   fi
 }
 
+LOG_FILE=/tmp/build-$USER-$$.log
+(
+exec 2>&1
+
 SRC_DIR=$1
 if [ -z "$SRC_DIR" ] ; then
   SRC_DIR=`pwd`
@@ -34,6 +38,12 @@ BUILD_DIR=$SRC_DIR/build-$REVIS/
 
 mkdir -p $BUILD_DIR
 
+# This will start logging to a unique log file, but once we know
+#  our build location we want it to log there. The following
+#  command makes these two files the same, and the 'tmp' log
+#  file location is removed at the end of the script.
+ln $LOG_FILE $BUILD_DIR/build_log.txt
+
 GET_BUILDER=$PROG_HOME/dir_get_builder.sh
 BUILD_TYPE=`$GET_BUILDER $SRC_DIR`
 if_failure "Can't get build type for $SRC_DIR"
@@ -47,5 +57,8 @@ DST_DIR=$BUILD_DIR/dst
 if_failure "Can't build $BUILDER $SRC_DIR $OBJ_DIR $DST_DIR $REVIS"
 
 echo "Build $BUILD_DIR Succeeded!"
+) | tee -a $LOG_FILE
+
+rm $LOG_FILE
 
 exit 0
