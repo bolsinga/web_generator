@@ -20,7 +20,7 @@
 <property name="build.classes" value="${obj.dir}/classes" />
 <property name="build.gensrc" value="${obj.dir}/gensrc" />
 
-<property name="sym.dir" value="${build.dir}/sym" />
+<property name="sym.dir" value="${obj.dir}/sym" />
 <property name="build.lib" value="${sym.dir}/lib" />
 
 <property name="dst.dir" value="${build.dir}/dst" />
