@@ -28,16 +28,7 @@
 
 <property name="jwsdp.home" value="${lib.dir}/jwsdp-1_3" />
 
-<target name="build_version" unless="build.version" >
-  <property name="svn.vers.file" value="${obj.dir}/svnvers" />
-  <exec executable="svnversion" output="${svn.vers.file}" >
-    <arg value="-c" />
-  </exec>
-  <exec executable="cut" input="${svn.vers.file}" outputproperty="build.version" >
-    <arg value="-f2" />
-    <arg value="-d:" />
-  </exec>
-</target>
+<property name="build.id" value="${user.name}-internal" />
 
 <path id="jaxb_xjc_classpath">
         <pathelement path="." />
@@ -186,7 +177,7 @@
         </javac>
 </target>
 
-<target name="web" depends="settings_binding, music_binding, diary_binding, build_version">
+<target name="web" depends="settings_binding, music_binding, diary_binding">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
@@ -202,7 +193,7 @@
         <copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/web.properties">
                 <filterset>
                         <filter token="builddate" value="${web.builddate}" />
-                        <filter token="program" value="com.bolsinga.site-${build.version}" />
+                        <filter token="program" value="com.bolsinga.site-${build.id}" />
                         <filter token="copyright" value="Program Copyright (c) 2004 - ${web.buildyear} Greg Bolsinga" />
                 </filterset>
         </copy>
