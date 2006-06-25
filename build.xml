@@ -10,11 +10,11 @@
 <property name="data.dir" value="../data/" />
 <property name="output.dir" value="/tmp/web" />
 
-<property name="src.dir" value="src" />
-<property name="lib.dir" value="lib" />
+<property name="src.dir" value="${basedir}/src" />
+<property name="lib.dir" value="${basedir}/lib" />
 
 <!-- This property is the root build dir property. -->
-<property name="build.dir" value="output" />
+<property name="build.dir" value="${basedir}/output" />
 
 <property name="obj.dir" value="${build.dir}/obj" />
 <property name="build.classes" value="${obj.dir}/classes" />
