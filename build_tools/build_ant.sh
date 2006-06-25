@@ -2,7 +2,7 @@
 
 usage ()
 {
-  echo "$0 src_dir obj_dir dst_dir build_id" 1>&2
+  echo "$0 src_dir obj_dir sym_dir dst_dir build_id" 1>&2
   echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
@@ -27,16 +27,20 @@ OBJ_DIR=$2
 if [ -z "$OBJ_DIR" ] ; then
   usage "No objects directory."
 fi
-DST_DIR=$3
+SYM_DIR=$3
+if [ -z "$SYM_DIR" ] ; then
+  usage "No symbols directory."
+fi
+DST_DIR=$4
 if [ -z "$DST_DIR" ] ; then
   usage "No destination directory."
 fi
-BUILD_ID=$4
+BUILD_ID=$5
 if [ -z "$BUILD_ID" ] ; then
   BUILD_ID=$USER-internal
 fi
 
-ARGS="-Dsrc.dir=$SRC_DIR -Dobj.dir=$OBJ_DIR -Ddst.dir=$DST_DIR -Dbuild.id=$BUILD_ID"
+ARGS="-Dsym.dir=$SYM_DIR -Dobj.dir=$OBJ_DIR -Ddst.dir=$DST_DIR -Dbuild.id=$BUILD_ID"
 echo "ant build.xml $ARGS" 1>&2
 
 cd $SRC_DIR ; ant $ARGS 1>&2

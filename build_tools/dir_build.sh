@@ -51,10 +51,11 @@ if_failure "Can't get build type for $SRC_DIR"
 BUILDER=$PROG_HOME/build_$BUILD_TYPE.sh
 
 OBJ_DIR=$BUILD_DIR/obj
+SYM_DIR=$BUILD_DIR/sym
 DST_DIR=$BUILD_DIR/dst
 
-`$BUILDER $SRC_DIR $OBJ_DIR $DST_DIR $REVIS`
-if_failure "Can't build $BUILDER $SRC_DIR $OBJ_DIR $DST_DIR $REVIS"
+`$BUILDER $SRC_DIR $OBJ_DIR $SYM_DIR $DST_DIR $REVIS`
+if_failure "Can't build $BUILDER $SRC_DIR $OBJ_DIR $SYM_DIR $DST_DIR $REVIS"
 
 echo "Build $BUILD_DIR Succeeded!"
 ) | tee -a $LOG_FILE
