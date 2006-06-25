@@ -67,8 +67,8 @@
 </target>
 
 <target name="music_binding" depends="prepare">
-        <xjc schema="xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data" removeOldOutput="yes">
-                <depends dir="xml" includes="music.xsd" />
+        <xjc schema="${basedir}/xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data" removeOldOutput="yes">
+                <depends dir="${basedir}/xml" includes="music.xsd" />
                 <produces dir="${build.gensrc}/com/bolsinga/music/data" includes="*impl/*" />
         </xjc>
         <javac  destdir="${build.classes}"
@@ -86,8 +86,8 @@
 </target>
 
 <target name="diary_binding" depends="prepare">
-        <xjc schema="xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data" removeOldOutput="yes">
-                <depends dir="xml" includes="diary.xsd" />
+        <xjc schema="${basedir}/xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data" removeOldOutput="yes">
+                <depends dir="${basedir}/xml" includes="diary.xsd" />
                 <produces dir="${build.gensrc}/com/bolsinga/diary/data" includes="*impl/*" />
         </xjc>
         <javac  destdir="${build.classes}"
@@ -105,8 +105,8 @@
 </target>
 
 <target name="rss_binding" depends="prepare">
-        <xjc schema="xml/rss-2_0.xsd" target="${build.gensrc}" package="com.bolsinga.rss.data" removeOldOutput="yes" extension="true">
-                <depends dir="xml" includes="rss-2_0.xsd" />
+        <xjc schema="${basedir}/xml/rss-2_0.xsd" target="${build.gensrc}" package="com.bolsinga.rss.data" removeOldOutput="yes" extension="true">
+                <depends dir="${basedir}/xml" includes="rss-2_0.xsd" />
                 <produces dir="${build.gensrc}/com/bolsinga/rss/data" includes="*impl/*" />
         </xjc>
         <javac  destdir="${build.classes}"
@@ -124,8 +124,8 @@
 </target>
 
 <target name="plist_binding" depends="prepare">
-        <xjc schema="xml/PropertyList-1.0.xsd" target="${build.gensrc}" package="com.bolsinga.plist.data" removeOldOutput="yes" extension="true">
-                <depends dir="xml" includes="PropertyList-1.0.xsd" />
+        <xjc schema="${basedir}/xml/PropertyList-1.0.xsd" target="${build.gensrc}" package="com.bolsinga.plist.data" removeOldOutput="yes" extension="true">
+                <depends dir="${basedir}/xml" includes="PropertyList-1.0.xsd" />
                 <produces dir="${build.gensrc}/com/bolsinga/plist/data" includes="*impl/*" />
         </xjc>
         <javac  destdir="${build.classes}"
@@ -143,8 +143,8 @@
 </target>
 
 <target name="settings_binding" depends="prepare">
-        <xjc schema="xml/settings.xsd" target="${build.gensrc}" package="com.bolsinga.settings.data" removeOldOutput="yes" extension="true">
-                <depends dir="xml" includes="settings.xsd" />
+        <xjc schema="${basedir}/xml/settings.xsd" target="${build.gensrc}" package="com.bolsinga.settings.data" removeOldOutput="yes" extension="true">
+                <depends dir="${basedir}/xml" includes="settings.xsd" />
                 <produces dir="${build.gensrc}/com/bolsinga/settings/data" includes="*impl/*" />
         </xjc>
         <javac  destdir="${build.classes}"
