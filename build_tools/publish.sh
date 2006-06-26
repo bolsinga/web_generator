@@ -37,15 +37,12 @@ fi
 
 TAR_NAME=$PROJECT-$VERSION
 
-UNIQUE_DIR=/tmp/$TAR_NAME-`id -u`-$$
-
-TMP_DIR=$UNIQUE_DIR/$TAR_NAME
-
-mkdir -p $TMP_DIR
-cp -r $SRC_DIR/ $TMP_DIR
+cd $SRC_DIR/.. ; ln -s $SRC_DIR $TAR_NAME
 
 echo "Creating $DEST_DIR/$TAR_NAME.tar.gz" 1>&2
 
-cd $UNIQUE_DIR ; tar czfv $DEST_DIR/$TAR_NAME.tar.gz $TAR_NAME 1>&2
+cd $SRC_DIR/.. ; tar czfhv $DEST_DIR/$TAR_NAME.tar.gz $TAR_NAME 1>&2
 
-rm -rf $UNIQUE_DIR
+cd $SRC_DIR/.. ; rm $TAR_NAME
+
+exit 0
