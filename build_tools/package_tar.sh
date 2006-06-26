@@ -7,6 +7,14 @@ usage()
   exit 1
 }
 
+if_failure ()
+{
+  if [ "$?" -ne 0 ] ; then
+    echo "$0: Failure Error: $1" 1>&2
+    exit 1
+  fi
+}
+
 SRC_DIR=$1
 if [ -z "$SRC_DIR" ] ; then
   usage "No src_dir."
@@ -38,10 +46,12 @@ fi
 TAR_NAME=$PROJECT-$VERSION
 
 cd $SRC_DIR/.. ; ln -s $SRC_DIR $TAR_NAME
+if_failure "symlink failed $SRC_DIR $TAR_NAME"
 
 echo "Creating $DEST_DIR/$TAR_NAME.tar.gz" 1>&2
 
 cd $SRC_DIR/.. ; tar czfhv $DEST_DIR/$TAR_NAME.tar.gz $TAR_NAME 1>&2
+if_failure "tar $DEST_DIR/$TAR_NAME.tar.gz failed"
 
 cd $SRC_DIR/.. ; rm $TAR_NAME
 
