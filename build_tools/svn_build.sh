@@ -79,9 +79,9 @@ if_failure "Can't export $REPOS $REVIS $PROJ_DIR into $SRC_DIR"
 `$BUILDER $SRC_DIR $OBJ_DIR $SYM_DIR $DST_DIR $REVIS`
 if_failure "Can't build $BUILDER $SRC_DIR $OBJ_DIR $SYM_DIR $DST_DIR $REVIS"
 
-PUBLISH=$PROG_HOME/publish.sh
-`$PUBLISH $DST_DIR $BUILD_DIR $PROJ_NAME $REVIS`
-if_failure "Can't publish $PUBLISH $DST_DIR $BUILD_DIR $PROJ_NAME $REVIS"
+PACKAGE_TAR=$PROG_HOME/package_tar.sh
+`$PACKAGE_TAR $DST_DIR $BUILD_DIR $PROJ_NAME $REVIS`
+if_failure "Can't package tar file $PACKAGE_TAR $DST_DIR $BUILD_DIR $PROJ_NAME $REVIS"
 
 echo "Build $BUILD_DIR Succeeded!"
 ) | tee -a $LOG_FILE
