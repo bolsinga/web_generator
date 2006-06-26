@@ -2,7 +2,7 @@
 
 usage()
 {
-  echo "$0 repository project_dir revision src_dir" 1>&2
+  echo "$0 repository project_dir revision export_dir" 1>&2
   echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
@@ -30,18 +30,18 @@ if [ -z "$REVIS" ] ; then
     usage "No revision"
 fi
 
-SRC_DIR=$4
-if [ -z "$SRC_DIR" ] ; then
-    usage "No src_dir"
+EXPORT_DIR=$4
+if [ -z "$EXPORT_DIR" ] ; then
+    usage "No export_dir"
 fi
-NAMED_DIR=`basename $SRC_DIR`
-SRC_DIR=`dirname $SRC_DIR`
-if [ ! -d "$SRC_DIR" ] ; then
-  mkdir -p $SRC_DIR
+NAMED_DIR=`basename $EXPORT_DIR`
+EXPORT_DIR=`dirname $EXPORT_DIR`
+if [ ! -d "$EXPORT_DIR" ] ; then
+  mkdir -p $EXPORT_DIR
 fi
-SRC_DIR=`cd "$SRC_DIR" && pwd`
+EXPORT_DIR=`cd "$EXPORT_DIR" && pwd`
 
-echo "SVN Export $REPOS/$PROJ_DIR -r $REVIS to $SRC_DIR/$NAMED_DIR" 1>&2
+echo "SVN Export $REPOS/$PROJ_DIR -r $REVIS to $EXPORT_DIR/$NAMED_DIR" 1>&2
 
-cd $SRC_DIR ; svn export -r $REVIS file://$REPOS/$PROJ_DIR $NAMED_DIR 1>&2
+cd $EXPORT_DIR ; svn export -r $REVIS file://$REPOS/$PROJ_DIR $NAMED_DIR 1>&2
 if_failure "Can't export $PROJ_DIR"
