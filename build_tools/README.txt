@@ -1,4 +1,3 @@
-TEsting edit
 This directory contains tools used (and related to) automatic builds after svn post-commit hooks.
 
 ----------
