@@ -100,6 +100,8 @@ svn_get_tool.sh
 ----------
 svn_post_commit.sh
 
-- This script is the root svn post-commit hook tool.
+- This script is the root svn post-commit hook tool. It uses svn_get_tool.sh to determine
+  if this repository revision pair supports auto-build, and if it does fires off the
+  auto-build tool with the results of the svn_project_description.sh tool.
  repository - The name of the repository (also passed to svn post-commit) to export from.
  revision - The revision of repository (also passed to svn post-commit) to export.
