@@ -57,8 +57,7 @@ package_tar.sh
 - This script will tar up a given directory in a given location with a versioned name.
  src_dir - The directory that will be tar'ed up.
  dest_dir - The directory where "<project_name>-<version>.tar.gz" will be created.
- project_name - The project name used to name the tar file.
- version - The project version used to name the tar file.
+ tar_name - The name used to name the tar file.
 
 ----------
 svn_build.sh
