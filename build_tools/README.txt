@@ -31,7 +31,8 @@ svn_export.sh
 
 - This script will export a svn directory revision to a given directory.
  repository - The name of the repository (also passed to svn post-commit) to export from.
- project_dir - The project directory in the repository to export.
+ project_dir - The project directory in the repository to export (obtained from
+  svn_project_description.sh).
  revision - The revision of repository (also passed to svn post-commit) to export.
  export_dir - The directory to export into.
 
@@ -70,6 +71,9 @@ svn_build.sh
   BUILD_DIR. If it is not set, it will set BUILD_DIR to "/tmp/svn-build/<process_id>".
  repository - The name of the repository (also passed to svn post-commit) to export from.
  revision - The revision of repository (also passed to svn post-commit) to export.
+ project_dir - The project directory in the repository to export (obtained from
+  svn_project_description.sh).
+ project_name - The project name (obtained from svn_project_description.sh).
 
 ----------
 dir_build.sh
@@ -88,5 +92,15 @@ svn_get_tool.sh
   for the project directory as the full path of the tools used to automatically build the
   given directory. If there is no svn property, this svn project is assumed to not be 
   automatically built.
+ repository - The name of the repository (also passed to svn post-commit) to export from.
+ revision - The revision of repository (also passed to svn post-commit) to export.
+ project_dir - The project directory in the repository to export (obtained from
+  svn_project_description.sh).
+ project_name - The project name (obtained from svn_project_description.sh).
+
+----------
+svn_post_commit.sh
+
+- This script is the root svn post-commit hook tool.
  repository - The name of the repository (also passed to svn post-commit) to export from.
  revision - The revision of repository (also passed to svn post-commit) to export.

@@ -2,7 +2,7 @@
 
 usage ()
 {
-  echo "$0 repository revision" 1>&2
+  echo "$0 repository revision project_directory project_name" 1>&2
   echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
@@ -33,20 +33,19 @@ if [ -z "$REVIS" ] ; then
   usage "No revision."
 fi
 
+PROJ_DIR=$3
+if [ -z "$PROJ_DIR" ] ; then
+  usage "No project_directory."
+fi
+
+PROJ_NAME=$4
+if [ -z "$PROJ_NAME" ] ; then
+  usage "No project_name."
+fi
+
 PRG="$0"
 PROG_HOME=`dirname "$PRG"`
 PROG_HOME=`cd "$PROG_HOME" && pwd`
-
-GET_PROJ_DESC=$PROG_HOME/svn_project_description.sh
-PROJ_DESC=`$GET_PROJ_DESC $REPOS $REVIS`
-if_failure "Can't get project description for $REPOS $REVIS"
-
-# Get everything after the $REVIS (Note the trailing ' '!)
-PARTIAL_DESC=${PROJ_DESC#*$REVIS }
-# Get everything before the ' '
-PROJ_DIR=${PARTIAL_DESC%* *}
-# Get everything after the ' '
-PROJ_NAME=${PARTIAL_DESC#* *}
 
 if [ -z "$BUILD_DIR" ] ; then
     BUILD_DIR=/tmp/svn-build/$$/
@@ -60,6 +59,7 @@ mkdir -p $BUILD_DIR
 #  command makes these two files the same, and the 'tmp' log
 #  file location is removed at the end of the script.
 ln $LOG_FILE $BUILD_DIR/build_log.txt
+if_failure "Can't ln $LOG_FILE $BUILD_DIR/build_log.txt"
 
 GET_BUILDER=$PROG_HOME/svn_get_builder.sh
 BUILD_TYPE=`$GET_BUILDER $REPOS $PROJ_DIR $REVIS`

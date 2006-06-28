@@ -2,7 +2,7 @@
 
 usage ()
 {
-  echo "$0 repository revision" 1>&2
+  echo "$0 repository revision project_directory project_name" 1>&2
   echo "$0: Usage Error: $1" 1>&2
   exit 1
 }
@@ -29,20 +29,15 @@ if [ -z "$REVIS" ] ; then
   usage "No revision."
 fi
 
-PRG="$0"
-PROG_HOME=`dirname "$PRG"`
-PROG_HOME=`cd "$PROG_HOME" && pwd`
+PROJ_DIR=$3
+if [ -z "$PROJ_DIR" ] ; then
+  usage "No project_directory."
+fi
 
-GET_PROJ_DESC=$PROG_HOME/svn_project_description.sh
-PROJ_DESC=`$GET_PROJ_DESC $REPOS $REVIS`
-if_failure "Can't get project description for $REPOS $REVIS"
-
-# Get everything after the $REVIS (Note the trailing ' '!)
-PARTIAL_DESC=${PROJ_DESC#*$REVIS }
-# Get everything before the ' '
-PROJ_DIR=${PARTIAL_DESC%* *}
-# Get everything after the ' '
-PROJ_NAME=${PARTIAL_DESC#* *}
+PROJ_NAME=$4
+if [ -z "$PROJ_NAME" ] ; then
+  usage "No project_name."
+fi
 
 SVNLOOK=/usr/local/bin/svnlook
 
@@ -54,8 +49,8 @@ echo "$SVNLOOK $ARGS" 1>&2
 AUTO_TOOL=`$SVNLOOK $ARGS`
 if_failure "$SVNLOOK $ARGS: $AUTO_TOOL"
 
-if [ -z $AUTO_TOOL ] ; then
-  echo "$REPOS $REVIS $PROJ_DIR $PROJ_NAME doesn't svn auto-build." 1>&2
+if [ -z "$AUTO_TOOL" ] ; then
+  echo "$REPOS $REVIS $PROJ_DIR $PROJ_NAME does not svn auto-build." 1>&2
   exit 1
 fi
 
@@ -63,5 +58,3 @@ echo "SVN auto-build for $REPOS $REVIS $PROJ_DIR $PROJ_NAME is $AUTO_TOOL" 1>&2
 echo $AUTO_TOOL
 
 exit 0  
-
-
