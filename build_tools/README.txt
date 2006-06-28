@@ -79,3 +79,14 @@ dir_build.sh
   package_tar.sh.
  <src_dir> - An optional directory to build. If nothing is supplied, the current directory
   is used.
+
+----------
+svn_get_tool.sh
+
+- This script will return the name of the program to run for the given repository and revision
+  as a part of running from a svn post-commit hook. It reads the "auto-build" svn property
+  for the project directory as the full path of the tools used to automatically build the
+  given directory. If there is no svn property, this svn project is assumed to not be 
+  automatically built.
+ repository - The name of the repository (also passed to svn post-commit) to export from.
+ revision - The revision of repository (also passed to svn post-commit) to export.
