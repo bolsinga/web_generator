@@ -193,7 +193,7 @@
         <copy file="${src.dir}/properties/config.properties" tofile="${build.classes}/com/bolsinga/web/web.properties">
                 <filterset>
                         <filter token="builddate" value="${web.builddate}" />
-                        <filter token="program" value="com.bolsinga.site-(TMP)-${build.id}" />
+                        <filter token="program" value="com.bolsinga.site-${build.id}" />
                         <filter token="copyright" value="Program Copyright (c) 2004 - ${web.buildyear} Greg Bolsinga" />
                 </filterset>
         </copy>
