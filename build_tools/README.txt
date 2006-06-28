@@ -84,6 +84,19 @@ dir_build.sh
   is used.
 
 ----------
+svn_package.sh
+
+- This script is intended to be called via the svn post-commit hook. It uses a selection of
+  the above tools to simply package up the given directory. All of the work it does is
+  logged into a text file. It will create its results into the environment variable
+  BUILD_DIR. If it is not set, it will set BUILD_DIR to "/tmp/svn-package/<process_id>".
+ repository - The name of the repository (also passed to svn post-commit) to export from.
+ revision - The revision of repository (also passed to svn post-commit) to export.
+ project_dir - The project directory in the repository to export (obtained from
+  svn_project_description.sh).
+ project_name - The project name (obtained from svn_project_description.sh).
+
+----------
 svn_get_tool.sh
 
 - This script will return the name of the program to run for the given repository and revision
