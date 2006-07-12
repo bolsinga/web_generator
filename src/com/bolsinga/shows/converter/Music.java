@@ -11,9 +11,11 @@ import com.bolsinga.music.data.*;
 
 public class Music {
 
-  private static HashMap sVenues = new HashMap();
-  private static HashMap sBandSorts = new HashMap();
-  private static HashMap sArtists = new HashMap();
+  private static final HashMap<String, com.bolsinga.music.data.Venue> sVenues =
+    new HashMap<String, com.bolsinga.music.data.Venue>();
+  private static final HashMap<String, String> sBandSorts = new HashMap<String, String>();
+  private static final HashMap<String, com.bolsinga.music.data.Artist> sArtists =
+    new HashMap<String, com.bolsinga.music.data.Artist>();
 
   private static final boolean TIDY_XML = false;
         
@@ -65,7 +67,7 @@ public class Music {
         
   private static void dumpSimilarArtists(com.bolsinga.music.data.Music music) {
     String s;
-    HashSet bands = new HashSet();
+    HashSet<String> bands = new HashSet<String>();
                 
     ListIterator i = music.getArtist().listIterator();
     while (i.hasNext()) {
@@ -164,7 +166,7 @@ public class Music {
   private static void createRelations(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List relations) throws JAXBException {
     Relation oldRelation = null;
     com.bolsinga.music.data.Relation xRelation = null;
-    String type = null, member = null, reason = null;
+    String type = null, reason = null;
     ListIterator mi = null;
     int index = 0;
                 
@@ -183,17 +185,13 @@ public class Music {
       if (type.equals("band")) {
         xRelation.setType("artist");
 
-        mi = oldRelation.getMembers().listIterator();
-        while (mi.hasNext()) {
-          member = (String)mi.next();
+        for (String member : oldRelation.getMembers()) {
           xRelation.getMember().add(sArtists.get(member));
         }
       } else if (type.equals("venue")) {
         xRelation.setType(type);
-                                
-        mi = oldRelation.getMembers().listIterator();
-        while (mi.hasNext()) {
-          member = (String)mi.next();
+
+        for (String member : oldRelation.getMembers()) {
           xRelation.getMember().add(sVenues.get(member));
         }
       } else {
@@ -247,12 +245,12 @@ public class Music {
       result.setName(name);
       result.setId("ar" + sArtists.size());
       if (sBandSorts.containsKey(name)) {
-        result.setSortname((String)sBandSorts.get(name));
+        result.setSortname(sBandSorts.get(name));
       }
       music.getArtist().add(result);
       sArtists.put(name, result);
     } else {
-      result = (com.bolsinga.music.data.Artist)sArtists.get(name);
+      result = sArtists.get(name);
     }
     return result;
   }

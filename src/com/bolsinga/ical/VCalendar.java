@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class VCalendar {
-  Vector fEvents = new Vector();
+  Vector<VEvent> fEvents = new Vector<VEvent>();
   String fName = null;
         
   public VCalendar(String name) {
@@ -26,15 +26,11 @@ public class VCalendar {
       w.write("\r\n");
       w.write("VERSION:2.0");
       w.write("\r\n");
-                        
-      VEvent event = null;
-      ListIterator i = fEvents.listIterator();
-      while (i.hasNext()) {
-        event = (VEvent)i.next();
-                                
+
+      for (VEvent event : fEvents) {
         event.output(w);
       }
-                        
+
       w.write("END:VCALENDAR");
       w.write("\r\n");
                         

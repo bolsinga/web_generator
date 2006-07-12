@@ -97,13 +97,11 @@ public class Util {
     return an;
   }
 
-  public static ul createUnorderedList(Vector elements) {
+  public static ul createUnorderedList(Vector<Element> elements) {
     ul list = new ul();
     list.setPrettyPrint(Util.getPrettyPrint());
 
-    Iterator i = elements.iterator();
-    while (i.hasNext()) {
-      Element e = (Element)i.next();
+    for (Element e : elements) {
       li item = new li(e);
       item.setPrettyPrint(Util.getPrettyPrint());
       list.addElement(item);
@@ -112,13 +110,11 @@ public class Util {
     return list;
   }
 
-  public static ol createOrderedList(Vector elements) {
+  public static ol createOrderedList(Vector<Element> elements) {
     ol list = new ol();
     list.setPrettyPrint(Util.getPrettyPrint());
 
-    Iterator i = elements.iterator();
-    while (i.hasNext()) {
-      Element e = (Element)i.next();
+    for (Element e : elements) {
       li item = new li(e);
       item.setPrettyPrint(Util.getPrettyPrint());
       list.addElement(item);

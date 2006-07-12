@@ -124,10 +124,10 @@ class EncoderData {
   // Don't use venues with lower case names, these are 'vague' venues.
   public static final Pattern sStartsLowerCase = Pattern.compile("\\p{Lower}.*");
   
-  String fName = null;
-  Pattern fPattern = null;
-  String fStandardLink = null;
-  String fUpLink = null;
+  private final String fName;
+  private final Pattern fPattern;
+  private final String fStandardLink;
+  private final String fUpLink;
   
   public static final Comparator ENCODERDATA_COMPARATOR = new Comparator() {
       public int compare(Object o1, Object o2) {
@@ -291,7 +291,7 @@ class EncoderData {
 
 class RegexEncode extends Encode {
 
-  private TreeSet fEncodings = new TreeSet(EncoderData.ENCODERDATA_COMPARATOR);
+  private final TreeSet fEncodings = new TreeSet(EncoderData.ENCODERDATA_COMPARATOR);
 
   public String embedLinks(Show show, boolean upOneLevel) {
     return EncoderData.addLinks(show.getComment(), upOneLevel, fEncodings);
@@ -371,17 +371,14 @@ class HashEncode extends Encode {
       
       // get the intersection of the words between the encoded and the encoders.
       //  These words serve as the base line to determine what work will need to be done.
-      HashSet keyWordsSet = new HashSet(encoderMap.keySet());
+      HashSet<String> keyWordsSet = new HashSet<String>(encoderMap.keySet());
       keyWordsSet.retainAll(encodedMap.keySet());
       
       int capacity = keyWordsSet.size() / WORDS_PER_ENTRY;
       fEncodables = new HashMap(capacity);
 
       Collection c;
-      Iterator i = keyWordsSet.iterator();
-      while (i.hasNext()) {
-        Object keyWord = i.next();
-        
+      for (String keyWord : keyWordsSet) {
         Iterator j = ((HashMap)encodedMap.get(keyWord)).values().iterator();
         while (j.hasNext()) {
           Object encodedItem = j.next();

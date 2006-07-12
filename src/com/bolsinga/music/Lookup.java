@@ -8,12 +8,18 @@ public class Lookup {
 
   private static Lookup sLookup = null;
         
-  private HashMap fArtistMap         = new HashMap();
-  private HashMap fVenueMap          = new HashMap();
-  private HashMap fCityMap           = new HashMap();
-  private HashMap fArtistRelationMap = new HashMap();
-  private HashMap fVenueRelationMap  = new HashMap();
-  private HashMap fLabelRelationMap  = new HashMap();
+  private final HashMap<String, Collection<Show>> fArtistMap =
+    new HashMap<String, Collection<Show>>();
+  private final HashMap<String, Collection<Show>> fVenueMap =
+    new HashMap<String, Collection<Show>>();
+  private final HashMap<String, Collection<Show>> fCityMap =
+    new HashMap<String, Collection<Show>>();
+  private final HashMap<String, Collection<String>> fArtistRelationMap =
+    new HashMap<String, Collection<String>>();
+  private final HashMap<String, Collection<String>> fVenueRelationMap =
+    new HashMap<String, Collection<String>>();
+  private final HashMap<String, Collection<String>> fLabelRelationMap =
+    new HashMap<String, Collection<String>>();
         
   public synchronized static Lookup getLookup(Music music) {
     if (sLookup == null) {
@@ -25,33 +31,33 @@ public class Lookup {
   private Lookup(Music music) {
     Show show = null;
     String id = null;
-    List list = null;
+    Collection<Show> showCollection = null;
     ListIterator ai = null;
     Artist artist = null;
     Set set = null;
-                
+
     ListIterator i = music.getShow().listIterator();
     while (i.hasNext()) {
       show = (Show)i.next();
                         
       id = ((Venue)show.getVenue()).getId();
       if (fVenueMap.containsKey(id)) {
-        list = (List)fVenueMap.get(id);
-        list.add(show);
+        showCollection = fVenueMap.get(id);
+        showCollection.add(show);
       } else {
-        list = new Vector();
-        list.add(show);
-        fVenueMap.put(id, list);
+        showCollection = new Vector<Show>();
+        showCollection.add(show);
+        fVenueMap.put(id, showCollection);
       }
                         
       id = ((Location)((Venue)show.getVenue()).getLocation()).getCity();
       if (fCityMap.containsKey(id)) {
-        list = (List)fCityMap.get(id);
-        list.add(show);
+        showCollection = fCityMap.get(id);
+        showCollection.add(show);
       } else {
-        list = new Vector();
-        list.add(show);
-        fCityMap.put(id, list);
+        showCollection = new Vector<Show>();
+        showCollection.add(show);
+        fCityMap.put(id, showCollection);
       }
                         
       ai = show.getArtist().listIterator();
@@ -60,12 +66,12 @@ public class Lookup {
                                 
         id = artist.getId();
         if (fArtistMap.containsKey(id)) {
-          list = (List)fArtistMap.get(id);
-          list.add(show);
+          showCollection = fArtistMap.get(id);
+          showCollection.add(show);
         } else {
-          list = new Vector();
-          list.add(show);
-          fArtistMap.put(id, list);
+          showCollection = new Vector<Show>();
+          showCollection.add(show);
+          fArtistMap.put(id, showCollection);
         }
       }
     }
@@ -90,7 +96,7 @@ public class Lookup {
         if (o instanceof Artist) {
           id = ((Artist)o).getId();
           if (!fArtistRelationMap.containsKey(id)) {
-            set = new HashSet();
+            set = new HashSet<String>();
             fArtistRelationMap.put(id, set);
           }
           ListIterator nri = rel.getMember().listIterator();
@@ -102,7 +108,7 @@ public class Lookup {
         } else if (o instanceof Venue) {
           id = ((Venue)o).getId();
           if (!fVenueRelationMap.containsKey(id)) {
-            set = new HashSet();
+            set = new HashSet<String>();
             fVenueRelationMap.put(id, set);
           }
           ListIterator nri = rel.getMember().listIterator();
@@ -114,7 +120,7 @@ public class Lookup {
         } else if (o instanceof Label) {
           id = ((Label)o).getId();
           if (!fLabelRelationMap.containsKey(id)) {
-            set = new HashSet();
+            set = new HashSet<String>();
             fLabelRelationMap.put(id, set);
           }
           ListIterator nri = rel.getMember().listIterator();

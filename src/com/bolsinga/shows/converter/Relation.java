@@ -7,15 +7,15 @@ public class Relation {
 
   private String fType;
   private String fReason;
-  private List fMembers;
+  private final Collection<String> fMembers;
         
   public Relation(String type, String reason) {
     fType = type;
     fReason = reason;
-    fMembers = new Vector();
+    fMembers = new Vector<String>();
   }
         
-  public Relation(String type, String reason, List members) {
+  public Relation(String type, String reason, Collection<String> members) {
     fType = type;
     fReason = reason;
     fMembers = members;
@@ -41,7 +41,7 @@ public class Relation {
     fMembers.add(member);
   }
         
-  public List getMembers() {
+  public Collection<String> getMembers() {
     return fMembers;
   }
         
@@ -54,10 +54,9 @@ public class Relation {
     sb.append(", ");
     sb.append(getReason());
     sb.append(" (");
-                
-    ListIterator i = getMembers().listIterator();
-    while (i.hasNext()) {
-      sb.append((String)(i.next()));
+
+    for (String s : getMembers()) {
+      sb.append(s);
       sb.append(", ");
     }
                 

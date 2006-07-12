@@ -41,7 +41,7 @@ public class Links {
   }
         
   public div addWebNavigator(Music music, String program) {
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
     e.add(new a(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
     e.add(getLinkToHome());

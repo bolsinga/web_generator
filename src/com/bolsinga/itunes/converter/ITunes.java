@@ -61,9 +61,9 @@ public class ITunes {
   private static final String FORMAT_CD               = "CD";
   private static final String FORMAT_DIGITAL_FILE     = "Digital File";
     
-  private static HashMap sAlbums = new HashMap();
+  private static final HashMap<String, Album> sAlbums = new HashMap<String, Album>();
 
-  private static HashSet sITunesKeys = new HashSet();
+  private static final HashSet<String> sITunesKeys = new HashSet<String>();
         
   public static void main(String[] args) {
     if (args.length != 2) {
@@ -302,7 +302,7 @@ public class ITunes {
       music.getAlbum().add(result);
       sAlbums.put(key, result);
     } else {
-      result = (Album)sAlbums.get(key);
+      result = sAlbums.get(key);
     }
     return result;
   }

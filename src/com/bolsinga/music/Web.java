@@ -276,7 +276,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
   }
 
   protected Element addIndexNavigator() {
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
     if (fTracksStats) {
       e.add(new StringElement(com.bolsinga.web.Util.getResourceString("tracks")));
       e.add(fLinks.getAlbumsLink());
@@ -527,8 +527,8 @@ public class Web {
   public static void generateDatePages(Music music, com.bolsinga.web.Encode encoder, Links links, String outputDir) {
     List items = music.getShow();
     Show item = null;
-    Vector list = null;
-    TreeMap dates = new TreeMap(com.bolsinga.music.Compare.SHOW_STATS_COMPARATOR);
+    Collection<Show> showCollection = null;
+    TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(com.bolsinga.music.Compare.SHOW_STATS_COMPARATOR);
                 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
@@ -539,12 +539,12 @@ public class Web {
       item = (Show)iterator.next();
 
       if (dates.containsKey(item)) {
-        list = (Vector)dates.get(item);
-        list.add(item);
+        showCollection = dates.get(item);
+        showCollection.add(item);
       } else {
-        list = new Vector();
-        list.add(item);
-        dates.put(item, list);
+        showCollection = new Vector<Show>();
+        showCollection.add(item);
+        dates.put(item, showCollection);
       }
                         
       creator.add(item);
@@ -578,45 +578,41 @@ public class Web {
   public static void generateCityPages(Music music, Links links, String outputDir) {
     Collection items = Lookup.getLookup(music).getCities();
     String item = null;
-    HashMap cityCount = new HashMap();
+    HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
-    Integer val = null;
-    HashSet set = null;
+    int val;
+    Collection<String> stringCollection = null;
                 
     Iterator iterator = items.iterator();
     while (iterator.hasNext()) {
       item = (String)iterator.next();
                         
-      val = new Integer(Lookup.getLookup(music).getShows(item).size());
+      val = Lookup.getLookup(music).getShows(item).size();
       if (cityCount.containsKey(val)) {
-        set = (HashSet)cityCount.get(val);
-        set.add(item);
+        stringCollection = cityCount.get(val);
+        stringCollection.add(item);
       } else {
-        set = new HashSet();
-        set.add(item);
-        cityCount.put(val, set);
+        stringCollection = new HashSet<String>();
+        stringCollection.add(item);
+        cityCount.put(val, stringCollection);
       }
     }
                 
-    List keys = new Vector(cityCount.keySet());
+    List<Integer> keys = new Vector<Integer>(cityCount.keySet());
     Collections.sort(keys);
     Collections.reverse(keys);
 
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
     int index = 0;
-                
-    Iterator i = keys.iterator();
-    while (i.hasNext()) {
-      val = (Integer)i.next();
-                        
-      List k = new Vector((HashSet)cityCount.get(val));
+
+    for (int value : keys) {
+      List<String> k = new Vector<String>(cityCount.get(value));
       Collections.sort(k);
-                        
-      Iterator j = k.iterator();
-      while (j.hasNext()) {
-        names[index] = (String)j.next();
-        values[index] = val.intValue();
+
+      for (String j : k) {
+        names[index] = j;
+        values[index] = value;
         index++;
       }
     }
@@ -714,7 +710,7 @@ public class Web {
   public static Element generatePreview(Music music, int lastShowsCount) {
     Links links = Links.getLinks(false);
                 
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
                 
     StringBuffer sb = new StringBuffer();
     sb.append(music.getArtist().size());
@@ -792,7 +788,7 @@ public class Web {
         
   public static Element addItem(Music music, Links links, Artist artist) {
     // CSS.ARTIST_ITEM
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
 
     if (artist.getAlbum().size() > 0) {
       e.add(Web.addTracks(links, artist));
@@ -809,7 +805,7 @@ public class Web {
       while (iterator.hasNext()) {
         Show show = (Show)iterator.next();
 
-        Vector se = new Vector();
+        Vector<Element> se = new Vector<Element>();
         StringBuffer sb = new StringBuffer();
         ListIterator bi = show.getArtist().listIterator();
         while (bi.hasNext()) {
@@ -851,7 +847,7 @@ public class Web {
         
   public static Element addItem(Music music, Links links, Venue venue) {
     // CSS.VENUE_ITEM
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
                 
     Collection relations = Lookup.getLookup(music).getRelations(venue);
     if (relations != null) {
@@ -866,7 +862,7 @@ public class Web {
         
         String showLink = links.getLinkTo(show);
         
-        Vector se = new Vector();
+        Vector<Element> se = new Vector<Element>();
         StringBuffer sb = new StringBuffer();
         ListIterator bi = show.getArtist().listIterator();
         while (bi.hasNext()) {
@@ -898,7 +894,7 @@ public class Web {
   }
         
   private static ul getShowListing(Links links, Show show) {
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
     StringBuffer sb = new StringBuffer();
     ListIterator bi = show.getArtist().listIterator();
     while (bi.hasNext()) {
@@ -928,7 +924,7 @@ public class Web {
 
   public static Element addItem(com.bolsinga.web.Encode encoder, Links links, Show show) {
     // CSS.SHOW_ITEM
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
 
     e.add(new h3().addElement(com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
 
@@ -944,7 +940,7 @@ public class Web {
 
   public static Element addItem(Links links, Album album) {
     // CSS.TRACKS_ITEM
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
                 
     StringBuffer sb;
     Artist artist = null;
@@ -968,7 +964,7 @@ public class Web {
 
     e.add(new h2().addElement(sb.toString()));
 
-    Vector ae = new Vector();
+    Vector<Element> ae = new Vector<Element>();
     ListIterator iterator = album.getSong().listIterator();
     while (iterator.hasNext()) {
       song = (Song)iterator.next();
@@ -997,7 +993,7 @@ public class Web {
   }
         
   public static div addRelations(Music music, Links links, Artist artist) {
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
     Iterator iterator = Lookup.getLookup(music).getRelations(artist).iterator();
     while (iterator.hasNext()) {
       Artist art = (Artist)iterator.next();
@@ -1015,7 +1011,7 @@ public class Web {
   }
         
   public static div addRelations(Music music, Links links, Venue venue) {
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
     Iterator iterator = Lookup.getLookup(music).getRelations(venue).iterator();
     while (iterator.hasNext()) {
       Venue v = (Venue)iterator.next();
@@ -1033,7 +1029,7 @@ public class Web {
   }
 
   public static div addTracks(Links links, Artist artist) {
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
 
     Collections.sort(artist.getAlbum(), com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
 
@@ -1059,7 +1055,7 @@ public class Web {
   }
         
   public static Element addArtistIndexNavigator(Music music, Links links, String curLetter) {
-    java.util.Map m = new TreeMap();
+    java.util.Map<String, String> m = new TreeMap<String, String>();
     Iterator iterator = music.getArtist().iterator();
     while (iterator.hasNext()) {
       Artist art = (Artist)iterator.next();
@@ -1069,14 +1065,12 @@ public class Web {
       }
     }
 
-    Vector e = new Vector();
-    iterator = m.keySet().iterator();
-    while (iterator.hasNext()) {
-      String s = (String)iterator.next();
+    Vector<Element> e = new Vector<Element>();
+    for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
         e.add(new StringElement(s));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA((String)m.get(s), s));
+        e.add(com.bolsinga.web.Util.createInternalA(m.get(s), s));
       }
     }
 
@@ -1086,7 +1080,7 @@ public class Web {
   }
         
   public static Element addVenueIndexNavigator(Music music, Links links, String curLetter) {
-    java.util.Map m = new TreeMap();
+    java.util.Map<String, String> m = new TreeMap<String, String>();
     Iterator iterator = music.getVenue().iterator();
     while (iterator.hasNext()) {
       Venue v = (Venue)iterator.next();
@@ -1096,14 +1090,12 @@ public class Web {
       }
     }
 
-    Vector e = new Vector();
-    iterator = m.keySet().iterator();
-    while (iterator.hasNext()) {
-      String v = (String)iterator.next();
+    Vector<Element> e = new Vector<Element>();
+    for (String v : m.keySet()) {
       if (v.equals(curLetter)) {
         e.add(new StringElement(v));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA((String)m.get(v), v));
+        e.add(com.bolsinga.web.Util.createInternalA(m.get(v), v));
       }
     }
 
@@ -1113,7 +1105,7 @@ public class Web {
   }
 
   public static Element addAlbumIndexNavigator(Music music, Links links, String curLetter) {
-    java.util.Map m = new TreeMap();
+    java.util.Map<String, String> m = new TreeMap<String, String>();
     Iterator iterator = music.getAlbum().iterator();
     while (iterator.hasNext()) {
       Album alb = (Album)iterator.next();
@@ -1123,14 +1115,12 @@ public class Web {
       }
     }
 
-    Vector e = new Vector();
-    iterator = m.keySet().iterator();
-    while (iterator.hasNext()) {
-      String s = (String)iterator.next();
+    Vector<Element> e = new Vector<Element>();
+    for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
         e.add(new StringElement(s));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA((String)m.get(s), s));
+        e.add(com.bolsinga.web.Util.createInternalA(m.get(s), s));
       }
     }
 
@@ -1183,7 +1173,7 @@ public class Web {
   }
         
   public static Element addShowIndexNavigator(Music music, Links links, String curLetter) {
-    java.util.Map m = new TreeMap();
+    java.util.Map<String, String> m = new TreeMap<String, String>();
     Iterator iterator = music.getShow().iterator();
     while (iterator.hasNext()) {
       Show s = (Show)iterator.next();
@@ -1193,14 +1183,12 @@ public class Web {
       }
     }
 
-    Vector e = new Vector();
-    iterator = m.keySet().iterator();
-    while (iterator.hasNext()) {
-      String s = (String)iterator.next();
+    Vector<Element> e = new Vector<Element>();
+    for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
         e.add(new StringElement(s));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA((String)m.get(s), s));
+        e.add(com.bolsinga.web.Util.createInternalA(m.get(s), s));
       }
     }
     e.add(links.getICalLink());

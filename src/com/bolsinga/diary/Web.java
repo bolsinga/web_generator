@@ -82,7 +82,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected Element addIndexNavigator() {
-    java.util.Map m = new TreeMap();
+    java.util.Map<String, String> m = new TreeMap<String, String>();
     Iterator i = fDiary.getEntry().iterator();
     while (i.hasNext()) {
       Entry e = (Entry)i.next();
@@ -92,14 +92,12 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
       }
     }
 
-    Vector e = new Vector();
-    i = m.keySet().iterator();
-    while (i.hasNext()) {
-      String s = (String)i.next();
+    Vector<Element> e = new Vector<Element>();
+    for (String s : m.keySet()) {
       if (s.equals(getCurrentLetter())) {
         e.add(new StringElement(s));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA((String)m.get(s), s));
+        e.add(com.bolsinga.web.Util.createInternalA(m.get(s), s));
       }
     }
     e.add(fLinks.getRSSLink());
@@ -110,7 +108,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
         
   private Element addWebNavigator(String program, Links links) {
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
                 
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
     e.add(new a(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
@@ -365,7 +363,7 @@ public class Web {
 
   public static ul addItem(com.bolsinga.web.Encode encoder, Entry entry, Links links, boolean upOneLevel) {
     // CSS.DIARY_ENTRY
-    Vector e = new Vector();
+    Vector<Element> e = new Vector<Element>();
     e.add(new h2().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
     e.add(new h4().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(entry), com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"))));
     e.add(new StringElement(Web.encodedComment(encoder, entry, upOneLevel)));
