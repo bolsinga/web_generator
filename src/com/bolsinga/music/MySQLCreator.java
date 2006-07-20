@@ -132,7 +132,7 @@ class MySQLCreator {
     return location;
   }
 
-  private HashMap artists = new HashMap();
+  private HashMap<String, Artist> artists = new HashMap<String, Artist>();
   private Object artistsLock = new Object();
 
   private Artist getArtist(String xmlID) throws JAXBException {
@@ -140,7 +140,7 @@ class MySQLCreator {
 
     synchronized (artistsLock) {
       if (artists.containsKey(xmlID)) {
-        item = (Artist)artists.get(xmlID);
+        item = artists.get(xmlID);
         return item;
       }
     }
@@ -157,14 +157,14 @@ class MySQLCreator {
     return item;
   }
 
-  private HashMap albums = new HashMap();
+  private HashMap<String, Album> albums = new HashMap<String, Album>();
   private Object albumsLock = new Object();
 
   private Album getAlbum(String xmlID, long album_id) throws SQLException, JAXBException {
     Album item = null;
     synchronized (albumsLock) {
       if (albums.containsKey(xmlID)) {
-        item = (Album)albums.get(xmlID);
+        item = albums.get(xmlID);
         return item;
       }
     }
@@ -238,14 +238,14 @@ class MySQLCreator {
     return item;
   }
 
-  private HashMap venues = new HashMap();
+  private HashMap<String, Venue> venues = new HashMap<String, Venue>();
   private Object venuesLock = new Object();
 
   private Venue getVenue(String xmlID) throws JAXBException {
     Venue item = null;
     synchronized (venuesLock) {
       if (venues.containsKey(xmlID)) {
-        item = (Venue)venues.get(xmlID);
+        item = venues.get(xmlID);
         return item;
       }
     }
