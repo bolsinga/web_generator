@@ -64,7 +64,7 @@ public class MySQLImporter {
       String[] title = { diary.getTitle() };
       com.bolsinga.sql.Util.insert(stmt, "title", title);
 
-      diary.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+      diary.setTimestamp(com.bolsinga.web.Util.nowUTC());
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();
@@ -100,7 +100,7 @@ public class MySQLImporter {
     rowItems[0] = null;
     rowItems[1] = entry.getComment();
     rowItems[2] = Util.getTitle(entry);
-    rowItems[3] = com.bolsinga.sql.Util.toDATETIME(entry.getTimestamp());
+    rowItems[3] = com.bolsinga.sql.Util.toDATETIME(com.bolsinga.web.Util.toGregorianCalendarUTC(entry.getTimestamp()));
     
     com.bolsinga.sql.Util.insert(stmt, "entry", rowItems);
   }

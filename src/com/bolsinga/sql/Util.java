@@ -43,7 +43,7 @@ public class Util {
     stmt.execute(sb.toString());
   }
 
-  public static Calendar toUTCCalendar(String sqlDATETIME) {
+  public static GregorianCalendar toCalendarUTC(String sqlDATETIME) {
     java.util.Date d = null;
     try {
       d = sSQLDateTimeFormat.parse(sqlDATETIME);
@@ -52,12 +52,12 @@ public class Util {
       e.printStackTrace();
       System.exit(1);
     }
-    Calendar c = Calendar.getInstance(sSQLDateTimeFormat.getTimeZone());
+    GregorianCalendar c = new GregorianCalendar(sSQLDateTimeFormat.getTimeZone());
     c.setTime(d);
     return c;
   }
 
-  public static String toDATETIME(Calendar c) {
+  public static String toDATETIME(GregorianCalendar c) {
     return sSQLDateTimeFormat.format(c.getTime());
   }
   

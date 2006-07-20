@@ -27,6 +27,16 @@ public class Util {
     return sPrettyPrint;
   }
         
+  public static GregorianCalendar toGregorianCalendarUTC(Calendar cal) {
+    GregorianCalendar result = nowUTC();
+    result.setTimeInMillis(cal.getTimeInMillis());
+    return result;
+  }
+
+  public static GregorianCalendar nowUTC() {
+    return new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+  }
+
   public static link getIconLink() {
     link result = new link();
     result.setRel("SHORTCUT ICON");
@@ -159,7 +169,7 @@ public class Util {
   public static String getCopyright(int startYear) {
     StringBuffer cp = new StringBuffer();
                 
-    int cur_year = Calendar.getInstance().get(Calendar.YEAR);
+    int cur_year = Calendar.getInstance().get(Calendar.YEAR); // LocalTime OK
                 
     cp.append("Contents Copyright (c) ");
     cp.append(startYear);
@@ -208,7 +218,7 @@ public class Util {
         Calendar c2 = null;
                         
         if (o1 instanceof com.bolsinga.music.data.Show) {
-          c1 = com.bolsinga.music.Util.toCalendar(((com.bolsinga.music.data.Show)o1).getDate());
+          c1 = com.bolsinga.music.Util.toCalendarUTC(((com.bolsinga.music.data.Show)o1).getDate());
         } else if (o1 instanceof com.bolsinga.diary.data.Entry) {
           c1 = ((com.bolsinga.diary.data.Entry)o1).getTimestamp();
         } else {
@@ -217,7 +227,7 @@ public class Util {
         }
 
         if (o2 instanceof com.bolsinga.music.data.Show) {
-          c2 = com.bolsinga.music.Util.toCalendar(((com.bolsinga.music.data.Show)o2).getDate());
+          c2 = com.bolsinga.music.Util.toCalendarUTC(((com.bolsinga.music.data.Show)o2).getDate());
         } else if (o2 instanceof com.bolsinga.diary.data.Entry) {
           c2 = ((com.bolsinga.diary.data.Entry)o2).getTimestamp();
         } else {

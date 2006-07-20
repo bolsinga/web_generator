@@ -17,8 +17,8 @@ public class Util {
   public  static final DateFormat sWebFormat        = new SimpleDateFormat("M/d/yyyy");
   private static final DecimalFormat sPercentFormat = new DecimalFormat("##.##");
         
-  public static Calendar toCalendar(com.bolsinga.music.data.Date date) {
-    Calendar localTime = Calendar.getInstance();
+  public static GregorianCalendar toCalendarUTC(com.bolsinga.music.data.Date date) {
+    Calendar localTime = Calendar.getInstance(); // LocalTime OK
     if (!date.isUnknown()) {
       // Set shows to 9 PM local time.
       localTime.clear();
@@ -28,14 +28,14 @@ public class Util {
       System.exit(1);
     }
     // Convert to UTC
-    Calendar result = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    GregorianCalendar result = com.bolsinga.web.Util.nowUTC();
     result.setTimeInMillis(localTime.getTimeInMillis());
     return result;
   }
 
   public static String toString(com.bolsinga.music.data.Date date) {
     if (!date.isUnknown()) {
-      return sWebFormat.format(toCalendar(date).getTime());
+      return sWebFormat.format(Util.toCalendarUTC(date).getTime());
     } else {
       Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
                           ((date.getDay() != null) ? date.getDay() : BigInteger.ZERO),
@@ -46,9 +46,9 @@ public class Util {
         
   public static String toMonth(com.bolsinga.music.data.Date date) {
     if (!date.isUnknown()) {
-      return sMonthFormat.format(toCalendar(date).getTime());
+      return sMonthFormat.format(Util.toCalendarUTC(date).getTime());
     } else {
-      Calendar d = Calendar.getInstance();
+      Calendar d = Calendar.getInstance(); // UTC isn't relevant here.
       if (date.getMonth() != null) {
         d.set(Calendar.MONTH, date.getMonth().intValue() - 1);
         return sMonthFormat.format(d.getTime());

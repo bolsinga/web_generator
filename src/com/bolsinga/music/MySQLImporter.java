@@ -221,7 +221,7 @@ public class MySQLImporter {
     rowItems[index++] = song.getGenre();
     java.math.BigInteger track = song.getTrack();
     rowItems[index++] = (track != null) ? track.toString() : null;
-    Calendar lastPlayed = song.getLastPlayed();
+    GregorianCalendar lastPlayed = com.bolsinga.web.Util.toGregorianCalendarUTC(song.getLastPlayed());
     String lastPlayedString = null;
     if (lastPlayed != null) {
       lastPlayedString = com.bolsinga.sql.Util.toDATETIME(lastPlayed);
@@ -426,7 +426,7 @@ public class MySQLImporter {
 
   private static String toSQLString(com.bolsinga.music.data.Date date) {
     if (!date.isUnknown()) {
-      return sSQLFormat.format(com.bolsinga.music.Util.toCalendar(date).getTime());
+      return sSQLFormat.format(com.bolsinga.music.Util.toCalendarUTC(date).getTime());
     } else {
       Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
                           ((date.getDay() != null) ? date.getDay() : BigInteger.ZERO),

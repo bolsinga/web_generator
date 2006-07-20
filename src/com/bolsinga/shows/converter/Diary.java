@@ -42,7 +42,7 @@ public class Diary {
 
       createComments(objFactory, diary, comments);
 
-      diary.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+      diary.setTimestamp(com.bolsinga.web.Util.nowUTC());
 
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
@@ -99,7 +99,7 @@ public class Diary {
       oldComment = (Comments)i.next();
                         
       xEntry = objFactory.createEntry();
-      xEntry.setTimestamp(Diary.createTimestamp(oldComment.getDate()));
+      xEntry.setTimestamp(Diary.toCalendarUTC(oldComment.getDate()));
       xEntry.setComment(oldComment.getData());
       xEntry.setId("e" + index--);
                         
@@ -109,8 +109,8 @@ public class Diary {
     java.util.Collections.sort(diary.getEntry(), com.bolsinga.diary.Util.ENTRY_COMPARATOR);
   }
         
-  private static Calendar createTimestamp(String date) {
-    Calendar localTime = Calendar.getInstance();
+  private static GregorianCalendar toCalendarUTC(String date) {
+    Calendar localTime = Calendar.getInstance(); // LocalTime OK
                 
     String monthString, dayString, yearString = null;
     int month, day, year = 0;
@@ -130,7 +130,7 @@ public class Diary {
     localTime.set(year, month - 1, day, 12, 0);
 
     // Convert to UTC.
-    Calendar result = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    GregorianCalendar result = com.bolsinga.web.Util.nowUTC();
     result.setTimeInMillis(localTime.getTimeInMillis());
     return result;
   }

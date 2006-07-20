@@ -115,7 +115,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     e.add(links.getLinkToHome());
 
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_MENU);
-    Object[] args = { Calendar.getInstance().getTime() };
+    Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
     d.addElement(new h4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
@@ -295,7 +295,7 @@ public class Web {
                 
     h.addElement(new meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new meta().setContent(System.getProperty("user.name")).setName("Author"));
-    h.addElement(new meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
+    h.addElement(new meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
     h.addElement(new meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
     h.addElement(new meta().setContent(com.bolsinga.web.Util.getCopyright(startYear)).setName("Copyright"));
 
@@ -307,7 +307,7 @@ public class Web {
   private static Element generateDiary(com.bolsinga.web.Encode encoder, Diary diary, Music music, Links links) {
     div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
                 
-    Object[] args = { Calendar.getInstance().getTime() };
+    Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
     diaryDiv.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
                 
     diaryDiv.addElement(links.getRSSLink());
@@ -333,7 +333,7 @@ public class Web {
                 
     StringBuffer sb = new StringBuffer();
     sb.append("archives/");
-    sb.append(Calendar.getInstance().get(Calendar.YEAR));
+    sb.append(Calendar.getInstance().get(Calendar.YEAR)); // LocalTime OK
     sb.append(".html");
                 
     diaryDiv.addElement(new h2().addElement(com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("archives"))));

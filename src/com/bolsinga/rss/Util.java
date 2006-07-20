@@ -14,7 +14,7 @@ public class Util {
     sRSSDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
         
-  public static String getRSSDate(java.util.Calendar c) {
+  public static String getRSSDate(GregorianCalendar c) {
     return sRSSDateFormat.format(c.getTime());
   }
         

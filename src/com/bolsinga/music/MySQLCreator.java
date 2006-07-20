@@ -387,7 +387,7 @@ class MySQLCreator {
         }
         String sqlDATETIME = rset.getString("last_played");
         if (!rset.wasNull()) {
-          Calendar utcCal = com.bolsinga.sql.Util.toUTCCalendar(sqlDATETIME);
+          GregorianCalendar utcCal = com.bolsinga.sql.Util.toCalendarUTC(sqlDATETIME);
           song.setLastPlayed(utcCal);
         }
         long playCount = rset.getLong("playcount");
@@ -527,7 +527,7 @@ class MySQLCreator {
     createShows();
     createRelations();
 
-    music.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+    music.setTimestamp(com.bolsinga.web.Util.nowUTC());
 
     return music;
   }

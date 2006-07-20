@@ -37,7 +37,7 @@ public class Music {
 
       com.bolsinga.itunes.converter.ITunes.addMusic(objFactory, music, iTunesFile);
 
-      music.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+      music.setTimestamp(com.bolsinga.web.Util.nowUTC());
 
       if (Music.TIDY_XML) {
         com.bolsinga.music.Compare.tidy(music);

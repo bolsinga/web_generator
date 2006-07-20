@@ -113,7 +113,7 @@ public class ICal {
         
   public static void addItem(Show show, VCalendar calendar) {
     com.bolsinga.music.data.Date d = show.getDate();
-    Calendar date = Calendar.getInstance();
+    Calendar date = Calendar.getInstance(); // UTC isn't required
     date.set(Calendar.MONTH, d.getMonth().intValue() - 1);
     date.set(Calendar.DAY_OF_MONTH, d.getDay().intValue());
                 

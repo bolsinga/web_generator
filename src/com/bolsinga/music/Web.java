@@ -1213,7 +1213,7 @@ public class Web {
 
     h.addElement(new meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new meta().setContent(System.getProperty("user.name")).setName("Author"));
-    h.addElement(new meta().setContent(Calendar.getInstance().getTime().toString()).setName("Date"));
+    h.addElement(new meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
     h.addElement(new meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
     h.addElement(new meta().setContent(com.bolsinga.web.Util.getCopyright(START_YEAR)).setName("Copyright"));
 

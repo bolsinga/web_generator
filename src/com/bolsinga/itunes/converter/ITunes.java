@@ -78,7 +78,7 @@ public class ITunes {
     try {
       com.bolsinga.music.data.Music music = ITunes.convert(itunesFile);
 
-      music.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+      music.setTimestamp(com.bolsinga.web.Util.nowUTC());
                                 
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
@@ -196,7 +196,7 @@ public class ITunes {
             
     String songTitle = null;
     String artist = null;
-    Calendar lastPlayed = null;
+    GregorianCalendar lastPlayed = null;
     int playCount = 0;
     String genre = null;
     String albumTitle = null;
@@ -233,8 +233,7 @@ public class ITunes {
       }
       if (key.equals(TK_PLAY_DATE_UTC)) {
         Calendar itunesCal = ((com.bolsinga.plist.data.Date)i.next()).getValue();
-        lastPlayed = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        lastPlayed.setTime(itunesCal.getTime());
+        lastPlayed = com.bolsinga.web.Util.toGregorianCalendarUTC(itunesCal);
         continue;
       }
       if (key.equals(TK_PLAY_COUNT)) {
@@ -265,7 +264,7 @@ public class ITunes {
     }
   }
         
-  private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, Calendar lastPlayed, int playCount, boolean compilation) throws JAXBException {
+  private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, GregorianCalendar lastPlayed, int playCount, boolean compilation) throws JAXBException {
     // Get or create the artist
     Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
                 
@@ -307,7 +306,7 @@ public class ITunes {
     return result;
   }
         
-  private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, Calendar lastPlayed, int playCount) throws JAXBException {
+  private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, GregorianCalendar lastPlayed, int playCount) throws JAXBException {
     // Create the song
     Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed, playCount);
             
@@ -322,7 +321,7 @@ public class ITunes {
     }
   }
         
-  private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, Calendar lastPlayed, int playCount) throws JAXBException {
+  private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, GregorianCalendar lastPlayed, int playCount) throws JAXBException {
     List songs = music.getSong();
             
     Song result = null;

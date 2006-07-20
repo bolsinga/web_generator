@@ -67,7 +67,7 @@ public class Util {
         entry = objFactory.createEntry();
         
         String sqlDATETIME = rset.getString("timestamp");
-        Calendar utcCal = com.bolsinga.sql.Util.toUTCCalendar(sqlDATETIME);
+        GregorianCalendar utcCal = com.bolsinga.sql.Util.toCalendarUTC(sqlDATETIME);
         entry.setTimestamp(utcCal);
         entry.setComment(rset.getString("comment"));
         entry.setId("e" + (rset.getLong("id") - 1));
@@ -180,7 +180,7 @@ public class Util {
       Util.createTitle(stmt, diary);
 
       // timestamp
-      diary.setTimestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+      diary.setTimestamp(com.bolsinga.web.Util.nowUTC());
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();
