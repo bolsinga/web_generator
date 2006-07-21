@@ -560,15 +560,15 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" todir="${dst.lib}" />
   <copy file="${src.dir}/scripts/upload.xml" todir="${dst.lib}" />
-  <copy todir="${dst.lib}">
-    <fileset dir="${lib.dir}">
-      <include name="jwsdp-1_3/jaxb/lib/jaxb-api.jar" />
-      <include name="jwsdp-1_3/jaxb/lib/jaxb-impl.jar" />
-      <include name="jwsdp-1_3/jaxb/lib/jaxb-libs.jar" />
-      <include name="jwsdp-1_3/jwsdp-shared/lib/jax-qname.jar" />
-      <include name="jwsdp-1_3/jwsdp-shared/lib/namespace.jar" />
-      <include name="jwsdp-1_3/jwsdp-shared/lib/relaxngDatatype.jar" />
-      <include name="jwsdp-1_3/jwsdp-shared/lib/xsdlib.jar" />
+  <copy todir="${dst.lib}/jwsdp-1_3">
+    <fileset dir="${jwsdp.home}">
+      <include name="jaxb/lib/jaxb-api.jar" />
+      <include name="jaxb/lib/jaxb-impl.jar" />
+      <include name="jaxb/lib/jaxb-libs.jar" />
+      <include name="jwsdp-shared/lib/jax-qname.jar" />
+      <include name="jwsdp-shared/lib/namespace.jar" />
+      <include name="jwsdp-shared/lib/relaxngDatatype.jar" />
+      <include name="jwsdp-shared/lib/xsdlib.jar" />
     </fileset>
   </copy>
 </target>
