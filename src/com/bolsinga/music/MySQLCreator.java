@@ -52,7 +52,7 @@ class MySQLCreator {
     return sb.toString();
   }
 
-  private com.bolsinga.music.data.Date createDate(String sqlDate, boolean dateVague, ObjectFactory objFactory) throws JAXBException {
+  private com.bolsinga.music.data.Date createDate(String sqlDate, boolean dateVague) throws JAXBException {
 
     com.bolsinga.music.data.Date result = objFactory.createDate();
     
@@ -203,7 +203,7 @@ class MySQLCreator {
           String sqlDate = rset.getString("release");
           if (!rset.wasNull()) {
             boolean dateVague = (rset.getInt("release_vague") == 1);
-            item.setReleaseDate(createDate(sqlDate, dateVague, objFactory));
+            item.setReleaseDate(createDate(sqlDate, dateVague));
           }
         }
         distinct = (rset.getLong(9) == 1);
@@ -211,7 +211,7 @@ class MySQLCreator {
           String sqlDate = rset.getString("purchase");
           if (!rset.wasNull()) {
             boolean dateVague = (rset.getInt("purchase_vague") == 1);
-            item.setPurchaseDate(createDate(sqlDate, dateVague, objFactory));
+            item.setPurchaseDate(createDate(sqlDate, dateVague));
           }
         }
         distinct = (rset.getLong(12) == 1);
@@ -382,7 +382,7 @@ class MySQLCreator {
         com.bolsinga.music.data.Date releaseDate = null;
         if (!rset.wasNull()) {
           boolean dateVague = (rset.getInt("release_vague") == 1);
-          releaseDate = createDate(sqlDate, dateVague, objFactory);
+          releaseDate = createDate(sqlDate, dateVague);
           song.setReleaseDate(releaseDate);
         }
         String sqlDATETIME = rset.getString("last_played");
@@ -462,7 +462,7 @@ class MySQLCreator {
 
         String sqlDate = rset.getString("date");
         boolean dateVague = (rset.getInt("date_vague") == 1);
-        show.setDate(createDate(sqlDate, dateVague, objFactory));
+        show.setDate(createDate(sqlDate, dateVague));
         
         show.setComment(rset.getString("comment"));
         
