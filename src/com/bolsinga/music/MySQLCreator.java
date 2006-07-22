@@ -149,7 +149,7 @@ class MySQLCreator {
     
     item.setId(xmlID);
     
-    music.getArtist().add(item);
+    ((List<Artist>)music.getArtist()).add(item);
     
     synchronized (artistsLock) {
       artists.put(xmlID, item);
@@ -233,7 +233,7 @@ class MySQLCreator {
       albums.put(xmlID, item);
     }
     
-    music.getAlbum().add(item);
+    ((List<Album>)music.getAlbum()).add(item);
     
     return item;
   }
@@ -258,7 +258,7 @@ class MySQLCreator {
       venues.put(xmlID, item);
     }
     
-    music.getVenue().add(item);
+    ((List<Venue>)music.getVenue()).add(item);
   
     return item;
   }
@@ -272,7 +272,7 @@ class MySQLCreator {
       while (rset.next()) {
         String xmlID = toXMLID("ar", rset.getLong("artist_id"));
         Artist artist = getArtist(xmlID);
-        show.getArtist().add(artist);
+        ((List<Artist>)show.getArtist()).add(artist);
       }
     } finally {
       if (rset != null) {
@@ -358,7 +358,7 @@ class MySQLCreator {
         String albumXMLID = toXMLID("a", album_id);
         album = getAlbum(albumXMLID, album_id);
 
-        List albumList = artist.getAlbum();
+        List<Album> albumList = (List<Album>)artist.getAlbum();
         if (!albumList.contains(album)) {
           albumList.add(album);
         }
@@ -404,8 +404,8 @@ class MySQLCreator {
           song.setDigitized(true);
         }
 
-        album.getSong().add(song);
-        music.getSong().add(song);
+        ((List<Song>)album.getSong()).add(song);
+        ((List<Song>)music.getSong()).add(song);
       }
     } finally {
       if (rset != null) {
@@ -466,7 +466,7 @@ class MySQLCreator {
         
         show.setComment(rset.getString("comment"));
         
-        music.getShow().add(show);
+        ((List<Show>)music.getShow()).add(show);
       }
     } finally {
       if (rset != null) {

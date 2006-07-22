@@ -5,11 +5,11 @@ import java.util.*;
 
 public class Show {     
   private String fDate;
-  private List fBands;
+  private List<String> fBands;
   private String fVenue;
   private String fComment;
 
-  public Show(String date, List bands, String venue, String comment) {
+  public Show(String date, List<String> bands, String venue, String comment) {
     fDate = date;
     fBands = bands;
     fVenue = venue;
@@ -24,7 +24,7 @@ public class Show {
     fDate = date;
   }
         
-  public List getBands() {
+  public List<String> getBands() {
     return fBands;
   }
         

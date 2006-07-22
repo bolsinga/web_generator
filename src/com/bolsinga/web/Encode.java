@@ -41,16 +41,12 @@ public abstract class Encode {
   }
 
   private static void generateDiary(Diary diary, Encode encoder, String outputDir) {
-    List items = diary.getEntry();
-    Entry item = null;
+    List<Entry> items = (List<Entry>)diary.getEntry();
     StringBuffer buffer = new StringBuffer();
 
     Collections.sort(items, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
 
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Entry)i.next();
-      
+    for (Entry item : items) {
       buffer.append(encoder.embedLinks(item, true));
     }
 
@@ -61,16 +57,12 @@ public abstract class Encode {
   }
 
   private static void generateMusic(Music music, Encode encoder, String outputDir) {
-    List items = music.getShow();
-    Show item = null;
+    List<Show> items = (List<Show>)music.getShow();
     StringBuffer buffer = new StringBuffer();
 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Show)i.next();
-
+    for (Show item : items) {
       if (item.getComment() != null) {
         buffer.append(encoder.embedLinks(item, true));
       }
@@ -129,11 +121,8 @@ class EncoderData {
   private final String fStandardLink;
   private final String fUpLink;
   
-  public static final Comparator ENCODERDATA_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        EncoderData d1 = (EncoderData)o1;
-        EncoderData d2 = (EncoderData)o2;
-        
+  public static final Comparator<EncoderData> ENCODERDATA_COMPARATOR = new Comparator<EncoderData>() {
+      public int compare(EncoderData d1, EncoderData d2) {
         int result = d2.getName().length() - d1.getName().length();
         if (result == 0) {
           result = d2.getName().compareTo(d1.getName());
@@ -175,51 +164,31 @@ class EncoderData {
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
   }
   
-  public static void addArtistData(List items, Links standardLinks, Links upLinks, Collection encodings) {
-    Artist item = null;
-
-    Iterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Artist)i.next();
-                        
+  public static void addArtistData(Collection<Artist> items, Links standardLinks, Links upLinks, Collection<EncoderData> encodings) {
+    for (Artist item : items) {
       encodings.add(new EncoderData(item, standardLinks, upLinks));
     }
   }
 
-  public static void addVenueData(List items, Links standardLinks, Links upLinks, Collection encodings) {
-    Venue item = null;
-                
-    Iterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Venue)i.next();
-                        
+  public static void addVenueData(Collection<Venue> items, Links standardLinks, Links upLinks, Collection<EncoderData> encodings) {
+    for (Venue item : items) {
       if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
         encodings.add(new EncoderData(item, standardLinks, upLinks));
       }
     }
   }
 
-  public static void addAlbumData(List items, Links standardLinks, Links upLinks, Collection encodings) {
-    Album item = null;
-                
-    Iterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Album)i.next();
-                        
+  public static void addAlbumData(Collection<Album> items, Links standardLinks, Links upLinks, Collection<EncoderData> encodings) {
+    for (Album item : items) {
       encodings.add(new EncoderData(item, standardLinks, upLinks));
     }
   }
 
-  public static String addLinks(String source, boolean upOneLevel, Collection encodings) {
+  public static String addLinks(String source, boolean upOneLevel, Collection<EncoderData> encodings) {
     String result = source;
 
     if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
-      EncoderData data = null;
-      
-      Iterator i = encodings.iterator();
-      while (i.hasNext()) {
-        data = (EncoderData)i.next();
-        
+      for (EncoderData data : encodings) {
         result = addLinks(data, result, upOneLevel);
       }
     }
@@ -291,7 +260,7 @@ class EncoderData {
 
 class RegexEncode extends Encode {
 
-  private final TreeSet fEncodings = new TreeSet(EncoderData.ENCODERDATA_COMPARATOR);
+  private final TreeSet<EncoderData> fEncodings = new TreeSet<EncoderData>(EncoderData.ENCODERDATA_COMPARATOR);
 
   public String embedLinks(Show show, boolean upOneLevel) {
     return EncoderData.addLinks(show.getComment(), upOneLevel, fEncodings);
@@ -304,15 +273,21 @@ class RegexEncode extends Encode {
   RegexEncode(Music music) {
     Links standardLinks = Links.getLinks(false);
     Links upLinks = Links.getLinks(true);
-                
-    List items = music.getArtist();
+    
+    {            
+    List<Artist> items = (List<Artist>)music.getArtist();
     EncoderData.addArtistData(items, standardLinks, upLinks, fEncodings);
-                
-    items = music.getVenue();
+    }
+
+    {           
+    List<Venue> items = (List<Venue>)music.getVenue();
     EncoderData.addVenueData(items, standardLinks, upLinks, fEncodings);
-                
-    items = music.getAlbum();
+    }
+     
+    {           
+    List<Album> items = (List<Album>)music.getAlbum();
     EncoderData.addAlbumData(items, standardLinks, upLinks, fEncodings);
+    }
   }
 }
 
@@ -340,7 +315,7 @@ class HashEncode extends Encode {
   // The key is the Show or Entry. The value is a TreeSet containing the EncoderData
   //  that are applicable to the given key. Only these EncoderDatas will be used
   //  to encode the key, saving some time.
-  HashMap fEncodables;
+  HashMap<Object, Collection<EncoderData>> fEncodables;
 
   HashEncode(Music music, Diary diary) {
     if (music != null) {
@@ -349,7 +324,7 @@ class HashEncode extends Encode {
       items = (diary != null) ? diary.getEntry() : null;
       int numDiary = (items != null) ? items.size() : 0;
       int numEncoded = numShows + numDiary;
-      HashMap encodedMap = new HashMap(numEncoded * WORDS_PER_ENTRY);
+      HashMap<String, HashSet<Object>> encodedMap = new HashMap<String, HashSet<Object>>(numEncoded * WORDS_PER_ENTRY);
       
       items = music.getArtist();
       int numArtist = (items != null) ? items.size() : 0;
@@ -359,7 +334,7 @@ class HashEncode extends Encode {
       int numAlbum = (items != null) ? items.size() : 0;
       int numEncoder = numArtist + numVenue + numAlbum;
 
-      HashMap encoderMap = new HashMap(numEncoder * WORDS_PER_NAME);
+      HashMap<String, HashMap<Object, EncoderData>> encoderMap = new HashMap<String, HashMap<Object, EncoderData>>(numEncoder * WORDS_PER_NAME);
       
       // The the words for each; the key is the unique word
       // For what will be encoded, the value is a HashSet of the Show and Entries that
@@ -375,23 +350,17 @@ class HashEncode extends Encode {
       keyWordsSet.retainAll(encodedMap.keySet());
       
       int capacity = keyWordsSet.size() / WORDS_PER_ENTRY;
-      fEncodables = new HashMap(capacity);
+      fEncodables = new HashMap<Object, Collection<EncoderData>>(capacity);
 
-      Collection c;
+      Collection<EncoderData> c;
       for (String keyWord : keyWordsSet) {
-        Iterator j = ((HashMap)encodedMap.get(keyWord)).values().iterator();
-        while (j.hasNext()) {
-          Object encodedItem = j.next();
-          
-          Iterator k = ((HashMap)encoderMap.get(keyWord)).values().iterator();
-          while (k.hasNext()) {
-            Object encoderItem = k.next();
-            
-            if (fEncodables.containsKey(encodedItem)) {
-              c = (Collection)fEncodables.get(encodedItem);
+        for (Object encodedItem : encodedMap.get(keyWord)) {
+          for (EncoderData encoderItem : encoderMap.get(keyWord).values()) {
+           if (fEncodables.containsKey(encodedItem)) {
+              c = fEncodables.get(encodedItem);
               c.add(encoderItem);
             } else {
-              c = new TreeSet(EncoderData.ENCODERDATA_COMPARATOR);
+              c = new TreeSet<EncoderData>(EncoderData.ENCODERDATA_COMPARATOR);
               c.add(encoderItem);
               fEncodables.put(encodedItem, c);
             }
@@ -401,28 +370,28 @@ class HashEncode extends Encode {
     }
   }
 
-  private void getEncodedWords(Music music, Diary diary, HashMap encodedMap) {
+  private void getEncodedWords(Music music, Diary diary, HashMap<String, HashSet<Object>> encodedMap) {
     getMusicWords(music, encodedMap);
     getDiaryWords(diary, encodedMap);
   }
 
   interface EncodeItem { 
-    public Object encode(Object value);
+    public EncoderData encode(Object value);
   }
 
-  private void addWords(String text, HashMap map, EncodeItem encoder, Object value, int capacity) {
-    HashMap encodeMap = null;
+  private void addWords(String text, HashMap<String, HashMap<Object, EncoderData>> map, EncodeItem encoder, Object value, int capacity) {
+    HashMap<Object, EncoderData> encodeMap = null;
     String[] words = text.split("\\W");
     for (int j = 0; j < words.length; j++) {
       String word = words[j].toLowerCase();
       if (word.length() != 0) {
         if (map.containsKey(word)) {
-           encodeMap = (HashMap)map.get(word);
+           encodeMap = map.get(word);
            if (!encodeMap.containsKey(value)) {
              encodeMap.put(value, encoder.encode(value));
            }
         } else {
-          encodeMap = new HashMap(capacity);
+          encodeMap = new HashMap<Object, EncoderData>(capacity);
           encodeMap.put(value, encoder.encode(value));
           map.put(word, encodeMap);
         }
@@ -430,47 +399,47 @@ class HashEncode extends Encode {
     }
   }
 
-  private void getMusicWords(Music music, HashMap encodedMap) {
-    List items = music.getShow();
-    Show item = null;
+  private void addEncodedWords(String text, HashMap<String, HashSet<Object>> map, Object value, int capacity) {
+    HashSet<Object> encodeSet = null;
+    String[] words = text.split("\\W");
+    for (int j = 0; j < words.length; j++) {
+      String word = words[j].toLowerCase();
+      if (word.length() != 0) {
+        if (map.containsKey(word)) {
+           encodeSet = map.get(word);
+           if (!encodeSet.contains(value)) {
+             encodeSet.add(value);
+           }
+        } else {
+          encodeSet = new HashSet<Object>(capacity);
+          encodeSet.add(value);
+          map.put(word, encodeSet);
+        }
+      }
+    }
+  }
 
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Show)i.next();
-
+  private void getMusicWords(Music music, HashMap<String, HashSet<Object>> encodedMap) {
+    List<Show> items = (List<Show>)music.getShow();
+    
+    for (Show item : items) {
       if (item.getComment() != null) {
-        addWords(item.getComment(), encodedMap, 
-                 new EncodeItem() {
-                   public Object encode(Object value) {
-                     return value;
-                   }
-                 },
-                 item, items.size());
+        addEncodedWords(item.getComment(), encodedMap, item, items.size());
       }
     }
   }
   
-  private void getDiaryWords(Diary diary, HashMap encodedMap) {
+  private void getDiaryWords(Diary diary, HashMap<String, HashSet<Object>> encodedMap) {
     if (diary != null) {
-      List items = diary.getEntry();
-      Entry item = null;
-      
-      ListIterator i = items.listIterator();
-      while (i.hasNext()) {
-        item = (Entry)i.next();
-        
-        addWords(item.getComment(), encodedMap,
-                 new EncodeItem() {
-                   public Object encode(Object value) {
-                     return value;
-                   }
-                 },
-                 item, items.size());
+      List<Entry> items = (List<Entry>)diary.getEntry();
+
+      for (Entry item : items) {
+        addEncodedWords(item.getComment(), encodedMap, item, items.size());
       }
     }
   }
 
-  private void getEncoderWords(Music music, HashMap encoderMap) {
+  private void getEncoderWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap) {
     Links standardLinks = Links.getLinks(false);
     Links upLinks = Links.getLinks(true);
 
@@ -479,16 +448,13 @@ class HashEncode extends Encode {
     getAlbumWords(music, encoderMap, standardLinks, upLinks);
   }
 
-  private void getArtistWords(Music music, HashMap encoderMap, final Links standardLinks, final Links upLinks) {
-    List items = music.getArtist();
+  private void getArtistWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
+    List<Artist> items = (List<Artist>)music.getArtist();
 
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      final Artist item = (Artist)i.next();
-
+    for (final Artist item : items) {
       addWords(item.getName(), encoderMap,
                new EncodeItem() {
-                 public Object encode(Object value) {
+                 public EncoderData encode(Object value) {
                    return new EncoderData(item, standardLinks, upLinks);
                  }
                },
@@ -496,17 +462,14 @@ class HashEncode extends Encode {
     }
   }
 
-  private void getVenueWords(Music music, HashMap encoderMap, final Links standardLinks, final Links upLinks) {
-    List items = music.getVenue();
+  private void getVenueWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
+    List<Venue> items = (List<Venue>)music.getVenue();
 
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      final Venue item = (Venue)i.next();
-
+    for (final Venue item : items) {
       if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
         addWords(item.getName(), encoderMap,
                  new EncodeItem() {
-                   public Object encode(Object value) {
+                   public EncoderData encode(Object value) {
                      return new EncoderData(item, standardLinks, upLinks);
                    }
                  },
@@ -515,27 +478,23 @@ class HashEncode extends Encode {
     }
   }
 
-  private void getAlbumWords(Music music, HashMap encoderMap, final Links standardLinks, final Links upLinks) {
-    List items = music.getAlbum();
+  private void getAlbumWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
+    List<Album> items = (List<Album>)music.getAlbum();
 
     // Create a HashSet of all Artist names. If an Album has the same name as an
     //  Artist, prefer the Artist name over the Album.
-    List artistList = music.getArtist();
-    HashSet artists = new HashSet(artistList.size());
-    ListIterator ai = artistList.listIterator();
-    while (ai.hasNext()) {
-      Artist item = (Artist)ai.next();
-      artists.add(item.getName());
+    List<Artist> artistList = (List<Artist>)music.getArtist();
+    HashSet<String> artists = new HashSet<String>(artistList.size());
+    
+    for (Artist artist : artistList) {
+      artists.add(artist.getName());
     }
 
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      final Album item = (Album)i.next();
-
+    for (final Album item : items) {
       if (!artists.contains(item.getTitle())) {
         addWords(item.getTitle(), encoderMap,
                  new EncodeItem() {
-                   public Object encode(Object value) {
+                   public EncoderData encode(Object value) {
                      return new EncoderData(item, standardLinks, upLinks);
                    }
                  },
@@ -546,7 +505,7 @@ class HashEncode extends Encode {
 
   public String embedLinks(Show show, boolean upOneLevel) {
     if ((fEncodables != null) && (fEncodables.containsKey(show))) {
-      return EncoderData.addLinks(show.getComment(), upOneLevel, (Collection)fEncodables.get(show));
+      return EncoderData.addLinks(show.getComment(), upOneLevel, fEncodables.get(show));
     } else {
       return show.getComment();
     }
@@ -554,7 +513,7 @@ class HashEncode extends Encode {
 
   public String embedLinks(Entry entry, boolean upOneLevel) {
     if ((fEncodables != null) && (fEncodables.containsKey(entry))) {
-      return EncoderData.addLinks(entry.getComment(), upOneLevel, (Collection)fEncodables.get(entry));
+      return EncoderData.addLinks(entry.getComment(), upOneLevel, fEncodables.get(entry));
     } else {
       return entry.getComment();
     }

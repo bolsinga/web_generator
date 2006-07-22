@@ -342,19 +342,15 @@ public class Web {
   }
         
   public static void generateArchivePages(Diary diary, com.bolsinga.web.Encode encoder, int startYear, String outputDir) {
-    List items = diary.getEntry();
-    Entry item = null;
+    List<Entry> items = (List<Entry>)diary.getEntry();
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
                 
     Links links = Links.getLinks(true);
                 
     DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
-                
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Entry)i.next();
-                        
+
+    for (Entry item : items) {
       creator.add(item);
     }
                 

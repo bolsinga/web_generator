@@ -441,18 +441,14 @@ public class Web {
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
         
   public static void generateArtistPages(Music music, Links links, String outputDir) {
-    List items = music.getArtist();
-    Artist item = null;
+    List<Artist> items = (List<Artist>)music.getArtist();
     int index = 0;
                 
     Collections.sort(items, com.bolsinga.music.Compare.ARTIST_COMPARATOR);
                 
     ArtistDocumentCreator creator = new ArtistDocumentCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
-                
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Artist)iterator.next();
-                        
+
+    for (Artist item : items) {
       creator.add(item);
     }
     creator.close();
@@ -461,12 +457,9 @@ public class Web {
 
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
-    iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Artist)iterator.next();
-
+    for (Artist item : items) {
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
-      List shows = Lookup.getLookup(music).getShows(item);
+      Collection<Show> shows = Lookup.getLookup(music).getShows(item);
       values[index] = (shows != null) ? shows.size() : 0;
                         
       index++;
@@ -483,18 +476,14 @@ public class Web {
   }
         
   public static void generateVenuePages(Music music, Links links, String outputDir) {
-    List items = music.getVenue();
-    Venue item = null;
+    List<Venue> items = (List<Venue>)music.getVenue();
     int index = 0;
                 
     Collections.sort(items, com.bolsinga.music.Compare.VENUE_COMPARATOR);
 
     VenueDocumentCreator creator = new VenueDocumentCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
-                
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Venue)iterator.next();
 
+    for (Venue item : items) {
       creator.add(item);
     }
     creator.close();
@@ -503,12 +492,9 @@ public class Web {
 
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
-    iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Venue)iterator.next();
-
+    for (Venue item : items) {
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
-      List shows = Lookup.getLookup(music).getShows(item);
+      Collection<Show> shows = Lookup.getLookup(music).getShows(item);
       values[index] = (shows != null) ? shows.size() : 0;
                         
       index++;
@@ -525,19 +511,15 @@ public class Web {
   }
         
   public static void generateDatePages(Music music, com.bolsinga.web.Encode encoder, Links links, String outputDir) {
-    List items = music.getShow();
-    Show item = null;
+    List<Show> items = (List<Show>)music.getShow();
     Collection<Show> showCollection = null;
     TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(com.bolsinga.music.Compare.SHOW_STATS_COMPARATOR);
                 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
     ShowDocumentCreator creator = new ShowDocumentCreator(music, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
-                
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Show)iterator.next();
 
+    for (Show item : items) {
       if (dates.containsKey(item)) {
         showCollection = dates.get(item);
         showCollection.add(item);
@@ -554,10 +536,8 @@ public class Web {
     String[] names = new String[dates.size()];
     int[] values = new int[dates.size()];
     int index = 0;
-    Iterator i = dates.keySet().iterator();
-    while (i.hasNext()) {
-      item = (Show)i.next();
-                        
+
+    for (Show item : dates.keySet()) {
       BigInteger year = item.getDate().getYear();
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkToPage(item), (year != null) ? year.toString() : "Unknown").toString();
       values[index] = ((Vector)dates.get(item)).size();
@@ -576,17 +556,13 @@ public class Web {
   }
         
   public static void generateCityPages(Music music, Links links, String outputDir) {
-    Collection items = Lookup.getLookup(music).getCities();
-    String item = null;
+    Collection<String> items = Lookup.getLookup(music).getCities();
     HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
     int val;
     Collection<String> stringCollection = null;
-                
-    Iterator iterator = items.iterator();
-    while (iterator.hasNext()) {
-      item = (String)iterator.next();
-                        
+
+    for (String item : items) {
       val = Lookup.getLookup(music).getShows(item).size();
       if (cityCount.containsKey(val)) {
         stringCollection = cityCount.get(val);
@@ -628,33 +604,25 @@ public class Web {
   }
 
   public static void generateTracksPages(Music music, Links links, String outputDir) {
-    List items = music.getAlbum();
-
-    Album item = null;
+    List<Album> items = (List<Album>)music.getAlbum();
     int index = 0;
                 
     Collections.sort(items, com.bolsinga.music.Compare.ALBUM_COMPARATOR);
                 
     TracksDocumentCreator creator = new TracksDocumentCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
-                
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Album)iterator.next();
-                        
+
+    for (Album item : items) {                
       creator.add(item);
     }
     creator.close();
 
-    items = music.getArtist();
-    Collections.sort(items, com.bolsinga.music.Compare.ARTIST_TRACKS_COMPARATOR);
+    List<Artist> artists = (List<Artist>)music.getArtist();
+    Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_TRACKS_COMPARATOR);
 
-    Artist artist = null;
-    String[] names = new String[items.size()];
-    int[] values = new int[items.size()];
-    iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      artist = (Artist)iterator.next();
-
+    String[] names = new String[artists.size()];
+    int[] values = new int[artists.size()];
+    
+    for (Artist artist : artists) {
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), artist.getName()).toString();
       values[index] = Util.trackCount(artist);
                         
@@ -673,16 +641,14 @@ public class Web {
       stats.close();
     }
 
-    items = music.getArtist();
-    Collections.sort(items, com.bolsinga.music.Compare.ARTIST_ALBUMS_COMPARATOR);
+    artists = (List<Artist>)music.getArtist();
+    Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_ALBUMS_COMPARATOR);
 
-    names = new String[items.size()];
-    values = new int[items.size()];
-    iterator = items.listIterator();
+    names = new String[artists.size()];
+    values = new int[artists.size()];
     index = 0;
-    while (iterator.hasNext()) {
-      artist = (Artist)iterator.next();
-
+    
+    for(Artist artist : artists) {
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), artist.getName()).toString();
       values[index] = (artist.getAlbum() != null) ? artist.getAlbum().size() : 0;
                         
@@ -763,12 +729,11 @@ public class Web {
     Object[] countArgs = { new Integer(lastShowsCount) };
     dr.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("lastshows"), countArgs)));
 
-    List items = music.getShow();
-    Show item = null;
+    List<Show> items = (List<Show>)music.getShow();
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(items);
     for (int i = 0; i < lastShowsCount; i++) {
-      item = (Show)items.get(i);
+      Show item = items.get(i);
                         
       div ds = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_SHOW);
       ds.addElement(new h4(com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), Util.toString(item.getDate()))));
@@ -799,12 +764,9 @@ public class Web {
       e.add(Web.addRelations(music, links, artist));
     }
 
-    List shows = Lookup.getLookup(music).getShows(artist);
+    Collection<Show> shows = Lookup.getLookup(music).getShows(artist);
     if (shows != null) {
-      ListIterator iterator = shows.listIterator();
-      while (iterator.hasNext()) {
-        Show show = (Show)iterator.next();
-
+      for (Show show : shows) {
         Vector<Element> se = new Vector<Element>();
         StringBuffer sb = new StringBuffer();
         ListIterator bi = show.getArtist().listIterator();
@@ -854,12 +816,9 @@ public class Web {
       e.add(Web.addRelations(music, links, venue));
     }
 
-    List shows = Lookup.getLookup(music).getShows(venue);
+    Collection<Show> shows = Lookup.getLookup(music).getShows(venue);
     if (shows != null) {
-      ListIterator iterator = shows.listIterator();
-      while (iterator.hasNext()) {
-        Show show = (Show)iterator.next();
-        
+      for (Show show : shows) {
         String showLink = links.getLinkTo(show);
         
         Vector<Element> se = new Vector<Element>();
@@ -1031,15 +990,13 @@ public class Web {
   public static div addTracks(Links links, Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
-    Collections.sort(artist.getAlbum(), com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
+    List<Album> albums = (List<Album>)artist.getAlbum();
+    Collections.sort(albums, com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
 
-    Iterator iterator = artist.getAlbum().iterator();
-    while (iterator.hasNext()) {
-      Album alb = (Album)iterator.next();
-                        
+    for (Album album : albums) {
       StringBuffer sb = new StringBuffer();
-      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(alb), alb.getTitle()));
-      com.bolsinga.music.data.Date albumRelease = alb.getReleaseDate();
+      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(album), album.getTitle()));
+      com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
       if (albumRelease != null) {
         sb.append(" (");
         sb.append(albumRelease.getYear());

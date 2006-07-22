@@ -10,6 +10,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import com.bolsinga.music.data.*;
+import com.bolsinga.diary.data.*;
+
 public class Util {
 
   private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.web");
@@ -184,23 +187,23 @@ public class Util {
     return cp.toString();
   }
 
-  public static List getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary) {
+  public static List<Object> getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary) {
     return Util.getRecentItems(count, music, diary, true);
   }
  
-  public static List getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary, boolean includeMusic) {
-    List shows = null;
+  public static List<Object> getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary, boolean includeMusic) {
+    List<Show> shows = null;
     if (includeMusic) {
-      shows = music.getShow();
+      shows = (List<Show>)music.getShow();
       Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
       Collections.reverse(shows);
     }
 
-    List entries = diary.getEntry();
+    List<Entry> entries = (List<Entry>)diary.getEntry();
     Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
     Collections.reverse(entries);
     
-    Vector items = new Vector(count * 2);
+    Vector<Object> items = new Vector<Object>(count * 2);
     if (shows != null) {
       items.addAll(shows.subList(0, count));
     }

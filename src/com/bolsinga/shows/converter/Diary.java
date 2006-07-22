@@ -21,8 +21,8 @@ public class Diary {
   }
         
   public static void convert(String commentsFile, String staticsFile, String outputFile) {
-    List comments = null;
-    List statics = null;
+    List<Comments> comments = null;
+    List<Statics> statics = null;
                 
     try {
       comments = Convert.comments(commentsFile);
@@ -66,13 +66,8 @@ public class Diary {
     }
   }
         
-  private static void createStatics(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List statics) throws JAXBException {
-    Statics oldStatic = null;
-                
-    ListIterator i = statics.listIterator();
-    while (i.hasNext()) {
-      oldStatic = (Statics)i.next();
-                        
+  private static void createStatics(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List<Statics> statics) throws JAXBException {
+    for (Statics oldStatic : statics) {
       String location = oldStatic.getLocation();
                         
       if (location.equalsIgnoreCase("left")) {
@@ -89,24 +84,22 @@ public class Diary {
     }
   }
 
-  private static void createComments(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List comments) throws JAXBException {
-    Comments oldComment = null;
+  private static void createComments(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List<Comments> comments) throws JAXBException {
     com.bolsinga.diary.data.Entry xEntry = null;
     int index = comments.size() - 1;
-                
-    ListIterator i = comments.listIterator();
-    while (i.hasNext()) {
-      oldComment = (Comments)i.next();
-                        
+
+    List<com.bolsinga.diary.data.Entry> entries = (List<com.bolsinga.diary.data.Entry>)diary.getEntry();
+    
+    for (Comments oldComment : comments) {
       xEntry = objFactory.createEntry();
       xEntry.setTimestamp(Diary.toCalendarUTC(oldComment.getDate()));
       xEntry.setComment(oldComment.getData());
       xEntry.setId("e" + index--);
                         
-      diary.getEntry().add(xEntry);
+      entries.add(xEntry);
     }
 
-    java.util.Collections.sort(diary.getEntry(), com.bolsinga.diary.Util.ENTRY_COMPARATOR);
+    java.util.Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
   }
         
   private static GregorianCalendar toCalendarUTC(String date) {

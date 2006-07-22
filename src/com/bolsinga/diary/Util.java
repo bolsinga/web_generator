@@ -14,11 +14,8 @@ public class Util {
   public  static final DateFormat sWebFormat   = new SimpleDateFormat("M/d/yyyy");
   private static final DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
 
-  public static final Comparator ENTRY_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Entry e1 = (Entry)o1;
-        Entry e2 = (Entry)o2;
-                        
+  public static final Comparator<Entry> ENTRY_COMPARATOR = new Comparator<Entry>() {
+      public int compare(Entry e1, Entry e2) {
         return e1.getTimestamp().before(e2.getTimestamp()) ? -1 : 1;
       }
     };
@@ -32,12 +29,12 @@ public class Util {
   }
 
   public static int getStartYear(Diary diary) {
-    List items = diary.getEntry();
+    List<Entry> items = (List<Entry>)diary.getEntry();
     Entry item = null;
 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
 
-    item = (Entry)items.get(0);
+    item = items.get(0);
 
     return item.getTimestamp().get(Calendar.YEAR);
   }
@@ -72,7 +69,7 @@ public class Util {
         entry.setComment(rset.getString("comment"));
         entry.setId("e" + (rset.getLong("id") - 1));
         
-        diary.getEntry().add(entry);
+        ((List<Entry>)diary.getEntry()).add(entry);
       }
     } finally {
       if (rset != null) {

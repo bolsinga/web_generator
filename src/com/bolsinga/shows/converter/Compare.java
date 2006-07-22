@@ -20,20 +20,14 @@ public class Compare {
     return (year * 10000) + (month * 100) + day;
   }
 
-  public static final Comparator VENUE_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Venue r1 = (Venue)o1;
-        Venue r2 = (Venue)o2;
-                        
+  public static final Comparator<Venue> VENUE_COMPARATOR = new Comparator<Venue>() {
+      public int compare(Venue r1, Venue r2) {
         return com.bolsinga.music.Compare.LIBRARY_COMPARATOR.compare(r1.getName(), r2.getName());
       }
     };
         
-  public static final Comparator SHOW_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Show r1 = (Show)o1;
-        Show r2 = (Show)o2;
-                        
+  public static final Comparator<Show> SHOW_COMPARATOR = new Comparator<Show>() {
+      public int compare(Show r1, Show r2) {
         int result = convert(r1.getDate()) - convert(r2.getDate());
         if (result == 0) {
           result = com.bolsinga.music.Compare.LIBRARY_COMPARATOR.compare(r1.getVenue(), r2.getVenue());
@@ -45,11 +39,8 @@ public class Compare {
       }
     };
         
-  public static final Comparator COMMENT_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Comments r1 = (Comments)o1;
-        Comments r2 = (Comments)o2;
-                        
+  public static final Comparator<Comments> COMMENT_COMPARATOR = new Comparator<Comments>() {
+      public int compare(Comments r1, Comments r2) {
         return convert(r1.getDate()) - convert(r2.getDate());
       }
     };

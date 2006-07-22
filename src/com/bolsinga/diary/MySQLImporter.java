@@ -106,15 +106,11 @@ public class MySQLImporter {
   }
 
   private static void importEntries(Statement stmt, Diary diary) throws SQLException {
-    List items = diary.getEntry();
-    Entry item = null;
+    List<Entry> items = (List<Entry>)diary.getEntry();
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
 
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Entry)i.next();
-
+    for (Entry item : items) {
       try {
         importEntry(stmt, item);
       } catch (SQLException e) {

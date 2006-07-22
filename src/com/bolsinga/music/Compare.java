@@ -61,38 +61,26 @@ public class Compare {
     return lower;
   }
 
-  private static final Comparator ARTIST_ID_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Artist i1 = (Artist)o1;
-        Artist i2 = (Artist)o2;
-
+  private static final Comparator<Artist> ARTIST_ID_COMPARATOR = new Comparator<Artist>() {
+      public int compare(Artist i1, Artist i2) {
         return i1.getId().compareTo(i2.getId());
       }
     };
 
-  private static final Comparator ALBUM_ID_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Album i1 = (Album)o1;
-        Album i2 = (Album)o2;
-
+  private static final Comparator<Album> ALBUM_ID_COMPARATOR = new Comparator<Album>() {
+      public int compare(Album i1, Album i2) {
         return i1.getId().compareTo(i2.getId());
       }
     };
 
-  private static final Comparator VENUE_ID_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Venue i1 = (Venue)o1;
-        Venue i2 = (Venue)o2;
-
+  private static final Comparator<Venue> VENUE_ID_COMPARATOR = new Comparator<Venue>() {
+      public int compare(Venue i1, Venue i2) {
         return i1.getId().compareTo(i2.getId());
       }
     };
 
-  private static final Comparator SONG_ID_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Song i1 = (Song)o1;
-        Song i2 = (Song)o2;
-
+  private static final Comparator<Song> SONG_ID_COMPARATOR = new Comparator<Song>() {
+      public int compare(Song i1, Song i2) {
         return i1.getId().compareTo(i2.getId());
       }
     };
@@ -139,57 +127,42 @@ public class Compare {
     };
 
   public static void tidy(Music music) {
-    Collections.sort(music.getArtist(), Compare.ARTIST_ID_COMPARATOR);
-    Iterator i = music.getArtist().iterator();
-    while (i.hasNext()) {
-      Artist a = (Artist)i.next();
-      Collections.sort(a.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
+    List<Artist> artists = (List<Artist>)music.getArtist();
+    Collections.sort(artists, Compare.ARTIST_ID_COMPARATOR);
+    for (Artist a : artists) {
+      Collections.sort((List<Album>)a.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
     }
-    Collections.sort(music.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
-    Collections.sort(music.getVenue(), Compare.VENUE_ID_COMPARATOR);
-    Collections.sort(music.getSong(), Compare.SONG_ID_COMPARATOR);
-    i = music.getRelation().iterator();
-    while (i.hasNext()) {
-      Relation r = (Relation)i.next();
+    Collections.sort((List<Album>)music.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
+    Collections.sort((List<Venue>)music.getVenue(), Compare.VENUE_ID_COMPARATOR);
+    Collections.sort((List<Song>)music.getSong(), Compare.SONG_ID_COMPARATOR);
+    for (Relation r : (List<Relation>)music.getRelation()) {
       Collections.sort(r.getMember(), Compare.RELATION_ID_COMPARATOR);
     }
   }
         
-  public static final Comparator LIBRARY_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        String s1 = (String)o1;
-        String s2 = (String)o2;
-        
+  public static final Comparator<String> LIBRARY_COMPARATOR = new Comparator<String>() {
+      public int compare(String s1, String s2) {
         return simplify(s1).compareToIgnoreCase(simplify(s2));
       }
     };
         
-  public static final Comparator DATE_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        com.bolsinga.music.data.Date r1 = (com.bolsinga.music.data.Date)o1;
-        com.bolsinga.music.data.Date r2 = (com.bolsinga.music.data.Date)o2;
-
+  public static final Comparator<com.bolsinga.music.data.Date> DATE_COMPARATOR = new Comparator<com.bolsinga.music.data.Date>() {
+      public int compare(com.bolsinga.music.data.Date r1, com.bolsinga.music.data.Date r2) {
         return convert(r1) - convert(r2);
       }
     };
         
-  public static final Comparator VENUE_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Venue r1 = (Venue)o1;
-        Venue r2 = (Venue)o2;
-                        
+  public static final Comparator<Venue> VENUE_COMPARATOR = new Comparator<Venue>() {
+      public int compare(Venue r1, Venue r2) {
         return LIBRARY_COMPARATOR.compare(r1.getName(), r2.getName());
       }
     };
         
-  public final Comparator VENUE_STATS_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Venue r1 = (Venue)o1;
-        Venue r2 = (Venue)o2;
-
-        List shows1 = Lookup.getLookup(fMusic).getShows(r1);
+  public final Comparator<Venue> VENUE_STATS_COMPARATOR = new Comparator<Venue>() {
+      public int compare(Venue r1, Venue r2) {
+        Collection<Show> shows1 = Lookup.getLookup(fMusic).getShows(r1);
         int sets1 = (shows1 != null) ? shows1.size() : 0;
-        List shows2 = Lookup.getLookup(fMusic).getShows(r2);
+        Collection<Show> shows2 = Lookup.getLookup(fMusic).getShows(r2);
         int sets2 = (shows2 != null) ? shows2.size() : 0;
                         
         int result = sets2 - sets1;
@@ -200,11 +173,8 @@ public class Compare {
       }
     };
         
-  public static final Comparator ARTIST_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Artist r1 = (Artist)o1;
-        Artist r2 = (Artist)o2;
-                        
+  public static final Comparator<Artist> ARTIST_COMPARATOR = new Comparator<Artist>() {
+      public int compare(Artist r1, Artist r2) {
         String n1 = r1.getSortname();
         if (n1 == null) {
           n1 = r1.getName();
@@ -218,43 +188,31 @@ public class Compare {
       }
     };
 
-  public static final Comparator ALBUM_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Album r1 = (Album)o1;
-        Album r2 = (Album)o2;
-                        
+  public static final Comparator<Album> ALBUM_COMPARATOR = new Comparator<Album>() {
+      public int compare(Album r1, Album r2) {
         int result = LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
         if (result == 0) {
-          result = ARTIST_COMPARATOR.compare(r1.getPerformer(), r2.getPerformer());
+          result = ARTIST_COMPARATOR.compare((Artist)r1.getPerformer(), (Artist)r2.getPerformer());
         }
         return result;
       }
     };
 
-  public static final Comparator SONG_ORDER_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Song r1 = (Song)o1;
-        Song r2 = (Song)o2;
-                        
+  public static final Comparator<Song> SONG_ORDER_COMPARATOR = new Comparator<Song>() {
+      public int compare(Song r1, Song r2) {
         return ((r1.getTrack() != null) ? r1.getTrack().intValue() : 0) - ((r2.getTrack() != null) ? r2.getTrack().intValue() : 0);
       }
     };
 
-  public static final Comparator ALBUM_ORDER_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Album r1 = (Album)o1;
-        Album r2 = (Album)o2;
-
+  public static final Comparator<Album> ALBUM_ORDER_COMPARATOR = new Comparator<Album>() {
+      public int compare(Album r1, Album r2) {
         // The 3000 assures that 'unknown' album dates are after the known ones.
         return ((r1.getReleaseDate() != null) ? r1.getReleaseDate().getYear().intValue() : 3000) - ((r2.getReleaseDate() != null) ? r2.getReleaseDate().getYear().intValue() : 3000);
       }
     };
 
-  public static final Comparator ARTIST_TRACKS_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Artist r1 = (Artist)o1;
-        Artist r2 = (Artist)o2;
-                        
+  public static final Comparator<Artist> ARTIST_TRACKS_COMPARATOR = new Comparator<Artist>() {
+      public int compare(Artist r1, Artist r2) {
         int tracks1 = Util.trackCount(r1);
         int tracks2 = Util.trackCount(r2);
                         
@@ -266,11 +224,8 @@ public class Compare {
       }
     };
         
-  public static final Comparator ARTIST_ALBUMS_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Artist r1 = (Artist)o1;
-        Artist r2 = (Artist)o2;
-                        
+  public static final Comparator<Artist> ARTIST_ALBUMS_COMPARATOR = new Comparator<Artist>() {
+      public int compare(Artist r1, Artist r2) {
         int albums1 = (r1.getAlbum() != null) ? r1.getAlbum().size() : 0;
         int albums2 = (r2.getAlbum() != null) ? r2.getAlbum().size() : 0;
                         
@@ -282,13 +237,10 @@ public class Compare {
       }
     };
         
-  public final Comparator ARTIST_STATS_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Artist r1 = (Artist)o1;
-        Artist r2 = (Artist)o2;
-                        
-        List shows1 = Lookup.getLookup(fMusic).getShows(r1);
-        List shows2 = Lookup.getLookup(fMusic).getShows(r2);
+  public final Comparator<Artist> ARTIST_STATS_COMPARATOR = new Comparator<Artist>() {
+      public int compare(Artist r1, Artist r2) {
+        Collection<Show> shows1 = Lookup.getLookup(fMusic).getShows(r1);
+        Collection<Show> shows2 = Lookup.getLookup(fMusic).getShows(r2);
         int sets1 = (shows1 != null) ? shows1.size() : 0;
         int sets2 = (shows2 != null) ? shows2.size() : 0;
                         
@@ -300,27 +252,21 @@ public class Compare {
       }
     };
         
-  public static final Comparator SHOW_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Show r1 = (Show)o1;
-        Show r2 = (Show)o2;
-                        
+  public static final Comparator<Show> SHOW_COMPARATOR = new Comparator<Show>() {
+      public int compare(Show r1, Show r2) {
         int result = DATE_COMPARATOR.compare(r1.getDate(), r2.getDate());
         if (result == 0) {
-          result = VENUE_COMPARATOR.compare(r1.getVenue(), r2.getVenue());
+          result = VENUE_COMPARATOR.compare((Venue)r1.getVenue(), (Venue)r2.getVenue());
           if (result == 0) {
-            result = ARTIST_COMPARATOR.compare(r1.getArtist().get(0), r2.getArtist().get(0));
+            result = ARTIST_COMPARATOR.compare((Artist)r1.getArtist().get(0), (Artist)r2.getArtist().get(0));
           }
         }
         return result;
       }
     };
         
-  public static final Comparator SHOW_STATS_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
-        Show r1 = (Show)o1;
-        Show r2 = (Show)o2;
-                        
+  public static final Comparator<Show> SHOW_STATS_COMPARATOR = new Comparator<Show>() {
+      public int compare(Show r1, Show r2) {
         com.bolsinga.music.data.Date d1 = r1.getDate();
         com.bolsinga.music.data.Date d2 = r2.getDate();
 

@@ -92,17 +92,13 @@ public class ICal {
   }
         
   public static void generate(Music music, String name, Writer w) {
-    List items = music.getShow();
-    Show item = null;
+    List<Show> items = (List<Show>)music.getShow();
                 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
                 
     VCalendar cal = new VCalendar(name);
-                
-    ListIterator i = items.listIterator();
-    while (i.hasNext()) {
-      item = (Show)i.next();
-                        
+
+    for (Show item : items) {
       if (!item.getDate().isUnknown()) {
         addItem(item, cal);
       }

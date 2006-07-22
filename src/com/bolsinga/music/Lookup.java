@@ -14,12 +14,12 @@ public class Lookup {
     new HashMap<String, Collection<Show>>();
   private final HashMap<String, Collection<Show>> fCityMap =
     new HashMap<String, Collection<Show>>();
-  private final HashMap<String, Collection<String>> fArtistRelationMap =
-    new HashMap<String, Collection<String>>();
-  private final HashMap<String, Collection<String>> fVenueRelationMap =
-    new HashMap<String, Collection<String>>();
-  private final HashMap<String, Collection<String>> fLabelRelationMap =
-    new HashMap<String, Collection<String>>();
+  private final HashMap<String, Collection<Artist>> fArtistRelationMap =
+    new HashMap<String, Collection<Artist>>();
+  private final HashMap<String, Collection<Venue>> fVenueRelationMap =
+    new HashMap<String, Collection<Venue>>();
+  private final HashMap<String, Collection<Label>> fLabelRelationMap =
+    new HashMap<String, Collection<Label>>();
         
   public synchronized static Lookup getLookup(Music music) {
     if (sLookup == null) {
@@ -29,17 +29,11 @@ public class Lookup {
   }
 
   private Lookup(Music music) {
-    Show show = null;
     String id = null;
     Collection<Show> showCollection = null;
-    ListIterator ai = null;
-    Artist artist = null;
-    Set set = null;
 
-    ListIterator i = music.getShow().listIterator();
-    while (i.hasNext()) {
-      show = (Show)i.next();
-                        
+    List<Show> shows = (List<Show>)music.getShow();
+    for (Show show : shows) {
       id = ((Venue)show.getVenue()).getId();
       if (fVenueMap.containsKey(id)) {
         showCollection = fVenueMap.get(id);
@@ -59,11 +53,9 @@ public class Lookup {
         showCollection.add(show);
         fCityMap.put(id, showCollection);
       }
-                        
-      ai = show.getArtist().listIterator();
-      while (ai.hasNext()) {
-        artist = (Artist)ai.next();
-                                
+
+      List<Artist> artists = (List<Artist>)show.getArtist();
+      for (Artist artist : artists) {
         id = artist.getId();
         if (fArtistMap.containsKey(id)) {
           showCollection = fArtistMap.get(id);
@@ -80,7 +72,7 @@ public class Lookup {
     List ritems = null;
     ListIterator ri = null;
                 
-    i = music.getRelation().listIterator();
+    ListIterator i = music.getRelation().listIterator();
     while (i.hasNext()) {
       rel = (Relation)i.next();
       if (rel == null) {
@@ -94,71 +86,74 @@ public class Lookup {
       while (ri.hasNext()) {
         Object o = ri.next();
         if (o instanceof Artist) {
+          Collection<Artist> rArtists;
           id = ((Artist)o).getId();
           if (!fArtistRelationMap.containsKey(id)) {
-            set = new HashSet<String>();
-            fArtistRelationMap.put(id, set);
+            rArtists = new HashSet<Artist>();
+            fArtistRelationMap.put(id, rArtists);
           }
           ListIterator nri = rel.getMember().listIterator();
           while (nri.hasNext()) {
-            artist = (Artist)nri.next();
-            set = (Set)fArtistRelationMap.get(id);
-            set.add(artist);
+            Artist artist = (Artist)nri.next();
+            rArtists = fArtistRelationMap.get(id);
+            rArtists.add(artist);
           }
         } else if (o instanceof Venue) {
+          Collection<Venue> rVenues;
           id = ((Venue)o).getId();
           if (!fVenueRelationMap.containsKey(id)) {
-            set = new HashSet<String>();
-            fVenueRelationMap.put(id, set);
+            rVenues = new HashSet<Venue>();
+            fVenueRelationMap.put(id, rVenues);
           }
           ListIterator nri = rel.getMember().listIterator();
           while (nri.hasNext()) {
             Venue venue = (Venue)nri.next();
-            set = (Set)fVenueRelationMap.get(id);
-              set.add(venue);
+            rVenues = fVenueRelationMap.get(id);
+            rVenues.add(venue);
           }
         } else if (o instanceof Label) {
+          Collection<Label> rLabels;
           id = ((Label)o).getId();
           if (!fLabelRelationMap.containsKey(id)) {
-            set = new HashSet<String>();
-            fLabelRelationMap.put(id, set);
+            rLabels = new HashSet<Label>();
+            fLabelRelationMap.put(id, rLabels);
           }
           ListIterator nri = rel.getMember().listIterator();
           while (nri.hasNext()) {
             Label label = (Label)nri.next();
-            set = (Set)fLabelRelationMap.get(id);
-            set.add(label);
+            rLabels = fLabelRelationMap.get(id);
+            rLabels.add(label);
           }
         }
       }
     }
   }
         
-  public List getShows(Artist artist) {
-    return (List)fArtistMap.get(artist.getId());
+  public Collection<Show> getShows(Artist artist) {
+    return fArtistMap.get(artist.getId());
   }
         
-  public List getShows(Venue venue) {
-    return (List)fVenueMap.get(venue.getId());
+  public Collection<Show> getShows(Venue venue) {
+    return fVenueMap.get(venue.getId());
   }
         
-  public List getShows(String city) {
-    return (List)fCityMap.get(city);
+  public Collection<Show> getShows(String city) {
+    return fCityMap.get(city);
   }
         
-  public Collection getRelations(Artist artist) {
-    return (Collection)fArtistRelationMap.get(artist.getId());
+  public Collection<Artist> getRelations(Artist artist) {
+    return fArtistRelationMap.get(artist.getId());
   }
         
-  public Collection getRelations(Venue venue) {
-    return (Collection)fVenueRelationMap.get(venue.getId());
+  public Collection<Venue> getRelations(Venue venue) {
+    return fVenueRelationMap.get(venue.getId());
   }
         
-  public Collection getRelations(Label label) {
-    return (Collection)fLabelRelationMap.get(label.getId());
+  public Collection<Label> getRelations(Label label) {
+    return fLabelRelationMap.get(label.getId());
   }
         
-  public Collection getCities() {
+  public Collection<String> getCities() {
     return fCityMap.keySet();
   }
 }

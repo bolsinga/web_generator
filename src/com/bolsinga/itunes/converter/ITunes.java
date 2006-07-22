@@ -298,7 +298,7 @@ public class ITunes {
       result.getFormat().add(FORMAT_DIGITAL_FILE);
       result.setId("a" + sAlbums.size());
                         
-      music.getAlbum().add(result);
+      ((List<Album>)music.getAlbum()).add(result);
       sAlbums.put(key, result);
     } else {
       result = sAlbums.get(key);
@@ -311,18 +311,18 @@ public class ITunes {
     Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed, playCount);
             
     // Add the song to the album
-    List songs = album.getSong();
+    List<Song> songs = (List<Song>)album.getSong();
     songs.add(song);
             
     // Add the album to the artist if it isn't there already.
-    List albums = artist.getAlbum();
+    List<Album> albums = (List<Album>)artist.getAlbum();
     if (!albums.contains(album)) {
       albums.add(album);
     }
   }
         
   private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, GregorianCalendar lastPlayed, int playCount) throws JAXBException {
-    List songs = music.getSong();
+    List<Song> songs = (List<Song>)music.getSong();
             
     Song result = null;
             
@@ -357,36 +357,33 @@ public class ITunes {
   }
         
   private static void sortAlbumOrder(com.bolsinga.music.data.Music music) {
-    ListIterator i = music.getArtist().listIterator();
-    while (i.hasNext()) {
-      Artist a = (Artist)i.next();
-      Collections.sort(a.getAlbum(), com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
+    List<Artist> artists = (List<Artist>)music.getArtist();
+    for (Artist a : artists) {
+      Collections.sort((List<Album>)a.getAlbum(), com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
     }
   }
 
   private static void sortAlbumsSongOrder(com.bolsinga.music.data.Music music) {
-    ListIterator i = music.getAlbum().listIterator();
-    while (i.hasNext()) {
-      Album a = (Album)i.next();
-      Collections.sort(a.getSong(), com.bolsinga.music.Compare.SONG_ORDER_COMPARATOR);
+    List<Album> albums = (List<Album>)music.getAlbum();
+    for (Album a : albums) {
+      Collections.sort((List<Song>)a.getSong(), com.bolsinga.music.Compare.SONG_ORDER_COMPARATOR);
     }
   }
         
   private static void setAlbumYears(ObjectFactory objFactory, com.bolsinga.music.data.Music music) throws JAXBException {
-    ListIterator i = music.getAlbum().listIterator();
+    List<Album> albums = (List<Album>)music.getAlbum();
     int albumYear, songYear;
     com.bolsinga.music.data.Date date;
-    while (i.hasNext()) {                  
-      Album a = (Album)i.next();
+    for (Album a : albums) {
       if (a.getReleaseDate() != null) {
         // The album already has a date; don't change it.
         break;
       }
                         
       albumYear = -1;
-      ListIterator si = a.getSong().listIterator();
-      while (si.hasNext()) {
-        date = ((Song)si.next()).getReleaseDate();
+      List<Song> songs = (List<Song>)a.getSong();
+      for (Song song : songs) {
+        date = song.getReleaseDate();
         if (date != null) {
           songYear = date.getYear().intValue();
           if (albumYear == -1) {

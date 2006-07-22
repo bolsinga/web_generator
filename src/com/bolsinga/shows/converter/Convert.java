@@ -55,8 +55,8 @@ public class Convert {
     dump(l);
   }
 
-  public static List relation(String filename) throws IOException {
-    Vector relations = new Vector();
+  public static List<Relation> relation(String filename) throws IOException {
+    Vector<Relation> relations = new Vector<Relation>();
 
     LineNumberReader in = null;
     try {
@@ -83,8 +83,8 @@ public class Convert {
     return relations;
   }
         
-  public static List bandsort(String filename) throws IOException {
-    Vector bandMaps = new Vector();
+  public static List<BandMap> bandsort(String filename) throws IOException {
+    Vector<BandMap> bandMaps = new Vector<BandMap>();
                 
     LineNumberReader in = null;
     try {
@@ -105,8 +105,8 @@ public class Convert {
     return bandMaps;
   }
         
-  public static List venuemap(String filename) throws IOException {
-    Vector venues = new Vector();
+  public static List<Venue> venuemap(String filename) throws IOException {
+    Vector<Venue> venues = new Vector<Venue>();
                 
     LineNumberReader in = null;
     try {
@@ -137,10 +137,10 @@ public class Convert {
     return venues;
   }
         
-  public static List shows(String filename) throws IOException {
+  public static List<Show> shows(String filename) throws IOException {
     final String SHOW_DELIMITER = "^";
         
-    Vector shows = new Vector();
+    Vector<Show> shows = new Vector<Show>();
 
     LineNumberReader in = null;
     try {
@@ -167,7 +167,7 @@ public class Convert {
         }
         
         bt = new StringTokenizer(bandstring, "|");
-        Vector bands = new Vector();
+        Vector<String> bands = new Vector<String>();
         while (bt.hasMoreElements()) {
           bands.add(bt.nextToken());
         }
@@ -187,8 +187,8 @@ public class Convert {
   private static Pattern sLocationPattern =   Pattern.compile("<location>(.*?)</location>", Pattern.DOTALL);
   private static Pattern sDataPattern =           Pattern.compile("<data>(.*?)</data>", Pattern.DOTALL);
         
-  public static List statics(String filename) throws IOException {
-    Vector statics = new Vector();
+  public static List<Statics> statics(String filename) throws IOException {
+    Vector<Statics> statics = new Vector<Statics>();
 
     FileInputStream fis = null;
     try {
@@ -227,8 +227,8 @@ public class Convert {
   private static Pattern sCommentPattern =        Pattern.compile("<comment>(.*?)</comment>", Pattern.DOTALL);
   private static Pattern sDatePattern =           Pattern.compile("<date>(.*?)</date>", Pattern.DOTALL);
 
-  public static List comments(String filename) throws IOException {
-    Vector comments = new Vector();
+  public static List<Comments> comments(String filename) throws IOException {
+    Vector<Comments> comments = new Vector<Comments>();
 
     FileInputStream fis = null;
     try {
