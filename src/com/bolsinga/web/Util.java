@@ -6,9 +6,8 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
+import javax.xml.datatype.*;
 
 import com.bolsinga.music.data.*;
 import com.bolsinga.diary.data.*;
@@ -17,6 +16,7 @@ public class Util {
 
   private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.web");
 
+  private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
   private static boolean sPrettyPrint = false;
   static {
@@ -24,16 +24,25 @@ public class Util {
     if (value != null) {
       sPrettyPrint = true;
     }
+    try {
+      sXMLDatatypeFactory = DatatypeFactory.newInstance();
+    } catch (DatatypeConfigurationException e) {
+      System.err.println("Exception: " + e);
+      e.printStackTrace();
+      System.exit(1);
+    }
   }
         
   public static boolean getPrettyPrint() {
     return sPrettyPrint;
   }
-        
-  public static GregorianCalendar toGregorianCalendarUTC(Calendar cal) {
-    GregorianCalendar result = nowUTC();
-    result.setTimeInMillis(cal.getTimeInMillis());
-    return result;
+
+  public static XMLGregorianCalendar toXMLGregorianCalendar(GregorianCalendar cal) {
+    return sXMLDatatypeFactory.newXMLGregorianCalendar(cal);
+  }
+
+  public static boolean convert(Boolean value) {
+    return (value != null) ? value.booleanValue() : false;
   }
 
   public static GregorianCalendar nowUTC() {
@@ -110,11 +119,11 @@ public class Util {
     return an;
   }
 
-  public static ul createUnorderedList(Vector<Element> elements) {
+  public static ul createUnorderedList(Vector<org.apache.ecs.Element> elements) {
     ul list = new ul();
     list.setPrettyPrint(Util.getPrettyPrint());
 
-    for (Element e : elements) {
+    for (org.apache.ecs.Element e : elements) {
       li item = new li(e);
       item.setPrettyPrint(Util.getPrettyPrint());
       list.addElement(item);
@@ -123,11 +132,11 @@ public class Util {
     return list;
   }
 
-  public static ol createOrderedList(Vector<Element> elements) {
+  public static ol createOrderedList(Vector<org.apache.ecs.Element> elements) {
     ol list = new ol();
     list.setPrettyPrint(Util.getPrettyPrint());
 
-    for (Element e : elements) {
+    for (org.apache.ecs.Element e : elements) {
       li item = new li(e);
       item.setPrettyPrint(Util.getPrettyPrint());
       list.addElement(item);
@@ -194,12 +203,12 @@ public class Util {
   public static List<Object> getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary, boolean includeMusic) {
     List<Show> shows = null;
     if (includeMusic) {
-      shows = (List<Show>)music.getShow();
+      shows = music.getShow();
       Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
       Collections.reverse(shows);
     }
 
-    List<Entry> entries = (List<Entry>)diary.getEntry();
+    List<Entry> entries = diary.getEntry();
     Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
     Collections.reverse(entries);
     
@@ -223,7 +232,7 @@ public class Util {
         if (o1 instanceof com.bolsinga.music.data.Show) {
           c1 = com.bolsinga.music.Util.toCalendarUTC(((com.bolsinga.music.data.Show)o1).getDate());
         } else if (o1 instanceof com.bolsinga.diary.data.Entry) {
-          c1 = ((com.bolsinga.diary.data.Entry)o1).getTimestamp();
+          c1 = ((com.bolsinga.diary.data.Entry)o1).getTimestamp().toGregorianCalendar();
         } else {
           System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
           System.exit(1);
@@ -232,7 +241,7 @@ public class Util {
         if (o2 instanceof com.bolsinga.music.data.Show) {
           c2 = com.bolsinga.music.Util.toCalendarUTC(((com.bolsinga.music.data.Show)o2).getDate());
         } else if (o2 instanceof com.bolsinga.diary.data.Entry) {
-          c2 = ((com.bolsinga.diary.data.Entry)o2).getTimestamp();
+          c2 = ((com.bolsinga.diary.data.Entry)o2).getTimestamp().toGregorianCalendar();
         } else {
           System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
           System.exit(1);

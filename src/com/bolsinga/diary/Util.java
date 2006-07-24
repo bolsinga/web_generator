@@ -6,9 +6,8 @@ import java.sql.*;
 import java.text.*;
 import java.util.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
+import javax.xml.datatype.*;
 
 public class Util {
   public  static final DateFormat sWebFormat   = new SimpleDateFormat("M/d/yyyy");
@@ -16,27 +15,28 @@ public class Util {
 
   public static final Comparator<Entry> ENTRY_COMPARATOR = new Comparator<Entry>() {
       public int compare(Entry e1, Entry e2) {
-        return e1.getTimestamp().before(e2.getTimestamp()) ? -1 : 1;
+        int comparison = e1.getTimestamp().compare(e2.getTimestamp());
+        return (comparison == DatatypeConstants.LESSER) ? -1 : 1;
       }
     };
 
   public static String getTitle(Entry entry) {
-    return sWebFormat.format(entry.getTimestamp().getTime());
+    return sWebFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
         
   public static String getMonth(Entry entry) {
-    return sMonthFormat.format(entry.getTimestamp().getTime());
+    return sMonthFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
 
   public static int getStartYear(Diary diary) {
-    List<Entry> items = (List<Entry>)diary.getEntry();
+    List<Entry> items = diary.getEntry();
     Entry item = null;
 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
 
     item = items.get(0);
 
-    return item.getTimestamp().get(Calendar.YEAR);
+    return item.getTimestamp().getYear();
   }
     
   public static com.bolsinga.diary.data.Diary createDiary(String sourceFile) {
@@ -65,11 +65,11 @@ public class Util {
         
         String sqlDATETIME = rset.getString("timestamp");
         GregorianCalendar utcCal = com.bolsinga.sql.Util.toCalendarUTC(sqlDATETIME);
-        entry.setTimestamp(utcCal);
+        entry.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(utcCal));
         entry.setComment(rset.getString("comment"));
         entry.setId("e" + (rset.getLong("id") - 1));
         
-        ((List<Entry>)diary.getEntry()).add(entry);
+        diary.getEntry().add(entry);
       }
     } finally {
       if (rset != null) {
@@ -177,7 +177,7 @@ public class Util {
       Util.createTitle(stmt, diary);
 
       // timestamp
-      diary.setTimestamp(com.bolsinga.web.Util.nowUTC());
+      diary.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();

@@ -42,7 +42,7 @@ public class Diary {
 
       createComments(objFactory, diary, comments);
 
-      diary.setTimestamp(com.bolsinga.web.Util.nowUTC());
+      diary.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
 
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
@@ -88,11 +88,11 @@ public class Diary {
     com.bolsinga.diary.data.Entry xEntry = null;
     int index = comments.size() - 1;
 
-    List<com.bolsinga.diary.data.Entry> entries = (List<com.bolsinga.diary.data.Entry>)diary.getEntry();
+    List<com.bolsinga.diary.data.Entry> entries = diary.getEntry();
     
     for (Comments oldComment : comments) {
       xEntry = objFactory.createEntry();
-      xEntry.setTimestamp(Diary.toCalendarUTC(oldComment.getDate()));
+      xEntry.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(Diary.toCalendarUTC(oldComment.getDate())));
       xEntry.setComment(oldComment.getData());
       xEntry.setId("e" + index--);
                         

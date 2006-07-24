@@ -41,7 +41,7 @@ public abstract class Encode {
   }
 
   private static void generateDiary(Diary diary, Encode encoder, String outputDir) {
-    List<Entry> items = (List<Entry>)diary.getEntry();
+    List<Entry> items = diary.getEntry();
     StringBuffer buffer = new StringBuffer();
 
     Collections.sort(items, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
@@ -57,7 +57,7 @@ public abstract class Encode {
   }
 
   private static void generateMusic(Music music, Encode encoder, String outputDir) {
-    List<Show> items = (List<Show>)music.getShow();
+    List<Show> items = music.getShow();
     StringBuffer buffer = new StringBuffer();
 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
@@ -275,17 +275,17 @@ class RegexEncode extends Encode {
     Links upLinks = Links.getLinks(true);
     
     {            
-    List<Artist> items = (List<Artist>)music.getArtist();
+    List<Artist> items = music.getArtist();
     EncoderData.addArtistData(items, standardLinks, upLinks, fEncodings);
     }
 
     {           
-    List<Venue> items = (List<Venue>)music.getVenue();
+    List<Venue> items = music.getVenue();
     EncoderData.addVenueData(items, standardLinks, upLinks, fEncodings);
     }
      
     {           
-    List<Album> items = (List<Album>)music.getAlbum();
+    List<Album> items = music.getAlbum();
     EncoderData.addAlbumData(items, standardLinks, upLinks, fEncodings);
     }
   }
@@ -319,19 +319,19 @@ class HashEncode extends Encode {
 
   HashEncode(Music music, Diary diary) {
     if (music != null) {
-      List items = music.getShow();
-      int numShows = (items != null) ? items.size() : 0;
-      items = (diary != null) ? diary.getEntry() : null;
-      int numDiary = (items != null) ? items.size() : 0;
+      List<Show> shows = music.getShow();
+      int numShows = (shows != null) ? shows.size() : 0;
+      List<Entry> entries = (diary != null) ? diary.getEntry() : null;
+      int numDiary = (entries != null) ? entries.size() : 0;
       int numEncoded = numShows + numDiary;
       HashMap<String, HashSet<Object>> encodedMap = new HashMap<String, HashSet<Object>>(numEncoded * WORDS_PER_ENTRY);
       
-      items = music.getArtist();
-      int numArtist = (items != null) ? items.size() : 0;
-      items = music.getVenue();
-      int numVenue = (items != null) ? items.size() : 0;
-      items = music.getAlbum();
-      int numAlbum = (items != null) ? items.size() : 0;
+      List<Artist> artists = music.getArtist();
+      int numArtist = (artists != null) ? artists.size() : 0;
+      List<Venue> venues = music.getVenue();
+      int numVenue = (venues != null) ? venues.size() : 0;
+      List<Album> albums= music.getAlbum();
+      int numAlbum = (albums != null) ? albums.size() : 0;
       int numEncoder = numArtist + numVenue + numAlbum;
 
       HashMap<String, HashMap<Object, EncoderData>> encoderMap = new HashMap<String, HashMap<Object, EncoderData>>(numEncoder * WORDS_PER_NAME);
@@ -420,7 +420,7 @@ class HashEncode extends Encode {
   }
 
   private void getMusicWords(Music music, HashMap<String, HashSet<Object>> encodedMap) {
-    List<Show> items = (List<Show>)music.getShow();
+    List<Show> items = music.getShow();
     
     for (Show item : items) {
       if (item.getComment() != null) {
@@ -431,7 +431,7 @@ class HashEncode extends Encode {
   
   private void getDiaryWords(Diary diary, HashMap<String, HashSet<Object>> encodedMap) {
     if (diary != null) {
-      List<Entry> items = (List<Entry>)diary.getEntry();
+      List<Entry> items = diary.getEntry();
 
       for (Entry item : items) {
         addEncodedWords(item.getComment(), encodedMap, item, items.size());
@@ -449,7 +449,7 @@ class HashEncode extends Encode {
   }
 
   private void getArtistWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Artist> items = (List<Artist>)music.getArtist();
+    List<Artist> items = music.getArtist();
 
     for (final Artist item : items) {
       addWords(item.getName(), encoderMap,
@@ -463,7 +463,7 @@ class HashEncode extends Encode {
   }
 
   private void getVenueWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Venue> items = (List<Venue>)music.getVenue();
+    List<Venue> items = music.getVenue();
 
     for (final Venue item : items) {
       if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
@@ -479,11 +479,11 @@ class HashEncode extends Encode {
   }
 
   private void getAlbumWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Album> items = (List<Album>)music.getAlbum();
+    List<Album> items = music.getAlbum();
 
     // Create a HashSet of all Artist names. If an Album has the same name as an
     //  Artist, prefer the Artist name over the Album.
-    List<Artist> artistList = (List<Artist>)music.getArtist();
+    List<Artist> artistList = music.getArtist();
     HashSet<String> artists = new HashSet<String>(artistList.size());
     
     for (Artist artist : artistList) {

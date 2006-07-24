@@ -7,6 +7,8 @@ import java.sql.*;
 import java.text.*;
 import java.util.*;
 
+import javax.xml.bind.*;
+
 public class MySQLImporter {
   public static void main(String[] args) {
     if ((args.length != 3) && (args.length != 4)) {
@@ -149,19 +151,15 @@ public class MySQLImporter {
     rowItems[3] = label.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[4] = Integer.toString((label.isActive() ? 1 : 0));
+    //    rowItems[4] = Integer.toString(com.bolsinga.web.Util.convert(label.isActive()) ? 1 : 0);
     rowItems[4] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "label", rowItems);
   }
 
   private static void importLabels(Statement stmt, Music music) throws SQLException {
-    List items = music.getLabel();
-    Label item = null;
-
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Label)iterator.next();
+    List<Label> items = music.getLabel();
+    for (Label item : items) {
       try {
         MySQLImporter.importLabel(stmt, item);
       } catch (SQLException e) {
@@ -176,11 +174,10 @@ public class MySQLImporter {
     return toSQLID(1, song.getId());
   }
 
-  private static String toSQLenum(java.util.List strings) {
+  private static String toSQLenum(List<JAXBElement<String>> strings) {
     StringBuffer sb = new StringBuffer();
-    Iterator i = strings.iterator();
-    while (i.hasNext()) {
-      String s = (String)i.next();
+    for (JAXBElement<String> js : strings) {
+      String s = js.getValue();
       if (sb.length() != 0) {
         sb.append(",");
       }
@@ -214,14 +211,16 @@ public class MySQLImporter {
       releaseDate = album.getReleaseDate();
     }
     rowItems[index++] = (releaseDate != null) ? MySQLImporter.toSQLString(releaseDate) : null;
-    rowItems[index++] = Integer.toString(((releaseDate == null || releaseDate.isUnknown()) ? 1 : 0));
+    boolean unknown = (releaseDate != null) ? com.bolsinga.web.Util.convert(releaseDate.isUnknown()) : true;
+    rowItems[index++] = Integer.toString(unknown ? 1 : 0);
     com.bolsinga.music.data.Date purchaseDate = album.getPurchaseDate();
     rowItems[index++] = (purchaseDate != null) ? MySQLImporter.toSQLString(purchaseDate) : null;
-    rowItems[index++] = Integer.toString(((purchaseDate == null || purchaseDate.isUnknown()) ? 1 : 0));
+    unknown = (purchaseDate != null) ? com.bolsinga.web.Util.convert(purchaseDate.isUnknown()) : true;
+    rowItems[index++] = Integer.toString(unknown ? 1 : 0);
     rowItems[index++] = song.getGenre();
     java.math.BigInteger track = song.getTrack();
     rowItems[index++] = (track != null) ? track.toString() : null;
-    GregorianCalendar lastPlayed = com.bolsinga.web.Util.toGregorianCalendarUTC(song.getLastPlayed());
+    GregorianCalendar lastPlayed = song.getLastPlayed().toGregorianCalendar();
     String lastPlayedString = null;
     if (lastPlayed != null) {
       lastPlayedString = com.bolsinga.sql.Util.toDATETIME(lastPlayed);
@@ -229,7 +228,7 @@ public class MySQLImporter {
     rowItems[index++] = lastPlayedString;
     // Live isn't currently tracked in the raw text files.
     //  Only use it coming out of the DB.
-    //    rowItems[index++] = Integer.toString((song.isLive() ? 1 : 0));
+    //    rowItems[index++] = Integer.toString(com.bolsinga.web.Util.convert(venue.isLive()) ? 1 : 0);
     rowItems[index++] = null;
     rowItems[index++] = MySQLImporter.toSQLID(album);
     rowItems[index++] = MySQLImporter.toSQLenum(album.getFormat());
@@ -239,12 +238,9 @@ public class MySQLImporter {
   }
 
   private static void importSongs(Statement stmt, Album album) throws SQLException {
-    List items = album.getSong();
-    Song item = null;
-
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Song)iterator.next();
+    List<JAXBElement<Object>> items = album.getSong();
+    for (JAXBElement<Object> jitem : items) {
+      Song item = (Song)jitem.getValue();
       try {
         importSong(stmt, item, album);
       } catch (SQLException e) {
@@ -267,7 +263,7 @@ public class MySQLImporter {
     Label label = (Label)album.getLabel();
     rowItems[2] = (label != null) ? MySQLImporter.toSQLID(label) : null;
     rowItems[3] = album.getComment();
-    boolean isCompilation = album.isCompilation();
+    boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
     rowItems[4] = (isCompilation) ? "1" : null;
     
     com.bolsinga.sql.Util.insert(stmt, "album", rowItems);
@@ -276,12 +272,8 @@ public class MySQLImporter {
   }
 
   private static void importAlbums(Statement stmt, Music music) throws SQLException {
-    List items = music.getAlbum();
-    Album item = null;
-
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Album)iterator.next();
+    List<Album> items = music.getAlbum();
+    for (Album item : items) {
       try {
         MySQLImporter.importAlbum(stmt, item);
       } catch (SQLException e) {
@@ -317,19 +309,15 @@ public class MySQLImporter {
     rowItems[4] = artist.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[5] = Integer.toString((artist.isActive() ? 1 : 0));
+    //    rowItems[5] = Integer.toString(com.bolsinga.web.Util.convert(artist.isActive()) ? 1 : 0);
     rowItems[5] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "artist", rowItems);
   }
 
   private static void importArtists(Statement stmt, Music music) throws SQLException {
-    List items = music.getArtist();
-    Artist item = null;
-
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Artist)iterator.next();
+    List<Artist> items = music.getArtist();
+    for (Artist item : items) {
       try {
         MySQLImporter.importArtist(stmt, item);
       } catch (SQLException e) {
@@ -364,19 +352,15 @@ public class MySQLImporter {
     rowItems[3] = venue.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[4] = Integer.toString((venue.isActive() ? 1 : 0));
+    //    rowItems[4] = Integer.toString(com.bolsinga.web.Util.convert(venue.isActive()) ? 1 : 0);
     rowItems[4] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "venue", rowItems);
   }
 
   private static void importVenues(Statement stmt, Music music) throws SQLException {
-    List items = music.getVenue();
-    Venue item = null;
-
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Venue)iterator.next();
+    List<Venue> items = music.getVenue();
+    for (Venue item : items) {
       try {
         MySQLImporter.importVenue(stmt, item);
       } catch (SQLException e) {
@@ -390,8 +374,7 @@ public class MySQLImporter {
   private static Object sPerformanceLock = new Object();
 
   private static long importPerformance(Statement stmt, Show show) throws SQLException {
-    List items = show.getArtist();
-    Artist item = null;
+    List<JAXBElement<Object>> items = show.getArtist();
     int playOrder = 1;
 
     String[] rowItems = new String[3];
@@ -403,10 +386,8 @@ public class MySQLImporter {
 
     rowItems[0] = Long.toString(performanceID);
     
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Artist)iterator.next();
-      
+    for (JAXBElement<Object> jitem : items) {
+      Artist item = (Artist)jitem.getValue();
       rowItems[1] = MySQLImporter.toSQLID(item);
       rowItems[2] = Integer.toString(playOrder++);
       
@@ -425,7 +406,8 @@ public class MySQLImporter {
   private static MessageFormat sUnknownFormat = new MessageFormat("{2, number,####}-{0, number,integer}-{1, number,####}");
 
   private static String toSQLString(com.bolsinga.music.data.Date date) {
-    if (!date.isUnknown()) {
+    boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
+    if (!unknown) {
       return sSQLFormat.format(com.bolsinga.music.Util.toCalendarUTC(date).getTime());
     } else {
       Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
@@ -444,7 +426,8 @@ public class MySQLImporter {
     rowItems[index++] = MySQLImporter.toSQLID(show);
     com.bolsinga.music.data.Date showDate = show.getDate();
     rowItems[index++] = (showDate != null) ? MySQLImporter.toSQLString(showDate) : null;
-    rowItems[index++] = Integer.toString(((showDate == null || showDate.isUnknown()) ? 1 : 0));
+    boolean unknown = (showDate != null) ? com.bolsinga.web.Util.convert(showDate.isUnknown()) : true;
+    rowItems[index++] = Integer.toString(unknown ? 1 : 0);
     rowItems[index++] = MySQLImporter.toSQLID((Venue)show.getVenue());
     rowItems[index++] = show.getComment();
     rowItems[index++] = Long.toString(performanceID);
@@ -453,12 +436,8 @@ public class MySQLImporter {
   }
 
   private static void importShows(Statement stmt, Music music) throws SQLException {
-    List items = music.getShow();
-    Show item = null;
-
-    ListIterator iterator = items.listIterator();
-    while (iterator.hasNext()) {
-      item = (Show)iterator.next();
+    List<Show> items = music.getShow();
+    for (Show item : items) {
       try {
         MySQLImporter.importShow(stmt, item);
       } catch (SQLException e) {

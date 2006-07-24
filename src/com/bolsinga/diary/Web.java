@@ -61,7 +61,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected boolean needNewSubsection() {
-    return ((fLastEntry == null) || (fLastEntry.getTimestamp().get(Calendar.MONTH) != fCurEntry.getTimestamp().get(Calendar.MONTH)));
+    return ((fLastEntry == null) || (fLastEntry.getTimestamp().getMonth() != fCurEntry.getTimestamp().getMonth()));
   }
 
   protected Element getSubsectionTitle() {
@@ -83,9 +83,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
 
   protected Element addIndexNavigator() {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    Iterator i = fDiary.getEntry().iterator();
-    while (i.hasNext()) {
-      Entry e = (Entry)i.next();
+    for (Entry e : fDiary.getEntry()) {
       String letter = fLinks.getPageFileName(e);
       if (!m.containsKey(letter)) {
         m.put(letter, fLinks.getLinkToPage(e));
@@ -315,11 +313,8 @@ public class Web {
     int mainPageEntryCount = com.bolsinga.web.Util.getSettings().getDiaryCount().intValue();
     boolean includeMusic = com.bolsinga.web.Util.getSettings().isMainPageHasMusic();
 
-    List items = com.bolsinga.web.Util.getRecentItems(mainPageEntryCount, music, diary, includeMusic);
-    Iterator i = items.iterator();
-    while (i.hasNext()) {
-      Object o = i.next();
-
+    List<Object> items = com.bolsinga.web.Util.getRecentItems(mainPageEntryCount, music, diary, includeMusic);
+    for (Object o : items) {
       if (o instanceof com.bolsinga.diary.data.Entry) {
         diaryDiv.addElement(Web.addItem(encoder, (com.bolsinga.diary.data.Entry)o, links, false));
       } else if (o instanceof com.bolsinga.music.data.Show) {
@@ -342,7 +337,7 @@ public class Web {
   }
         
   public static void generateArchivePages(Diary diary, com.bolsinga.web.Encode encoder, int startYear, String outputDir) {
-    List<Entry> items = (List<Entry>)diary.getEntry();
+    List<Entry> items = diary.getEntry();
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
                 

@@ -4,6 +4,8 @@ import java.math.*;
 import java.util.*;
 import java.util.regex.*;
 
+import javax.xml.bind.*;
+
 import com.bolsinga.music.data.*;
 
 public class Compare {
@@ -73,6 +75,14 @@ public class Compare {
       }
     };
 
+  private static final Comparator<JAXBElement<Object>> JAXB_ALBUM_ID_COMPARATOR = new Comparator<JAXBElement<Object>>() {
+      public int compare(JAXBElement<Object> i1, JAXBElement<Object> i2) {
+        Album a1 = (Album)i1.getValue();
+        Album a2 = (Album)i2.getValue();
+        return ALBUM_ID_COMPARATOR.compare(a1, a2);
+      }
+    };
+
   private static final Comparator<Venue> VENUE_ID_COMPARATOR = new Comparator<Venue>() {
       public int compare(Venue i1, Venue i2) {
         return i1.getId().compareTo(i2.getId());
@@ -127,15 +137,15 @@ public class Compare {
     };
 
   public static void tidy(Music music) {
-    List<Artist> artists = (List<Artist>)music.getArtist();
+    List<Artist> artists = music.getArtist();
     Collections.sort(artists, Compare.ARTIST_ID_COMPARATOR);
     for (Artist a : artists) {
-      Collections.sort((List<Album>)a.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
+      Collections.sort(a.getAlbum(), Compare.JAXB_ALBUM_ID_COMPARATOR);
     }
-    Collections.sort((List<Album>)music.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
-    Collections.sort((List<Venue>)music.getVenue(), Compare.VENUE_ID_COMPARATOR);
-    Collections.sort((List<Song>)music.getSong(), Compare.SONG_ID_COMPARATOR);
-    for (Relation r : (List<Relation>)music.getRelation()) {
+    Collections.sort(music.getAlbum(), Compare.ALBUM_ID_COMPARATOR);
+    Collections.sort(music.getVenue(), Compare.VENUE_ID_COMPARATOR);
+    Collections.sort(music.getSong(), Compare.SONG_ID_COMPARATOR);
+    for (Relation r : music.getRelation()) {
       Collections.sort(r.getMember(), Compare.RELATION_ID_COMPARATOR);
     }
   }
@@ -204,12 +214,28 @@ public class Compare {
       }
     };
 
+  public static final Comparator<JAXBElement<Object>> JAXB_SONG_ORDER_COMPARATOR = new Comparator<JAXBElement<Object>>() {
+    public int compare(JAXBElement<Object> o1, JAXBElement<Object> o2) {
+      Song s1 = (Song)o1.getValue();
+      Song s2 = (Song)o2.getValue();
+      return SONG_ORDER_COMPARATOR.compare(s1, s2);
+    }
+  };
+
   public static final Comparator<Album> ALBUM_ORDER_COMPARATOR = new Comparator<Album>() {
       public int compare(Album r1, Album r2) {
         // The 3000 assures that 'unknown' album dates are after the known ones.
         return ((r1.getReleaseDate() != null) ? r1.getReleaseDate().getYear().intValue() : 3000) - ((r2.getReleaseDate() != null) ? r2.getReleaseDate().getYear().intValue() : 3000);
       }
     };
+
+  public static final Comparator<JAXBElement<Object>> JAXB_ALBUM_ORDER_COMPARATOR = new Comparator<JAXBElement<Object>>() {
+    public int compare(JAXBElement<Object> o1, JAXBElement<Object> o2) {
+      Album a1 = (Album)o1.getValue();
+      Album a2 = (Album)o2.getValue();
+      return ALBUM_ORDER_COMPARATOR.compare(a1, a2);
+    }
+  };
 
   public static final Comparator<Artist> ARTIST_TRACKS_COMPARATOR = new Comparator<Artist>() {
       public int compare(Artist r1, Artist r2) {
@@ -258,7 +284,9 @@ public class Compare {
         if (result == 0) {
           result = VENUE_COMPARATOR.compare((Venue)r1.getVenue(), (Venue)r2.getVenue());
           if (result == 0) {
-            result = ARTIST_COMPARATOR.compare((Artist)r1.getArtist().get(0), (Artist)r2.getArtist().get(0));
+            Artist a1 = (Artist)r1.getArtist().get(0).getValue();
+            Artist a2 = (Artist)r2.getArtist().get(0).getValue();
+            result = ARTIST_COMPARATOR.compare(a1, a2);
           }
         }
         return result;

@@ -3,9 +3,8 @@ package com.bolsinga.itunes.converter;
 import java.io.*;
 import java.util.*;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
+import javax.xml.bind.*;
+import javax.xml.datatype.*;
 
 import com.bolsinga.plist.*;
 import com.bolsinga.music.data.*;
@@ -78,7 +77,7 @@ public class ITunes {
     try {
       com.bolsinga.music.data.Music music = ITunes.convert(itunesFile);
 
-      music.setTimestamp(com.bolsinga.web.Util.nowUTC());
+      music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
                                 
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
@@ -161,9 +160,9 @@ public class ITunes {
 
     com.bolsinga.plist.data.Plist plist = Util.createPlist(itunesFile);
             
-    ListIterator i = (plist.getDict().getKeyAndArrayOrData()).listIterator();
+    ListIterator<Object> i = (plist.getDict().getKeyAndArrayOrData()).listIterator();
     while (i.hasNext()) {
-      com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)i.next();
+      JAXBElement<String> key = (JAXBElement<String>)i.next();
       if (key.getValue().equals("Tracks")) {
         com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
                                 
@@ -176,9 +175,9 @@ public class ITunes {
   }
         
   private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List tracks) throws JAXBException {
-    ListIterator i = tracks.listIterator();
+    ListIterator<Object> i = tracks.listIterator();
     while (i.hasNext()) {
-      com.bolsinga.plist.data.Key key = (com.bolsinga.plist.data.Key)i.next();
+      JAXBElement<String> key = (JAXBElement<String>)i.next();
 
       com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)i.next();
       ITunes.addTrack(objFactory, music, track);
@@ -192,11 +191,11 @@ public class ITunes {
   }
         
   private static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) throws JAXBException {
-    ListIterator i = track.getKeyAndArrayOrData().listIterator();
+    ListIterator<Object> i = track.getKeyAndArrayOrData().listIterator();
             
     String songTitle = null;
     String artist = null;
-    GregorianCalendar lastPlayed = null;
+    XMLGregorianCalendar lastPlayed = null;
     int playCount = 0;
     String genre = null;
     String albumTitle = null;
@@ -205,39 +204,38 @@ public class ITunes {
     boolean isVideo = false;
             
     while (i.hasNext()) {
-      String key = ((com.bolsinga.plist.data.Key)i.next()).getValue();
+      String key = ((JAXBElement<String>)i.next()).getValue();
                                         
       if (key.equals(TK_NAME)) {
-        songTitle = ((com.bolsinga.plist.data.String)i.next()).getValue();
+        songTitle = ((JAXBElement<String>)i.next()).getValue();
         continue;
       }
       if (key.equals(TK_ARTIST)) {
-        artist = ((com.bolsinga.plist.data.String)i.next()).getValue();
+        artist = ((JAXBElement<String>)i.next()).getValue();
         continue;
       }
       if (key.equals(TK_ALBUM)) {
-        albumTitle = ((com.bolsinga.plist.data.String)i.next()).getValue();
+        albumTitle = ((JAXBElement<String>)i.next()).getValue();
         continue;
       }
       if (key.equals(TK_GENRE)) {
-        genre = ((com.bolsinga.plist.data.String)i.next()).getValue();
+        genre = ((JAXBElement<String>)i.next()).getValue();
         continue;
       }
       if (key.equals(TK_TRACK_NUMBER)) {
-        index = ((com.bolsinga.plist.data.Integer)i.next()).getValue().intValue();
+        index = ((JAXBElement<java.math.BigInteger>)i.next()).getValue().intValue();
         continue;
       }
       if (key.equals(TK_YEAR)) {
-        year = ((com.bolsinga.plist.data.Integer)i.next()).getValue().intValue();
+        year = ((JAXBElement<java.math.BigInteger>)i.next()).getValue().intValue();
         continue;
       }
       if (key.equals(TK_PLAY_DATE_UTC)) {
-        Calendar itunesCal = ((com.bolsinga.plist.data.Date)i.next()).getValue();
-        lastPlayed = com.bolsinga.web.Util.toGregorianCalendarUTC(itunesCal);
+        lastPlayed = ((JAXBElement<XMLGregorianCalendar>)i.next()).getValue();
         continue;
       }
       if (key.equals(TK_PLAY_COUNT)) {
-        playCount = ((com.bolsinga.plist.data.Integer)i.next()).getValue().intValue();
+        playCount = ((JAXBElement<java.math.BigInteger>)i.next()).getValue().intValue();
         continue;
       }
       if (key.equals(TK_COMPILATION)) {
@@ -264,7 +262,7 @@ public class ITunes {
     }
   }
         
-  private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, GregorianCalendar lastPlayed, int playCount, boolean compilation) throws JAXBException {
+  private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, XMLGregorianCalendar lastPlayed, int playCount, boolean compilation) throws JAXBException {
     // Get or create the artist
     Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
                 
@@ -295,34 +293,42 @@ public class ITunes {
       } else {
         result.setCompilation(true);
       }
-      result.getFormat().add(FORMAT_DIGITAL_FILE);
+      result.getFormat().add(objFactory.createAlbumFormat(FORMAT_DIGITAL_FILE));
       result.setId("a" + sAlbums.size());
                         
-      ((List<Album>)music.getAlbum()).add(result);
+      music.getAlbum().add(result);
       sAlbums.put(key, result);
     } else {
       result = sAlbums.get(key);
     }
     return result;
   }
-        
-  private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, GregorianCalendar lastPlayed, int playCount) throws JAXBException {
+  
+  private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
+
+  private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, XMLGregorianCalendar lastPlayed, int playCount) throws JAXBException {
     // Create the song
     Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed, playCount);
             
     // Add the song to the album
-    List<Song> songs = (List<Song>)album.getSong();
-    songs.add(song);
+    List<JAXBElement<Object>> songs = album.getSong();
+    songs.add(objFactory.createAlbumSong(song));
             
     // Add the album to the artist if it isn't there already.
-    List<Album> albums = (List<Album>)artist.getAlbum();
-    if (!albums.contains(album)) {
-      albums.add(album);
+    HashSet<String> artistAlbums = sArtistAlbums.get(artist.getId());
+    if (artistAlbums == null) {
+      artistAlbums = new HashSet<String>();
+      sArtistAlbums.put(artist.getId(), artistAlbums);
+    }
+    if (!artistAlbums.contains(album.getId())) {
+      artistAlbums.add(album.getId());
+      JAXBElement<Object> jalbum = objFactory.createArtistAlbum(album);
+      artist.getAlbum().add(jalbum);
     }
   }
         
-  private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, GregorianCalendar lastPlayed, int playCount) throws JAXBException {
-    List<Song> songs = (List<Song>)music.getSong();
+  private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, XMLGregorianCalendar lastPlayed, int playCount) throws JAXBException {
+    List<Song> songs = music.getSong();
             
     Song result = null;
             
@@ -357,21 +363,21 @@ public class ITunes {
   }
         
   private static void sortAlbumOrder(com.bolsinga.music.data.Music music) {
-    List<Artist> artists = (List<Artist>)music.getArtist();
+    List<Artist> artists = music.getArtist();
     for (Artist a : artists) {
-      Collections.sort((List<Album>)a.getAlbum(), com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
+      Collections.sort(a.getAlbum(), com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
     }
   }
 
   private static void sortAlbumsSongOrder(com.bolsinga.music.data.Music music) {
-    List<Album> albums = (List<Album>)music.getAlbum();
+    List<Album> albums = music.getAlbum();
     for (Album a : albums) {
-      Collections.sort((List<Song>)a.getSong(), com.bolsinga.music.Compare.SONG_ORDER_COMPARATOR);
+      Collections.sort(a.getSong(), com.bolsinga.music.Compare.JAXB_SONG_ORDER_COMPARATOR);
     }
   }
         
   private static void setAlbumYears(ObjectFactory objFactory, com.bolsinga.music.data.Music music) throws JAXBException {
-    List<Album> albums = (List<Album>)music.getAlbum();
+    List<Album> albums = music.getAlbum();
     int albumYear, songYear;
     com.bolsinga.music.data.Date date;
     for (Album a : albums) {
@@ -381,9 +387,9 @@ public class ITunes {
       }
                         
       albumYear = -1;
-      List<Song> songs = (List<Song>)a.getSong();
-      for (Song song : songs) {
-        date = song.getReleaseDate();
+      List<JAXBElement<Object>> songs = a.getSong();
+      for (JAXBElement<Object> song : songs) {
+        date = ((Song)song.getValue()).getReleaseDate();
         if (date != null) {
           songYear = date.getYear().intValue();
           if (albumYear == -1) {

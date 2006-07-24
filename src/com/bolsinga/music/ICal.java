@@ -8,6 +8,8 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
+import javax.xml.bind.*;
+
 /*
  * http://www.imc.org/pdi/vcal-10.txt
  */
@@ -92,14 +94,15 @@ public class ICal {
   }
         
   public static void generate(Music music, String name, Writer w) {
-    List<Show> items = (List<Show>)music.getShow();
+    List<Show> items = music.getShow();
                 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
                 
     VCalendar cal = new VCalendar(name);
 
     for (Show item : items) {
-      if (!item.getDate().isUnknown()) {
+      boolean unknown = com.bolsinga.web.Util.convert(item.getDate().isUnknown());
+      if (!unknown) {
         addItem(item, cal);
       }
     }
@@ -115,10 +118,10 @@ public class ICal {
                 
     StringBuffer summary = new StringBuffer();
     String url = null;
-                
-    ListIterator bi = show.getArtist().listIterator();
+
+    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
     while (bi.hasNext()) {
-      Artist a = (Artist)bi.next();
+      Artist a = (Artist)bi.next().getValue();
                         
       summary.append(a.getName());
                         

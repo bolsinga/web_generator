@@ -31,7 +31,7 @@ public class Links {
   }
         
   public String getPageFileName(Entry entry) {
-    return sArchivePageFormat.format(entry.getTimestamp().getTime());
+    return sArchivePageFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
 
   public String getPagePath(Entry entry) {

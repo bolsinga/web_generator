@@ -5,9 +5,7 @@ import java.sql.*;
 import java.text.*;
 import java.util.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 
 import com.bolsinga.music.data.*;
 
@@ -19,7 +17,8 @@ public class Util {
         
   public static GregorianCalendar toCalendarUTC(com.bolsinga.music.data.Date date) {
     Calendar localTime = Calendar.getInstance(); // LocalTime OK
-    if (!date.isUnknown()) {
+    boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
+    if (!unknown) {
       // Set shows to 9 PM local time.
       localTime.clear();
       localTime.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue(), 12 + 9, 0);
@@ -34,7 +33,8 @@ public class Util {
   }
 
   public static String toString(com.bolsinga.music.data.Date date) {
-    if (!date.isUnknown()) {
+    boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
+    if (!unknown) {
       return sWebFormat.format(Util.toCalendarUTC(date).getTime());
     } else {
       Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
@@ -45,7 +45,8 @@ public class Util {
   }
         
   public static String toMonth(com.bolsinga.music.data.Date date) {
-    if (!date.isUnknown()) {
+    boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
+    if (!unknown) {
       return sMonthFormat.format(Util.toCalendarUTC(date).getTime());
     } else {
       Calendar d = Calendar.getInstance(); // UTC isn't relevant here.
@@ -110,15 +111,12 @@ public class Util {
         
   public static int trackCount(Artist artist) {
     int tracks = 0;
-    List albums = artist.getAlbum();
+    List<JAXBElement<Object>> albums = artist.getAlbum();
     if (albums != null) {
-      ListIterator i = albums.listIterator();
-      while (i.hasNext()) {
-        Album album = (Album)i.next();
-        List songs = album.getSong();
-        ListIterator si = songs.listIterator();
-        while (si.hasNext()) {
-          Song song = (Song)si.next();
+      for (JAXBElement<Object> jalbum : albums) {
+        Album album = (Album)jalbum.getValue();
+        for (JAXBElement<Object> jsong : album.getSong()) {
+          Song song = (Song)jsong.getValue();
           if (song.getPerformer().equals(artist)) {
             tracks++;
           }

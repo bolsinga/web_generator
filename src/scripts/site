@@ -28,8 +28,9 @@ fi
 
 for i in \
     "${SITE_LIB_DIR}" \
-    "${SITE_LIB_DIR}/jwsdp-1_3/jaxb/lib" \
-    "${SITE_LIB_DIR}/jwsdp-1_3/jwsdp-shared/lib" ; do
+    "${SITE_LIB_DIR}/jwsdp-2.0/jaxb/lib" \
+    "${SITE_LIB_DIR}/jwsdp-2.0/sjsxp/lib" \
+    "${SITE_LIB_DIR}/jwsdp-2.0/jwsdp-shared/lib" ; do
     for j in "${i}"/*.jar; do
         if [ -z "$LOCAL_CLASSPATH" ] ; then
             LOCAL_CLASSPATH="$j"

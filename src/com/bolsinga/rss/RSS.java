@@ -9,9 +9,7 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
+import javax.xml.bind.*;
 
 public class RSS {
 
@@ -91,10 +89,10 @@ public class RSS {
     
     sb.append(com.bolsinga.music.Util.toString(show.getDate()));
     sb.append(" - ");
-                
-    ListIterator i = show.getArtist().listIterator();
+
+    Iterator<JAXBElement<Object>> i = show.getArtist().iterator();
     while (i.hasNext()) {
-      Artist performer = (Artist)i.next();
+      Artist performer = (Artist)i.next().getValue();
                         
       sb.append(performer.getName());
                         
@@ -110,12 +108,12 @@ public class RSS {
   }
 
   public static void add(com.bolsinga.diary.data.Entry entry, com.bolsinga.diary.Links links, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
-    add(com.bolsinga.diary.Util.getTitle(entry), com.bolsinga.web.Util.toGregorianCalendarUTC(entry.getTimestamp()), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
+    add(com.bolsinga.diary.Util.getTitle(entry), entry.getTimestamp().toGregorianCalendar(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
   }
 
   public static void add(String title, GregorianCalendar cal, String link, String description, com.bolsinga.rss.data.ObjectFactory objFactory, TRssChannel channel) throws JAXBException {
     TRssItem item = objFactory.createTRssItem();
-    List itemElements = item.getTitleOrDescriptionOrLink();
+    List<Object> itemElements = item.getTitleOrDescriptionOrLink();
 
     StringBuffer sb = new StringBuffer();
     sb.append(com.bolsinga.web.Util.getSettings().getContact());
@@ -138,7 +136,7 @@ public class RSS {
     try {           
       TRssChannel channel = objFactory.createTRssChannel();
 
-      List channelElements = channel.getTitleOrLinkOrDescription();
+      List<Object> channelElements = channel.getTitleOrLinkOrDescription();
                         
       channelElements.add(objFactory.createTRssChannelTitle(diary.getTitle()));
       channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRssRoot()));
@@ -147,11 +145,11 @@ public class RSS {
       channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.web.Util.nowUTC())));
       channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.Util.getSettings().getContact()));
 
-      TRssChannel.Image logo = com.bolsinga.rss.Util.createLogo(objFactory);
+      TImage logo = com.bolsinga.rss.Util.createLogo(objFactory);
       logo.setLink(com.bolsinga.web.Util.getSettings().getRssRoot());
       logo.setDescription(diary.getTitle());
                         
-      channelElements.add(logo);
+      channelElements.add(objFactory.createTRssChannelImage(logo));
                         
       com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(false);
       com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(false);
@@ -170,16 +168,17 @@ public class RSS {
         }
       }
 
-      TRss rss = objFactory.createRss();
+      TRss rss = objFactory.createTRss();
       rss.setVersion(new java.math.BigDecimal(2.0));
       rss.setChannel(channel);
-                                                
+
+      JAXBElement<TRss> jrss = objFactory.createRss(rss);                                                
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.rss.data");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                         
-      m.marshal(rss, os);
+      m.marshal(jrss, os);
                         
     } catch (JAXBException e) {
       System.err.println(e);

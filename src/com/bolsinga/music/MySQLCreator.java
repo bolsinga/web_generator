@@ -4,9 +4,7 @@ import java.math.*;
 import java.sql.*;
 import java.util.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 
 import com.bolsinga.music.data.*;
 
@@ -22,14 +20,8 @@ class MySQLCreator {
   PreparedStatement performanceStmt;
 
   public MySQLCreator(ObjectFactory objFactory, Connection conn) {
-    try {
-      this.objFactory = objFactory;
-      this.music = objFactory.createMusic();
-    } catch (JAXBException je) {
-      System.err.println("Exception: " + je);
-      je.printStackTrace();
-      System.exit(1);
-    }
+    this.objFactory = objFactory;
+    this.music = objFactory.createMusic();
     try {
       this.conn = conn;
       this.stmt = conn.createStatement();
@@ -149,7 +141,7 @@ class MySQLCreator {
     
     item.setId(xmlID);
     
-    ((List<Artist>)music.getArtist()).add(item);
+    music.getArtist().add(item);
     
     synchronized (artistsLock) {
       artists.put(xmlID, item);
@@ -196,7 +188,7 @@ class MySQLCreator {
           }
         distinct = (rset.getLong(4) == 1);
         if (distinct) {
-          item.getProducer().add(getArtist(toXMLID("ar", rset.getLong("producer_id"))));
+          item.getProducer().add(objFactory.createAlbumProducer(getArtist(toXMLID("ar", rset.getLong("producer_id")))));
         }
         distinct = (rset.getLong(6) == 1);
         if (distinct) {
@@ -219,7 +211,7 @@ class MySQLCreator {
           String formatSQLenum = rset.getString("format");
           String[] formats = formatSQLenum.split(",");
           for (int i = 0; i < formats.length; i++) {
-            item.getFormat().add(formats[0]);
+            item.getFormat().add(objFactory.createAlbumFormat(formats[0]));
           }
         }
       }
@@ -233,7 +225,7 @@ class MySQLCreator {
       albums.put(xmlID, item);
     }
     
-    ((List<Album>)music.getAlbum()).add(item);
+    music.getAlbum().add(item);
     
     return item;
   }
@@ -258,7 +250,7 @@ class MySQLCreator {
       venues.put(xmlID, item);
     }
     
-    ((List<Venue>)music.getVenue()).add(item);
+    music.getVenue().add(item);
   
     return item;
   }
@@ -272,7 +264,7 @@ class MySQLCreator {
       while (rset.next()) {
         String xmlID = toXMLID("ar", rset.getLong("artist_id"));
         Artist artist = getArtist(xmlID);
-        ((List<Artist>)show.getArtist()).add(artist);
+        show.getArtist().add(objFactory.createShowArtist(artist));
       }
     } finally {
       if (rset != null) {
@@ -283,23 +275,23 @@ class MySQLCreator {
 
   private void addMemberToRelation(Relation relation, String type, long id) throws JAXBException {
     if (type.equals("artist")) {
-      relation.setType(type);
+      relation.setType(RelationType.fromValue(type));
       String xmlID = toXMLID("ar", id);
       Artist artist = getArtist(xmlID);
       if (artist == null) {
         System.err.println("Relation: Unknown Artist ID: " + id);
         System.exit(1);
       }
-      relation.getMember().add(artist);
+      relation.getMember().add(objFactory.createRelationMember(artist));
     } else if (type.equals("venue")) {
-      relation.setType(type);
+      relation.setType(RelationType.fromValue(type));
       String xmlID = toXMLID("v", id);
       Venue venue = getVenue(xmlID);
       if (venue == null) {
         System.err.println("Relation: Unknown Venue ID: " + id);
         System.exit(1);
       }
-      relation.getMember().add(venue);
+      relation.getMember().add(objFactory.createRelationMember(venue));
     } else {
       System.err.println("Unknown Relation type: " + type);
     }
@@ -338,6 +330,8 @@ class MySQLCreator {
 
   }
 
+  private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
+
   private void createSongs() throws SQLException, JAXBException {
     ResultSet rset = null;
     Artist artist = null;
@@ -358,9 +352,16 @@ class MySQLCreator {
         String albumXMLID = toXMLID("a", album_id);
         album = getAlbum(albumXMLID, album_id);
 
-        List<Album> albumList = (List<Album>)artist.getAlbum();
-        if (!albumList.contains(album)) {
-          albumList.add(album);
+        // Add the album to the artist if it isn't there already.
+        HashSet<String> artistAlbums = sArtistAlbums.get(artist.getId());
+        if (artistAlbums == null) {
+          artistAlbums = new HashSet<String>();
+          sArtistAlbums.put(artist.getId(), artistAlbums);
+        }
+        if (!artistAlbums.contains(album.getId())) {
+          artistAlbums.add(album.getId());
+          JAXBElement<Object> jalbum = objFactory.createArtistAlbum(album);
+          artist.getAlbum().add(jalbum);
         }
 
         String songID = toXMLID("s", rset.getLong("id"));
@@ -372,11 +373,11 @@ class MySQLCreator {
         song.setPerformer(artist);
         long composer_id = rset.getLong("composer_id");
         if (!rset.wasNull()) {
-          song.getComposer().add(getArtist(toXMLID("ar", composer_id)));
+          song.getComposer().add(objFactory.createSongComposer(getArtist(toXMLID("ar", composer_id))));
         }
         long producer_id = rset.getLong("producer_id");
         if (!rset.wasNull()) {
-          song.getProducer().add(getArtist(toXMLID("ar", producer_id)));
+          song.getProducer().add(objFactory.createSongProducer(getArtist(toXMLID("ar", producer_id))));
         }
         String sqlDate = rset.getString("release");
         com.bolsinga.music.data.Date releaseDate = null;
@@ -388,7 +389,7 @@ class MySQLCreator {
         String sqlDATETIME = rset.getString("last_played");
         if (!rset.wasNull()) {
           GregorianCalendar utcCal = com.bolsinga.sql.Util.toCalendarUTC(sqlDATETIME);
-          song.setLastPlayed(utcCal);
+          song.setLastPlayed(com.bolsinga.web.Util.toXMLGregorianCalendar(utcCal));
         }
         long playCount = rset.getLong("playcount");
         if (!rset.wasNull()) {
@@ -404,8 +405,8 @@ class MySQLCreator {
           song.setDigitized(true);
         }
 
-        ((List<Song>)album.getSong()).add(song);
-        ((List<Song>)music.getSong()).add(song);
+        album.getSong().add(objFactory.createAlbumSong(song));
+        music.getSong().add(song);
       }
     } finally {
       if (rset != null) {
@@ -466,7 +467,7 @@ class MySQLCreator {
         
         show.setComment(rset.getString("comment"));
         
-        ((List<Show>)music.getShow()).add(show);
+        music.getShow().add(show);
       }
     } finally {
       if (rset != null) {
@@ -527,7 +528,7 @@ class MySQLCreator {
     createShows();
     createRelations();
 
-    music.setTimestamp(com.bolsinga.web.Util.nowUTC());
+    music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
 
     return music;
   }
@@ -559,4 +560,3 @@ class MySQLCreator {
     }
   }
 }
-

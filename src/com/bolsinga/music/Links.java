@@ -52,7 +52,7 @@ public class Links {
     e.add(getCityLink());
 
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
-    Object[] args = { music.getTimestamp().getTime() };
+    Object[] args = { music.getTimestamp().toGregorianCalendar().getTime() };
     d.addElement(new h4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;

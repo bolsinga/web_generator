@@ -26,7 +26,7 @@
 <property name="dst.dir" value="${build.dir}/dst" />
 <property name="dst.lib" value="${dst.dir}/lib" />
 
-<property name="jwsdp.home" value="${lib.dir}/jwsdp-1_3" />
+<property name="jwsdp.home" value="${lib.dir}/jwsdp-2.0" />
 
 <property name="build.id" value="${user.name}-internal" />
 
@@ -39,11 +39,7 @@
         <pathelement path="." />
         <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-api.jar" />
         <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-impl.jar" />
-        <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-libs.jar" />
-        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/jax-qname.jar" />
-        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/namespace.jar" />
-        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/relaxngDatatype.jar" />
-        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/xsdlib.jar" />
+        <pathelement path="${jwsdp.home}/sjsxp/lib/jsr173_api.jar" />
 </path>
 
 <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
@@ -69,7 +65,7 @@
 <target name="music_binding" depends="prepare">
         <xjc schema="${basedir}/xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data" removeOldOutput="yes">
                 <depends dir="${basedir}/xml" includes="music.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/music/data" includes="*impl/*" />
+                <produces dir="${build.gensrc}/com/bolsinga/music/data" />
         </xjc>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -88,7 +84,7 @@
 <target name="diary_binding" depends="prepare">
         <xjc schema="${basedir}/xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data" removeOldOutput="yes">
                 <depends dir="${basedir}/xml" includes="diary.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/diary/data" includes="*impl/*" />
+                <produces dir="${build.gensrc}/com/bolsinga/diary/data" />
         </xjc>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -107,7 +103,7 @@
 <target name="rss_binding" depends="prepare">
         <xjc schema="${basedir}/xml/rss-2_0.xsd" target="${build.gensrc}" package="com.bolsinga.rss.data" removeOldOutput="yes" extension="true">
                 <depends dir="${basedir}/xml" includes="rss-2_0.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/rss/data" includes="*impl/*" />
+                <produces dir="${build.gensrc}/com/bolsinga/rss/data" />
         </xjc>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -126,7 +122,7 @@
 <target name="plist_binding" depends="prepare">
         <xjc schema="${basedir}/xml/PropertyList-1.0.xsd" target="${build.gensrc}" package="com.bolsinga.plist.data" removeOldOutput="yes" extension="true">
                 <depends dir="${basedir}/xml" includes="PropertyList-1.0.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/plist/data" includes="*impl/*" />
+                <produces dir="${build.gensrc}/com/bolsinga/plist/data" />
         </xjc>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -145,7 +141,7 @@
 <target name="settings_binding" depends="prepare">
         <xjc schema="${basedir}/xml/settings.xsd" target="${build.gensrc}" package="com.bolsinga.settings.data" removeOldOutput="yes" extension="true">
                 <depends dir="${basedir}/xml" includes="settings.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/settings/data" includes="*impl/*" />
+                <produces dir="${build.gensrc}/com/bolsinga/settings/data" />
         </xjc>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
@@ -560,20 +556,14 @@ java -cp lib/music.jar:lib/ecs-1.4.2.jar:lib/jwsdp-1_3/jaxb/lib/jaxb-api.jar:lib
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" todir="${dst.lib}" />
   <copy file="${src.dir}/scripts/upload.xml" todir="${dst.lib}" />
-  <copy todir="${dst.lib}/jwsdp-1_3">
+  <copy todir="${dst.lib}/jwsdp-2.0">
     <fileset dir="${jwsdp.home}">
       <include name="jaxb/lib/jaxb-api.jar" />
       <include name="jaxb/lib/jaxb-impl.jar" />
-      <include name="jaxb/lib/jaxb-libs.jar" />
-      <include name="jwsdp-shared/lib/jax-qname.jar" />
-      <include name="jwsdp-shared/lib/namespace.jar" />
-      <include name="jwsdp-shared/lib/relaxngDatatype.jar" />
-      <include name="jwsdp-shared/lib/xsdlib.jar" />
+      <include name="sjsxp/lib/jsr173_api.jar" />
+      <include name="jwsdp-shared/lib/activation.jar" />
     </fileset>
   </copy>
 </target>
 
 </project>
-
-
-

@@ -37,7 +37,7 @@ public class Music {
 
       com.bolsinga.itunes.converter.ITunes.addMusic(objFactory, music, iTunesFile);
 
-      music.setTimestamp(com.bolsinga.web.Util.nowUTC());
+      music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
 
       if (Music.TIDY_XML) {
         com.bolsinga.music.Compare.tidy(music);
@@ -68,10 +68,9 @@ public class Music {
   private static void dumpSimilarArtists(com.bolsinga.music.data.Music music) {
     String s;
     HashSet<String> bands = new HashSet<String>();
-                
-    ListIterator i = music.getArtist().listIterator();
-    while (i.hasNext()) {
-      s = ((Artist)i.next()).getName().toLowerCase();
+    
+    for (Artist artist : music.getArtist()) {
+      s = artist.getName().toLowerCase();
       if (bands.contains(s)) {
         System.out.println(s);
       } else {
@@ -109,7 +108,7 @@ public class Music {
         
     convert(objFactory, music, shows);
 
-    Collections.sort((List<Artist>)music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR);
+    Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR);
 
     createRelations(objFactory, music, relations);
                 
@@ -142,7 +141,7 @@ public class Music {
       xVenue.setLocation(xLocation);
       xVenue.setId("v" + index++);
                         
-      ((List<com.bolsinga.music.data.Venue>)music.getVenue()).add(xVenue);
+      music.getVenue().add(xVenue);
                         
       sVenues.put(name, xVenue);
     }
@@ -158,7 +157,6 @@ public class Music {
   private static void createRelations(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List<Relation> relations) throws JAXBException {
     com.bolsinga.music.data.Relation xRelation = null;
     String type = null, reason = null;
-    ListIterator mi = null;
     int index = 0;
 
     for (Relation oldRelation : relations) {
@@ -172,16 +170,16 @@ public class Music {
       xRelation.setId("r" + index++);
                         
       if (type.equals("band")) {
-        xRelation.setType("artist");
+        xRelation.setType(RelationType.fromValue("artist"));
 
         for (String member : oldRelation.getMembers()) {
-          xRelation.getMember().add(sArtists.get(member));
+          xRelation.getMember().add(objFactory.createRelationMember(sArtists.get(member)));
         }
       } else if (type.equals("venue")) {
-        xRelation.setType(type);
+        xRelation.setType(RelationType.fromValue(type));
 
         for (String member : oldRelation.getMembers()) {
-          xRelation.getMember().add(sVenues.get(member));
+          xRelation.getMember().add(objFactory.createRelationMember(sVenues.get(member)));
         }
       } else {
         System.err.println("Unknown relation type: " + type);
@@ -236,7 +234,7 @@ public class Music {
       if (sBandSorts.containsKey(name)) {
         result.setSortname(sBandSorts.get(name));
       }
-      ((List<com.bolsinga.music.data.Artist>)music.getArtist()).add(result);
+      music.getArtist().add(result);
       sArtists.put(name, result);
     } else {
       result = sArtists.get(name);
@@ -258,10 +256,6 @@ public class Music {
 
     int index = 0;
                 
-    List oldBands = null;
-    ListIterator bi = null;
-    String oldBand = null;
-
     Collections.sort(shows, Compare.SHOW_COMPARATOR);
 
     for (Show oldShow : shows) {
@@ -269,15 +263,11 @@ public class Music {
                         
       xDate = createDate(objFactory, oldShow.getDate());
       xShow.setDate(xDate);
-                        
-      oldBands = oldShow.getBands();
-      bi = oldBands.listIterator();
-      while (bi.hasNext()) {
-        oldBand = (String)bi.next();
-                                                                
+                   
+      for (String oldBand : oldShow.getBands()) {     
         xArtist = addArtist(objFactory, music, oldBand);
                                 
-        ((List<com.bolsinga.music.data.Artist>)xShow.getArtist()).add(xArtist);
+        xShow.getArtist().add(objFactory.createShowArtist(xArtist));
       }
 
       xShow.setVenue(sVenues.get(oldShow.getVenue()));
@@ -286,7 +276,7 @@ public class Music {
       }
       xShow.setId("sh" + index++);
                         
-      ((List<com.bolsinga.music.data.Show>)music.getShow()).add(xShow);
+      music.getShow().add(xShow);
     }
   }
         

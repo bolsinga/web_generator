@@ -64,7 +64,7 @@ public class MySQLImporter {
       String[] title = { diary.getTitle() };
       com.bolsinga.sql.Util.insert(stmt, "title", title);
 
-      diary.setTimestamp(com.bolsinga.web.Util.nowUTC());
+      diary.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();
@@ -100,13 +100,13 @@ public class MySQLImporter {
     rowItems[0] = null;
     rowItems[1] = entry.getComment();
     rowItems[2] = Util.getTitle(entry);
-    rowItems[3] = com.bolsinga.sql.Util.toDATETIME(com.bolsinga.web.Util.toGregorianCalendarUTC(entry.getTimestamp()));
+    rowItems[3] = com.bolsinga.sql.Util.toDATETIME(entry.getTimestamp().toGregorianCalendar());
     
     com.bolsinga.sql.Util.insert(stmt, "entry", rowItems);
   }
 
   private static void importEntries(Statement stmt, Diary diary) throws SQLException {
-    List<Entry> items = (List<Entry>)diary.getEntry();
+    List<Entry> items = diary.getEntry();
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
 

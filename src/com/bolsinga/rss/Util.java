@@ -18,8 +18,8 @@ public class Util {
     return sRSSDateFormat.format(c.getTime());
   }
         
-  public static com.bolsinga.rss.data.TRssChannel.Image createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
-    com.bolsinga.rss.data.TRssChannel.Image logo = objFactory.createTRssChannelImage();
+  public static com.bolsinga.rss.data.TImage createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
+    com.bolsinga.rss.data.TImage logo = objFactory.createTImage();
 
     com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getLogoImage();
     logo.setHeight(image.getHeight());

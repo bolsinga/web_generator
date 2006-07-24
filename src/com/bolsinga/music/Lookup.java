@@ -3,6 +3,7 @@ package com.bolsinga.music;
 import com.bolsinga.music.data.*;
 
 import java.util.*;
+import javax.xml.bind.*;
 
 public class Lookup {
 
@@ -32,7 +33,7 @@ public class Lookup {
     String id = null;
     Collection<Show> showCollection = null;
 
-    List<Show> shows = (List<Show>)music.getShow();
+    List<Show> shows = music.getShow();
     for (Show show : shows) {
       id = ((Venue)show.getVenue()).getId();
       if (fVenueMap.containsKey(id)) {
@@ -54,9 +55,9 @@ public class Lookup {
         fCityMap.put(id, showCollection);
       }
 
-      List<Artist> artists = (List<Artist>)show.getArtist();
-      for (Artist artist : artists) {
-        id = artist.getId();
+      List<JAXBElement<Object>> artists = show.getArtist();
+      for (JAXBElement<Object> artist : artists) {
+        id = ((Artist)artist.getValue()).getId();
         if (fArtistMap.containsKey(id)) {
           showCollection = fArtistMap.get(id);
           showCollection.add(show);

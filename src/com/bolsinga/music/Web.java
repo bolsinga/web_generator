@@ -13,6 +13,7 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
@@ -441,7 +442,7 @@ public class Web {
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
         
   public static void generateArtistPages(Music music, Links links, String outputDir) {
-    List<Artist> items = (List<Artist>)music.getArtist();
+    List<Artist> items = music.getArtist();
     int index = 0;
                 
     Collections.sort(items, com.bolsinga.music.Compare.ARTIST_COMPARATOR);
@@ -476,7 +477,7 @@ public class Web {
   }
         
   public static void generateVenuePages(Music music, Links links, String outputDir) {
-    List<Venue> items = (List<Venue>)music.getVenue();
+    List<Venue> items = music.getVenue();
     int index = 0;
                 
     Collections.sort(items, com.bolsinga.music.Compare.VENUE_COMPARATOR);
@@ -511,7 +512,7 @@ public class Web {
   }
         
   public static void generateDatePages(Music music, com.bolsinga.web.Encode encoder, Links links, String outputDir) {
-    List<Show> items = (List<Show>)music.getShow();
+    List<Show> items = music.getShow();
     Collection<Show> showCollection = null;
     TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(com.bolsinga.music.Compare.SHOW_STATS_COMPARATOR);
                 
@@ -540,7 +541,7 @@ public class Web {
     for (Show item : dates.keySet()) {
       BigInteger year = item.getDate().getYear();
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkToPage(item), (year != null) ? year.toString() : "Unknown").toString();
-      values[index] = ((Vector)dates.get(item)).size();
+      values[index] = dates.get(item).size();
                         
       index++;
     }
@@ -604,7 +605,7 @@ public class Web {
   }
 
   public static void generateTracksPages(Music music, Links links, String outputDir) {
-    List<Album> items = (List<Album>)music.getAlbum();
+    List<Album> items = music.getAlbum();
     int index = 0;
                 
     Collections.sort(items, com.bolsinga.music.Compare.ALBUM_COMPARATOR);
@@ -616,7 +617,7 @@ public class Web {
     }
     creator.close();
 
-    List<Artist> artists = (List<Artist>)music.getArtist();
+    List<Artist> artists = music.getArtist();
     Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_TRACKS_COMPARATOR);
 
     String[] names = new String[artists.size()];
@@ -641,7 +642,7 @@ public class Web {
       stats.close();
     }
 
-    artists = (List<Artist>)music.getArtist();
+    artists = music.getArtist();
     Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_ALBUMS_COMPARATOR);
 
     names = new String[artists.size()];
@@ -716,7 +717,7 @@ public class Web {
 
     div dm = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MENU);
     dm.addElement(com.bolsinga.web.Util.getLogo());
-    Object[] genArgs = { music.getTimestamp().getTime() };
+    Object[] genArgs = { music.getTimestamp().toGregorianCalendar().getTime() };
     dm.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), genArgs)));
     dm.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     dm.addElement(links.getICalLink());
@@ -729,12 +730,12 @@ public class Web {
     Object[] countArgs = { new Integer(lastShowsCount) };
     dr.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("lastshows"), countArgs)));
 
-    List<Show> items = (List<Show>)music.getShow();
+    List<Show> items = music.getShow();
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(items);
     for (int i = 0; i < lastShowsCount; i++) {
       Show item = items.get(i);
-                        
+
       div ds = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_SHOW);
       ds.addElement(new h4(com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), Util.toString(item.getDate()))));
       ds.addElement(getShowListing(links, item));
@@ -769,9 +770,9 @@ public class Web {
       for (Show show : shows) {
         Vector<Element> se = new Vector<Element>();
         StringBuffer sb = new StringBuffer();
-        ListIterator bi = show.getArtist().listIterator();
+        Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
         while (bi.hasNext()) {
-          Artist performer = (Artist)bi.next();
+          Artist performer = (Artist)bi.next().getValue();
                                     
           if (artist.equals(performer)) {
             sb.append(performer.getName());
@@ -823,9 +824,9 @@ public class Web {
         
         Vector<Element> se = new Vector<Element>();
         StringBuffer sb = new StringBuffer();
-        ListIterator bi = show.getArtist().listIterator();
+        Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
         while (bi.hasNext()) {
-          Artist performer = (Artist)bi.next();
+          Artist performer = (Artist)bi.next().getValue();
           sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
           
           if (bi.hasNext()) {
@@ -855,9 +856,9 @@ public class Web {
   private static ul getShowListing(Links links, Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuffer sb = new StringBuffer();
-    ListIterator bi = show.getArtist().listIterator();
+    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
     while (bi.hasNext()) {
-      Artist performer = (Artist)bi.next();
+      Artist performer = (Artist)bi.next().getValue();
                         
       sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
                         
@@ -905,7 +906,7 @@ public class Web {
     Artist artist = null;
     Song song;
                 
-    boolean isCompilation = album.isCompilation();
+    boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
                 
     sb = new StringBuffer();
     sb.append(com.bolsinga.web.Util.createNamedTarget(album.getId(), album.getTitle()));
@@ -924,9 +925,8 @@ public class Web {
     e.add(new h2().addElement(sb.toString()));
 
     Vector<Element> ae = new Vector<Element>();
-    ListIterator iterator = album.getSong().listIterator();
-    while (iterator.hasNext()) {
-      song = (Song)iterator.next();
+    for (JAXBElement<Object> jsong : album.getSong()) {
+      song = (Song)jsong.getValue();
       sb = new StringBuffer();
       if (isCompilation) {
         artist = (Artist)song.getPerformer();
@@ -990,10 +990,11 @@ public class Web {
   public static div addTracks(Links links, Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
-    List<Album> albums = (List<Album>)artist.getAlbum();
-    Collections.sort(albums, com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
+    List<JAXBElement<Object>> albums = artist.getAlbum();
+    Collections.sort(albums, com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
 
-    for (Album album : albums) {
+    for (JAXBElement<Object> jalbum : albums) {
+      Album album = (Album)jalbum.getValue();
       StringBuffer sb = new StringBuffer();
       sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(album), album.getTitle()));
       com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
@@ -1013,9 +1014,8 @@ public class Web {
         
   public static Element addArtistIndexNavigator(Music music, Links links, String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    Iterator iterator = music.getArtist().iterator();
-    while (iterator.hasNext()) {
-      Artist art = (Artist)iterator.next();
+
+    for (Artist art : music.getArtist()) {
       String letter = links.getPageFileName(art);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(art));
@@ -1038,9 +1038,7 @@ public class Web {
         
   public static Element addVenueIndexNavigator(Music music, Links links, String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    Iterator iterator = music.getVenue().iterator();
-    while (iterator.hasNext()) {
-      Venue v = (Venue)iterator.next();
+    for (Venue v : music.getVenue()) {
       String letter = links.getPageFileName(v);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(v));
@@ -1063,9 +1061,7 @@ public class Web {
 
   public static Element addAlbumIndexNavigator(Music music, Links links, String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    Iterator iterator = music.getAlbum().iterator();
-    while (iterator.hasNext()) {
-      Album alb = (Album)iterator.next();
+    for (Album alb : music.getAlbum()) {
       String letter = links.getPageFileName(alb);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(alb));
@@ -1131,9 +1127,7 @@ public class Web {
         
   public static Element addShowIndexNavigator(Music music, Links links, String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    Iterator iterator = music.getShow().iterator();
-    while (iterator.hasNext()) {
-      Show s = (Show)iterator.next();
+    for (Show s : music.getShow()) {
       String letter = links.getPageFileName(s);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(s));
