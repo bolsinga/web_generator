@@ -159,14 +159,14 @@ public class ITunes {
     createKnownKeys();
 
     com.bolsinga.plist.data.Plist plist = Util.createPlist(itunesFile);
-            
-    ListIterator<Object> i = (plist.getDict().getKeyAndArrayOrData()).listIterator();
+
+    Iterator<Object> i = plist.getDict().getKeyAndArrayOrData().iterator();
     while (i.hasNext()) {
       JAXBElement<String> key = (JAXBElement<String>)i.next();
       if (key.getValue().equals("Tracks")) {
         com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
                                 
-        List tracks = dict.getKeyAndArrayOrData();
+        List<Object> tracks = dict.getKeyAndArrayOrData();
         ITunes.addTracks(objFactory, music, tracks);
       } else {
         Object o = i.next();
@@ -174,8 +174,8 @@ public class ITunes {
     }
   }
         
-  private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List tracks) throws JAXBException {
-    ListIterator<Object> i = tracks.listIterator();
+  private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List<Object> tracks) throws JAXBException {
+    Iterator<Object> i = tracks.iterator();
     while (i.hasNext()) {
       JAXBElement<String> key = (JAXBElement<String>)i.next();
 
@@ -191,7 +191,7 @@ public class ITunes {
   }
         
   private static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) throws JAXBException {
-    ListIterator<Object> i = track.getKeyAndArrayOrData().listIterator();
+    Iterator<Object> i = track.getKeyAndArrayOrData().iterator();
             
     String songTitle = null;
     String artist = null;
