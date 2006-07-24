@@ -71,9 +71,9 @@ public class Lookup {
                 
     Relation rel = null;
     List ritems = null;
-    ListIterator ri = null;
+    Iterator ri = null;
                 
-    ListIterator i = music.getRelation().listIterator();
+    Iterator i = music.getRelation().iterator();
     while (i.hasNext()) {
       rel = (Relation)i.next();
       if (rel == null) {
@@ -83,7 +83,7 @@ public class Lookup {
       if (ritems == null) {
         continue;
       }
-      ri = ritems.listIterator();
+      ri = ritems.iterator();
       while (ri.hasNext()) {
         Object o = ri.next();
         if (o instanceof Artist) {
@@ -93,7 +93,7 @@ public class Lookup {
             rArtists = new HashSet<Artist>();
             fArtistRelationMap.put(id, rArtists);
           }
-          ListIterator nri = rel.getMember().listIterator();
+          Iterator nri = rel.getMember().iterator();
           while (nri.hasNext()) {
             Artist artist = (Artist)nri.next();
             rArtists = fArtistRelationMap.get(id);
@@ -106,7 +106,7 @@ public class Lookup {
             rVenues = new HashSet<Venue>();
             fVenueRelationMap.put(id, rVenues);
           }
-          ListIterator nri = rel.getMember().listIterator();
+          Iterator nri = rel.getMember().iterator();
           while (nri.hasNext()) {
             Venue venue = (Venue)nri.next();
             rVenues = fVenueRelationMap.get(id);
@@ -119,7 +119,7 @@ public class Lookup {
             rLabels = new HashSet<Label>();
             fLabelRelationMap.put(id, rLabels);
           }
-          ListIterator nri = rel.getMember().listIterator();
+          Iterator nri = rel.getMember().iterator();
           while (nri.hasNext()) {
             Label label = (Label)nri.next();
             rLabels = fLabelRelationMap.get(id);

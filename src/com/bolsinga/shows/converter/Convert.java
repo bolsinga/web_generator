@@ -265,7 +265,7 @@ public class Convert {
   }
         
   private static void dump(List list) {
-    ListIterator i = list.listIterator();
+    Iterator i = list.iterator();
     while (i.hasNext()) {
       System.out.println(i.next());
     }

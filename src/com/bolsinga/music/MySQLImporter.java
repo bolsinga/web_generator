@@ -463,7 +463,7 @@ public class MySQLImporter {
     
     rowItems[0] = Long.toString(relationID);
     
-    ListIterator iterator = items.listIterator();
+    Iterator iterator = items.iterator();
     while (iterator.hasNext()) {
       item = iterator.next();
       if (item instanceof Artist) {
@@ -488,7 +488,7 @@ public class MySQLImporter {
     List items = music.getRelation();
     Relation item = null;
 
-    ListIterator iterator = items.listIterator();
+    Iterator iterator = items.iterator();
     while (iterator.hasNext()) {
       item = (Relation)iterator.next();
       try {
