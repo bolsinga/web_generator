@@ -99,10 +99,12 @@ public class Compare {
     return Integer.valueOf(id.substring(index)).intValue();
   }
 
-  private static final Comparator RELATION_ID_COMPARATOR = new Comparator() {
-      public int compare(Object o1, Object o2) {
+  private static final Comparator<JAXBElement<Object>> RELATION_ID_COMPARATOR = new Comparator<JAXBElement<Object>>() {
+      public int compare(JAXBElement<Object> jo1, JAXBElement<Object> jo2) {
         int id1 = -1;
         int id2 = -1;
+        Object o1 = (Object)jo1.getValue();
+        Object o2 = (Object)jo2.getValue();
 
         if (o1 instanceof Artist) {
           if (o2 instanceof Artist) {

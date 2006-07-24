@@ -224,7 +224,7 @@ public class Util {
     return items.subList(0, count);
   }
 
-  public static final Comparator CHANNEL_ITEM_COMPARATOR = new Comparator() {
+  public static final Comparator<Object> CHANNEL_ITEM_COMPARATOR = new Comparator<Object>() {
       public int compare(Object o1, Object o2) {
         Calendar c1 = null;
         Calendar c2 = null;
