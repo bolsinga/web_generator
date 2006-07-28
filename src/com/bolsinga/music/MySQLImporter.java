@@ -451,9 +451,6 @@ public class MySQLImporter {
   private static Object sRelationLock = new Object();
 
   private static long importRelation(Statement stmt, Relation relation) throws SQLException {
-    List items = relation.getMember();
-    Object item = null;
-    
     String[] rowItems = new String[4];
     
     long relationID = -1;
@@ -463,9 +460,8 @@ public class MySQLImporter {
     
     rowItems[0] = Long.toString(relationID);
     
-    Iterator iterator = items.iterator();
-    while (iterator.hasNext()) {
-      item = iterator.next();
+    for (JAXBElement<Object> jo : relation.getMember()) {
+      Object item = jo.getValue();
       if (item instanceof Artist) {
         rowItems[1] = MySQLImporter.toSQLID((Artist)item);
         rowItems[2] = "artist";
@@ -485,12 +481,7 @@ public class MySQLImporter {
   }
 
   private static void importRelations(Statement stmt, Music music) throws SQLException {
-    List items = music.getRelation();
-    Relation item = null;
-
-    Iterator iterator = items.iterator();
-    while (iterator.hasNext()) {
-      item = (Relation)iterator.next();
+    for (Relation item : music.getRelation()) {
       try {
         MySQLImporter.importRelation(stmt, item);
       } catch (SQLException e) {

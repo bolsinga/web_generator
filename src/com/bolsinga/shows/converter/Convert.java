@@ -264,10 +264,9 @@ public class Convert {
     return comments;
   }
         
-  private static void dump(List list) {
-    Iterator i = list.iterator();
-    while (i.hasNext()) {
-      System.out.println(i.next());
+  private static void dump(List<?> list) {
+    for (Object t : list) {
+      System.out.println(t);
     }
   }
 }

@@ -760,8 +760,7 @@ public class Web {
       e.add(Web.addTracks(links, artist));
     }
                 
-    Collection relations = Lookup.getLookup(music).getRelations(artist);
-    if (relations != null) {
+    if (Lookup.getLookup(music).getRelations(artist) != null) {
       e.add(Web.addRelations(music, links, artist));
     }
 
@@ -812,8 +811,7 @@ public class Web {
     // CSS.VENUE_ITEM
     Vector<Element> e = new Vector<Element>();
                 
-    Collection relations = Lookup.getLookup(music).getRelations(venue);
-    if (relations != null) {
+    if (Lookup.getLookup(music).getRelations(venue) != null) {
       e.add(Web.addRelations(music, links, venue));
     }
 
@@ -953,9 +951,7 @@ public class Web {
         
   public static div addRelations(Music music, Links links, Artist artist) {
     Vector<Element> e = new Vector<Element>();
-    Iterator iterator = Lookup.getLookup(music).getRelations(artist).iterator();
-    while (iterator.hasNext()) {
-      Artist art = (Artist)iterator.next();
+    for (Artist art : Lookup.getLookup(music).getRelations(artist)) {
       if (art.equals(artist)) {
         e.add(new StringElement(art.getName()));
       } else {
@@ -971,9 +967,7 @@ public class Web {
         
   public static div addRelations(Music music, Links links, Venue venue) {
     Vector<Element> e = new Vector<Element>();
-    Iterator iterator = Lookup.getLookup(music).getRelations(venue).iterator();
-    while (iterator.hasNext()) {
-      Venue v = (Venue)iterator.next();
+    for (Venue v : Lookup.getLookup(music).getRelations(venue)) {
       if (v.equals(venue)) {
         e.add(new StringElement(v.getName()));
       } else {

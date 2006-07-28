@@ -156,11 +156,7 @@ public class RSS {
 
       int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
 
-      List recentItems = com.bolsinga.web.Util.getRecentItems(entryCount, music, diary);
-      Iterator i = recentItems.iterator();
-      while (i.hasNext()) {
-        Object o = i.next();
-                                
+      for (Object o : com.bolsinga.web.Util.getRecentItems(entryCount, music, diary)) {
         if (o instanceof com.bolsinga.music.data.Show) {
           RSS.add((Show)o, musicLinks, objFactory, channel);
         } else if (o instanceof com.bolsinga.diary.data.Entry) {
