@@ -35,7 +35,7 @@ public class Convert {
   }
 
   public void convert() throws IOException {
-    List l = null;
+    Collection<?> l = null;
     if (fType.equals("relations")) {
       l = relation(fFile);
     } else if (fType.equals("bandsort")) {
@@ -264,8 +264,8 @@ public class Convert {
     return comments;
   }
         
-  private static void dump(List<?> list) {
-    for (Object t : list) {
+  private static void dump(Collection<?> c) {
+    for (Object t : c) {
       System.out.println(t);
     }
   }
