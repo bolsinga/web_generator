@@ -69,23 +69,9 @@ public class Lookup {
       }
     }
                 
-    Relation rel = null;
-    List ritems = null;
-    Iterator ri = null;
-                
-    Iterator i = music.getRelation().iterator();
-    while (i.hasNext()) {
-      rel = (Relation)i.next();
-      if (rel == null) {
-        continue;
-      }
-      ritems = rel.getMember();
-      if (ritems == null) {
-        continue;
-      }
-      ri = ritems.iterator();
-      while (ri.hasNext()) {
-        Object o = ri.next();
+    for (Relation rel : music.getRelation()) {
+      for (JAXBElement<Object> jo : rel.getMember()) {
+        Object o = jo.getValue();
         if (o instanceof Artist) {
           Collection<Artist> rArtists;
           id = ((Artist)o).getId();
@@ -93,9 +79,8 @@ public class Lookup {
             rArtists = new HashSet<Artist>();
             fArtistRelationMap.put(id, rArtists);
           }
-          Iterator nri = rel.getMember().iterator();
-          while (nri.hasNext()) {
-            Artist artist = (Artist)nri.next();
+          for (JAXBElement<Object> ja : rel.getMember()) {
+            Artist artist = (Artist)ja.getValue();
             rArtists = fArtistRelationMap.get(id);
             rArtists.add(artist);
           }
@@ -106,9 +91,8 @@ public class Lookup {
             rVenues = new HashSet<Venue>();
             fVenueRelationMap.put(id, rVenues);
           }
-          Iterator nri = rel.getMember().iterator();
-          while (nri.hasNext()) {
-            Venue venue = (Venue)nri.next();
+          for (JAXBElement<Object> jv : rel.getMember()) {
+            Venue venue = (Venue)jv.getValue();
             rVenues = fVenueRelationMap.get(id);
             rVenues.add(venue);
           }
@@ -119,12 +103,14 @@ public class Lookup {
             rLabels = new HashSet<Label>();
             fLabelRelationMap.put(id, rLabels);
           }
-          Iterator nri = rel.getMember().iterator();
-          while (nri.hasNext()) {
-            Label label = (Label)nri.next();
+          for (JAXBElement<Object> jl : rel.getMember()) {
+            Label label = (Label)jl.getValue();
             rLabels = fLabelRelationMap.get(id);
             rLabels.add(label);
           }
+        } else {
+          System.err.println("No Relation: " + o);
+          System.exit(1);
         }
       }
     }
