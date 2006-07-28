@@ -162,8 +162,9 @@ public class ITunes {
 
     Iterator<Object> i = plist.getDict().getKeyAndArrayOrData().iterator();
     while (i.hasNext()) {
-      JAXBElement<String> key = (JAXBElement<String>)i.next();
-      if (key.getValue().equals("Tracks")) {
+      JAXBElement<Object> jo = (JAXBElement<Object>)i.next();
+      String key = (String)jo.getValue();
+      if (key.equals("Tracks")) {
         com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
                                 
         List<Object> tracks = dict.getKeyAndArrayOrData();
@@ -177,7 +178,7 @@ public class ITunes {
   private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List<Object> tracks) throws JAXBException {
     Iterator<Object> i = tracks.iterator();
     while (i.hasNext()) {
-      JAXBElement<String> key = (JAXBElement<String>)i.next();
+      Object key = i.next(); // key not used
 
       com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)i.next();
       ITunes.addTrack(objFactory, music, track);
@@ -204,53 +205,54 @@ public class ITunes {
     boolean isVideo = false;
             
     while (i.hasNext()) {
-      String key = ((JAXBElement<String>)i.next()).getValue();
-                                        
+      JAXBElement<Object> jokey = (JAXBElement<Object>)i.next();
+      String key = (String)jokey.getValue();
+
+      // always pull off the value, it may be unused.
+      JAXBElement<Object> jovalue = (JAXBElement<Object>)i.next();
+
       if (key.equals(TK_NAME)) {
-        songTitle = ((JAXBElement<String>)i.next()).getValue();
+        songTitle = (String)jovalue.getValue();
         continue;
       }
       if (key.equals(TK_ARTIST)) {
-        artist = ((JAXBElement<String>)i.next()).getValue();
+        artist = (String)jovalue.getValue();
         continue;
       }
       if (key.equals(TK_ALBUM)) {
-        albumTitle = ((JAXBElement<String>)i.next()).getValue();
+        albumTitle = (String)jovalue.getValue();
         continue;
       }
       if (key.equals(TK_GENRE)) {
-        genre = ((JAXBElement<String>)i.next()).getValue();
+        genre = (String)jovalue.getValue();
         continue;
       }
       if (key.equals(TK_TRACK_NUMBER)) {
-        index = ((JAXBElement<java.math.BigInteger>)i.next()).getValue().intValue();
+        index = ((java.math.BigInteger)jovalue.getValue()).intValue();
         continue;
       }
       if (key.equals(TK_YEAR)) {
-        year = ((JAXBElement<java.math.BigInteger>)i.next()).getValue().intValue();
+        year = ((java.math.BigInteger)jovalue.getValue()).intValue();
         continue;
       }
       if (key.equals(TK_PLAY_DATE_UTC)) {
-        lastPlayed = ((JAXBElement<XMLGregorianCalendar>)i.next()).getValue();
+        lastPlayed = (XMLGregorianCalendar)jovalue.getValue();
         continue;
       }
       if (key.equals(TK_PLAY_COUNT)) {
-        playCount = ((JAXBElement<java.math.BigInteger>)i.next()).getValue().intValue();
+        playCount = ((java.math.BigInteger)jovalue.getValue()).intValue();
         continue;
       }
       if (key.equals(TK_COMPILATION)) {
         // Ignore the value, but it needs to be pulled.
-        compilation = (i.next() != null);
+        compilation = (jovalue != null);
         continue;
       }
       if (key.equals(TK_HAS_VIDEO)) {
         // Ignore the value, but it needs to be pulled.
-        isVideo = (i.next() != null);
+        isVideo = (jovalue != null);
         continue;
       }
-
-      // This key isn't used, so pass over its value.
-      Object o = i.next();
 
       if (!sITunesKeys.contains(key)) {
         System.out.println("iTunes added a new key: " + key);
