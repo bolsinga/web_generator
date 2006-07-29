@@ -4,8 +4,8 @@ import java.io.*;
 import java.util.*;
 
 public class VCalendar {
-  Vector<VEvent> fEvents = new Vector<VEvent>();
-  String fName = null;
+  private final Vector<VEvent> fEvents = new Vector<VEvent>();
+  private String fName = null;
         
   public VCalendar(String name) {
     fName = name;

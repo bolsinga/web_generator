@@ -5,7 +5,7 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public abstract class MultiDocumentCreator extends DocumentCreator {
-  li fSubsection = null;
+  private li fSubsection = null;
     
   protected MultiDocumentCreator(String outputDir) {
     super(outputDir);

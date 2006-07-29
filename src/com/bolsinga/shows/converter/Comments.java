@@ -6,8 +6,8 @@ import java.util.*;
 import com.bolsinga.shows.converter.*;
 
 public class Comments {
-  public String fDate;
-  public String fData;
+  private String fDate;
+  private String fData;
         
   public Comments(String date, String data) {
     fDate = date;

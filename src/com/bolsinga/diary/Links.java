@@ -18,7 +18,7 @@ public class Links {
   public  static final String RSS_DIR      = "rss";
   private static final String HASH         = "#";
     
-  static DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
+  private static final DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
 
   private boolean fUpOneLevel;
         

@@ -10,6 +10,19 @@ import java.util.*;
 import javax.xml.bind.*;
 
 public class MySQLImporter {
+
+  private static long sLocationID = 0;
+  private static final Object sLocationLock = new Object();
+
+  private static long sPerformanceID = 0;
+  private static final Object sPerformanceLock = new Object();
+
+  private static long sRelationID = 0;
+  private static final Object sRelationLock = new Object();
+
+  private static final DateFormat sSQLFormat = new SimpleDateFormat("yyyy-M-d");
+  private static final MessageFormat sUnknownFormat = new MessageFormat("{2, number,####}-{0, number,integer}-{1, number,####}");
+
   public static void main(String[] args) {
     if ((args.length != 3) && (args.length != 4)) {
       MySQLImporter.usage();
@@ -97,9 +110,6 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.truncate(stmt, "song");
     com.bolsinga.sql.Util.truncate(stmt, "venue");
   }
-
-  private static long sLocationID = 0;
-  private static Object sLocationLock = new Object();
 
   private static long importLocation(Statement stmt, Location location) throws SQLException {
     String[] rowItems = new String[6];
@@ -370,9 +380,6 @@ public class MySQLImporter {
     }
   }
 
-  private static long sPerformanceID = 0;
-  private static Object sPerformanceLock = new Object();
-
   private static long importPerformance(Statement stmt, Show show) throws SQLException {
     List<JAXBElement<Object>> items = show.getArtist();
     int playOrder = 1;
@@ -401,9 +408,6 @@ public class MySQLImporter {
     // 'sh'
     return toSQLID(2, show.getId());
   }
-
-  private static DateFormat sSQLFormat = new SimpleDateFormat("yyyy-M-d");
-  private static MessageFormat sUnknownFormat = new MessageFormat("{2, number,####}-{0, number,integer}-{1, number,####}");
 
   private static String toSQLString(com.bolsinga.music.data.Date date) {
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
@@ -446,9 +450,6 @@ public class MySQLImporter {
       }
     }
   }
-
-  private static long sRelationID = 0;
-  private static Object sRelationLock = new Object();
 
   private static long importRelation(Statement stmt, Relation relation) throws SQLException {
     String[] rowItems = new String[4];

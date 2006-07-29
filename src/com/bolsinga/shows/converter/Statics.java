@@ -6,8 +6,8 @@ import java.util.*;
 import com.bolsinga.shows.converter.*;
 
 public class Statics {
-  public String fLocation;
-  public String fData;
+  private String fLocation;
+  private String fData;
         
   public Statics(String location, String data) {
     fLocation = location;

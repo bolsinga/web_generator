@@ -16,13 +16,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
-  com.bolsinga.web.Encode fEncoder = null;
-  Diary  fDiary     = null;
-  Links  fLinks     = null;
-  String fProgram   = null;
-  Entry  fCurEntry  = null;
-  Entry  fLastEntry = null;
-  int fStartYear = -1;
+  private com.bolsinga.web.Encode fEncoder = null;
+  private Diary  fDiary     = null;
+  private Links  fLinks     = null;
+  private String fProgram   = null;
+  private Entry  fCurEntry  = null;
+  private Entry  fLastEntry = null;
+  private int fStartYear = -1;
         
   public DiaryDocumentCreator(Diary diary, com.bolsinga.web.Encode encoder, Links links, String outputDir, String program, int startYear) {
     super(outputDir);

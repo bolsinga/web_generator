@@ -6,12 +6,10 @@ import java.util.*;
 import java.util.regex.*;
 
 public class Util {
-  private static Pattern sSQL = Pattern.compile("'");
+  private static final Pattern sSQL = Pattern.compile("'");
 
-  private static DateFormat sSQLDateTimeFormat = null;
-
+  private static final DateFormat sSQLDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   static {
-    sSQLDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     sSQLDateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
 

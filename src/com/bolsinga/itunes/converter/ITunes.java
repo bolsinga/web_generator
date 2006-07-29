@@ -63,6 +63,8 @@ public class ITunes {
   private static final HashMap<String, Album> sAlbums = new HashMap<String, Album>();
 
   private static final HashSet<String> sITunesKeys = new HashSet<String>();
+  
+  private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
         
   public static void main(String[] args) {
     if (args.length != 2) {
@@ -305,8 +307,6 @@ public class ITunes {
     }
     return result;
   }
-  
-  private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
 
   private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, XMLGregorianCalendar lastPlayed, int playCount) throws JAXBException {
     // Create the song

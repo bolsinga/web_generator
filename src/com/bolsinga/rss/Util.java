@@ -8,9 +8,8 @@ import java.util.*;
  */
 
 public class Util {
-  private static DateFormat sRSSDateFormat = null;
+  private static final DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
   static {
-    sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
     sRSSDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
         

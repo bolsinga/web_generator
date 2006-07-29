@@ -8,9 +8,9 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public abstract class DocumentCreator {
-  String fOutputDir = null;
+  private String fOutputDir = null;
   private XhtmlDocument fDocument = null;
-  div fMain = null;
+  private div fMain = null;
         
   protected DocumentCreator(String outputDir) {
     fOutputDir = outputDir;

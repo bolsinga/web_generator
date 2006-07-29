@@ -10,6 +10,8 @@ import com.bolsinga.diary.data.*;
 
 public class MySQLImporter {
 
+  private static final Pattern sFriends = Pattern.compile("\"(.*)\">(.*)<");
+
   public static void main(String[] args) {
     if ((args.length != 3) && (args.length != 4)) {
       MySQLImporter.usage();
@@ -184,8 +186,6 @@ public class MySQLImporter {
 
     com.bolsinga.sql.Util.insert(stmt, "friend", rowItems);
   }
-
-  private static Pattern sFriends = Pattern.compile("\"(.*)\">(.*)<");
 
   private static void importFriends(Statement stmt, Diary diary) throws SQLException {
     String data = diary.getFriends();

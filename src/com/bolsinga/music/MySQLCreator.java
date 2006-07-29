@@ -9,15 +9,26 @@ import javax.xml.bind.*;
 import com.bolsinga.music.data.*;
 
 class MySQLCreator {
-  ObjectFactory objFactory;
-  Music music;
-  Connection conn;
-  Statement stmt;
+  private ObjectFactory objFactory;
+  private Music music;
+  private Connection conn;
+  private Statement stmt;
 
-  PreparedStatement locationStmt;
-  PreparedStatement albumStmt;
-  PreparedStatement albumDistinctStmt;
-  PreparedStatement performanceStmt;
+  private PreparedStatement locationStmt;
+  private PreparedStatement albumStmt;
+  private PreparedStatement albumDistinctStmt;
+  private PreparedStatement performanceStmt;
+
+  private final HashMap<String, Artist> artists = new HashMap<String, Artist>();
+  private final Object artistsLock = new Object();
+
+  private final HashMap<String, Album> albums = new HashMap<String, Album>();
+  private final Object albumsLock = new Object();
+
+  private final HashMap<String, Venue> venues = new HashMap<String, Venue>();
+  private final Object venuesLock = new Object();
+
+  private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
 
   public MySQLCreator(ObjectFactory objFactory, Connection conn) {
     this.objFactory = objFactory;
@@ -124,9 +135,6 @@ class MySQLCreator {
     return location;
   }
 
-  private HashMap<String, Artist> artists = new HashMap<String, Artist>();
-  private Object artistsLock = new Object();
-
   private Artist getArtist(String xmlID) throws JAXBException {
     Artist item = null;
 
@@ -148,9 +156,6 @@ class MySQLCreator {
     }
     return item;
   }
-
-  private HashMap<String, Album> albums = new HashMap<String, Album>();
-  private Object albumsLock = new Object();
 
   private Album getAlbum(String xmlID, long album_id) throws SQLException, JAXBException {
     Album item = null;
@@ -229,9 +234,6 @@ class MySQLCreator {
     
     return item;
   }
-
-  private HashMap<String, Venue> venues = new HashMap<String, Venue>();
-  private Object venuesLock = new Object();
 
   private Venue getVenue(String xmlID) throws JAXBException {
     Venue item = null;
@@ -329,8 +331,6 @@ class MySQLCreator {
     }
 
   }
-
-  private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
 
   private void createSongs() throws SQLException, JAXBException {
     ResultSet rset = null;

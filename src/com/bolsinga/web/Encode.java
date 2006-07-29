@@ -308,14 +308,14 @@ class NullEncode extends Encode {
 
 class HashEncode extends Encode {
   // Assume average of 25 words per entry.
-  static final int WORDS_PER_ENTRY = 25;
+  private static final int WORDS_PER_ENTRY = 25;
   // Assume average of 3 words per name
-  static final int WORDS_PER_NAME = 3;
+  private static final int WORDS_PER_NAME = 3;
 
   // The key is the Show or Entry. The value is a TreeSet containing the EncoderData
   //  that are applicable to the given key. Only these EncoderDatas will be used
   //  to encode the key, saving some time.
-  HashMap<Object, Collection<EncoderData>> fEncodables;
+  private HashMap<Object, Collection<EncoderData>> fEncodables;
 
   HashEncode(Music music, Diary diary) {
     if (music != null) {

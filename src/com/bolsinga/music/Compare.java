@@ -15,11 +15,11 @@ public class Compare {
   private static final String A    = "a ";
   private static final String AN   = "an ";
     
-  private static Pattern sChomp = Pattern.compile("\\W*");
+  private static final Pattern sChomp = Pattern.compile("\\W*");
         
   private static Compare sCompare = null;
         
-  private Music fMusic = null;
+  private final Music fMusic;
         
   public synchronized static Compare getCompare(com.bolsinga.music.data.Music music) {
     if (sCompare == null) {

@@ -8,6 +8,14 @@ import java.util.*;
 import java.util.regex.*;
 
 public class Convert {
+        
+  private static final Pattern sStaticPattern   = Pattern.compile("<static>(.*?)</static>", Pattern.DOTALL);
+  private static final Pattern sLocationPattern = Pattern.compile("<location>(.*?)</location>", Pattern.DOTALL);
+  private static final Pattern sDataPattern     = Pattern.compile("<data>(.*?)</data>", Pattern.DOTALL);
+
+  private static final Pattern sCommentPattern = Pattern.compile("<comment>(.*?)</comment>", Pattern.DOTALL);
+  private static final Pattern sDatePattern    = Pattern.compile("<date>(.*?)</date>", Pattern.DOTALL);
+
   private String fType;
   private String fFile;
         
@@ -183,10 +191,6 @@ public class Convert {
     return shows;
   }
         
-  private static Pattern sStaticPattern =         Pattern.compile("<static>(.*?)</static>", Pattern.DOTALL);
-  private static Pattern sLocationPattern =   Pattern.compile("<location>(.*?)</location>", Pattern.DOTALL);
-  private static Pattern sDataPattern =           Pattern.compile("<data>(.*?)</data>", Pattern.DOTALL);
-        
   public static List<Statics> statics(String filename) throws IOException {
     Vector<Statics> statics = new Vector<Statics>();
 
@@ -223,9 +227,6 @@ public class Convert {
 
     return statics;
   }
-
-  private static Pattern sCommentPattern =        Pattern.compile("<comment>(.*?)</comment>", Pattern.DOTALL);
-  private static Pattern sDatePattern =           Pattern.compile("<date>(.*?)</date>", Pattern.DOTALL);
 
   public static List<Comments> comments(String filename) throws IOException {
     Vector<Comments> comments = new Vector<Comments>();

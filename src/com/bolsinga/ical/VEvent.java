@@ -6,12 +6,12 @@ import java.util.*;
 
 public class VEvent {
 
-  static DateFormat sFormatter = new SimpleDateFormat("yyyyMMdd");
+  private static final DateFormat sFormatter = new SimpleDateFormat("yyyyMMdd");
         
-  Calendar fDate;
-  String fSummary;
-  String fURL;
-  String fUID;
+  private Calendar fDate;
+  private String fSummary;
+  private String fURL;
+  private String fUID;
         
   public VEvent(Calendar date, String summary, String url, String uid) {
     fDate = date;

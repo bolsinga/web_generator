@@ -14,7 +14,7 @@ import com.bolsinga.diary.data.*;
 
 public class Util {
 
-  private static ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.web");
+  private static final ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.web");
 
   private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
@@ -251,7 +251,7 @@ public class Util {
       }
     };
         
-  public static void createSettings(String sourceFile) {
+  public synchronized static void createSettings(String sourceFile) {
     if (sSettings == null) {
       try {
         JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
@@ -266,7 +266,7 @@ public class Util {
     }
   }
 
-  public static com.bolsinga.settings.data.Settings getSettings() {
+  public synchronized static com.bolsinga.settings.data.Settings getSettings() {
     return sSettings;
   }
     

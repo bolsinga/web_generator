@@ -17,9 +17,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
-  Music  fMusic   = null;
-  Links  fLinks   = null;
-  String fProgram = null;
+  protected Music  fMusic   = null;
+  protected Links  fLinks   = null;
+  private String fProgram = null;
     
   protected MusicDocumentCreator(Music music, Links links, String outputDir, String program) {
     super(outputDir);
@@ -43,9 +43,9 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
 }
 
 abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
-  Music  fMusic   = null;
-  Links  fLinks   = null;
-  String fProgram = null;
+  protected Music  fMusic   = null;
+  protected Links  fLinks   = null;
+  private String fProgram = null;
 
   protected SingleSectionMusicDocumentCreator(Music music, Links links, String outputDir, String program) {
     super(outputDir);
@@ -69,8 +69,8 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
 }
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
-  Artist fLastArtist = null;
-  Artist fCurArtist  = null;
+  private Artist fLastArtist = null;
+  private Artist fCurArtist  = null;
         
   public ArtistDocumentCreator(Music music, Links links, String outputDir, String program) {
     super(music, links, outputDir, program);
@@ -116,8 +116,8 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
 }
 
 class VenueDocumentCreator extends MusicDocumentCreator {
-  Venue fLastVenue = null;
-  Venue fCurVenue  = null;
+  private Venue fLastVenue = null;
+  private Venue fCurVenue  = null;
         
   public VenueDocumentCreator(Music music, Links links, String outputDir, String program) {
     super(music, links, outputDir, program);
@@ -163,9 +163,9 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 }
 
 class ShowDocumentCreator extends MusicDocumentCreator {
-  Show fLastShow = null;
-  Show fCurShow  = null;
-  com.bolsinga.web.Encode fEncoder = null;
+  private Show fLastShow = null;
+  private Show fCurShow  = null;
+  private com.bolsinga.web.Encode fEncoder = null;
    
   public ShowDocumentCreator(Music music, com.bolsinga.web.Encode encoder, Links links, String outputDir, String program) {
     super(music, links, outputDir, program);
@@ -213,10 +213,10 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 }
 
 class StatisticsCreator extends SingleSectionMusicDocumentCreator {
-  String fFileName  = null;
-  String fTitle     = null;
-  String fDirectory = null;
-  table  fCurTable  = null;
+  private String fFileName  = null;
+  private String fTitle     = null;
+  private String fDirectory = null;
+  private table  fCurTable  = null;
 
   public StatisticsCreator(Music music, Links links, String outputDir, String program, String filename, String title, String directory) {
     super(music, links, outputDir, program);
@@ -294,8 +294,8 @@ class TracksStatisticsCreator extends StatisticsCreator {
 }
 
 class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
-  Album fLastAlbum = null;
-  Album fCurAlbum  = null;
+  private Album fLastAlbum = null;
+  private Album fCurAlbum  = null;
         
   public TracksDocumentCreator(Music music, Links links, String outputDir, String program) {
     super(music, links, outputDir, program);
@@ -337,7 +337,7 @@ public class Web {
   private static final boolean GENERATE_XML = false;
        
   // This is the first year of this data.
-  private static int START_YEAR = 2003;
+  private static final int START_YEAR = 2003;
  
   public static void main(String[] args) {
     if ((args.length != 4) && (args.length != 5)) {
