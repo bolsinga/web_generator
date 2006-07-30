@@ -6,8 +6,8 @@ import java.util.*;
 import com.bolsinga.shows.converter.*;
 
 public class Statics {
-  private String fLocation;
-  private String fData;
+  private final String fLocation;
+  private final String fData;
         
   public Statics(String location, String data) {
     fLocation = location;
@@ -18,16 +18,8 @@ public class Statics {
     return fLocation;
   }
         
-  public void setLocation(String location) {
-    fLocation = location;
-  }
-        
   public String getData() {
     return fData;
-  }
-        
-  public void setData(String data) {
-    fData = data;
   }
         
   public String toString() {

@@ -13,7 +13,7 @@ public class Util {
     sSQLDateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
 
-  private static String constructInsert(String table, String[] rowItems) {
+  private static String constructInsert(final String table, final String[] rowItems) {
     StringBuffer sb = new StringBuffer("INSERT INTO ");
     sb.append(table);
     sb.append(" VALUES (");
@@ -30,18 +30,18 @@ public class Util {
     return sb.toString();
   }
 
-  public static void insert(Statement stmt, String table, String[] rowItems) throws SQLException {
+  public static void insert(final Statement stmt, final String table, final String[] rowItems) throws SQLException {
     stmt.execute(Util.constructInsert(table, rowItems));
   }
 
-  public static void truncate(Statement stmt, String table) throws SQLException {
+  public static void truncate(final Statement stmt, final String table) throws SQLException {
     StringBuffer sb = new StringBuffer("TRUNCATE ");
     sb.append(table);
 
     stmt.execute(sb.toString());
   }
 
-  public static GregorianCalendar toCalendarUTC(String sqlDATETIME) {
+  public static GregorianCalendar toCalendarUTC(final String sqlDATETIME) {
     java.util.Date d = null;
     try {
       d = sSQLDateTimeFormat.parse(sqlDATETIME);
@@ -55,11 +55,11 @@ public class Util {
     return c;
   }
 
-  public static String toDATETIME(GregorianCalendar c) {
+  public static String toDATETIME(final GregorianCalendar c) {
     return sSQLDateTimeFormat.format(c.getTime());
   }
   
-  private static String quote(String s) {
+  private static String quote(final String s) {
     if (s != null) {
       StringBuffer sb = new StringBuffer();
       sb.append("'");
@@ -71,7 +71,7 @@ public class Util {
     }
   }
 
-  private static String encodeSQLString(String s) {
+  private static String encodeSQLString(final String s) {
     Matcher m = sSQL.matcher(s);
     String result = m.replaceAll("''");
     return result;

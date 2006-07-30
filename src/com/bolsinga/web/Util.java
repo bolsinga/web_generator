@@ -18,12 +18,11 @@ public class Util {
 
   private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
-  private static boolean sPrettyPrint = false;
+  private static final boolean sPrettyPrint;
   static {
     String value = System.getProperty("web.pretty_containers");
-    if (value != null) {
-      sPrettyPrint = true;
-    }
+    sPrettyPrint = (value != null);
+
     try {
       sXMLDatatypeFactory = DatatypeFactory.newInstance();
     } catch (DatatypeConfigurationException e) {
@@ -37,11 +36,11 @@ public class Util {
     return sPrettyPrint;
   }
 
-  public static XMLGregorianCalendar toXMLGregorianCalendar(GregorianCalendar cal) {
+  public static XMLGregorianCalendar toXMLGregorianCalendar(final GregorianCalendar cal) {
     return sXMLDatatypeFactory.newXMLGregorianCalendar(cal);
   }
 
-  public static boolean convert(Boolean value) {
+  public static boolean convert(final Boolean value) {
     return (value != null) ? value.booleanValue() : false;
   }
 
@@ -68,7 +67,7 @@ public class Util {
     return i;
   }
         
-  public static ul convertToUnOrderedList(String data) {
+  public static ul convertToUnOrderedList(final String data) {
     ul list = new ul();
                 
     // Convert each line to a li tag.
@@ -80,7 +79,7 @@ public class Util {
     return list;
   }
         
-  public static String convertToParagraphs(String data) {
+  public static String convertToParagraphs(final String data) {
     // Convert each line to <p> tags
     StringBuffer tagged = new StringBuffer();
     if (data != null) {
@@ -92,18 +91,18 @@ public class Util {
     return tagged.toString();
   }
         
-  public static div createDiv(String className) {
+  public static div createDiv(final String className) {
     div d = new div();
     d.setClass(className);
     d.setPrettyPrint(Util.getPrettyPrint());
     return d;
   }
         
-  public static a createInternalA(String url, String value) {
+  public static a createInternalA(final String url, final String value) {
     return Util.createInternalA(url, value, null);
   }
         
-  public static a createInternalA(String url, String value, String title) {
+  public static a createInternalA(final String url, final String value, final String title) {
     a an = new a(url, value);
     an.setClass(CSS.INTERNAL);
     if (title != null) {
@@ -112,14 +111,14 @@ public class Util {
     return an;
   }
     
-  public static a createNamedTarget(String name, String value) {
+  public static a createNamedTarget(final String name, final String value) {
     a an = new a();
     an.setName(name);
     an.addElement("t", value);
     return an;
   }
 
-  public static ul createUnorderedList(Vector<org.apache.ecs.Element> elements) {
+  public static ul createUnorderedList(final Vector<org.apache.ecs.Element> elements) {
     ul list = new ul();
     list.setPrettyPrint(Util.getPrettyPrint());
 
@@ -132,7 +131,7 @@ public class Util {
     return list;
   }
 
-  public static ol createOrderedList(Vector<org.apache.ecs.Element> elements) {
+  public static ol createOrderedList(final Vector<org.apache.ecs.Element> elements) {
     ol list = new ol();
     list.setPrettyPrint(Util.getPrettyPrint());
 
@@ -178,7 +177,7 @@ public class Util {
     return sb.toString();
   }
 
-  public static String getCopyright(int startYear) {
+  public static String getCopyright(final int startYear) {
     StringBuffer cp = new StringBuffer();
                 
     int cur_year = Calendar.getInstance().get(Calendar.YEAR); // LocalTime OK
@@ -196,11 +195,11 @@ public class Util {
     return cp.toString();
   }
 
-  public static List<Object> getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary) {
+  public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary) {
     return Util.getRecentItems(count, music, diary, true);
   }
  
-  public static List<Object> getRecentItems(int count, com.bolsinga.music.data.Music music, com.bolsinga.diary.data.Diary diary, boolean includeMusic) {
+  public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final boolean includeMusic) {
     List<Show> shows = null;
     if (includeMusic) {
       shows = music.getShow();
@@ -225,7 +224,7 @@ public class Util {
   }
 
   public static final Comparator<Object> CHANNEL_ITEM_COMPARATOR = new Comparator<Object>() {
-      public int compare(Object o1, Object o2) {
+      public int compare(final Object o1, final Object o2) {
         Calendar c1 = null;
         Calendar c2 = null;
                         
@@ -251,7 +250,7 @@ public class Util {
       }
     };
         
-  public synchronized static void createSettings(String sourceFile) {
+  public synchronized static void createSettings(final String sourceFile) {
     if (sSettings == null) {
       try {
         JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
@@ -270,7 +269,7 @@ public class Util {
     return sSettings;
   }
     
-  public static String getResourceString(String key) {
+  public static String getResourceString(final String key) {
     return sResource.getString(key); 
   }
 }

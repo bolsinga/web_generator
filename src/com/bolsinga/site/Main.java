@@ -86,7 +86,7 @@ public class Main {
     }
   }
 
-  private static void usage(String[] badargs, String reason) {
+  private static void usage(final String[] badargs, final String reason) {
     System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [user] [password] [output.dir] <xml|musicxml|diaryxml|import|musicimport|diaryimport|site|musicsite|diarysite|site-ddb|musicsite-db|diarysite-db>");
     System.out.println(reason);
     System.out.println("Arguments:");

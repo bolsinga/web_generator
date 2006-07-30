@@ -5,8 +5,8 @@ import java.util.*;
 
 public class Relation {
 
-  private String fType;
-  private String fReason;
+  private final String fType;
+  private final String fReason;
   private final Collection<String> fMembers;
         
   public Relation(String type, String reason) {
@@ -25,16 +25,8 @@ public class Relation {
     return fType;
   }
         
-  public void setType(String type) {
-    fType = type;
-  }
-        
   public String getReason() {
     return fReason;
-  }
-        
-  public void setReason(String reason) {
-    fReason = reason;
   }
         
   public void addMember(String member) {

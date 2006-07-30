@@ -29,7 +29,7 @@ public abstract class Encode {
     Encode.generate(args[0], args[1], args[3]);
   }
 
-  private static void generate(String diaryFile, String musicFile, String outputDir) {
+  private static void generate(final String diaryFile, final String musicFile, final String outputDir) {
     Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
 
@@ -40,7 +40,7 @@ public abstract class Encode {
     generateMusic(music, encoder, outputDir);
   }
 
-  private static void generateDiary(Diary diary, Encode encoder, String outputDir) {
+  private static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
     List<Entry> items = diary.getEntry();
     StringBuffer buffer = new StringBuffer();
 
@@ -56,7 +56,7 @@ public abstract class Encode {
     writeDocument(buffer, outputDir, sb.toString());
   }
 
-  private static void generateMusic(Music music, Encode encoder, String outputDir) {
+  private static void generateMusic(final Music music, final Encode encoder, final String outputDir) {
     List<Show> items = music.getShow();
     StringBuffer buffer = new StringBuffer();
 
@@ -74,7 +74,7 @@ public abstract class Encode {
     writeDocument(buffer, outputDir, sb.toString());
   }
 
-  private static void writeDocument(StringBuffer buffer, String outputDir, String fileName) {
+  private static void writeDocument(final StringBuffer buffer, final String outputDir, final String fileName) {
     try {
       File f = new File(outputDir, fileName);
       File parent = new File(f.getParent());
@@ -93,7 +93,7 @@ public abstract class Encode {
     }
   }
 
-  public synchronized static Encode getEncode(Music music, Diary diary) {
+  public synchronized static Encode getEncode(final Music music, final Diary diary) {
     if (sEncode == null) {
       //      sEncode = new RegexEncode(music);
       //      sEncode = new NullEncode();
@@ -122,7 +122,7 @@ class EncoderData {
   private final String fUpLink;
   
   public static final Comparator<EncoderData> ENCODERDATA_COMPARATOR = new Comparator<EncoderData>() {
-      public int compare(EncoderData d1, EncoderData d2) {
+      public int compare(final EncoderData d1, final EncoderData d2) {
         int result = d2.getName().length() - d1.getName().length();
         if (result == 0) {
           result = d2.getName().compareTo(d1.getName());
@@ -131,7 +131,7 @@ class EncoderData {
       }
     };
   
-  EncoderData(Artist artist, Links standardLinks, Links upLinks) {
+  EncoderData(final Artist artist, final Links standardLinks, final Links upLinks) {
     fName = artist.getName();
     fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
     
@@ -142,7 +142,7 @@ class EncoderData {
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
   }
   
-  EncoderData(Venue venue, Links standardLinks, Links upLinks) {
+  EncoderData(final Venue venue, final Links standardLinks, final Links upLinks) {
     fName = venue.getName();
     fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
     
@@ -153,7 +153,7 @@ class EncoderData {
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
   }
   
-  EncoderData(Album album, Links standardLinks, Links upLinks) {
+  EncoderData(final Album album, final Links standardLinks, final Links upLinks) {
     fName = album.getTitle();
     fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
     
@@ -164,13 +164,13 @@ class EncoderData {
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
   }
   
-  public static void addArtistData(Collection<Artist> items, Links standardLinks, Links upLinks, Collection<EncoderData> encodings) {
+  public static void addArtistData(final Collection<Artist> items, final Links standardLinks, final Links upLinks, final Collection<EncoderData> encodings) {
     for (Artist item : items) {
       encodings.add(new EncoderData(item, standardLinks, upLinks));
     }
   }
 
-  public static void addVenueData(Collection<Venue> items, Links standardLinks, Links upLinks, Collection<EncoderData> encodings) {
+  public static void addVenueData(final Collection<Venue> items, final Links standardLinks, final Links upLinks, final Collection<EncoderData> encodings) {
     for (Venue item : items) {
       if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
         encodings.add(new EncoderData(item, standardLinks, upLinks));
@@ -178,13 +178,13 @@ class EncoderData {
     }
   }
 
-  public static void addAlbumData(Collection<Album> items, Links standardLinks, Links upLinks, Collection<EncoderData> encodings) {
+  public static void addAlbumData(final Collection<Album> items, final Links standardLinks, final Links upLinks, final Collection<EncoderData> encodings) {
     for (Album item : items) {
       encodings.add(new EncoderData(item, standardLinks, upLinks));
     }
   }
 
-  public static String addLinks(String source, boolean upOneLevel, Collection<EncoderData> encodings) {
+  public static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
     String result = source;
 
     if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
@@ -196,7 +196,7 @@ class EncoderData {
     return result;
   }
         
-  private static String addLinks(EncoderData data, String source, boolean upOneLevel) {
+  private static String addLinks(final EncoderData data, final String source, final boolean upOneLevel) {
     String result = source;
                                                 
     Matcher entryMatch = data.getPattern().matcher(source);
@@ -227,7 +227,7 @@ class EncoderData {
     return fName;
   }
   
-  String createRegex(String name) {
+  String createRegex(final String name) {
     StringBuffer sb = new StringBuffer();
     
     sb.append("(^|\\W)(");
@@ -247,7 +247,7 @@ class EncoderData {
     return fPattern;
   }
   
-  String getLink(boolean upOneLevel) {
+  String getLink(final boolean upOneLevel) {
     StringBuffer sb = new StringBuffer();
     
     sb.append("$1");
@@ -262,15 +262,15 @@ class RegexEncode extends Encode {
 
   private final TreeSet<EncoderData> fEncodings = new TreeSet<EncoderData>(EncoderData.ENCODERDATA_COMPARATOR);
 
-  public String embedLinks(Show show, boolean upOneLevel) {
+  public String embedLinks(final Show show, final boolean upOneLevel) {
     return EncoderData.addLinks(show.getComment(), upOneLevel, fEncodings);
   }
 
-  public String embedLinks(Entry entry, boolean upOneLevel) {
+  public String embedLinks(final Entry entry, final boolean upOneLevel) {
     return EncoderData.addLinks(entry.getComment(), upOneLevel, fEncodings);
   }
 
-  RegexEncode(Music music) {
+  RegexEncode(final Music music) {
     Links standardLinks = Links.getLinks(false);
     Links upLinks = Links.getLinks(true);
     
@@ -297,11 +297,11 @@ class NullEncode extends Encode {
 
   }
 
-  public String embedLinks(Show show, boolean upOneLevel) {
+  public String embedLinks(final Show show, final boolean upOneLevel) {
     return show.getComment();
   }
 
-  public String embedLinks(Entry entry, boolean upOneLevel) {
+  public String embedLinks(final Entry entry, final boolean upOneLevel) {
     return entry.getComment();
   }
 }
@@ -315,9 +315,9 @@ class HashEncode extends Encode {
   // The key is the Show or Entry. The value is a TreeSet containing the EncoderData
   //  that are applicable to the given key. Only these EncoderDatas will be used
   //  to encode the key, saving some time.
-  private HashMap<Object, Collection<EncoderData>> fEncodables;
+  private final HashMap<Object, Collection<EncoderData>> fEncodables;
 
-  HashEncode(Music music, Diary diary) {
+  HashEncode(final Music music, final Diary diary) {
     if (music != null) {
       List<Show> shows = music.getShow();
       int numShows = (shows != null) ? shows.size() : 0;
@@ -367,10 +367,12 @@ class HashEncode extends Encode {
           }
         }
       }
+    } else {
+      fEncodables = null;
     }
   }
 
-  private void getEncodedWords(Music music, Diary diary, HashMap<String, HashSet<Object>> encodedMap) {
+  private void getEncodedWords(final Music music, final Diary diary, final HashMap<String, HashSet<Object>> encodedMap) {
     getMusicWords(music, encodedMap);
     getDiaryWords(diary, encodedMap);
   }
@@ -379,7 +381,7 @@ class HashEncode extends Encode {
     public EncoderData encode(Object value);
   }
 
-  private void addWords(String text, HashMap<String, HashMap<Object, EncoderData>> map, EncodeItem encoder, Object value, int capacity) {
+  private void addWords(final String text, final HashMap<String, HashMap<Object, EncoderData>> map, final EncodeItem encoder, final Object value, final int capacity) {
     HashMap<Object, EncoderData> encodeMap = null;
     String[] words = text.split("\\W");
     for (int j = 0; j < words.length; j++) {
@@ -399,7 +401,7 @@ class HashEncode extends Encode {
     }
   }
 
-  private void addEncodedWords(String text, HashMap<String, HashSet<Object>> map, Object value, int capacity) {
+  private void addEncodedWords(final String text, final HashMap<String, HashSet<Object>> map, final Object value, final int capacity) {
     HashSet<Object> encodeSet = null;
     String[] words = text.split("\\W");
     for (int j = 0; j < words.length; j++) {
@@ -419,7 +421,7 @@ class HashEncode extends Encode {
     }
   }
 
-  private void getMusicWords(Music music, HashMap<String, HashSet<Object>> encodedMap) {
+  private void getMusicWords(final Music music, final HashMap<String, HashSet<Object>> encodedMap) {
     List<Show> items = music.getShow();
     
     for (Show item : items) {
@@ -429,7 +431,7 @@ class HashEncode extends Encode {
     }
   }
   
-  private void getDiaryWords(Diary diary, HashMap<String, HashSet<Object>> encodedMap) {
+  private void getDiaryWords(final Diary diary, final HashMap<String, HashSet<Object>> encodedMap) {
     if (diary != null) {
       List<Entry> items = diary.getEntry();
 
@@ -439,7 +441,7 @@ class HashEncode extends Encode {
     }
   }
 
-  private void getEncoderWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap) {
+  private void getEncoderWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap) {
     Links standardLinks = Links.getLinks(false);
     Links upLinks = Links.getLinks(true);
 
@@ -448,7 +450,7 @@ class HashEncode extends Encode {
     getAlbumWords(music, encoderMap, standardLinks, upLinks);
   }
 
-  private void getArtistWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
+  private void getArtistWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
     List<Artist> items = music.getArtist();
 
     for (final Artist item : items) {
@@ -462,7 +464,7 @@ class HashEncode extends Encode {
     }
   }
 
-  private void getVenueWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
+  private void getVenueWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
     List<Venue> items = music.getVenue();
 
     for (final Venue item : items) {
@@ -478,7 +480,7 @@ class HashEncode extends Encode {
     }
   }
 
-  private void getAlbumWords(Music music, HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
+  private void getAlbumWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
     List<Album> items = music.getAlbum();
 
     // Create a HashSet of all Artist names. If an Album has the same name as an
@@ -503,7 +505,7 @@ class HashEncode extends Encode {
     }
   }
 
-  public String embedLinks(Show show, boolean upOneLevel) {
+  public String embedLinks(final Show show, final boolean upOneLevel) {
     if ((fEncodables != null) && (fEncodables.containsKey(show))) {
       return EncoderData.addLinks(show.getComment(), upOneLevel, fEncodables.get(show));
     } else {
@@ -511,7 +513,7 @@ class HashEncode extends Encode {
     }
   }
 
-  public String embedLinks(Entry entry, boolean upOneLevel) {
+  public String embedLinks(final Entry entry, final boolean upOneLevel) {
     if ((fEncodables != null) && (fEncodables.containsKey(entry))) {
       return EncoderData.addLinks(entry.getComment(), upOneLevel, fEncodables.get(entry));
     } else {

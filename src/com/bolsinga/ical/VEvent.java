@@ -8,19 +8,19 @@ public class VEvent {
 
   private static final DateFormat sFormatter = new SimpleDateFormat("yyyyMMdd");
         
-  private Calendar fDate;
-  private String fSummary;
-  private String fURL;
-  private String fUID;
+  private final Calendar fDate;
+  private final String fSummary;
+  private final String fURL;
+  private final String fUID;
         
-  public VEvent(Calendar date, String summary, String url, String uid) {
+  public VEvent(final Calendar date, final String summary, final String url, final String uid) {
     fDate = date;
     fSummary = summary;
     fURL = url;
     fUID = uid;
   }
 
-  public void output(Writer w) {
+  public void output(final Writer w) {
     try {
       w.write("BEGIN:VEVENT");
       w.write("\r\n");
@@ -55,7 +55,7 @@ public class VEvent {
     }
   }
         
-  private void writeAllDay(Writer w) throws IOException {
+  private void writeAllDay(final Writer w) throws IOException {
     Calendar end = (Calendar)fDate.clone();
     end.add(Calendar.DATE, 1);
 

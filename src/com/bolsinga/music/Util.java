@@ -15,7 +15,7 @@ public class Util {
   public  static final DateFormat sWebFormat        = new SimpleDateFormat("M/d/yyyy");
   private static final DecimalFormat sPercentFormat = new DecimalFormat("##.##");
         
-  public static GregorianCalendar toCalendarUTC(com.bolsinga.music.data.Date date) {
+  public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.Date date) {
     Calendar localTime = Calendar.getInstance(); // LocalTime OK
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
@@ -32,7 +32,7 @@ public class Util {
     return result;
   }
 
-  public static String toString(com.bolsinga.music.data.Date date) {
+  public static String toString(final com.bolsinga.music.data.Date date) {
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
       return sWebFormat.format(Util.toCalendarUTC(date).getTime());
@@ -44,7 +44,7 @@ public class Util {
     }
   }
         
-  public static String toMonth(com.bolsinga.music.data.Date date) {
+  public static String toMonth(final com.bolsinga.music.data.Date date) {
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
       return sMonthFormat.format(Util.toCalendarUTC(date).getTime());
@@ -59,11 +59,11 @@ public class Util {
     }
   }
         
-  public static String toString(double value) {
+  public static String toString(final double value) {
     return sPercentFormat.format(value);
   }
 
-  public static Music createMusic(String sourceFile) {
+  public static Music createMusic(final String sourceFile) {
     Music music = null;
     try {
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
@@ -78,7 +78,7 @@ public class Util {
     return music;
   }
 
-  public static Music createMusic(String user, String password) {
+  public static Music createMusic(final String user, final String password) {
     Music music = null;
     Connection conn = null;
 
@@ -109,7 +109,7 @@ public class Util {
     return music;
   }
         
-  public static int trackCount(Artist artist) {
+  public static int trackCount(final Artist artist) {
     int tracks = 0;
     List<JAXBElement<Object>> albums = artist.getAlbum();
     if (albums != null) {

@@ -62,7 +62,7 @@ public class CSS {
     CSS.generate(args[0]);
   }
         
-  public static void generate(String outputDir) {
+  public static void generate(final String outputDir) {
     try {
       File f = new File(outputDir, "layout.css");
       File parent = new File(f.getParent());
@@ -81,7 +81,7 @@ public class CSS {
     }
   }
         
-  public static void generate(PrintWriter pw) {
+  public static void generate(final PrintWriter pw) {
     writeCSSDeclaration(pw, ARTIST_INDEX);
     writeCSSDeclaration(pw, ARTIST_ITEM);
     writeCSSDeclaration(pw, ARTIST_RELATION);
@@ -123,7 +123,7 @@ public class CSS {
     writeCSSDeclaration(pw, TABLE_FOOTER);
   }
         
-  private static void writeCSSDeclaration(PrintWriter pw, String name) {
+  private static void writeCSSDeclaration(final PrintWriter pw, final String name) {
     pw.print(".");
     pw.print(name);
     pw.println(" {");

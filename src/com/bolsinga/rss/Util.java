@@ -13,11 +13,11 @@ public class Util {
     sRSSDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
         
-  public static String getRSSDate(GregorianCalendar c) {
+  public static String getRSSDate(final GregorianCalendar c) {
     return sRSSDateFormat.format(c.getTime());
   }
         
-  public static com.bolsinga.rss.data.TImage createLogo(com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
+  public static com.bolsinga.rss.data.TImage createLogo(final com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
     com.bolsinga.rss.data.TImage logo = objFactory.createTImage();
 
     com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getLogoImage();

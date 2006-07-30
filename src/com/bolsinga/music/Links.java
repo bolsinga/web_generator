@@ -30,17 +30,17 @@ public class Links {
   public  static final String ALBUM_STATS = "albumstats";
   private static final String HASH        = "#";
         
-  private boolean fUpOneLevel;
+  private final boolean fUpOneLevel;
         
-  public static Links getLinks(boolean upOneLevel) {
+  public static Links getLinks(final boolean upOneLevel) {
     return new Links(upOneLevel);
   }
         
-  Links(boolean upOneLevel) {
+  Links(final boolean upOneLevel) {
     fUpOneLevel = upOneLevel;
   }
         
-  public div addWebNavigator(Music music, String program) {
+  public div addWebNavigator(final Music music, final String program) {
     Vector<Element> e = new Vector<Element>();
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
     e.add(new a(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
@@ -58,7 +58,7 @@ public class Links {
     return d;
   }
         
-  public String getPageFileName(String name) {
+  public String getPageFileName(final String name) {
     String file = Compare.simplify(name).substring(0, 1).toUpperCase();
     if (file.matches("\\W")) {
       file = OTHER;
@@ -66,7 +66,7 @@ public class Links {
     return file;
   }
         
-  public String getPageFileName(BigInteger year) {
+  public String getPageFileName(final BigInteger year) {
     if (year == null) {
       return OTHER;
     } else {
@@ -74,7 +74,7 @@ public class Links {
     }
   }
         
-  public String getPageFileName(Artist artist) {
+  public String getPageFileName(final Artist artist) {
     String name = artist.getSortname();
     if (name == null) {
       name = artist.getName();
@@ -82,20 +82,20 @@ public class Links {
     return getPageFileName(name);
   }
         
-  public String getPageFileName(Venue venue) {
+  public String getPageFileName(final Venue venue) {
     return getPageFileName(venue.getName());
   }
         
-  public String getPageFileName(Show show) {
+  public String getPageFileName(final Show show) {
     BigInteger current = show.getDate().getYear();
     return getPageFileName(current);
   }
 
-  public String getPageFileName(Album album) {
+  public String getPageFileName(final Album album) {
     return getPageFileName(album.getTitle());
   }
         
-  public String getPagePath(Artist artist) {
+  public String getPagePath(final Artist artist) {
     StringBuffer sb = new StringBuffer();
     sb.append(ARTIST_DIR);
     sb.append(File.separator);
@@ -104,7 +104,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getPagePath(Venue venue) {
+  public String getPagePath(final Venue venue) {
     StringBuffer sb = new StringBuffer();
     sb.append(VENUE_DIR);
     sb.append(File.separator);
@@ -113,7 +113,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getPagePath(Show show) {
+  public String getPagePath(final Show show) {
     StringBuffer sb = new StringBuffer();
     sb.append(SHOW_DIR);
     sb.append(File.separator);
@@ -122,7 +122,7 @@ public class Links {
     return sb.toString();
   }
 
-  public String getPagePath(Album album) {
+  public String getPagePath(final Album album) {
     StringBuffer sb = new StringBuffer();
     sb.append(TRACKS_DIR);
     sb.append(File.separator);
@@ -131,7 +131,7 @@ public class Links {
     return sb.toString();
   }
 
-  public String getLinkToPage(Artist artist) {
+  public String getLinkToPage(final Artist artist) {
     StringBuffer sb = new StringBuffer();
                 
     if (fUpOneLevel) {
@@ -146,7 +146,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getLinkToPage(Venue venue) {
+  public String getLinkToPage(final Venue venue) {
     StringBuffer sb = new StringBuffer();
                 
     if (fUpOneLevel) {
@@ -161,7 +161,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getLinkToPage(Show show) {
+  public String getLinkToPage(final Show show) {
     StringBuffer sb = new StringBuffer();
                 
     if (fUpOneLevel) {
@@ -176,7 +176,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getLinkToPage(Album album) {
+  public String getLinkToPage(final Album album) {
     StringBuffer sb = new StringBuffer();
                 
     if (fUpOneLevel) {
@@ -191,7 +191,7 @@ public class Links {
     return sb.toString();
   }
 
-  public String getLinkTo(Artist artist) {
+  public String getLinkTo(final Artist artist) {
     StringBuffer sb = new StringBuffer();
                 
     sb.append(getLinkToPage(artist));
@@ -201,7 +201,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getLinkTo(Venue venue) {
+  public String getLinkTo(final Venue venue) {
     StringBuffer sb = new StringBuffer();
                 
     sb.append(getLinkToPage(venue));
@@ -211,7 +211,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getLinkTo(Show show) {
+  public String getLinkTo(final Show show) {
     StringBuffer sb = new StringBuffer();
                 
     sb.append(getLinkToPage(show));
@@ -221,7 +221,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getLinkTo(Album album) {
+  public String getLinkTo(final Album album) {
     StringBuffer sb = new StringBuffer();
                 
     sb.append(getLinkToPage(album));

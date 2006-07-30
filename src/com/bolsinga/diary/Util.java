@@ -14,21 +14,21 @@ public class Util {
   private static final DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
 
   public static final Comparator<Entry> ENTRY_COMPARATOR = new Comparator<Entry>() {
-      public int compare(Entry e1, Entry e2) {
+      public int compare(final Entry e1, final Entry e2) {
         int comparison = e1.getTimestamp().compare(e2.getTimestamp());
         return (comparison == DatatypeConstants.LESSER) ? -1 : 1;
       }
     };
 
-  public static String getTitle(Entry entry) {
+  public static String getTitle(final Entry entry) {
     return sWebFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
         
-  public static String getMonth(Entry entry) {
+  public static String getMonth(final Entry entry) {
     return sMonthFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
 
-  public static int getStartYear(Diary diary) {
+  public static int getStartYear(final Diary diary) {
     List<Entry> items = diary.getEntry();
     Entry item = null;
 
@@ -39,7 +39,7 @@ public class Util {
     return item.getTimestamp().getYear();
   }
     
-  public static com.bolsinga.diary.data.Diary createDiary(String sourceFile) {
+  public static com.bolsinga.diary.data.Diary createDiary(final String sourceFile) {
     com.bolsinga.diary.data.Diary diary = null;
     try {
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
@@ -54,7 +54,7 @@ public class Util {
     return diary;
   }
 
-  private static void createEntries(Statement stmt, Diary diary, ObjectFactory objFactory) throws SQLException, JAXBException {
+  private static void createEntries(final Statement stmt, final Diary diary, final ObjectFactory objFactory) throws SQLException, JAXBException {
     ResultSet rset = null;
     try {
       Entry entry = null;
@@ -78,7 +78,7 @@ public class Util {
     }
   }
 
-  private static void createHeaders(Statement stmt, Diary diary) throws SQLException {
+  private static void createHeaders(final Statement stmt, final Diary diary) throws SQLException {
     ResultSet rset = null;
     try {
       StringBuffer data = new StringBuffer();
@@ -97,7 +97,7 @@ public class Util {
     }
   }
 
-  private static void createSides(Statement stmt, Diary diary) throws SQLException {
+  private static void createSides(final Statement stmt, final Diary diary) throws SQLException {
     ResultSet rset = null;
     try {
       StringBuffer data = new StringBuffer();
@@ -116,7 +116,7 @@ public class Util {
     }
   }
 
-  private static void createFriends(Statement stmt, Diary diary) throws SQLException {
+  private static void createFriends(final Statement stmt, final Diary diary) throws SQLException {
     ResultSet rset = null;
     try {
       StringBuffer data = new StringBuffer();
@@ -138,7 +138,7 @@ public class Util {
     }
   }
   
-  private static void createTitle(Statement stmt, Diary diary) throws SQLException {
+  private static void createTitle(final Statement stmt, final Diary diary) throws SQLException {
     ResultSet rset = null;
     try {
       rset = stmt.executeQuery("SELECT * FROM title;");
@@ -152,7 +152,7 @@ public class Util {
     }
   }
 
-  public static com.bolsinga.diary.data.Diary createDiary(String user, String password) {
+  public static com.bolsinga.diary.data.Diary createDiary(final String user, final String password) {
     Diary diary = null;
     Connection conn = null;
     Statement stmt = null;

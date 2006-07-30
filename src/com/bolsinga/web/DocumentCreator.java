@@ -8,11 +8,13 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public abstract class DocumentCreator {
-  private String fOutputDir = null;
+  private final String fOutputDir;
+
+  // These change during the life-cycle of this object
   private XhtmlDocument fDocument = null;
   private div fMain = null;
         
-  protected DocumentCreator(String outputDir) {
+  protected DocumentCreator(final String outputDir) {
     fOutputDir = outputDir;
   }
         
@@ -71,7 +73,7 @@ public abstract class DocumentCreator {
     }
   }
         
-  protected String getTitle(String type) {
+  protected String getTitle(final String type) {
     Object[] args = { getCurrentLetter(), type };
     return MessageFormat.format(com.bolsinga.web.Util.getResourceString("htmltitle"), args);
   }

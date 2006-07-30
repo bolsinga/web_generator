@@ -16,15 +16,17 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
-  private com.bolsinga.web.Encode fEncoder = null;
-  private Diary  fDiary     = null;
-  private Links  fLinks     = null;
-  private String fProgram   = null;
-  private Entry  fCurEntry  = null;
-  private Entry  fLastEntry = null;
-  private int fStartYear = -1;
+  private final com.bolsinga.web.Encode fEncoder;
+  private final Diary  fDiary;
+  private final Links  fLinks;
+  private final String fProgram;
+  private final int fStartYear;
+
+  // These change during the life-cycle of this object
+  private Entry  fCurEntry;
+  private Entry  fLastEntry;
         
-  public DiaryDocumentCreator(Diary diary, com.bolsinga.web.Encode encoder, Links links, String outputDir, String program, int startYear) {
+  public DiaryDocumentCreator(final Diary diary, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
     super(outputDir);
     fEncoder = encoder;
     fDiary = diary;
@@ -33,7 +35,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     fStartYear = startYear;
   }
 
-  public void add(Entry entry) {
+  public void add(final Entry entry) {
     fCurEntry = entry;
     add();
     fLastEntry = fCurEntry;
@@ -105,7 +107,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     return d;
   }
         
-  private Element addWebNavigator(String program, Links links) {
+  private Element addWebNavigator(final String program, final Links links) {
     Vector<Element> e = new Vector<Element>();
                 
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
@@ -168,7 +170,7 @@ public class Web {
     System.exit(0);
   }
 
-  private static void export(Diary diary) {
+  private static void export(final Diary diary) {
     try {
       File outputFile = new File("/tmp", "diary_db.xml");
 
@@ -192,25 +194,25 @@ public class Web {
     }
   }
 
-  public static void generate(String sourceFile, String musicFile, String outputDir) {
+  public static void generate(final String sourceFile, final String musicFile, final String outputDir) {
     Diary diary = Util.createDiary(sourceFile);
 
     generate(diary, musicFile, outputDir);
   }
         
-  public static void generate(Diary diary, String musicFile, String outputDir) {
+  public static void generate(final Diary diary, final String musicFile, final String outputDir) {
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
     generate(diary, music, encoder, outputDir);
   }
         
-  public static void generate(Diary diary, Music music, com.bolsinga.web.Encode encoder, String outputDir) {
+  public static void generate(final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     int startYear = Util.getStartYear(diary);
     generateMainPage(encoder, music, diary, startYear, outputDir);
     generateArchivePages(diary, encoder, startYear, outputDir);
   }
         
-  public static void generateMainPage(com.bolsinga.web.Encode encoder, Music music, Diary diary, int startYear, String outputDir) {
+  public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
     Links links = Links.getLinks(false);
 
     XhtmlDocument doc = createDocument(diary.getTitle(), startYear, links);
@@ -250,7 +252,7 @@ public class Web {
     }
   }
 
-  private static div createMainStatics(Diary diary) {
+  private static div createMainStatics(final Diary diary) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_STATIC);
     d.addElement(new h4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
     String statics = diary.getStatic();
@@ -260,7 +262,7 @@ public class Web {
     return d;
   }
 
-  private static div createMainLinks(Diary diary) {
+  private static div createMainLinks(final Diary diary) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_LINKS);
     d.addElement(new h4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
     String friends = diary.getFriends();
@@ -270,14 +272,14 @@ public class Web {
     return d;
   }
 
-  private static div generateColumn1(Diary diary) {
+  private static div generateColumn1(final Diary diary) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL1);
     d.addElement(Web.createMainStatics(diary));
     d.addElement(Web.createMainLinks(diary));
     return d;
   }
         
-  public static XhtmlDocument createDocument(String title, int startYear, Links links) {
+  public static XhtmlDocument createDocument(final String title, final int startYear, final Links links) {
     XhtmlDocument d = new XhtmlDocument(ECSDefaults.getDefaultCodeset());
                 
     d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
@@ -302,7 +304,7 @@ public class Web {
     return d;
   }
         
-  private static Element generateDiary(com.bolsinga.web.Encode encoder, Diary diary, Music music, Links links) {
+  private static Element generateDiary(final com.bolsinga.web.Encode encoder, final Diary diary, final Music music, final Links links) {
     div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
                 
     Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
@@ -336,7 +338,7 @@ public class Web {
     return diaryDiv;
   }
         
-  public static void generateArchivePages(Diary diary, com.bolsinga.web.Encode encoder, int startYear, String outputDir) {
+  public static void generateArchivePages(final Diary diary, final com.bolsinga.web.Encode encoder, final int startYear, final String outputDir) {
     List<Entry> items = diary.getEntry();
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
@@ -352,7 +354,7 @@ public class Web {
     creator.close();
   }
 
-  public static ul addItem(com.bolsinga.web.Encode encoder, Entry entry, Links links, boolean upOneLevel) {
+  public static ul addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
     // CSS.DIARY_ENTRY
     Vector<Element> e = new Vector<Element>();
     e.add(new h2().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));

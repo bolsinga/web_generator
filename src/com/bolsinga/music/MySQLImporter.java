@@ -41,12 +41,12 @@ public class MySQLImporter {
     System.exit(0);
   }
 
-  public static void importData(String sourceFile, String user, String password, boolean clearDB) {
+  public static void importData(final String sourceFile, final String user, final String password, final boolean clearDB) {
     Music music = com.bolsinga.music.Util.createMusic(sourceFile);
     importData(music, user, password, clearDB);
   }
 
-  public static void importData(Music music, String user, String password, boolean clearDB) {
+  public static void importData(final Music music, final String user, final String password, final boolean clearDB) {
     Connection conn = null;
     Statement stmt = null;
     try {
@@ -99,7 +99,7 @@ public class MySQLImporter {
     }
   }
 
-  private static void clearDB(Statement stmt) throws SQLException {
+  private static void clearDB(final Statement stmt) throws SQLException {
     com.bolsinga.sql.Util.truncate(stmt, "album");
     com.bolsinga.sql.Util.truncate(stmt, "artist");
     com.bolsinga.sql.Util.truncate(stmt, "label");
@@ -111,7 +111,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.truncate(stmt, "venue");
   }
 
-  private static long importLocation(Statement stmt, Location location) throws SQLException {
+  private static long importLocation(final Statement stmt, final Location location) throws SQLException {
     String[] rowItems = new String[6];
     
     long locationID = -1;
@@ -132,16 +132,16 @@ public class MySQLImporter {
     return locationID;
   }
 
-  private static String toSQLID(int index, String id) {
+  private static String toSQLID(final int index, final String id) {
     return Long.toString(Long.valueOf(id.substring(index)).longValue() + 1);
   }
 
-  private static String toSQLID(Label label) {
+  private static String toSQLID(final Label label) {
     // 'l'
     return toSQLID(1, label.getId());
   }
 
-  private static void importLabel(Statement stmt, Label label) throws SQLException {
+  private static void importLabel(final Statement stmt, final Label label) throws SQLException {
     Location location = (Location)label.getLocation();
     long locationID = -1;
     if (location != null) {
@@ -167,7 +167,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "label", rowItems);
   }
 
-  private static void importLabels(Statement stmt, Music music) throws SQLException {
+  private static void importLabels(final Statement stmt, final Music music) throws SQLException {
     List<Label> items = music.getLabel();
     for (Label item : items) {
       try {
@@ -179,12 +179,12 @@ public class MySQLImporter {
     }
   }
 
-  private static String toSQLID(Song song) {
+  private static String toSQLID(final Song song) {
     // 's'
     return toSQLID(1, song.getId());
   }
 
-  private static String toSQLenum(List<JAXBElement<String>> strings) {
+  private static String toSQLenum(final List<JAXBElement<String>> strings) {
     StringBuffer sb = new StringBuffer();
     for (JAXBElement<String> js : strings) {
       String s = js.getValue();
@@ -196,7 +196,7 @@ public class MySQLImporter {
     return sb.toString();
   }
 
-  private static void importSong(Statement stmt, Song song, Album album) throws SQLException {
+  private static void importSong(final Statement stmt, final Song song, final Album album) throws SQLException {
     String[] rowItems = new String[16];
     int index = 0;
 
@@ -247,7 +247,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "song", rowItems);
   }
 
-  private static void importSongs(Statement stmt, Album album) throws SQLException {
+  private static void importSongs(final Statement stmt, final Album album) throws SQLException {
     List<JAXBElement<Object>> items = album.getSong();
     for (JAXBElement<Object> jitem : items) {
       Song item = (Song)jitem.getValue();
@@ -260,12 +260,12 @@ public class MySQLImporter {
     }
   }
 
-  private static String toSQLID(Album album) {
+  private static String toSQLID(final Album album) {
     // 'a'
     return toSQLID(1, album.getId());
   }
 
-  private static void importAlbum(Statement stmt, Album album) throws SQLException {
+  private static void importAlbum(final Statement stmt, final Album album) throws SQLException {
     String[] rowItems = new String[5];
     
     rowItems[0] = MySQLImporter.toSQLID(album);
@@ -281,7 +281,7 @@ public class MySQLImporter {
     importSongs(stmt, album);
   }
 
-  private static void importAlbums(Statement stmt, Music music) throws SQLException {
+  private static void importAlbums(final Statement stmt, final Music music) throws SQLException {
     List<Album> items = music.getAlbum();
     for (Album item : items) {
       try {
@@ -293,12 +293,12 @@ public class MySQLImporter {
     }
   }
 
-  private static String toSQLID(Artist artist) {
+  private static String toSQLID(final Artist artist) {
     // 'ar'
     return toSQLID(2, artist.getId());
   }
 
-  private static void importArtist(Statement stmt, Artist artist) throws SQLException {
+  private static void importArtist(final Statement stmt, final Artist artist) throws SQLException {
     Location location = (Location)artist.getLocation();
     long locationID = -1;
     if (location != null) {
@@ -325,7 +325,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "artist", rowItems);
   }
 
-  private static void importArtists(Statement stmt, Music music) throws SQLException {
+  private static void importArtists(final Statement stmt, final Music music) throws SQLException {
     List<Artist> items = music.getArtist();
     for (Artist item : items) {
       try {
@@ -337,12 +337,12 @@ public class MySQLImporter {
     }
   }
 
-  private static String toSQLID(Venue venue) {
+  private static String toSQLID(final Venue venue) {
     // 'v'
     return toSQLID(1, venue.getId());
   }
 
-  private static void importVenue(Statement stmt, Venue venue) throws SQLException {
+  private static void importVenue(final Statement stmt, final Venue venue) throws SQLException {
     Location location = (Location)venue.getLocation();
     long locationID = -1;
     if (location != null) {
@@ -368,7 +368,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "venue", rowItems);
   }
 
-  private static void importVenues(Statement stmt, Music music) throws SQLException {
+  private static void importVenues(final Statement stmt, final Music music) throws SQLException {
     List<Venue> items = music.getVenue();
     for (Venue item : items) {
       try {
@@ -380,7 +380,7 @@ public class MySQLImporter {
     }
   }
 
-  private static long importPerformance(Statement stmt, Show show) throws SQLException {
+  private static long importPerformance(final Statement stmt, final Show show) throws SQLException {
     List<JAXBElement<Object>> items = show.getArtist();
     int playOrder = 1;
 
@@ -404,12 +404,12 @@ public class MySQLImporter {
     return performanceID;
   }
 
-  private static String toSQLID(Show show) {
+  private static String toSQLID(final Show show) {
     // 'sh'
     return toSQLID(2, show.getId());
   }
 
-  private static String toSQLString(com.bolsinga.music.data.Date date) {
+  private static String toSQLString(final com.bolsinga.music.data.Date date) {
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
       return sSQLFormat.format(com.bolsinga.music.Util.toCalendarUTC(date).getTime());
@@ -421,7 +421,7 @@ public class MySQLImporter {
     }
   }
 
-  private static void importShow(Statement stmt, Show show) throws SQLException {
+  private static void importShow(final Statement stmt, final Show show) throws SQLException {
     long performanceID = MySQLImporter.importPerformance(stmt, show);
     
     String[] rowItems = new String[6];
@@ -439,7 +439,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "shows", rowItems);
   }
 
-  private static void importShows(Statement stmt, Music music) throws SQLException {
+  private static void importShows(final Statement stmt, final Music music) throws SQLException {
     List<Show> items = music.getShow();
     for (Show item : items) {
       try {
@@ -451,7 +451,7 @@ public class MySQLImporter {
     }
   }
 
-  private static long importRelation(Statement stmt, Relation relation) throws SQLException {
+  private static long importRelation(final Statement stmt, final Relation relation) throws SQLException {
     String[] rowItems = new String[4];
     
     long relationID = -1;
@@ -481,7 +481,7 @@ public class MySQLImporter {
     return relationID;
   }
 
-  private static void importRelations(Statement stmt, Music music) throws SQLException {
+  private static void importRelations(final Statement stmt, final Music music) throws SQLException {
     for (Relation item : music.getRelation()) {
       try {
         MySQLImporter.importRelation(stmt, item);

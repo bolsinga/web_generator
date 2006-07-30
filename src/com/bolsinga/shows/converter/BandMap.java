@@ -4,10 +4,10 @@ import java.io.*;
 import java.util.*;
 
 public class BandMap {
-  private String fName;
-  private String fSortName;
+  private final String fName;
+  private final String fSortName;
         
-  public BandMap(String name, String sortName) {
+  public BandMap(final String name, final String sortName) {
     fName = name;
     fSortName = sortName;
   }
@@ -15,19 +15,11 @@ public class BandMap {
   public String getName() {
     return fName;
   }
-        
-  public void setName(String name) {
-    fName = name;
-  }
-        
+
   public String getSortName() {
     return fSortName;
   }
-        
-  public void setSortName(String sortName) {
-    fSortName = sortName;
-  }
-        
+
   public String toString() {
     StringBuffer sb = new StringBuffer();
                 

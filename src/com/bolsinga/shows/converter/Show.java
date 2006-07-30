@@ -4,10 +4,10 @@ import java.io.*;
 import java.util.*;
 
 public class Show {     
-  private String fDate;
-  private List<String> fBands;
-  private String fVenue;
-  private String fComment;
+  private final String fDate;
+  private final List<String> fBands;
+  private final String fVenue;
+  private final String fComment;
 
   public Show(String date, List<String> bands, String venue, String comment) {
     fDate = date;
@@ -19,11 +19,7 @@ public class Show {
   public String getDate() {
     return fDate;
   }
-        
-  public void setDate(String date) {
-    fDate = date;
-  }
-        
+
   public List<String> getBands() {
     return fBands;
   }
@@ -36,16 +32,8 @@ public class Show {
     return fVenue;
   }
         
-  public void setVenue(String venue) {
-    fVenue = venue;
-  }
-        
   public String getComment() {
     return fComment;
-  }
-        
-  public void setComment(String comment) {
-    fComment = comment;
   }
         
   public String toString() {

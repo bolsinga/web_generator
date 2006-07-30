@@ -17,11 +17,11 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
-  protected Music  fMusic   = null;
-  protected Links  fLinks   = null;
-  private String fProgram = null;
+  protected final Music fMusic;
+  protected final Links fLinks;
+  private final String  fProgram;
     
-  protected MusicDocumentCreator(Music music, Links links, String outputDir, String program) {
+  protected MusicDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
     super(outputDir);
     fMusic = music;
     fLinks = links;
@@ -43,11 +43,11 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
 }
 
 abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
-  protected Music  fMusic   = null;
-  protected Links  fLinks   = null;
-  private String fProgram = null;
+  protected final Music fMusic;
+  protected final Links fLinks;
+  private final String  fProgram;
 
-  protected SingleSectionMusicDocumentCreator(Music music, Links links, String outputDir, String program) {
+  protected SingleSectionMusicDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
     super(outputDir);
     fMusic = music;
     fLinks = links;
@@ -69,14 +69,15 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
 }
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
+  // These change during the life-cycle of this object
   private Artist fLastArtist = null;
   private Artist fCurArtist  = null;
         
-  public ArtistDocumentCreator(Music music, Links links, String outputDir, String program) {
+  public ArtistDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
     super(music, links, outputDir, program);
   }
 
-  public void add(Artist item) {
+  public void add(final Artist item) {
     fCurArtist = item;
     add();
     fLastArtist = fCurArtist;
@@ -116,14 +117,15 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
 }
 
 class VenueDocumentCreator extends MusicDocumentCreator {
+  // These change during the life-cycle of this object
   private Venue fLastVenue = null;
   private Venue fCurVenue  = null;
         
-  public VenueDocumentCreator(Music music, Links links, String outputDir, String program) {
+  public VenueDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
     super(music, links, outputDir, program);
   }
 
-  public void add(Venue item) {
+  public void add(final Venue item) {
     fCurVenue = item;
     add();
     fLastVenue = fCurVenue;
@@ -163,16 +165,18 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 }
 
 class ShowDocumentCreator extends MusicDocumentCreator {
+  private final com.bolsinga.web.Encode fEncoder;
+
+  // These change during the life-cycle of this object
   private Show fLastShow = null;
   private Show fCurShow  = null;
-  private com.bolsinga.web.Encode fEncoder = null;
    
-  public ShowDocumentCreator(Music music, com.bolsinga.web.Encode encoder, Links links, String outputDir, String program) {
+  public ShowDocumentCreator(final Music music, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program) {
     super(music, links, outputDir, program);
     fEncoder = encoder;
   }
         
-  public void add(Show item) {
+  public void add(final Show item) {
     fCurShow = item;
     add();
     fLastShow = fCurShow;
@@ -213,19 +217,21 @@ class ShowDocumentCreator extends MusicDocumentCreator {
 }
 
 class StatisticsCreator extends SingleSectionMusicDocumentCreator {
-  private String fFileName  = null;
-  private String fTitle     = null;
-  private String fDirectory = null;
+  private final String fFileName;
+  private final String fTitle;
+  private final String fDirectory;
+
+  // This changes during the life-cycle of this object
   private table  fCurTable  = null;
 
-  public StatisticsCreator(Music music, Links links, String outputDir, String program, String filename, String title, String directory) {
+  public StatisticsCreator(final Music music, final Links links, final String outputDir, final String program, final String filename, final String title, final String directory) {
     super(music, links, outputDir, program);
     fFileName = filename;
     fTitle = title;
     fDirectory = directory;
   }
 
-  public void add(table t) {
+  public void add(final table t) {
     fCurTable = t;
     add();
   }
@@ -261,17 +267,17 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
 }
 
 class TracksStatisticsCreator extends StatisticsCreator {
-  private boolean fTracksStats;
+  private final boolean fTracksStats;
         
-  public static TracksStatisticsCreator createTracksStats(Music music, Links links, String outputDir, String program, String title, String directory) {
+  public static TracksStatisticsCreator createTracksStats(final Music music, final Links links, final String outputDir, final String program, final String title, final String directory) {
     return new TracksStatisticsCreator(music, links, outputDir, program, Links.STATS, true, title, directory);
   }
 
-  public static TracksStatisticsCreator createAlbumStats(Music music, Links links, String outputDir, String program, String title, String directory) {
+  public static TracksStatisticsCreator createAlbumStats(final Music music, final Links links, final String outputDir, final String program, final String title, final String directory) {
     return new TracksStatisticsCreator(music, links, outputDir, program, Links.ALBUM_STATS, false, title, directory);
   }
 
-  private TracksStatisticsCreator(Music music, Links links, String outputDir, String program, String filename, boolean isTracksStats, String title, String directory) {
+  private TracksStatisticsCreator(final Music music, final Links links, final String outputDir, final String program, final String filename, final boolean isTracksStats, final String title, final String directory) {
     super(music, links, outputDir, program, filename, title, directory);
     fTracksStats = isTracksStats;
   }
@@ -294,14 +300,15 @@ class TracksStatisticsCreator extends StatisticsCreator {
 }
 
 class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
+  // These change during the life-cycle of this object
   private Album fLastAlbum = null;
   private Album fCurAlbum  = null;
         
-  public TracksDocumentCreator(Music music, Links links, String outputDir, String program) {
+  public TracksDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
     super(music, links, outputDir, program);
   }
         
-  public void add(Album item) {
+  public void add(final Album item) {
     fCurAlbum = item;
     add();
     fLastAlbum = fCurAlbum;
@@ -394,7 +401,7 @@ public class Web {
     System.exit(0);
   }
         
-  private static void export(Music music) {
+  private static void export(final Music music) {
     com.bolsinga.music.Compare.tidy(music);
     try {
       File outputFile = new File("/tmp", "music_db.xml");
@@ -419,13 +426,13 @@ public class Web {
     }
   }
 
-  public static void generate(String sourceFile, String outputDir) {
+  public static void generate(final String sourceFile, final String outputDir) {
     Music music = Util.createMusic(sourceFile);
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, null);
     generate(music, encoder, outputDir);
   }
         
-  public static void generate(Music music, com.bolsinga.web.Encode encoder, String outputDir) {
+  public static void generate(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     Links links = Links.getLinks(true);
                 
     generateArtistPages(music, links, outputDir);
@@ -441,7 +448,7 @@ public class Web {
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
         
-  public static void generateArtistPages(Music music, Links links, String outputDir) {
+  public static void generateArtistPages(final Music music, final Links links, final String outputDir) {
     List<Artist> items = music.getArtist();
     int index = 0;
                 
@@ -476,7 +483,7 @@ public class Web {
     stats.close();
   }
         
-  public static void generateVenuePages(Music music, Links links, String outputDir) {
+  public static void generateVenuePages(final Music music, final Links links, final String outputDir) {
     List<Venue> items = music.getVenue();
     int index = 0;
                 
@@ -511,7 +518,7 @@ public class Web {
     stats.close();
   }
         
-  public static void generateDatePages(Music music, com.bolsinga.web.Encode encoder, Links links, String outputDir) {
+  public static void generateDatePages(final Music music, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir) {
     List<Show> items = music.getShow();
     Collection<Show> showCollection = null;
     TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(com.bolsinga.music.Compare.SHOW_STATS_COMPARATOR);
@@ -556,7 +563,7 @@ public class Web {
     stats.close();
   }
         
-  public static void generateCityPages(Music music, Links links, String outputDir) {
+  public static void generateCityPages(final Music music, final Links links, final String outputDir) {
     Collection<String> items = Lookup.getLookup(music).getCities();
     HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
@@ -604,7 +611,7 @@ public class Web {
     creator.close();
   }
 
-  public static void generateTracksPages(Music music, Links links, String outputDir) {
+  public static void generateTracksPages(final Music music, final Links links, final String outputDir) {
     List<Album> items = music.getAlbum();
     int index = 0;
                 
@@ -669,12 +676,12 @@ public class Web {
     }
   }
         
-  public static Element generatePreview(String sourceFile, int lastShowsCount) {
+  public static Element generatePreview(final String sourceFile, final int lastShowsCount) {
     Music music = Util.createMusic(sourceFile);
     return generatePreview(music, lastShowsCount);
   }
         
-  public static Element generatePreview(Music music, int lastShowsCount) {
+  public static Element generatePreview(final Music music, final int lastShowsCount) {
     Links links = Links.getLinks(false);
                 
     Vector<Element> e = new Vector<Element>();
@@ -748,11 +755,11 @@ public class Web {
     return d;
   }
         
-  public static String getLinkedData(com.bolsinga.web.Encode encoder, Show show, boolean upOneLevel) {
+  public static String getLinkedData(final com.bolsinga.web.Encode encoder, final Show show, final boolean upOneLevel) {
     return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel));
   }
         
-  public static Element addItem(Music music, Links links, Artist artist) {
+  public static Element addItem(final Music music, final Links links, final Artist artist) {
     // CSS.ARTIST_ITEM
     Vector<Element> e = new Vector<Element>();
 
@@ -807,7 +814,7 @@ public class Web {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  public static Element addItem(Music music, Links links, Venue venue) {
+  public static Element addItem(final Music music, final Links links, final Venue venue) {
     // CSS.VENUE_ITEM
     Vector<Element> e = new Vector<Element>();
                 
@@ -851,7 +858,7 @@ public class Web {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  private static ul getShowListing(Links links, Show show) {
+  private static ul getShowListing(final Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuffer sb = new StringBuffer();
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
@@ -874,13 +881,13 @@ public class Web {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
 
-  public static Element addItem(com.bolsinga.web.Encode encoder, Show show) {
+  public static Element addItem(final com.bolsinga.web.Encode encoder, final Show show) {
     Links links = Links.getLinks(false);
 
     return Web.addItem(encoder, links, show);
   }
 
-  public static Element addItem(com.bolsinga.web.Encode encoder, Links links, Show show) {
+  public static Element addItem(final com.bolsinga.web.Encode encoder, final Links links, final Show show) {
     // CSS.SHOW_ITEM
     Vector<Element> e = new Vector<Element>();
 
@@ -896,7 +903,7 @@ public class Web {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
 
-  public static Element addItem(Links links, Album album) {
+  public static Element addItem(final Links links, final Album album) {
     // CSS.TRACKS_ITEM
     Vector<Element> e = new Vector<Element>();
                 
@@ -949,7 +956,7 @@ public class Web {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  public static div addRelations(Music music, Links links, Artist artist) {
+  public static div addRelations(final Music music, final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
     for (Artist art : Lookup.getLookup(music).getRelations(artist)) {
       if (art.equals(artist)) {
@@ -965,7 +972,7 @@ public class Web {
     return d;
   }
         
-  public static div addRelations(Music music, Links links, Venue venue) {
+  public static div addRelations(final Music music, final Links links, final Venue venue) {
     Vector<Element> e = new Vector<Element>();
     for (Venue v : Lookup.getLookup(music).getRelations(venue)) {
       if (v.equals(venue)) {
@@ -981,7 +988,7 @@ public class Web {
     return d;
   }
 
-  public static div addTracks(Links links, Artist artist) {
+  public static div addTracks(final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
     List<JAXBElement<Object>> albums = artist.getAlbum();
@@ -1006,7 +1013,7 @@ public class Web {
     return d;
   }
         
-  public static Element addArtistIndexNavigator(Music music, Links links, String curLetter) {
+  public static Element addArtistIndexNavigator(final Music music, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
 
     for (Artist art : music.getArtist()) {
@@ -1030,7 +1037,7 @@ public class Web {
     return d;
   }
         
-  public static Element addVenueIndexNavigator(Music music, Links links, String curLetter) {
+  public static Element addVenueIndexNavigator(final Music music, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
     for (Venue v : music.getVenue()) {
       String letter = links.getPageFileName(v);
@@ -1053,7 +1060,7 @@ public class Web {
     return d;
   }
 
-  public static Element addAlbumIndexNavigator(Music music, Links links, String curLetter) {
+  public static Element addAlbumIndexNavigator(final Music music, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
     for (Album alb : music.getAlbum()) {
       String letter = links.getPageFileName(alb);
@@ -1076,7 +1083,7 @@ public class Web {
     return d;
   }
         
-  public static table makeTable(String[] names, int[] values, String caption, String header) {
+  public static table makeTable(final String[] names, final int[] values, final String caption, final String header) {
     table t = new table();
     t.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
     caption capt = new caption();
@@ -1119,7 +1126,7 @@ public class Web {
     return t;
   }
         
-  public static Element addShowIndexNavigator(Music music, Links links, String curLetter) {
+  public static Element addShowIndexNavigator(final Music music, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
     for (Show s : music.getShow()) {
       String letter = links.getPageFileName(s);
@@ -1143,7 +1150,7 @@ public class Web {
     return d;
   }
         
-  static XhtmlDocument createHTMLDocument(Links links, String title) {
+  static XhtmlDocument createHTMLDocument(final Links links, final String title) {
     XhtmlDocument d = new XhtmlDocument(ECSDefaults.getDefaultCodeset());
 
     d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());

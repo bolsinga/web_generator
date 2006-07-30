@@ -9,11 +9,12 @@ import javax.xml.bind.*;
 import com.bolsinga.music.data.*;
 
 class MySQLCreator {
-  private ObjectFactory objFactory;
-  private Music music;
-  private Connection conn;
-  private Statement stmt;
+  private final ObjectFactory objFactory;
+  private final Music music;
+  private final Connection conn;
 
+  // These data members are behind a try statement, making them hard to make final
+  private Statement stmt;
   private PreparedStatement locationStmt;
   private PreparedStatement albumStmt;
   private PreparedStatement albumDistinctStmt;
@@ -30,11 +31,11 @@ class MySQLCreator {
 
   private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
 
-  public MySQLCreator(ObjectFactory objFactory, Connection conn) {
+  public MySQLCreator(final ObjectFactory objFactory, final Connection conn) {
     this.objFactory = objFactory;
     this.music = objFactory.createMusic();
+    this.conn = conn;
     try {
-      this.conn = conn;
       this.stmt = conn.createStatement();
 
       this.locationStmt = conn.prepareStatement("SELECT * FROM location WHERE id= ?;");
@@ -48,14 +49,14 @@ class MySQLCreator {
     }
   }
 
-  private String toXMLID(String prefix, long sqlID) {
+  private String toXMLID(final String prefix, final long sqlID) {
     StringBuffer sb = new StringBuffer();
     sb.append(prefix);
     sb.append(sqlID - 1);
     return sb.toString();
   }
 
-  private com.bolsinga.music.data.Date createDate(String sqlDate, boolean dateVague) throws JAXBException {
+  private com.bolsinga.music.data.Date createDate(final String sqlDate, final boolean dateVague) throws JAXBException {
 
     com.bolsinga.music.data.Date result = objFactory.createDate();
     
@@ -109,7 +110,7 @@ class MySQLCreator {
     return result;
   }
   
-  private Location createLocation(long locationID) throws SQLException, JAXBException {
+  private Location createLocation(final long locationID) throws SQLException, JAXBException {
     Location location = objFactory.createLocation();
     ResultSet rset = null;
     try {
@@ -135,7 +136,7 @@ class MySQLCreator {
     return location;
   }
 
-  private Artist getArtist(String xmlID) throws JAXBException {
+  private Artist getArtist(final String xmlID) throws JAXBException {
     Artist item = null;
 
     synchronized (artistsLock) {
@@ -157,7 +158,7 @@ class MySQLCreator {
     return item;
   }
 
-  private Album getAlbum(String xmlID, long album_id) throws SQLException, JAXBException {
+  private Album getAlbum(final String xmlID, final long album_id) throws SQLException, JAXBException {
     Album item = null;
     synchronized (albumsLock) {
       if (albums.containsKey(xmlID)) {
@@ -235,7 +236,7 @@ class MySQLCreator {
     return item;
   }
 
-  private Venue getVenue(String xmlID) throws JAXBException {
+  private Venue getVenue(final String xmlID) throws JAXBException {
     Venue item = null;
     synchronized (venuesLock) {
       if (venues.containsKey(xmlID)) {
@@ -257,7 +258,7 @@ class MySQLCreator {
     return item;
   }
 
-  private void addPerformances(Show show, long performanceID) throws SQLException, JAXBException {
+  private void addPerformances(final Show show, final long performanceID) throws SQLException, JAXBException {
     ResultSet rset = null;
 
     try {
@@ -275,7 +276,7 @@ class MySQLCreator {
     }
   }
 
-  private void addMemberToRelation(Relation relation, String type, long id) throws JAXBException {
+  private void addMemberToRelation(final Relation relation, final String type, final long id) throws JAXBException {
     if (type.equals("artist")) {
       relation.setType(RelationType.fromValue(type));
       String xmlID = toXMLID("ar", id);

@@ -30,12 +30,12 @@ public class MySQLImporter {
     System.exit(0);
   }
 
-  public static void importData(String sourceFile, String user, String password, boolean clearDB) {
+  public static void importData(final String sourceFile, final String user, final String password, final boolean clearDB) {
     Diary diary = Util.createDiary(sourceFile);
     importData(diary, user, password, clearDB);
   }
 
-  public static void importData(Diary diary, String user, String password, boolean clearDB) {
+  public static void importData(final Diary diary, final String user, final String password, final boolean clearDB) {
     Connection conn = null;
     Statement stmt = null;
     try {
@@ -87,7 +87,7 @@ public class MySQLImporter {
     }
   }
 
-  private static void clearDB(Statement stmt) throws SQLException {
+  private static void clearDB(final Statement stmt) throws SQLException {
     com.bolsinga.sql.Util.truncate(stmt, "category");
     com.bolsinga.sql.Util.truncate(stmt, "entry");
     com.bolsinga.sql.Util.truncate(stmt, "friend");
@@ -96,7 +96,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.truncate(stmt, "title");
   }
 
-  private static void importEntry(Statement stmt, Entry entry) throws SQLException {
+  private static void importEntry(final Statement stmt, final Entry entry) throws SQLException {
     String[] rowItems = new String[4];
     
     rowItems[0] = null;
@@ -107,7 +107,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "entry", rowItems);
   }
 
-  private static void importEntries(Statement stmt, Diary diary) throws SQLException {
+  private static void importEntries(final Statement stmt, final Diary diary) throws SQLException {
     List<Entry> items = diary.getEntry();
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
@@ -122,7 +122,7 @@ public class MySQLImporter {
     }
   }
 
-  private static void importHeader(Statement stmt, String header) throws SQLException {
+  private static void importHeader(final Statement stmt, final String header) throws SQLException {
     String[] rowItems = new String[2];
 
     rowItems[0] = null;
@@ -131,7 +131,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "header", rowItems);
   }
 
-  private static void importHeaders(Statement stmt, Diary diary) throws SQLException {
+  private static void importHeaders(final Statement stmt, final Diary diary) throws SQLException {
     String data = diary.getHeader();
 
     if (data == null) {
@@ -149,7 +149,7 @@ public class MySQLImporter {
     }
   }
 
-  private static void importSide(Statement stmt, String side) throws SQLException {
+  private static void importSide(final Statement stmt, final String side) throws SQLException {
     String[] rowItems = new String[2];
 
     rowItems[0] = null;
@@ -158,7 +158,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "side", rowItems);
   }
 
-  private static void importSides(Statement stmt, Diary diary) throws SQLException {
+  private static void importSides(final Statement stmt, final Diary diary) throws SQLException {
     String data = diary.getStatic();
 
     if (data == null) {
@@ -176,7 +176,7 @@ public class MySQLImporter {
     }
   }
 
-  private static void importFriend(Statement stmt, String name, String displayName, String url) throws SQLException {
+  private static void importFriend(final Statement stmt, final String name, final String displayName, final String url) throws SQLException {
     String [] rowItems = new String[4];
 
     rowItems[0] = null;
@@ -187,7 +187,7 @@ public class MySQLImporter {
     com.bolsinga.sql.Util.insert(stmt, "friend", rowItems);
   }
 
-  private static void importFriends(Statement stmt, Diary diary) throws SQLException {
+  private static void importFriends(final Statement stmt, final Diary diary) throws SQLException {
     String data = diary.getFriends();
     String name = null, displayName = null, url = null;
 

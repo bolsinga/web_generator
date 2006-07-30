@@ -5,7 +5,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 public class Util {
-  public static com.bolsinga.plist.data.Plist createPlist(String sourceFile) {
+  public static com.bolsinga.plist.data.Plist createPlist(final String sourceFile) {
     com.bolsinga.plist.data.Plist plist = null;
     try {
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.plist.data");

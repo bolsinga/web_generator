@@ -20,7 +20,7 @@ public class Diary {
     Diary.convert(args[0], args[1], args[2]);
   }
         
-  public static void convert(String commentsFile, String staticsFile, String outputFile) {
+  public static void convert(final String commentsFile, final String staticsFile, final String outputFile) {
     List<Comments> comments = null;
     List<Statics> statics = null;
                 
@@ -66,7 +66,7 @@ public class Diary {
     }
   }
         
-  private static void createStatics(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List<Statics> statics) throws JAXBException {
+  private static void createStatics(final ObjectFactory objFactory, final com.bolsinga.diary.data.Diary diary, final List<Statics> statics) throws JAXBException {
     for (Statics oldStatic : statics) {
       String location = oldStatic.getLocation();
                         
@@ -84,7 +84,7 @@ public class Diary {
     }
   }
 
-  private static void createComments(ObjectFactory objFactory, com.bolsinga.diary.data.Diary diary, List<Comments> comments) throws JAXBException {
+  private static void createComments(final ObjectFactory objFactory, final com.bolsinga.diary.data.Diary diary, final List<Comments> comments) throws JAXBException {
     com.bolsinga.diary.data.Entry xEntry = null;
     int index = comments.size() - 1;
 
@@ -102,7 +102,7 @@ public class Diary {
     java.util.Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
   }
         
-  private static GregorianCalendar toCalendarUTC(String date) {
+  private static GregorianCalendar toCalendarUTC(final String date) {
     Calendar localTime = Calendar.getInstance(); // LocalTime OK
                 
     String monthString, dayString, yearString = null;

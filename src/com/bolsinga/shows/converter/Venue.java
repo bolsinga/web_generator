@@ -4,11 +4,11 @@ import java.io.*;
 import java.util.*;
 
 public class Venue {
-  private String fName;
-  private String fCity;
-  private String fState;
-  private String fAddress;
-  private String fURL;
+  private final String fName;
+  private final String fCity;
+  private final String fState;
+  private final String fAddress;
+  private final String fURL;
         
   public Venue(String name, String city, String state, String address, String url) {
     fName = name;
@@ -18,50 +18,24 @@ public class Venue {
     fURL = url;
   }
         
-  public Venue(String name, String city, String state) {
-    fName = name;
-    fCity = city;
-    fState = state;
-  }
-        
   public String getName() {
     return fName;
-  }
-        
-  public void setName(String name) {
-    fName = name;
   }
         
   public String getCity() {
     return fCity;
   }
         
-  public void setCity(String city) {
-    fCity = city;
-  }
-        
   public String getState() {
     return fState;
-  }
-        
-  public void setState(String state) {
-    fState = state;
   }
         
   public String getAddress() {
     return fAddress;
   }
-        
-  public void setAddress(String address) {
-    fAddress = address;
-  }
-        
+
   public String getURL() {
     return fURL;
-  }
-        
-  public void setURL(String url) {
-    fURL = url;
   }
         
   public String toString() {

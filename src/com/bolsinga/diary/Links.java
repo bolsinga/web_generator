@@ -20,21 +20,21 @@ public class Links {
     
   private static final DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
 
-  private boolean fUpOneLevel;
+  private final boolean fUpOneLevel;
         
-  public static Links getLinks(boolean upOneLevel) {
+  public static Links getLinks(final boolean upOneLevel) {
     return new Links(upOneLevel);
   }
         
-  Links(boolean upOneLevel) {
+  Links(final boolean upOneLevel) {
     fUpOneLevel = upOneLevel;
   }
         
-  public String getPageFileName(Entry entry) {
+  public String getPageFileName(final Entry entry) {
     return sArchivePageFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
 
-  public String getPagePath(Entry entry) {
+  public String getPagePath(final Entry entry) {
     StringBuffer sb = new StringBuffer();
 
     sb.append(ARCHIVES_DIR);
@@ -45,7 +45,7 @@ public class Links {
     return sb.toString();
   }
 
-  public String getLinkToPage(Entry entry) {
+  public String getLinkToPage(final Entry entry) {
     StringBuffer sb = new StringBuffer();
                 
     if (fUpOneLevel) {
@@ -61,7 +61,7 @@ public class Links {
     return sb.toString();
   }
         
-  public String getLinkTo(Entry entry) {
+  public String getLinkTo(final Entry entry) {
     StringBuffer sb = new StringBuffer();
                 
     sb.append(getLinkToPage(entry));

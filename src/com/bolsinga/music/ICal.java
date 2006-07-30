@@ -64,13 +64,13 @@ public class ICal {
     System.exit(0);
   }
 
-  public static void generate(String sourceFile, String outputDir) {
+  public static void generate(final String sourceFile, final String outputDir) {
     Music music = Util.createMusic(sourceFile);
                 
     generate(music, outputDir);
   }
         
-  public static void generate(Music music, String outputDir) {
+  public static void generate(final Music music, final String outputDir) {
     OutputStreamWriter w = null;
 
     String name = com.bolsinga.web.Util.getSettings().getIcalName();
@@ -93,7 +93,7 @@ public class ICal {
     generate(music, name, w);
   }
         
-  public static void generate(Music music, String name, Writer w) {
+  public static void generate(final Music music, final String name, final Writer w) {
     List<Show> items = music.getShow();
                 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
@@ -110,7 +110,7 @@ public class ICal {
     cal.output(w);
   }
         
-  public static void addItem(Show show, VCalendar calendar) {
+  public static void addItem(final Show show, final VCalendar calendar) {
     com.bolsinga.music.data.Date d = show.getDate();
     Calendar date = Calendar.getInstance(); // UTC isn't required
     date.set(Calendar.MONTH, d.getMonth().intValue() - 1);

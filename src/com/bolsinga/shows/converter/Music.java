@@ -28,7 +28,7 @@ public class Music {
     Music.convert(args[0], args[1], args[2], args[3], args[4], args[5]);
   }
         
-  public static void convert(String showsFile, String venueFile, String bandFile, String relationFile, String iTunesFile, String outputFile) {
+  public static void convert(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String outputFile) {
                 
     ObjectFactory objFactory = new ObjectFactory();
                 
@@ -65,7 +65,7 @@ public class Music {
     }
   }
         
-  private static void dumpSimilarArtists(com.bolsinga.music.data.Music music) {
+  private static void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
     String s;
     HashSet<String> bands = new HashSet<String>();
     
@@ -81,7 +81,7 @@ public class Music {
     System.exit(0);
   }
 
-  public static com.bolsinga.music.data.Music createMusic(ObjectFactory objFactory, String showsFile, String venueFile, String bandFile, String relationFile)  throws JAXBException {
+  public static com.bolsinga.music.data.Music createMusic(final ObjectFactory objFactory, final String showsFile, final String venueFile, final String bandFile, final String relationFile)  throws JAXBException {
     List<Show> shows = null;
     List<Venue> venues = null;
     List<BandMap> bands = null;
@@ -115,7 +115,7 @@ public class Music {
     return music;
   }
         
-  private static void createVenues(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List<Venue> venues) throws JAXBException {
+  private static void createVenues(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final List<Venue> venues) throws JAXBException {
     // Go through each venue.
     //  Create a Venue for each             
     // Make a hash of the Venue information by name
@@ -147,14 +147,14 @@ public class Music {
     }
   }
         
-  private static void createBandSort(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List<BandMap> bands) throws JAXBException {
+  private static void createBandSort(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final List<BandMap> bands) throws JAXBException {
     // Make a hash of the band sort names by name
     for (BandMap bandMap : bands) {
       sBandSorts.put(bandMap.getName(), bandMap.getSortName());
     }
   }
         
-  private static void createRelations(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List<Relation> relations) throws JAXBException {
+  private static void createRelations(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final List<Relation> relations) throws JAXBException {
     com.bolsinga.music.data.Relation xRelation = null;
     String type = null, reason = null;
     int index = 0;
@@ -190,7 +190,7 @@ public class Music {
     }
   }
         
-  private static com.bolsinga.music.data.Date createDate(ObjectFactory objFactory, String date) throws JAXBException {
+  private static com.bolsinga.music.data.Date createDate(final ObjectFactory objFactory, final String date) throws JAXBException {
     com.bolsinga.music.data.Date result = objFactory.createDate();
                 
     String monthString, dayString, yearString = null;
@@ -225,7 +225,7 @@ public class Music {
     return result;
   }
         
-  public static com.bolsinga.music.data.Artist addArtist(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name) throws JAXBException {
+  public static com.bolsinga.music.data.Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String name) throws JAXBException {
     com.bolsinga.music.data.Artist result = null;
     if (!sArtists.containsKey(name)) {
       result = objFactory.createArtist();
@@ -242,7 +242,7 @@ public class Music {
     return result;
   }
                 
-  private static void convert(ObjectFactory objFactory, com.bolsinga.music.data.Music music, List<Show> shows) throws JAXBException {
+  private static void convert(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final List<Show> shows) throws JAXBException {
     // Go through each show.
     //  Create an Artist for each band in the set, if it doesn't already exist. Use the sort name.
     //  Create a Date.
@@ -280,7 +280,7 @@ public class Music {
     }
   }
         
-  private static void dump(com.bolsinga.music.data.Music music) throws JAXBException {
+  private static void dump(final com.bolsinga.music.data.Music music) throws JAXBException {
     JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
     Marshaller m = jc.createMarshaller();
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );

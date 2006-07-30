@@ -22,14 +22,14 @@ public class Lookup {
   private final HashMap<String, Collection<Label>> fLabelRelationMap =
     new HashMap<String, Collection<Label>>();
         
-  public synchronized static Lookup getLookup(Music music) {
+  public synchronized static Lookup getLookup(final Music music) {
     if (sLookup == null) {
       sLookup = new Lookup(music);
     }
     return sLookup;
   }
 
-  private Lookup(Music music) {
+  private Lookup(final Music music) {
     String id = null;
     Collection<Show> showCollection = null;
 
@@ -116,27 +116,27 @@ public class Lookup {
     }
   }
         
-  public Collection<Show> getShows(Artist artist) {
+  public Collection<Show> getShows(final Artist artist) {
     return fArtistMap.get(artist.getId());
   }
         
-  public Collection<Show> getShows(Venue venue) {
+  public Collection<Show> getShows(final Venue venue) {
     return fVenueMap.get(venue.getId());
   }
         
-  public Collection<Show> getShows(String city) {
+  public Collection<Show> getShows(final String city) {
     return fCityMap.get(city);
   }
         
-  public Collection<Artist> getRelations(Artist artist) {
+  public Collection<Artist> getRelations(final Artist artist) {
     return fArtistRelationMap.get(artist.getId());
   }
         
-  public Collection<Venue> getRelations(Venue venue) {
+  public Collection<Venue> getRelations(final Venue venue) {
     return fVenueRelationMap.get(venue.getId());
   }
         
-  public Collection<Label> getRelations(Label label) {
+  public Collection<Label> getRelations(final Label label) {
     return fLabelRelationMap.get(label.getId());
   }
         

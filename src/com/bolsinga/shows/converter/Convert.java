@@ -16,8 +16,8 @@ public class Convert {
   private static final Pattern sCommentPattern = Pattern.compile("<comment>(.*?)</comment>", Pattern.DOTALL);
   private static final Pattern sDatePattern    = Pattern.compile("<date>(.*?)</date>", Pattern.DOTALL);
 
-  private String fType;
-  private String fFile;
+  private final String fType;
+  private final String fFile;
         
   public static void main(String args[]) {
     if (args.length != 2) {
@@ -37,7 +37,7 @@ public class Convert {
     System.exit(0);
   }
 
-  public Convert(String type, String file) {
+  public Convert(final String type, final String file) {
     fType = type;
     fFile = file;
   }
@@ -63,7 +63,7 @@ public class Convert {
     dump(l);
   }
 
-  public static List<Relation> relation(String filename) throws IOException {
+  public static List<Relation> relation(final String filename) throws IOException {
     Vector<Relation> relations = new Vector<Relation>();
 
     LineNumberReader in = null;
@@ -91,7 +91,7 @@ public class Convert {
     return relations;
   }
         
-  public static List<BandMap> bandsort(String filename) throws IOException {
+  public static List<BandMap> bandsort(final String filename) throws IOException {
     Vector<BandMap> bandMaps = new Vector<BandMap>();
                 
     LineNumberReader in = null;
@@ -113,7 +113,7 @@ public class Convert {
     return bandMaps;
   }
         
-  public static List<Venue> venuemap(String filename) throws IOException {
+  public static List<Venue> venuemap(final String filename) throws IOException {
     Vector<Venue> venues = new Vector<Venue>();
                 
     LineNumberReader in = null;
@@ -121,18 +121,29 @@ public class Convert {
       in = new LineNumberReader(new FileReader(filename));
       String s = null;
       StringTokenizer st = null;
+
+      String name, city, state, address, url;
+
       while ((s = in.readLine()) != null) {
         st = new StringTokenizer(s, "*");
-        
-        Venue v = new Venue(st.nextToken(), st.nextToken(), st.nextToken());
+
+        name = st.nextToken();
+        city = st.nextToken();
+        state = st.nextToken();
         
         if (st.hasMoreElements()) {
-          v.setAddress(st.nextToken());
+          address = st.nextToken();
+        } else {
+          address = null;
         }
         
         if (st.hasMoreElements()) {
-          v.setURL(st.nextToken());
+          url = st.nextToken();
+        } else {
+          url = null;
         }
+        
+        Venue v = new Venue(name, city, state, address, url);
         
         venues.add(v);
       }
@@ -145,7 +156,7 @@ public class Convert {
     return venues;
   }
         
-  public static List<Show> shows(String filename) throws IOException {
+  public static List<Show> shows(final String filename) throws IOException {
     final String SHOW_DELIMITER = "^";
         
     Vector<Show> shows = new Vector<Show>();
@@ -191,7 +202,7 @@ public class Convert {
     return shows;
   }
         
-  public static List<Statics> statics(String filename) throws IOException {
+  public static List<Statics> statics(final String filename) throws IOException {
     Vector<Statics> statics = new Vector<Statics>();
 
     FileInputStream fis = null;
@@ -228,7 +239,7 @@ public class Convert {
     return statics;
   }
 
-  public static List<Comments> comments(String filename) throws IOException {
+  public static List<Comments> comments(final String filename) throws IOException {
     Vector<Comments> comments = new Vector<Comments>();
 
     FileInputStream fis = null;
@@ -265,7 +276,7 @@ public class Convert {
     return comments;
   }
         
-  private static void dump(Collection<?> c) {
+  private static void dump(final Collection<?> c) {
     for (Object t : c) {
       System.out.println(t);
     }

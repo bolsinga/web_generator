@@ -75,7 +75,7 @@ public class ITunes {
     ITunes.convert(args[0], args[1]);
   }
         
-  public static void convert(String itunesFile, String outputFile) {          
+  public static void convert(final String itunesFile, final String outputFile) {          
     try {
       com.bolsinga.music.data.Music music = ITunes.convert(itunesFile);
 
@@ -102,7 +102,7 @@ public class ITunes {
     }
   }
         
-  public static com.bolsinga.music.data.Music convert(String itunesFile) throws JAXBException {
+  public static com.bolsinga.music.data.Music convert(final String itunesFile) throws JAXBException {
 
     ObjectFactory objFactory = new ObjectFactory();
                 
@@ -155,7 +155,7 @@ public class ITunes {
     sITunesKeys.add(TK_BPM);
   }
         
-  public static void addMusic(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String itunesFile) throws JAXBException {
+  public static void addMusic(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String itunesFile) throws JAXBException {
         
     // Create a list of all known iTunes keys. This way if a new one shows up, the program will let us know.
     createKnownKeys();
@@ -177,7 +177,7 @@ public class ITunes {
     }
   }
         
-  private static void addTracks(ObjectFactory objFactory, com.bolsinga.music.data.Music music, java.util.List<Object> tracks) throws JAXBException {
+  private static void addTracks(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final java.util.List<Object> tracks) throws JAXBException {
     Iterator<Object> i = tracks.iterator();
     while (i.hasNext()) {
       Object key = i.next(); // key not used
@@ -193,7 +193,7 @@ public class ITunes {
     sortAlbumsSongOrder(music);
   }
         
-  private static void addTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, com.bolsinga.plist.data.Dict track) throws JAXBException {
+  private static void addTrack(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final com.bolsinga.plist.data.Dict track) throws JAXBException {
     Iterator<Object> i = track.getKeyAndArrayOrData().iterator();
             
     String songTitle = null;
@@ -261,26 +261,27 @@ public class ITunes {
       }
     }
 
+    if (albumTitle == null) {
+      albumTitle = songTitle + " - Single";
+    }
+
     if (!isVideo) {
       ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
         
-  private static void createTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String artistName, String songTitle, String albumTitle, int year, int index, String genre, XMLGregorianCalendar lastPlayed, int playCount, boolean compilation) throws JAXBException {
+  private static void createTrack(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String artistName, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount, final boolean compilation) throws JAXBException {
     // Get or create the artist
     Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
                 
     // Get or create the album.
-    if (albumTitle == null) {
-      albumTitle = songTitle + " - Single";
-    }
     Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
                 
     // The song is always the new item. The artist and album may already be known.
     ITunes.addAlbumTrack(objFactory, music, artist, album, songTitle, year, index, genre, lastPlayed, playCount);
   }
         
-  private static Album addAlbum(ObjectFactory objFactory, com.bolsinga.music.data.Music music, String name, Artist artist) throws JAXBException {
+  private static Album addAlbum(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String name, final Artist artist) throws JAXBException {
     Album result = null;
     StringBuffer keyBuffer = new StringBuffer();
     keyBuffer.append(name);
@@ -308,7 +309,7 @@ public class ITunes {
     return result;
   }
 
-  private static void addAlbumTrack(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, Album album, String songTitle, int year, int index, String genre, XMLGregorianCalendar lastPlayed, int playCount) throws JAXBException {
+  private static void addAlbumTrack(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final Artist artist, final Album album, final String songTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount) throws JAXBException {
     // Create the song
     Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed, playCount);
             
@@ -329,7 +330,7 @@ public class ITunes {
     }
   }
         
-  private static Song createSong(ObjectFactory objFactory, com.bolsinga.music.data.Music music, Artist artist, String songTitle, int year, int index, String genre, XMLGregorianCalendar lastPlayed, int playCount) throws JAXBException {
+  private static Song createSong(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final Artist artist, final String songTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount) throws JAXBException {
     List<Song> songs = music.getSong();
             
     Song result = null;
@@ -357,28 +358,28 @@ public class ITunes {
     return result;
   }
 
-  private static com.bolsinga.music.data.Date releaseYear(ObjectFactory objFactory, int year) throws JAXBException {
+  private static com.bolsinga.music.data.Date releaseYear(final ObjectFactory objFactory, final int year) throws JAXBException {
     com.bolsinga.music.data.Date release = objFactory.createDate();
     release.setUnknown(true);
     release.setYear(java.math.BigInteger.valueOf(year));
     return release;
   }
         
-  private static void sortAlbumOrder(com.bolsinga.music.data.Music music) {
+  private static void sortAlbumOrder(final com.bolsinga.music.data.Music music) {
     List<Artist> artists = music.getArtist();
     for (Artist a : artists) {
       Collections.sort(a.getAlbum(), com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
     }
   }
 
-  private static void sortAlbumsSongOrder(com.bolsinga.music.data.Music music) {
+  private static void sortAlbumsSongOrder(final com.bolsinga.music.data.Music music) {
     List<Album> albums = music.getAlbum();
     for (Album a : albums) {
       Collections.sort(a.getSong(), com.bolsinga.music.Compare.JAXB_SONG_ORDER_COMPARATOR);
     }
   }
         
-  private static void setAlbumYears(ObjectFactory objFactory, com.bolsinga.music.data.Music music) throws JAXBException {
+  private static void setAlbumYears(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music) throws JAXBException {
     List<Album> albums = music.getAlbum();
     int albumYear, songYear;
     com.bolsinga.music.data.Date date;

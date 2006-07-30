@@ -6,10 +6,10 @@ import java.util.*;
 import com.bolsinga.shows.converter.*;
 
 public class Comments {
-  private String fDate;
-  private String fData;
+  private final String fDate;
+  private final String fData;
         
-  public Comments(String date, String data) {
+  public Comments(final String date, final String data) {
     fDate = date;
     fData = data;
   }
@@ -17,19 +17,11 @@ public class Comments {
   public String getDate() {
     return fDate;
   }
-        
-  public void setDate(String date) {
-    fDate = date;
-  }
-        
+
   public String getData() {
     return fData;
   }
-        
-  public void setData(String data) {
-    fData = data;
-  }
-        
+
   public String toString() {
     StringBuffer sb = new StringBuffer();
                 

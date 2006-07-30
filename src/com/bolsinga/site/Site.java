@@ -44,19 +44,19 @@ public class Site {
       System.exit(0);
   }
 
-  public static void generate(String diaryFile, String musicFile, String settingsFile, String outputDir, String variant) {
+  public static void generate(final String diaryFile, final String musicFile, final String settingsFile, final String outputDir, final String variant) {
     com.bolsinga.web.Util.createSettings(settingsFile);
     Site.generate(diaryFile, musicFile, outputDir, variant);
   }
 
-  public static void generate(String diaryFile, String musicFile, String outputDir, String variant) {
+  public static void generate(final String diaryFile, final String musicFile, final String outputDir, final String variant) {
     Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
     
     Site.generate(diary, music, outputDir, variant);
   }
 
-  public static void generate(Diary diary, Music music, String outputDir, String variant) {
+  public static void generate(final Diary diary, final Music music, final String outputDir, final String variant) {
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
 
     boolean musicOnly = variant.equals("music");

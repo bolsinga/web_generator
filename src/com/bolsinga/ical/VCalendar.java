@@ -5,17 +5,17 @@ import java.util.*;
 
 public class VCalendar {
   private final Vector<VEvent> fEvents = new Vector<VEvent>();
-  private String fName = null;
+  private final String fName;
         
-  public VCalendar(String name) {
+  public VCalendar(final String name) {
     fName = name;
   }
         
-  public void add(VEvent event) {
+  public void add(final VEvent event) {
     fEvents.add(event);
   }
         
-  public void output(Writer w) {
+  public void output(final Writer w) {
     try {
       w.write("BEGIN:VCALENDAR");
       w.write("\r\n");

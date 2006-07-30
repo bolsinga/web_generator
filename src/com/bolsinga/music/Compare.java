@@ -21,24 +21,24 @@ public class Compare {
         
   private final Music fMusic;
         
-  public synchronized static Compare getCompare(com.bolsinga.music.data.Music music) {
+  public synchronized static Compare getCompare(final com.bolsinga.music.data.Music music) {
     if (sCompare == null) {
       sCompare = new Compare(music);
     }
     return sCompare;
   }
         
-  private Compare(Music music) {
+  private Compare(final Music music) {
     fMusic = music;
   }
         
-  private static int convert(com.bolsinga.music.data.Date d) {
+  private static int convert(final com.bolsinga.music.data.Date d) {
     return ((d.getYear() != null) ? d.getYear().intValue() * 10000 : 0) +
       ((d.getMonth() != null) ? d.getMonth().intValue() * 100 : 0) +
       ((d.getDay() != null) ? d.getDay().intValue() : 0);
   }
                 
-  public static String simplify(String s) {
+  public static String simplify(final String s) {
     String lower = s.toLowerCase();
     int len = s.length();
     if (lower.startsWith(THE)) {
@@ -64,19 +64,19 @@ public class Compare {
   }
 
   private static final Comparator<Artist> ARTIST_ID_COMPARATOR = new Comparator<Artist>() {
-      public int compare(Artist i1, Artist i2) {
+      public int compare(final Artist i1, final Artist i2) {
         return i1.getId().compareTo(i2.getId());
       }
     };
 
   private static final Comparator<Album> ALBUM_ID_COMPARATOR = new Comparator<Album>() {
-      public int compare(Album i1, Album i2) {
+      public int compare(final Album i1, final Album i2) {
         return i1.getId().compareTo(i2.getId());
       }
     };
 
   private static final Comparator<JAXBElement<Object>> JAXB_ALBUM_ID_COMPARATOR = new Comparator<JAXBElement<Object>>() {
-      public int compare(JAXBElement<Object> i1, JAXBElement<Object> i2) {
+      public int compare(final JAXBElement<Object> i1, final JAXBElement<Object> i2) {
         Album a1 = (Album)i1.getValue();
         Album a2 = (Album)i2.getValue();
         return ALBUM_ID_COMPARATOR.compare(a1, a2);
@@ -84,23 +84,23 @@ public class Compare {
     };
 
   private static final Comparator<Venue> VENUE_ID_COMPARATOR = new Comparator<Venue>() {
-      public int compare(Venue i1, Venue i2) {
+      public int compare(final Venue i1, final Venue i2) {
         return i1.getId().compareTo(i2.getId());
       }
     };
 
   private static final Comparator<Song> SONG_ID_COMPARATOR = new Comparator<Song>() {
-      public int compare(Song i1, Song i2) {
+      public int compare(final Song i1, final Song i2) {
         return i1.getId().compareTo(i2.getId());
       }
     };
 
-  private static int convert(int index, String id) {
+  private static int convert(final int index, final String id) {
     return Integer.valueOf(id.substring(index)).intValue();
   }
 
   private static final Comparator<JAXBElement<Object>> RELATION_ID_COMPARATOR = new Comparator<JAXBElement<Object>>() {
-      public int compare(JAXBElement<Object> jo1, JAXBElement<Object> jo2) {
+      public int compare(final JAXBElement<Object> jo1, final JAXBElement<Object> jo2) {
         int id1 = -1;
         int id2 = -1;
         Object o1 = (Object)jo1.getValue();
@@ -138,7 +138,7 @@ public class Compare {
       }
     };
 
-  public static void tidy(Music music) {
+  public static void tidy(final Music music) {
     List<Artist> artists = music.getArtist();
     Collections.sort(artists, Compare.ARTIST_ID_COMPARATOR);
     for (Artist a : artists) {
@@ -153,25 +153,25 @@ public class Compare {
   }
         
   public static final Comparator<String> LIBRARY_COMPARATOR = new Comparator<String>() {
-      public int compare(String s1, String s2) {
+      public int compare(final String s1, final String s2) {
         return simplify(s1).compareToIgnoreCase(simplify(s2));
       }
     };
         
   public static final Comparator<com.bolsinga.music.data.Date> DATE_COMPARATOR = new Comparator<com.bolsinga.music.data.Date>() {
-      public int compare(com.bolsinga.music.data.Date r1, com.bolsinga.music.data.Date r2) {
+      public int compare(final com.bolsinga.music.data.Date r1, final com.bolsinga.music.data.Date r2) {
         return convert(r1) - convert(r2);
       }
     };
         
   public static final Comparator<Venue> VENUE_COMPARATOR = new Comparator<Venue>() {
-      public int compare(Venue r1, Venue r2) {
+      public int compare(final Venue r1, final Venue r2) {
         return LIBRARY_COMPARATOR.compare(r1.getName(), r2.getName());
       }
     };
         
   public final Comparator<Venue> VENUE_STATS_COMPARATOR = new Comparator<Venue>() {
-      public int compare(Venue r1, Venue r2) {
+      public int compare(final Venue r1, final Venue r2) {
         Collection<Show> shows1 = Lookup.getLookup(fMusic).getShows(r1);
         int sets1 = (shows1 != null) ? shows1.size() : 0;
         Collection<Show> shows2 = Lookup.getLookup(fMusic).getShows(r2);
@@ -186,7 +186,7 @@ public class Compare {
     };
         
   public static final Comparator<Artist> ARTIST_COMPARATOR = new Comparator<Artist>() {
-      public int compare(Artist r1, Artist r2) {
+      public int compare(final Artist r1, final Artist r2) {
         String n1 = r1.getSortname();
         if (n1 == null) {
           n1 = r1.getName();
@@ -201,7 +201,7 @@ public class Compare {
     };
 
   public static final Comparator<Album> ALBUM_COMPARATOR = new Comparator<Album>() {
-      public int compare(Album r1, Album r2) {
+      public int compare(final Album r1, final Album r2) {
         int result = LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
         if (result == 0) {
           result = ARTIST_COMPARATOR.compare((Artist)r1.getPerformer(), (Artist)r2.getPerformer());
@@ -211,13 +211,13 @@ public class Compare {
     };
 
   public static final Comparator<Song> SONG_ORDER_COMPARATOR = new Comparator<Song>() {
-      public int compare(Song r1, Song r2) {
+      public int compare(final Song r1, final Song r2) {
         return ((r1.getTrack() != null) ? r1.getTrack().intValue() : 0) - ((r2.getTrack() != null) ? r2.getTrack().intValue() : 0);
       }
     };
 
   public static final Comparator<JAXBElement<Object>> JAXB_SONG_ORDER_COMPARATOR = new Comparator<JAXBElement<Object>>() {
-    public int compare(JAXBElement<Object> o1, JAXBElement<Object> o2) {
+    public int compare(final JAXBElement<Object> o1, final JAXBElement<Object> o2) {
       Song s1 = (Song)o1.getValue();
       Song s2 = (Song)o2.getValue();
       return SONG_ORDER_COMPARATOR.compare(s1, s2);
@@ -225,14 +225,14 @@ public class Compare {
   };
 
   public static final Comparator<Album> ALBUM_ORDER_COMPARATOR = new Comparator<Album>() {
-      public int compare(Album r1, Album r2) {
+      public int compare(final Album r1, final Album r2) {
         // The 3000 assures that 'unknown' album dates are after the known ones.
         return ((r1.getReleaseDate() != null) ? r1.getReleaseDate().getYear().intValue() : 3000) - ((r2.getReleaseDate() != null) ? r2.getReleaseDate().getYear().intValue() : 3000);
       }
     };
 
   public static final Comparator<JAXBElement<Object>> JAXB_ALBUM_ORDER_COMPARATOR = new Comparator<JAXBElement<Object>>() {
-    public int compare(JAXBElement<Object> o1, JAXBElement<Object> o2) {
+    public int compare(final JAXBElement<Object> o1, final JAXBElement<Object> o2) {
       Album a1 = (Album)o1.getValue();
       Album a2 = (Album)o2.getValue();
       return ALBUM_ORDER_COMPARATOR.compare(a1, a2);
@@ -240,7 +240,7 @@ public class Compare {
   };
 
   public static final Comparator<Artist> ARTIST_TRACKS_COMPARATOR = new Comparator<Artist>() {
-      public int compare(Artist r1, Artist r2) {
+      public int compare(final Artist r1, final Artist r2) {
         int tracks1 = Util.trackCount(r1);
         int tracks2 = Util.trackCount(r2);
                         
@@ -253,7 +253,7 @@ public class Compare {
     };
         
   public static final Comparator<Artist> ARTIST_ALBUMS_COMPARATOR = new Comparator<Artist>() {
-      public int compare(Artist r1, Artist r2) {
+      public int compare(final Artist r1, final Artist r2) {
         int albums1 = (r1.getAlbum() != null) ? r1.getAlbum().size() : 0;
         int albums2 = (r2.getAlbum() != null) ? r2.getAlbum().size() : 0;
                         
@@ -266,7 +266,7 @@ public class Compare {
     };
         
   public final Comparator<Artist> ARTIST_STATS_COMPARATOR = new Comparator<Artist>() {
-      public int compare(Artist r1, Artist r2) {
+      public int compare(final Artist r1, final Artist r2) {
         Collection<Show> shows1 = Lookup.getLookup(fMusic).getShows(r1);
         Collection<Show> shows2 = Lookup.getLookup(fMusic).getShows(r2);
         int sets1 = (shows1 != null) ? shows1.size() : 0;
@@ -281,7 +281,7 @@ public class Compare {
     };
         
   public static final Comparator<Show> SHOW_COMPARATOR = new Comparator<Show>() {
-      public int compare(Show r1, Show r2) {
+      public int compare(final Show r1, final Show r2) {
         int result = DATE_COMPARATOR.compare(r1.getDate(), r2.getDate());
         if (result == 0) {
           result = VENUE_COMPARATOR.compare((Venue)r1.getVenue(), (Venue)r2.getVenue());
@@ -296,7 +296,7 @@ public class Compare {
     };
         
   public static final Comparator<Show> SHOW_STATS_COMPARATOR = new Comparator<Show>() {
-      public int compare(Show r1, Show r2) {
+      public int compare(final Show r1, final Show r2) {
         com.bolsinga.music.data.Date d1 = r1.getDate();
         com.bolsinga.music.data.Date d2 = r2.getDate();
 
