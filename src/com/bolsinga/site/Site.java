@@ -62,18 +62,41 @@ public class Site {
     boolean musicOnly = variant.equals("music");
     boolean diaryOnly = variant.equals("diary");
     boolean webOnly = variant.equals("web");
-        
+
+    long start, diaryTime = 0, musicTime = 0, icalTime = 0, rssTime = 0;
+    
     if (!musicOnly) {
+      start = System.currentTimeMillis();
       com.bolsinga.diary.Web.generate(diary, music, encoder, outputDir);
+      diaryTime = System.currentTimeMillis() - start;
     }
     if (!diaryOnly) {
+      start = System.currentTimeMillis();
       com.bolsinga.music.Web.generate(music, encoder, outputDir);
+      musicTime = System.currentTimeMillis() - start;
       if (!webOnly) {
+        start = System.currentTimeMillis();
         com.bolsinga.music.ICal.generate(music, outputDir);
+        icalTime = System.currentTimeMillis() - start;
       }
     }
     if (!webOnly) {
+      start = System.currentTimeMillis();
       com.bolsinga.rss.RSS.generate(diary, music, outputDir);
+      rssTime = System.currentTimeMillis() - start;
+    }
+    
+    if (System.getProperty("site.times") != null) {
+      displayTime(diaryTime, "diary");
+      displayTime(musicTime, "music");
+      displayTime(icalTime, "ical");
+      displayTime(rssTime, "rss");
+    }
+  }
+  
+  private static void displayTime(long millis, String type) {
+    if (millis != 0) {
+      System.out.println(type + ": " + millis);
     }
   }
 }
