@@ -5,6 +5,7 @@ import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
 public abstract class MultiDocumentCreator extends DocumentCreator {
+  // This changes during the life-cycle of this object
   private li fSubsection = null;
     
   protected MultiDocumentCreator(final String outputDir) {
