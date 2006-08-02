@@ -131,35 +131,35 @@ class EncoderData {
   
   EncoderData(final Artist artist, final Links standardLinks, final Links upLinks) {
     fName = artist.getName();
-    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+    fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
     Object[] args = { fName };
     String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoartist"), args);
     
-    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString();
-    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString();
+    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString());
+    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString());
   }
   
   EncoderData(final Venue venue, final Links standardLinks, final Links upLinks) {
     fName = venue.getName();
-    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+    fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
     Object[] args = { fName };
     String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfovenue"), args);
     
-    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString();
-    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString();
+    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString());
+    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString());
   }
   
   EncoderData(final Album album, final Links standardLinks, final Links upLinks) {
     fName = album.getTitle();
-    fPattern = Pattern.compile(createRegex(fName), Pattern.CASE_INSENSITIVE);
+    fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
     Object[] args = { fName };
     String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoalbum"), args);
     
-    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
-    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
+    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString());
+    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString());
   }
 
   public static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
@@ -167,7 +167,7 @@ class EncoderData {
 
     if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
       for (EncoderData data : encodings) {
-        result = addLinks(data, result, upOneLevel);
+        result = EncoderData.addLinks(data, result, upOneLevel);
       }
     }
 
@@ -184,9 +184,9 @@ class EncoderData {
                         
       Matcher html = sHTMLTag.matcher(source);
       if (html.find()) {
-        sb.append(addLinks(data, html.group(1), upOneLevel));
+        sb.append(EncoderData.addLinks(data, html.group(1), upOneLevel));
         sb.append(html.group(2));
-        sb.append(addLinks(data, html.group(4), upOneLevel));
+        sb.append(EncoderData.addLinks(data, html.group(4), upOneLevel));
       } else {
         do {
           entryMatch.appendReplacement(sb, data.getLink(upOneLevel));
@@ -205,7 +205,15 @@ class EncoderData {
     return fName;
   }
   
-  String createRegex(final String name) {
+  Pattern getPattern() {
+    return fPattern;
+  }
+  
+  private String getLink(final boolean upOneLevel) {
+    return (upOneLevel ? fUpLink : fStandardLink);
+  }
+
+  private static String createRegex(final String name) {
     StringBuffer sb = new StringBuffer();
     
     sb.append("(^|\\W)(");
@@ -221,15 +229,11 @@ class EncoderData {
     return sb.toString();
   }
   
-  Pattern getPattern() {
-    return fPattern;
-  }
-  
-  String getLink(final boolean upOneLevel) {
+  private static String getLink(final String link) {
     StringBuffer sb = new StringBuffer();
     
     sb.append("$1");
-    sb.append(upOneLevel ? fUpLink : fStandardLink);
+    sb.append(link);
     sb.append("$3");
     
     return sb.toString();
