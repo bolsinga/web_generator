@@ -95,9 +95,7 @@ public abstract class Encode {
 
   public synchronized static Encode getEncode(final Music music, final Diary diary) {
     if (sEncode == null) {
-      //      sEncode = new RegexEncode(music);
-      //      sEncode = new NullEncode();
-            sEncode = new HashEncode(music, diary);
+      sEncode = new HashEncode(music, diary);
     }
     return sEncode;
   }
@@ -162,26 +160,6 @@ class EncoderData {
     
     fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString();
     fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString();
-  }
-  
-  public static void addArtistData(final Collection<Artist> items, final Links standardLinks, final Links upLinks, final Collection<EncoderData> encodings) {
-    for (Artist item : items) {
-      encodings.add(new EncoderData(item, standardLinks, upLinks));
-    }
-  }
-
-  public static void addVenueData(final Collection<Venue> items, final Links standardLinks, final Links upLinks, final Collection<EncoderData> encodings) {
-    for (Venue item : items) {
-      if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
-        encodings.add(new EncoderData(item, standardLinks, upLinks));
-      }
-    }
-  }
-
-  public static void addAlbumData(final Collection<Album> items, final Links standardLinks, final Links upLinks, final Collection<EncoderData> encodings) {
-    for (Album item : items) {
-      encodings.add(new EncoderData(item, standardLinks, upLinks));
-    }
   }
 
   public static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
@@ -255,54 +233,6 @@ class EncoderData {
     sb.append("$3");
     
     return sb.toString();
-  }
-}
-
-class RegexEncode extends Encode {
-
-  private final TreeSet<EncoderData> fEncodings = new TreeSet<EncoderData>(EncoderData.ENCODERDATA_COMPARATOR);
-
-  public String embedLinks(final Show show, final boolean upOneLevel) {
-    return EncoderData.addLinks(show.getComment(), upOneLevel, fEncodings);
-  }
-
-  public String embedLinks(final Entry entry, final boolean upOneLevel) {
-    return EncoderData.addLinks(entry.getComment(), upOneLevel, fEncodings);
-  }
-
-  RegexEncode(final Music music) {
-    Links standardLinks = Links.getLinks(false);
-    Links upLinks = Links.getLinks(true);
-    
-    {            
-    List<Artist> items = music.getArtist();
-    EncoderData.addArtistData(items, standardLinks, upLinks, fEncodings);
-    }
-
-    {           
-    List<Venue> items = music.getVenue();
-    EncoderData.addVenueData(items, standardLinks, upLinks, fEncodings);
-    }
-     
-    {           
-    List<Album> items = music.getAlbum();
-    EncoderData.addAlbumData(items, standardLinks, upLinks, fEncodings);
-    }
-  }
-}
-
-class NullEncode extends Encode {
-
-  NullEncode() {
-
-  }
-
-  public String embedLinks(final Show show, final boolean upOneLevel) {
-    return show.getComment();
-  }
-
-  public String embedLinks(final Entry entry, final boolean upOneLevel) {
-    return entry.getComment();
   }
 }
 
