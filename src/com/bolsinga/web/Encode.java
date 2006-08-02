@@ -506,18 +506,18 @@ class HashEncode extends Encode {
   }
 
   public String embedLinks(final Show show, final boolean upOneLevel) {
-    if ((fEncodables != null) && (fEncodables.containsKey(show))) {
-      return EncoderData.addLinks(show.getComment(), upOneLevel, fEncodables.get(show));
-    } else {
-      return show.getComment();
-    }
+    return embedLinks(show, show.getComment(), upOneLevel);
   }
 
   public String embedLinks(final Entry entry, final boolean upOneLevel) {
-    if ((fEncodables != null) && (fEncodables.containsKey(entry))) {
-      return EncoderData.addLinks(entry.getComment(), upOneLevel, fEncodables.get(entry));
+    return embedLinks(entry, entry.getComment(), upOneLevel);
+  }
+  
+  private String embedLinks(final Object obj, final String source, final boolean upOneLevel) {
+    if ((fEncodables != null) && (fEncodables.containsKey(obj))) {
+      return EncoderData.addLinks(source, upOneLevel, fEncodables.get(obj));
     } else {
-      return entry.getComment();
+      return source;
     }
   }
 }
