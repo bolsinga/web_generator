@@ -94,7 +94,7 @@ public class Site {
     }
   }
   
-  private static void displayTime(long millis, String type) {
+  private static void displayTime(final long millis, final String type) {
     if (millis != 0) {
       System.out.println(type + ": " + millis);
     }
