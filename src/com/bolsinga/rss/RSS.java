@@ -163,6 +163,10 @@ public class RSS {
           RSS.add((Show)o, musicLinks, objFactory, channel);
         } else if (o instanceof com.bolsinga.diary.data.Entry) {
           RSS.add((Entry)o, diaryLinks, objFactory, channel);
+        } else {
+          System.err.println("Unknown recent item." + o.toString());
+          Thread.dumpStack();
+          System.exit(1);
         }
       }
 

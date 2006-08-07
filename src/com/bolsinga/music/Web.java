@@ -749,9 +749,11 @@ public class Web {
     Object[] countArgs = { new Integer(lastShowsCount) };
     dr.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("lastshows"), countArgs)));
 
-    List<Show> items = music.getShow();
-    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
-    Collections.reverse(items);
+    Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
+    Collections.reverse(music.getShow());
+
+    List<Show> items = Collections.unmodifiableList(music.getShow());
+    
     for (int i = 0; i < lastShowsCount; i++) {
       Show item = items.get(i);
 

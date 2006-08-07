@@ -211,13 +211,13 @@ public class Web {
     generateMainPage(encoder, music, diary, startYear, outputDir);
     generateArchivePages(diary, encoder, startYear, outputDir);
   }
-        
+
   public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
     Links links = Links.getLinks(false);
 
     XhtmlDocument doc = createDocument(diary.getTitle(), startYear, links);
 
-    doc.getBody().addElement(generateColumn1(diary));
+    doc.getBody().addElement(generateColumn1(diary.getStatic(), diary.getFriends()));
                 
     div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
     div header = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_HEADER);
@@ -252,30 +252,28 @@ public class Web {
     }
   }
 
-  private static div createMainStatics(final Diary diary) {
+  private static div createMainStatics(final String statics) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_STATIC);
     d.addElement(new h4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
-    String statics = diary.getStatic();
     if (statics != null) {
       d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(statics));
     }
     return d;
   }
 
-  private static div createMainLinks(final Diary diary) {
+  private static div createMainLinks(final String friends) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_LINKS);
     d.addElement(new h4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
-    String friends = diary.getFriends();
     if (friends != null) {
       d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(friends));
     }
     return d;
   }
 
-  private static div generateColumn1(final Diary diary) {
+  private static div generateColumn1(final String statics, final String friends) {
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL1);
-    d.addElement(Web.createMainStatics(diary));
-    d.addElement(Web.createMainLinks(diary));
+    d.addElement(Web.createMainStatics(statics));
+    d.addElement(Web.createMainLinks(friends));
     return d;
   }
         

@@ -202,16 +202,16 @@ public class Util {
   public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final boolean includeMusic) {
     List<Show> shows = null;
     if (includeMusic) {
-      shows = music.getShow();
-      Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
-      Collections.reverse(shows);
+      Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
+      Collections.reverse(music.getShow());
+      shows = Collections.unmodifiableList(music.getShow());
     }
 
-    List<Entry> entries = diary.getEntry();
-    Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
-    Collections.reverse(entries);
+    Collections.sort(diary.getEntry(), com.bolsinga.diary.Util.ENTRY_COMPARATOR);
+    Collections.reverse(diary.getEntry());
+    List<Entry> entries = Collections.unmodifiableList(diary.getEntry());
     
-    Vector<Object> items = new Vector<Object>(count * 2);
+    List<Object> items = new Vector<Object>(count * 2);
     if (shows != null) {
       items.addAll(shows.subList(0, count));
     }
@@ -220,7 +220,7 @@ public class Util {
     Collections.sort(items, CHANNEL_ITEM_COMPARATOR);
     Collections.reverse(items);
     
-    return items.subList(0, count);
+    return Collections.unmodifiableList(items.subList(0, count));
   }
 
   public static final Comparator<Object> CHANNEL_ITEM_COMPARATOR = new Comparator<Object>() {
