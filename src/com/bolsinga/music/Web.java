@@ -17,13 +17,15 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
-  protected final Music fMusic;
+  protected final GregorianCalendar fTimeStamp;
+  protected final Lookup fLookup;
   protected final Links fLinks;
   private final String  fProgram;
     
-  protected MusicDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
+  protected MusicDocumentCreator(final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(outputDir);
-    fMusic = music;
+    fTimeStamp = timeStamp;
+    fLookup = lookup;
     fLinks = links;
     fProgram = program;
   }
@@ -36,20 +38,22 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
     d.addElement(new h1().addElement(getTitle()));
     d.addElement(com.bolsinga.web.Util.getLogo());
-    d.addElement(fLinks.addWebNavigator(fMusic, fProgram));
+    d.addElement(fLinks.addWebNavigator(fTimeStamp, fProgram));
     d.addElement(addIndexNavigator());
     return d;
   }
 }
 
 abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
-  protected final Music fMusic;
+  protected final GregorianCalendar fTimeStamp;
+  protected final Lookup fLookup;
   protected final Links fLinks;
   private final String  fProgram;
 
-  protected SingleSectionMusicDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
+  protected SingleSectionMusicDocumentCreator(final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(outputDir);
-    fMusic = music;
+    fTimeStamp = timeStamp;
+    fLookup = lookup;
     fLinks = links;
     fProgram = program;
   }
@@ -62,19 +66,22 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
     d.addElement(new h1().addElement(getTitle()));
     d.addElement(com.bolsinga.web.Util.getLogo());
-    d.addElement(fLinks.addWebNavigator(fMusic, fProgram));
+    d.addElement(fLinks.addWebNavigator(fTimeStamp, fProgram));
     d.addElement(addIndexNavigator());
     return d;
   }
 }
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
+  private final List<Artist> fArtists;
+
   // These change during the life-cycle of this object
   private Artist fLastArtist = null;
   private Artist fCurArtist  = null;
-        
-  public ArtistDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
-    super(music, links, outputDir, program);
+          
+  public ArtistDocumentCreator(final List<Artist> artists, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+    super(lookup, links, timeStamp, outputDir, program);
+    fArtists = artists;
   }
 
   public void add(final Artist item) {
@@ -108,21 +115,24 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fMusic, fLinks, fCurArtist);
+    return Web.addItem(fLookup, fLinks, fCurArtist);
   }
     
   protected Element addIndexNavigator() {
-    return Web.addArtistIndexNavigator(fMusic, fLinks, getCurrentLetter());
+    return Web.addArtistIndexNavigator(fArtists, fLinks, getCurrentLetter());
   }
 }
 
 class VenueDocumentCreator extends MusicDocumentCreator {
+  private final List<Venue> fVenues;
+
   // These change during the life-cycle of this object
   private Venue fLastVenue = null;
   private Venue fCurVenue  = null;
-        
-  public VenueDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
-    super(music, links, outputDir, program);
+    
+  public VenueDocumentCreator(final List<Venue> venues, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+    super(lookup, links, timeStamp, outputDir, program);
+    fVenues = venues;
   }
 
   public void add(final Venue item) {
@@ -156,24 +166,26 @@ class VenueDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fMusic, fLinks, fCurVenue);
+    return Web.addItem(fLookup, fLinks, fCurVenue);
   }
         
   protected Element addIndexNavigator() {
-    return Web.addVenueIndexNavigator(fMusic, fLinks, getCurrentLetter());
+    return Web.addVenueIndexNavigator(fVenues, fLinks, getCurrentLetter());
   }
 }
 
 class ShowDocumentCreator extends MusicDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
+  private final List<Show> fShows;
 
   // These change during the life-cycle of this object
   private Show fLastShow = null;
   private Show fCurShow  = null;
-   
-  public ShowDocumentCreator(final Music music, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program) {
-    super(music, links, outputDir, program);
+
+  public ShowDocumentCreator(final List<Show> shows, final Lookup lookup, final com.bolsinga.web.Encode encoder, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+    super(lookup, links, timeStamp, outputDir, program);
     fEncoder = encoder;
+    fShows = shows;
   }
         
   public void add(final Show item) {
@@ -212,7 +224,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element addIndexNavigator() {
-    return Web.addShowIndexNavigator(fMusic, fLinks, getCurrentLetter());
+    return Web.addShowIndexNavigator(fShows, fLinks, getCurrentLetter());
   }
 }
 
@@ -224,8 +236,8 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
   // This changes during the life-cycle of this object
   private table  fCurTable  = null;
 
-  public StatisticsCreator(final Music music, final Links links, final String outputDir, final String program, final String filename, final String title, final String directory) {
-    super(music, links, outputDir, program);
+  public StatisticsCreator(final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program, final String filename, final String title, final String directory) {
+    super(lookup, links, timeStamp, outputDir, program);
     fFileName = filename;
     fTitle = title;
     fDirectory = directory;
@@ -269,16 +281,16 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
 class TracksStatisticsCreator extends StatisticsCreator {
   private final boolean fTracksStats;
         
-  public static TracksStatisticsCreator createTracksStats(final Music music, final Links links, final String outputDir, final String program, final String title, final String directory) {
-    return new TracksStatisticsCreator(music, links, outputDir, program, Links.STATS, true, title, directory);
+  public static TracksStatisticsCreator createTracksStats(final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program, final String title, final String directory) {
+    return new TracksStatisticsCreator(lookup, links, timeStamp, outputDir, program, Links.STATS, true, title, directory);
   }
 
-  public static TracksStatisticsCreator createAlbumStats(final Music music, final Links links, final String outputDir, final String program, final String title, final String directory) {
-    return new TracksStatisticsCreator(music, links, outputDir, program, Links.ALBUM_STATS, false, title, directory);
+  public static TracksStatisticsCreator createAlbumStats(final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program, final String title, final String directory) {
+    return new TracksStatisticsCreator(lookup, links, timeStamp, outputDir, program, Links.ALBUM_STATS, false, title, directory);
   }
 
-  private TracksStatisticsCreator(final Music music, final Links links, final String outputDir, final String program, final String filename, final boolean isTracksStats, final String title, final String directory) {
-    super(music, links, outputDir, program, filename, title, directory);
+  private TracksStatisticsCreator(final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program, final String filename, final boolean isTracksStats, final String title, final String directory) {
+    super(lookup, links, timeStamp, outputDir, program, filename, title, directory);
     fTracksStats = isTracksStats;
   }
 
@@ -300,12 +312,15 @@ class TracksStatisticsCreator extends StatisticsCreator {
 }
 
 class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
+  private final List<Album> fAlbums;
+
   // These change during the life-cycle of this object
   private Album fLastAlbum = null;
   private Album fCurAlbum  = null;
-        
-  public TracksDocumentCreator(final Music music, final Links links, final String outputDir, final String program) {
-    super(music, links, outputDir, program);
+          
+  public TracksDocumentCreator(final List<Album> albums, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+    super(lookup, links, timeStamp, outputDir, program);
+    fAlbums = albums;
   }
         
   public void add(final Album item) {
@@ -335,7 +350,7 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
   }
 
   protected Element addIndexNavigator() {
-    return Web.addAlbumIndexNavigator(fMusic, fLinks, getCurrentLetter());
+    return Web.addAlbumIndexNavigator(fAlbums, fLinks, getCurrentLetter());
   }
 }
 
@@ -433,41 +448,42 @@ public class Web {
   }
         
   public static void generate(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+    Lookup lookup = Lookup.getLookup(music);
     Links links = Links.getLinks(true);
+    GregorianCalendar timeStamp = music.getTimestamp().toGregorianCalendar();
                 
-    generateArtistPages(music, links, outputDir);
+    generateArtistPages(music, lookup, links, timeStamp, outputDir);
                 
-    generateVenuePages(music, links, outputDir);
+    generateVenuePages(music, lookup, links, timeStamp, outputDir);
                 
-    generateDatePages(music, encoder, links, outputDir);
+    generateDatePages(music, encoder, lookup, links, timeStamp, outputDir);
                 
-    generateCityPages(music, links, outputDir);
+    generateCityPages(music, lookup, links, timeStamp, outputDir);
                 
-    generateTracksPages(music, links, outputDir);
+    generateTracksPages(music, lookup, links, timeStamp, outputDir);
   }
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
         
-  public static void generateArtistPages(final Music music, final Links links, final String outputDir) {
-    List<Artist> items = music.getArtist();
-    int index = 0;
-                
-    Collections.sort(items, com.bolsinga.music.Compare.ARTIST_COMPARATOR);
-                
-    ArtistDocumentCreator creator = new ArtistDocumentCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
-
+  public static void generateArtistPages(final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR);
+    List<Artist> items = Collections.unmodifiableList(music.getArtist());
+    
+    ArtistDocumentCreator creator = new ArtistDocumentCreator(items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Artist item : items) {
       creator.add(item);
     }
     creator.close();
                 
-    Collections.sort(items, com.bolsinga.music.Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
+    Collections.sort(music.getArtist(), com.bolsinga.music.Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
+    items = Collections.unmodifiableList(music.getArtist());
 
+    int index = 0;
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
     for (Artist item : items) {
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
-      Collection<Show> shows = Lookup.getLookup(music).getShows(item);
+      Collection<Show> shows = lookup.getShows(item);
       values[index] = (shows != null) ? shows.size() : 0;
                         
       index++;
@@ -478,31 +494,30 @@ public class Web {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.ARTIST_DIR);
+    StatisticsCreator stats = new StatisticsCreator(lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.ARTIST_DIR);
     stats.add(makeTable(names, values, tableTitle, typeString));
     stats.close();
   }
         
-  public static void generateVenuePages(final Music music, final Links links, final String outputDir) {
-    List<Venue> items = music.getVenue();
-    int index = 0;
-                
-    Collections.sort(items, com.bolsinga.music.Compare.VENUE_COMPARATOR);
+  public static void generateVenuePages(final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    Collections.sort(music.getVenue(), com.bolsinga.music.Compare.VENUE_COMPARATOR);
+    List<Venue> items = Collections.unmodifiableList(music.getVenue());
 
-    VenueDocumentCreator creator = new VenueDocumentCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
-
+    VenueDocumentCreator creator = new VenueDocumentCreator(items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Venue item : items) {
       creator.add(item);
     }
     creator.close();
 
-    Collections.sort(items, com.bolsinga.music.Compare.getCompare(music).VENUE_STATS_COMPARATOR);
+    Collections.sort(music.getVenue(), com.bolsinga.music.Compare.getCompare(music).VENUE_STATS_COMPARATOR);
+    items = Collections.unmodifiableList(music.getVenue());
 
+    int index = 0;
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
     for (Venue item : items) {
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
-      Collection<Show> shows = Lookup.getLookup(music).getShows(item);
+      Collection<Show> shows = lookup.getShows(item);
       values[index] = (shows != null) ? shows.size() : 0;
                         
       index++;
@@ -513,20 +528,19 @@ public class Web {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.VENUE_DIR);
+    StatisticsCreator stats = new StatisticsCreator(lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.VENUE_DIR);
     stats.add(makeTable(names, values, tableTitle, typeString));
     stats.close();
   }
         
-  public static void generateDatePages(final Music music, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir) {
-    List<Show> items = music.getShow();
+  public static void generateDatePages(final Music music, final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
+    List<Show> items = Collections.unmodifiableList(music.getShow());
+
     Collection<Show> showCollection = null;
     TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(com.bolsinga.music.Compare.SHOW_STATS_COMPARATOR);
                 
-    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
-
-    ShowDocumentCreator creator = new ShowDocumentCreator(music, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
-
+    ShowDocumentCreator creator = new ShowDocumentCreator(items, lookup, encoder, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Show item : items) {
       if (dates.containsKey(item)) {
         showCollection = dates.get(item);
@@ -541,9 +555,9 @@ public class Web {
     }
     creator.close();
 
+    int index = 0;
     String[] names = new String[dates.size()];
     int[] values = new int[dates.size()];
-    int index = 0;
 
     for (Show item : dates.keySet()) {
       BigInteger year = item.getDate().getYear();
@@ -558,20 +572,20 @@ public class Web {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.SHOW_DIR);
+    StatisticsCreator stats = new StatisticsCreator(lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.SHOW_DIR);
     stats.add(makeTable(names, values, tableTitle, typeString));
     stats.close();
   }
         
-  public static void generateCityPages(final Music music, final Links links, final String outputDir) {
-    Collection<String> items = Lookup.getLookup(music).getCities();
+  public static void generateCityPages(final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    Collection<String> items = lookup.getCities();
     HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
     int val;
     Collection<String> stringCollection = null;
 
     for (String item : items) {
-      val = Lookup.getLookup(music).getShows(item).size();
+      val = lookup.getShows(item).size();
       if (cityCount.containsKey(val)) {
         stringCollection = cityCount.get(val);
         stringCollection.add(item);
@@ -606,19 +620,16 @@ public class Web {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator creator = new StatisticsCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.CITIES_DIR);
+    StatisticsCreator creator = new StatisticsCreator(lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.CITIES_DIR);
     creator.add(makeTable(names, values, tableTitle, typeString));
     creator.close();
   }
 
-  public static void generateTracksPages(final Music music, final Links links, final String outputDir) {
-    List<Album> items = music.getAlbum();
-    int index = 0;
+  public static void generateTracksPages(final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    Collections.sort(music.getAlbum(), com.bolsinga.music.Compare.ALBUM_COMPARATOR);
+    List<Album> items = Collections.unmodifiableList(music.getAlbum());
                 
-    Collections.sort(items, com.bolsinga.music.Compare.ALBUM_COMPARATOR);
-                
-    TracksDocumentCreator creator = new TracksDocumentCreator(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"));
-
+    TracksDocumentCreator creator = new TracksDocumentCreator(items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Album item : items) {                
       creator.add(item);
     }
@@ -627,6 +638,7 @@ public class Web {
     List<Artist> artists = music.getArtist();
     Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_TRACKS_COMPARATOR);
 
+    int index = 0;
     String[] names = new String[artists.size()];
     int[] values = new int[artists.size()];
     
@@ -644,7 +656,7 @@ public class Web {
       Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
 
-      StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
+      StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
       stats.add(makeTable(names, values, tableTitle, typeString));
       stats.close();
     }
@@ -670,7 +682,7 @@ public class Web {
       Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
 
-      StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(music, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
+      StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
       stats.add(makeTable(names, values, tableTitle, typeString));
       stats.close();
     }
@@ -759,7 +771,7 @@ public class Web {
     return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel));
   }
         
-  public static Element addItem(final Music music, final Links links, final Artist artist) {
+  public static Element addItem(final Lookup lookup, final Links links, final Artist artist) {
     // CSS.ARTIST_ITEM
     Vector<Element> e = new Vector<Element>();
 
@@ -767,11 +779,11 @@ public class Web {
       e.add(Web.addTracks(links, artist));
     }
                 
-    if (Lookup.getLookup(music).getRelations(artist) != null) {
-      e.add(Web.addRelations(music, links, artist));
+    if (lookup.getRelations(artist) != null) {
+      e.add(Web.addRelations(lookup, links, artist));
     }
 
-    Collection<Show> shows = Lookup.getLookup(music).getShows(artist);
+    Collection<Show> shows = lookup.getShows(artist);
     if (shows != null) {
       for (Show show : shows) {
         Vector<Element> se = new Vector<Element>();
@@ -814,15 +826,15 @@ public class Web {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  public static Element addItem(final Music music, final Links links, final Venue venue) {
+  public static Element addItem(final Lookup lookup, final Links links, final Venue venue) {
     // CSS.VENUE_ITEM
     Vector<Element> e = new Vector<Element>();
                 
-    if (Lookup.getLookup(music).getRelations(venue) != null) {
-      e.add(Web.addRelations(music, links, venue));
+    if (lookup.getRelations(venue) != null) {
+      e.add(Web.addRelations(lookup, links, venue));
     }
 
-    Collection<Show> shows = Lookup.getLookup(music).getShows(venue);
+    Collection<Show> shows = lookup.getShows(venue);
     if (shows != null) {
       for (Show show : shows) {
         String showLink = links.getLinkTo(show);
@@ -956,9 +968,9 @@ public class Web {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  public static div addRelations(final Music music, final Links links, final Artist artist) {
+  public static div addRelations(final Lookup lookup, final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
-    for (Artist art : Lookup.getLookup(music).getRelations(artist)) {
+    for (Artist art : lookup.getRelations(artist)) {
       if (art.equals(artist)) {
         e.add(new StringElement(art.getName()));
       } else {
@@ -972,9 +984,9 @@ public class Web {
     return d;
   }
         
-  public static div addRelations(final Music music, final Links links, final Venue venue) {
+  public static div addRelations(final Lookup lookup, final Links links, final Venue venue) {
     Vector<Element> e = new Vector<Element>();
-    for (Venue v : Lookup.getLookup(music).getRelations(venue)) {
+    for (Venue v : lookup.getRelations(venue)) {
       if (v.equals(venue)) {
         e.add(new StringElement(v.getName()));
       } else {
@@ -1013,10 +1025,10 @@ public class Web {
     return d;
   }
         
-  public static Element addArtistIndexNavigator(final Music music, final Links links, final String curLetter) {
+  public static Element addArtistIndexNavigator(final List<Artist> artists, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
 
-    for (Artist art : music.getArtist()) {
+    for (Artist art : artists) {
       String letter = links.getPageFileName(art);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(art));
@@ -1037,9 +1049,9 @@ public class Web {
     return d;
   }
         
-  public static Element addVenueIndexNavigator(final Music music, final Links links, final String curLetter) {
+  public static Element addVenueIndexNavigator(final List<Venue> venues, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    for (Venue v : music.getVenue()) {
+    for (Venue v : venues) {
       String letter = links.getPageFileName(v);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(v));
@@ -1060,9 +1072,9 @@ public class Web {
     return d;
   }
 
-  public static Element addAlbumIndexNavigator(final Music music, final Links links, final String curLetter) {
+  public static Element addAlbumIndexNavigator(final List<Album> items, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    for (Album alb : music.getAlbum()) {
+    for (Album alb : items) {
       String letter = links.getPageFileName(alb);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(alb));
@@ -1126,9 +1138,9 @@ public class Web {
     return t;
   }
         
-  public static Element addShowIndexNavigator(final Music music, final Links links, final String curLetter) {
+  public static Element addShowIndexNavigator(final List<Show> shows, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    for (Show s : music.getShow()) {
+    for (Show s : shows) {
       String letter = links.getPageFileName(s);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(s));

@@ -137,8 +137,10 @@ public class RSS {
       TRssChannel channel = objFactory.createTRssChannel();
 
       List<Object> channelElements = channel.getTitleOrLinkOrDescription();
-                        
-      channelElements.add(objFactory.createTRssChannelTitle(diary.getTitle()));
+
+      String diaryTitle = diary.getTitle();
+      
+      channelElements.add(objFactory.createTRssChannelTitle(diaryTitle));
       channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRssRoot()));
       channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.Util.getSettings().getRssDescription()));
       channelElements.add(objFactory.createTRssChannelGenerator(com.bolsinga.web.Util.getGenerator()));
@@ -147,7 +149,7 @@ public class RSS {
 
       TImage logo = com.bolsinga.rss.Util.createLogo(objFactory);
       logo.setLink(com.bolsinga.web.Util.getSettings().getRssRoot());
-      logo.setDescription(diary.getTitle());
+      logo.setDescription(diaryTitle);
                         
       channelElements.add(objFactory.createTRssChannelImage(logo));
                         

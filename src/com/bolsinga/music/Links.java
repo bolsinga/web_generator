@@ -40,7 +40,7 @@ public class Links {
     fUpOneLevel = upOneLevel;
   }
         
-  public div addWebNavigator(final Music music, final String program) {
+  public div addWebNavigator(final GregorianCalendar cal, final String program) {
     Vector<Element> e = new Vector<Element>();
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
     e.add(new a(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
@@ -52,7 +52,7 @@ public class Links {
     e.add(getCityLink());
 
     div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
-    Object[] args = { music.getTimestamp().toGregorianCalendar().getTime() };
+    Object[] args = { cal.getTime() };
     d.addElement(new h4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;

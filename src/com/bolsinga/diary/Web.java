@@ -17,7 +17,7 @@ import javax.xml.bind.Marshaller;
 
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
-  private final Diary  fDiary;
+  private final List<Entry>  fEntries;
   private final Links  fLinks;
   private final String fProgram;
   private final int fStartYear;
@@ -26,10 +26,10 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private Entry  fCurEntry;
   private Entry  fLastEntry;
         
-  public DiaryDocumentCreator(final Diary diary, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
+  public DiaryDocumentCreator(final List<Entry> entries, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
     super(outputDir);
     fEncoder = encoder;
-    fDiary = diary;
+    fEntries = entries;
     fLinks = links;
     fProgram = program;
     fStartYear = startYear;
@@ -85,7 +85,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
 
   protected Element addIndexNavigator() {
     java.util.Map<String, String> m = new TreeMap<String, String>();
-    for (Entry e : fDiary.getEntry()) {
+    for (Entry e : fEntries) {
       String letter = fLinks.getPageFileName(e);
       if (!m.containsKey(letter)) {
         m.put(letter, fLinks.getLinkToPage(e));
@@ -339,13 +339,13 @@ public class Web {
   }
         
   public static void generateArchivePages(final Diary diary, final com.bolsinga.web.Encode encoder, final int startYear, final String outputDir) {
-    List<Entry> items = diary.getEntry();
-                
-    Collections.sort(items, Util.ENTRY_COMPARATOR);
-                
+    Collections.sort(diary.getEntry(), Util.ENTRY_COMPARATOR);
+
+    List<Entry> items = Collections.unmodifiableList(diary.getEntry());
+                    
     Links links = Links.getLinks(true);
                 
-    DiaryDocumentCreator creator = new DiaryDocumentCreator(diary, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
+    DiaryDocumentCreator creator = new DiaryDocumentCreator(items, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
 
     for (Entry item : items) {
       creator.add(item);
