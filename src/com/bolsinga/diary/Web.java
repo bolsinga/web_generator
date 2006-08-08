@@ -26,8 +26,8 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private Entry  fCurEntry;
   private Entry  fLastEntry;
         
-  public DiaryDocumentCreator(final List<Entry> entries, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
-    super(outputDir);
+  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final List<Entry> entries, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
+    super(backgrounder, outputDir);
     fEncoder = encoder;
     fEntries = entries;
     fLinks = links;
@@ -122,10 +122,12 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 }
 
-public class Web {
+public class Web implements com.bolsinga.web.Backgroundable {
 
   private static final boolean GENERATE_XML = false;
 
+  private final com.bolsinga.web.Backgrounder fBackgrounder;
+  
   public static void main(String[] args) {
     if (args.length != 5) {
       Web.usage();
@@ -161,7 +163,19 @@ public class Web {
     }
 
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
-    generate(diary, music, encoder, output);
+    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+    Web web = new Web(backgrounder);
+    web.generate(diary, music, encoder, output);
+    web.complete();
+  }
+  
+  Web(final com.bolsinga.web.Backgrounder backgrounder) {
+    fBackgrounder = backgrounder;
+    backgrounder.addInterest(this);
+  }
+  
+  void complete() {
+    fBackgrounder.removeInterest(this);
   }
 
   private static void usage() {
@@ -203,13 +217,20 @@ public class Web {
   public static void generate(final Diary diary, final String musicFile, final String outputDir) {
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
-    generate(diary, music, encoder, outputDir);
+    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+    Web web = new Web(backgrounder);
+    web.generate(diary, music, encoder, outputDir);
+    web.complete();
   }
         
-  public static void generate(final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  public void generate(final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+    Web.generate(fBackgrounder, diary, music, encoder, outputDir);
+  }
+
+  public static void generate(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     int startYear = Util.getStartYear(diary);
     generateMainPage(encoder, music, diary, startYear, outputDir);
-    generateArchivePages(diary, encoder, startYear, outputDir);
+    generateArchivePages(backgrounder, diary, encoder, startYear, outputDir);
   }
 
   public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
@@ -336,20 +357,20 @@ public class Web {
     return diaryDiv;
   }
         
-  public static void generateArchivePages(final Diary diary, final com.bolsinga.web.Encode encoder, final int startYear, final String outputDir) {
+  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final com.bolsinga.web.Encode encoder, final int startYear, final String outputDir) {
     Collections.sort(diary.getEntry(), Util.ENTRY_COMPARATOR);
 
     List<Entry> items = Collections.unmodifiableList(diary.getEntry());
                     
     Links links = Links.getLinks(true);
                 
-    DiaryDocumentCreator creator = new DiaryDocumentCreator(items, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
+    DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, items, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
 
     for (Entry item : items) {
       creator.add(item);
     }
                 
-    creator.close();
+    creator.complete();
   }
 
   public static ul addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {

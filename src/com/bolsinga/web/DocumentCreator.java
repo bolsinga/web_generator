@@ -7,15 +7,49 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
-public abstract class DocumentCreator {
+class DocWriter implements Runnable {
+  private final XhtmlDocument fDoc;
+  private final String fOutputDir;
+  private final String fLastPath;
+  
+  public DocWriter(final XhtmlDocument doc, final String outputDir, final String lastPath) {
+    fDoc = doc;
+    fOutputDir = outputDir;
+    fLastPath = lastPath;
+  }
+  
+  public void run() {
+    try {
+      File f = new File(fOutputDir, fLastPath);
+      File parent = new File(f.getParent());
+      if (!parent.exists()) {
+        if (!parent.mkdirs()) {
+          System.out.println("Can't: " + parent.getAbsolutePath());
+        }
+      }
+      OutputStream os = new FileOutputStream(f);
+      fDoc.output(os);
+      os.close();
+    } catch (IOException ioe) {
+      System.err.println("Exception: " + ioe);
+      ioe.printStackTrace();
+      System.exit(1);
+    }
+  }
+}
+
+public abstract class DocumentCreator implements Backgroundable {
+  private final Backgrounder fBackgrounder;
   private final String fOutputDir;
 
   // These change during the life-cycle of this object
   private XhtmlDocument fDocument = null;
   private div fMain = null;
         
-  protected DocumentCreator(final String outputDir) {
+  protected DocumentCreator(final Backgrounder backgrounder, final String outputDir) {
+    fBackgrounder = backgrounder;
     fOutputDir = outputDir;
+    fBackgrounder.addInterest(this);
   }
         
   protected abstract String getTitle();
@@ -28,8 +62,13 @@ public abstract class DocumentCreator {
   protected abstract String getCurrentLetter();
   protected abstract Element getCurrentElement();
   protected abstract Element addIndexNavigator();
-        
-  public void close() {
+  
+  public void complete() {
+    close();
+    fBackgrounder.removeInterest(this);
+  }
+  
+  void close() {
     if (fDocument != null) {
       writeDocument();
       fDocument = null;
@@ -55,22 +94,7 @@ public abstract class DocumentCreator {
   protected void writeDocument() {
     fDocument.getBody().addElement(fMain);
 
-    try {
-      File f = new File(fOutputDir, getLastPath());
-      File parent = new File(f.getParent());
-      if (!parent.exists()) {
-        if (!parent.mkdirs()) {
-          System.out.println("Can't: " + parent.getAbsolutePath());
-        }
-      }
-      OutputStream os = new FileOutputStream(f);
-      fDocument.output(os);
-      os.close();
-    } catch (IOException ioe) {
-      System.err.println("Exception: " + ioe);
-      ioe.printStackTrace();
-      System.exit(1);
-    }
+    fBackgrounder.execute(this, new DocWriter(fDocument, fOutputDir, getLastPath()));
   }
         
   protected String getTitle(final String type) {
@@ -79,7 +103,7 @@ public abstract class DocumentCreator {
   }
         
   protected void finalize() throws Throwable {
-    close();
+    complete();
     super.finalize();
   }
 }

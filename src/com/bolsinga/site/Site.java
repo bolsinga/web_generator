@@ -3,7 +3,10 @@ package com.bolsinga.site;
 import com.bolsinga.music.data.*;
 import com.bolsinga.diary.data.*;
 
-public class Site {
+public class Site implements com.bolsinga.web.Backgroundable {
+
+  private final com.bolsinga.web.Backgrounder fBackgrounder;
+  
   public static void main(String[] args) {
     if (args.length != 6) {
       Site.usage();
@@ -34,8 +37,20 @@ public class Site {
     }
 
     com.bolsinga.web.Util.createSettings(settingsFile);
-
-    Site.generate(diary, music, outputDir, variant);
+    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+    
+    Site site = new Site(backgrounder);
+    site.generate(diary, music, outputDir, variant);
+    site.complete();
+  }
+  
+  Site(final com.bolsinga.web.Backgrounder backgrounder) {
+    fBackgrounder = backgrounder;
+    fBackgrounder.addInterest(this);
+  }
+  
+  void complete() {
+    fBackgrounder.removeInterest(this);
   }
 
   private static void usage() {
@@ -44,21 +59,12 @@ public class Site {
       System.exit(0);
   }
 
-  public static void generate(final String diaryFile, final String musicFile, final String settingsFile, final String outputDir, final String variant) {
-    com.bolsinga.web.Util.createSettings(settingsFile);
-    Site.generate(diaryFile, musicFile, outputDir, variant);
-  }
-
-  public static void generate(final String diaryFile, final String musicFile, final String outputDir, final String variant) {
-    Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
-    Music music = com.bolsinga.music.Util.createMusic(musicFile);
-    
-    Site.generate(diary, music, outputDir, variant);
-  }
-
-  public static void generate(final Diary diary, final Music music, final String outputDir, final String variant) {
+  public void generate(final Diary diary, final Music music, final String outputDir, final String variant) {
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+    Site.generate(fBackgrounder, encoder, diary, music, outputDir, variant);
+  }
 
+  public static void generate(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Encode encoder, final Diary diary, final Music music, final String outputDir, final String variant) {
     boolean musicOnly = variant.equals("music");
     boolean diaryOnly = variant.equals("diary");
     boolean webOnly = variant.equals("web");
@@ -67,12 +73,12 @@ public class Site {
     
     if (!musicOnly) {
       start = System.currentTimeMillis();
-      com.bolsinga.diary.Web.generate(diary, music, encoder, outputDir);
+      com.bolsinga.diary.Web.generate(backgrounder, diary, music, encoder, outputDir);
       diaryTime = System.currentTimeMillis() - start;
     }
     if (!diaryOnly) {
       start = System.currentTimeMillis();
-      com.bolsinga.music.Web.generate(music, encoder, outputDir);
+      com.bolsinga.music.Web.generate(backgrounder, music, encoder, outputDir);
       musicTime = System.currentTimeMillis() - start;
       if (!webOnly) {
         start = System.currentTimeMillis();

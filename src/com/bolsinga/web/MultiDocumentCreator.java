@@ -8,8 +8,8 @@ public abstract class MultiDocumentCreator extends DocumentCreator {
   // This changes during the life-cycle of this object
   private li fSubsection = null;
     
-  protected MultiDocumentCreator(final String outputDir) {
-    super(outputDir);
+  protected MultiDocumentCreator(final Backgrounder backgrounder, final String outputDir) {
+    super(backgrounder, outputDir);
   }
 
   protected abstract boolean needNewSubsection();

@@ -1,6 +1,9 @@
 package com.bolsinga.site;
 
-public class Main {
+public class Main implements com.bolsinga.web.Backgroundable {
+
+  private final com.bolsinga.web.Backgrounder fBackgrounder;
+  
   public static void main(String[] args) {
     if (args.length != 14) {
       Main.usage(args, "Wrong number of arguments");
@@ -28,6 +31,26 @@ public class Main {
     // Site generation arguments
     String settingsFile = args[9];
 
+    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+   
+    Main main = new Main(backgrounder);
+    boolean success = main.generate(command, diaryFile, musicFile, user, password, output, itunes, shows, venue, sort, relations, comments, statics, settingsFile);
+    if (!success) {
+      Main.usage(args, "Invalid action");
+    }
+    main.complete();
+  }
+    
+  Main(final com.bolsinga.web.Backgrounder backgrounder) {
+    fBackgrounder = backgrounder;
+    fBackgrounder.addInterest(this);
+  }
+  
+  void complete() {
+    fBackgrounder.removeInterest(this);
+  }
+  
+  boolean generate(String command, String diaryFile, String musicFile, String user, String password, String output, String itunes, String shows, String venue, String sort, String relations, String comments, String statics, String settingsFile) {
     boolean musicXML = command.equals("musicxml") || command.equals("xml");
     boolean diaryXML = command.equals("diaryxml") || command.equals("xml");
     boolean musicImport = command.equals("musicimport") || command.equals("import");
@@ -37,7 +60,7 @@ public class Main {
     boolean diarysite = command.matches("^diarysite.*");
 
     if (!(musicXML | diaryXML | musicImport | diaryImport | site | musicsite | diarysite)) {
-      Main.usage(args, "Invalid action");
+      return false;
     }
 
     if (musicXML || diaryXML) {
@@ -47,7 +70,7 @@ public class Main {
       if (diaryXML) {
         com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
       }
-      System.exit(0);
+      return true;
     }
 
     if (musicImport || diaryImport) {
@@ -57,7 +80,7 @@ public class Main {
       if (diaryImport) {
         com.bolsinga.diary.MySQLImporter.importData(diaryFile, user, password, true);
       }
-      System.exit(0);
+      return true;
     }
 
     com.bolsinga.web.Util.createSettings(settingsFile);
@@ -75,15 +98,19 @@ public class Main {
       music = com.bolsinga.music.Util.createMusic(user, password);
     }
 
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+
     if (site) {
-      com.bolsinga.site.Site.generate(diary, music, output, "all");
+      com.bolsinga.site.Site.generate(fBackgrounder, encoder, diary, music, output, "all");
     }
     if (musicsite) {
-      com.bolsinga.site.Site.generate(diary, music, output, "music");
+      com.bolsinga.site.Site.generate(fBackgrounder, encoder, diary, music, output, "music");
     }
     if (diarysite) {
-      com.bolsinga.site.Site.generate(diary, music, output, "diary");
+      com.bolsinga.site.Site.generate(fBackgrounder, encoder, diary, music, output, "diary");
     }
+
+    return true;
   }
 
   private static void usage(final String[] badargs, final String reason) {
