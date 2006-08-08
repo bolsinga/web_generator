@@ -248,8 +248,9 @@ class HashEncode extends Encode {
 
   // The key is the Show or Entry. The value is a TreeSet containing the EncoderData
   //  that are applicable to the given key. Only these EncoderDatas will be used
-  //  to encode the key, saving some time.
-  private final HashMap<Object, Collection<EncoderData>> fEncodables;
+  //  to encode the key, saving some time. This is created in the constructor,
+  //  and only read from thereafter.
+  private final Map<Object, Collection<EncoderData>> fEncodables;
 
   HashEncode(final Music music, final Diary diary) {
     if (music != null) {
@@ -284,23 +285,24 @@ class HashEncode extends Encode {
       keyWordsSet.retainAll(encodedMap.keySet());
       
       int capacity = keyWordsSet.size() / WORDS_PER_ENTRY;
-      fEncodables = new HashMap<Object, Collection<EncoderData>>(capacity);
+      HashMap<Object, Collection<EncoderData>> encodables = new HashMap<Object, Collection<EncoderData>>(capacity);
 
       Collection<EncoderData> c;
       for (String keyWord : keyWordsSet) {
         for (Object encodedItem : encodedMap.get(keyWord)) {
           for (EncoderData encoderItem : encoderMap.get(keyWord).values()) {
-           if (fEncodables.containsKey(encodedItem)) {
-              c = fEncodables.get(encodedItem);
+           if (encodables.containsKey(encodedItem)) {
+              c = encodables.get(encodedItem);
               c.add(encoderItem);
             } else {
               c = new TreeSet<EncoderData>(EncoderData.ENCODERDATA_COMPARATOR);
               c.add(encoderItem);
-              fEncodables.put(encodedItem, c);
+              encodables.put(encodedItem, c);
             }
           }
         }
       }
+      fEncodables = Collections.unmodifiableMap(encodables);
     } else {
       fEncodables = null;
     }
