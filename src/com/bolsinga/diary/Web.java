@@ -162,8 +162,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
       System.exit(0);
     }
 
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
     com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(backgrounder, music, diary);                
     Web web = new Web(backgrounder);
     web.generate(diary, music, encoder, output);
     web.complete();
@@ -216,8 +216,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
         
   public static void generate(final Diary diary, final String musicFile, final String outputDir) {
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
     com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(backgrounder, music, diary);                
     Web web = new Web(backgrounder);
     web.generate(diary, music, encoder, outputDir);
     web.complete();

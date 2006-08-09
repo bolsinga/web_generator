@@ -33,11 +33,15 @@ public abstract class Encode {
     Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
 
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+    
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(backgrounder, music, diary);
 
     generateDiary(diary, encoder, outputDir);
 
     generateMusic(music, encoder, outputDir);
+    
+    // +++gdb This isn't proper!
   }
 
   private static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
@@ -93,9 +97,9 @@ public abstract class Encode {
     }
   }
 
-  public synchronized static Encode getEncode(final Music music, final Diary diary) {
+  public synchronized static Encode getEncode(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Diary diary) {
     if (sEncode == null) {
-      sEncode = new HashEncode(music, diary);
+      sEncode = new HashEncode(backgrounder, music, diary);
     }
     return sEncode;
   }
@@ -246,13 +250,17 @@ class HashEncode extends Encode {
   // Assume average of 3 words per name
   private static final int WORDS_PER_NAME = 3;
 
+  private final com.bolsinga.web.Backgrounder fBackgrounder;
+  
   // The key is the Show or Entry. The value is a TreeSet containing the EncoderData
   //  that are applicable to the given key. Only these EncoderDatas will be used
   //  to encode the key, saving some time. This is created in the constructor,
   //  and only read from thereafter.
   private final Map<Object, Collection<EncoderData>> fEncodables;
 
-  HashEncode(final Music music, final Diary diary) {
+  HashEncode(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Diary diary) {
+    fBackgrounder = backgrounder;
+    
     if (music != null) {
       List<Show> shows = music.getShow();
       int numShows = (shows != null) ? shows.size() : 0;

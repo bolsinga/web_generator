@@ -98,7 +98,7 @@ public class Main implements com.bolsinga.web.Backgroundable {
       music = com.bolsinga.music.Util.createMusic(user, password);
     }
 
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(fBackgrounder, music, diary);
 
     if (site) {
       com.bolsinga.site.Site.generate(fBackgrounder, encoder, diary, music, output, "all");

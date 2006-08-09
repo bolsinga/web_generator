@@ -60,7 +60,7 @@ public class Site implements com.bolsinga.web.Backgroundable {
   }
 
   public void generate(final Diary diary, final Music music, final String outputDir, final String variant) {
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(fBackgrounder, music, diary);
     Site.generate(fBackgrounder, encoder, diary, music, outputDir, variant);
   }
 
