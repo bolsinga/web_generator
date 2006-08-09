@@ -454,13 +454,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
   }
 
-  public static void generate(final String sourceFile, final String outputDir) {
-    Music music = Util.createMusic(sourceFile);
-    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(backgrounder, music, null);
-    generate(backgrounder, music, encoder, outputDir);
-  }
-
   public void generate(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     Web.generate(fBackgrounder, music, encoder, outputDir);
   }
