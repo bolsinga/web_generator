@@ -14,37 +14,31 @@ import org.apache.ecs.*;
 import org.apache.ecs.xhtml.*;
 import org.apache.ecs.filter.*;
 
-public abstract class Encode {
+class EncodeTest implements com.bolsinga.web.Backgroundable {
 
-  private static Encode sEncode = null;
+  private final com.bolsinga.web.Backgrounder fBackgrounder;
   
-  public static void main(String[] args) {
-    if (args.length != 4) {
-      System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir]>");
-      System.exit(0);
-    }
-
-    com.bolsinga.web.Util.createSettings(args[2]);
-                
-    Encode.generate(args[0], args[1], args[3]);
+  EncodeTest(final com.bolsinga.web.Backgrounder backgrounder) {
+    fBackgrounder = backgrounder;
+    fBackgrounder.addInterest(this);
   }
-
-  private static void generate(final String diaryFile, final String musicFile, final String outputDir) {
+  
+  void complete() {
+    fBackgrounder.removeInterest(this);
+  }
+  
+  void generate(final String diaryFile, final String musicFile, final String outputDir) {
     Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
-
-    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
     
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(backgrounder, music, diary);
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(fBackgrounder, music, diary);
 
     generateDiary(diary, encoder, outputDir);
 
     generateMusic(music, encoder, outputDir);
-    
-    // +++gdb This isn't proper!
   }
 
-  private static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
+  static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
     List<Entry> items = diary.getEntry();
     StringBuffer buffer = new StringBuffer();
 
@@ -60,7 +54,7 @@ public abstract class Encode {
     writeDocument(buffer, outputDir, sb.toString());
   }
 
-  private static void generateMusic(final Music music, final Encode encoder, final String outputDir) {
+  static void generateMusic(final Music music, final Encode encoder, final String outputDir) {
     List<Show> items = music.getShow();
     StringBuffer buffer = new StringBuffer();
 
@@ -78,7 +72,7 @@ public abstract class Encode {
     writeDocument(buffer, outputDir, sb.toString());
   }
 
-  private static void writeDocument(final StringBuffer buffer, final String outputDir, final String fileName) {
+  static void writeDocument(final StringBuffer buffer, final String outputDir, final String fileName) {
     try {
       File f = new File(outputDir, fileName);
       File parent = new File(f.getParent());
@@ -95,6 +89,26 @@ public abstract class Encode {
       ioe.printStackTrace();
       System.exit(1);
     }
+  }
+}
+
+public abstract class Encode {
+
+  private static Encode sEncode = null;
+    
+  public static void main(String[] args) {
+    if (args.length != 4) {
+      System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir]>");
+      System.exit(0);
+    }
+
+    com.bolsinga.web.Util.createSettings(args[2]);
+
+    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+    
+    EncodeTest test = new EncodeTest(backgrounder);
+    test.generate(args[0], args[1], args[3]);
+    test.complete();
   }
 
   public synchronized static Encode getEncode(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Diary diary) {
