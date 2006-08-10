@@ -8,6 +8,7 @@ import com.bolsinga.music.*;
 import java.io.*;
 import java.text.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.regex.*;
 
 import org.apache.ecs.*;
@@ -94,6 +95,9 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
 
 public abstract class Encode {
 
+  // NOTE: With the current set of data (2006-08-02) there is a 210:1 ratio of up to std links!
+  public static final boolean PRE_CALCULATED_ENCODINGS_UP_LEVEL_VALUE = true;
+  
   private static Encode sEncode = null;
     
   public static void main(String[] args) {
@@ -258,7 +262,115 @@ class EncoderData {
   }
 }
 
+class BackgroundEncoder implements com.bolsinga.web.Backgroundable {
+
+  private final com.bolsinga.web.Backgrounder fBackgrounder;
+
+  // Data Sources
+  private Collection<Show> fShows;
+  private Collection<Entry> fEntries;
+  private final Map<Object, Collection<EncoderData>> fEncodables;
+  
+  // Computed Data
+  private final ConcurrentMap<Object, Future<String>> fEncodings;
+  
+  public BackgroundEncoder(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Diary diary, final Map<Object, Collection<EncoderData>> encodables) {
+    fBackgrounder = backgrounder;
+    
+    fShows = Collections.unmodifiableCollection(music.getShow());
+    fEntries = Collections.unmodifiableCollection(diary.getEntry());
+    
+    // Nothing is being added nor removed from fEncodables at this point
+    fEncodables = encodables;
+    
+    fEncodings = new ConcurrentHashMap<Object, Future<String>>(fShows.size() + fEntries.size());
+  }
+  
+  public void startEncoding() {
+    fBackgrounder.addInterest(this);
+
+    processEntries(Encode.PRE_CALCULATED_ENCODINGS_UP_LEVEL_VALUE);
+    processShows(Encode.PRE_CALCULATED_ENCODINGS_UP_LEVEL_VALUE);
+    
+    fBackgrounder.removeInterest(this);
+  }
+  
+  class EntryProcessor implements Callable<String> {
+    private final Entry fEntry;
+    private final Map<Object, Collection<EncoderData>> fEncodables;
+    private final boolean fUpOneLevel;
+    
+    EntryProcessor(final Entry entry, final Map<Object, Collection<EncoderData>> encodables, final boolean upOneLevel) {
+      fEntry = entry;
+      fEncodables = encodables;
+      fUpOneLevel = upOneLevel;
+    }
+
+    public String call() {
+      return EncoderData.addLinks(fEntry.getComment(), fUpOneLevel, fEncodables.get(fEntry));
+    }
+  }
+  
+  private void processEntries(final boolean upOneLevel) {
+    for (final Entry e : fEntries) {
+      if (fEncodables.containsKey(e)) {
+        FutureTask<String> task = new FutureTask<String>(new EntryProcessor(e, fEncodables, upOneLevel));
+        fEncodings.putIfAbsent(e, task);
+        fBackgrounder.execute(this, task);
+      }
+    }
+    
+    fEntries = null;
+  }
+
+  class ShowProcessor implements Callable<String> {
+    private final Show fShow;
+    private final Map<Object, Collection<EncoderData>> fEncodables;
+    private final boolean fUpOneLevel;
+    
+    ShowProcessor(final Show show, final Map<Object, Collection<EncoderData>> encodables, final boolean upOneLevel) {
+      fShow = show;
+      fEncodables = encodables;
+      fUpOneLevel = upOneLevel;
+    }
+
+    public String call() {
+      return EncoderData.addLinks(fShow.getComment(), fUpOneLevel, fEncodables.get(fShow));
+    }
+  }
+  
+  private void processShows(final boolean upOneLevel) {
+    for (final Show s : fShows) {
+      if (fEncodables.containsKey(s)) {
+        FutureTask<String> task = new FutureTask<String>(new ShowProcessor(s, fEncodables, upOneLevel));
+        fEncodings.putIfAbsent(s, task);
+        fBackgrounder.execute(this, task);
+      }
+    }
+    
+    fShows = null;
+  }
+  
+  public String getLinks(final Object obj) throws InterruptedException {
+    String result = null;
+    Future<String> f = null;
+    try {
+      f = fEncodings.get(obj);
+      result = f.get();
+    } catch (CancellationException ce) {
+      fEncodings.remove(obj, f);
+    } catch (ExecutionException ee) {
+      Thread.dumpStack();
+      System.exit(1);
+    }
+    return result;
+  }
+}
+
 class HashEncode extends Encode {
+
+  private static final boolean sPrecalculateEncodings = (System.getProperty("site.precalculateencodings") != null);
+  
   // Assume average of 25 words per entry.
   private static final int WORDS_PER_ENTRY = 25;
   // Assume average of 3 words per name
@@ -271,6 +383,8 @@ class HashEncode extends Encode {
   //  to encode the key, saving some time. This is created in the constructor,
   //  and only read from thereafter.
   private final Map<Object, Collection<EncoderData>> fEncodables;
+  
+  private final BackgroundEncoder fBackgroundEncoder;
 
   HashEncode(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Diary diary) {
     fBackgrounder = backgrounder;
@@ -327,6 +441,13 @@ class HashEncode extends Encode {
       fEncodables = Collections.unmodifiableMap(encodables);
     } else {
       fEncodables = null;
+    }
+    
+    if (HashEncode.sPrecalculateEncodings) {
+      fBackgroundEncoder = new BackgroundEncoder(fBackgrounder, music, diary, fEncodables);
+      fBackgroundEncoder.startEncoding();
+    } else {
+      fBackgroundEncoder = null;
     }
   }
 
@@ -473,9 +594,16 @@ class HashEncode extends Encode {
   
   private String embedLinks(final Object obj, final String source, final boolean upOneLevel) {
     if ((fEncodables != null) && (fEncodables.containsKey(obj))) {
-      return EncoderData.addLinks(source, upOneLevel, fEncodables.get(obj));
-    } else {
-      return source;
+      if ((fBackgroundEncoder != null) && (upOneLevel == Encode.PRE_CALCULATED_ENCODINGS_UP_LEVEL_VALUE)) {
+        try {
+          return fBackgroundEncoder.getLinks(obj);
+        } catch (InterruptedException ie) {
+          return source;
+        }
+      } else {
+        return EncoderData.addLinks(source, upOneLevel, fEncodables.get(obj));
+      }
     }
+    return source;
   }
 }
