@@ -117,7 +117,7 @@ fi
 
 COMMAND="exec \"$JAVA_CMD\" -Xms96m -Xmx96m"
 if [ ! -z "$JAVA_OPTS" ] ; then
-    COMMAND="$COMMAND \"$JAVA_OPTS\""
+    COMMAND="$COMMAND $JAVA_OPTS"
 fi
 COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $DATA_FILES $DB_USER $DB_PASSWORD $OUTPUT_HOME $ACTION"
 
