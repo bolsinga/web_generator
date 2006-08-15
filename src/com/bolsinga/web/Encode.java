@@ -295,7 +295,7 @@ class BackgroundEncoder implements com.bolsinga.web.Backgroundable {
     fBackgrounder.removeInterest(this);
   }
   
-  class EntryProcessor implements Callable<String> {
+  static class EntryProcessor implements Callable<String> {
     private final Entry fEntry;
     private final Map<Object, Collection<EncoderData>> fEncodables;
     private final boolean fUpOneLevel;
@@ -323,7 +323,7 @@ class BackgroundEncoder implements com.bolsinga.web.Backgroundable {
     fEntries = null;
   }
 
-  class ShowProcessor implements Callable<String> {
+  static class ShowProcessor implements Callable<String> {
     private final Show fShow;
     private final Map<Object, Collection<EncoderData>> fEncodables;
     private final boolean fUpOneLevel;
