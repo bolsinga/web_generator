@@ -464,14 +464,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
     GregorianCalendar timeStamp = music.getTimestamp().toGregorianCalendar();
                 
     generateArtistPages(backgrounder, music, lookup, links, timeStamp, outputDir);
+    Web.generateArtistStats(backgrounder, music, lookup, links, timeStamp, outputDir);
                 
     generateVenuePages(backgrounder, music, lookup, links, timeStamp, outputDir);
+    Web.generateVenueStats(backgrounder, music, lookup, links, timeStamp, outputDir);
                 
     generateDatePages(backgrounder, music, encoder, lookup, links, timeStamp, outputDir);
+    Web.generateDateStats(backgrounder, music, encoder, lookup, links, timeStamp, outputDir);
                 
     generateCityPages(backgrounder, music, lookup, links, timeStamp, outputDir);
                 
     generateTracksPages(backgrounder, music, lookup, links, timeStamp, outputDir);
+    Web.generateTracksStats(backgrounder, music, lookup, links, timeStamp, outputDir);
+    Web.generateAlbumsStats(backgrounder, music, lookup, links, timeStamp, outputDir);
   }
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
@@ -480,14 +485,20 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR);
     List<Artist> items = Collections.unmodifiableList(music.getArtist());
     
+    Web.generateArtistPages(backgrounder, items, lookup, links, timeStamp, outputDir);
+  }
+    
+  private static void generateArtistPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Artist> items, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     ArtistDocumentCreator creator = new ArtistDocumentCreator(backgrounder, items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Artist item : items) {
       creator.add(item);
     }
     creator.complete();
-                
+  }
+  
+  private static void generateArtistStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     Collections.sort(music.getArtist(), com.bolsinga.music.Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
-    items = Collections.unmodifiableList(music.getArtist());
+    List<Artist> items = Collections.unmodifiableList(music.getArtist());
 
     int index = 0;
     String[] names = new String[items.size()];
@@ -513,15 +524,21 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static void generateVenuePages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     Collections.sort(music.getVenue(), com.bolsinga.music.Compare.VENUE_COMPARATOR);
     List<Venue> items = Collections.unmodifiableList(music.getVenue());
+    
+    Web.generateVenuePages(backgrounder, items, lookup, links, timeStamp, outputDir);
+  }
 
+  public static void generateVenuePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Venue> items, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     VenueDocumentCreator creator = new VenueDocumentCreator(backgrounder, items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Venue item : items) {
       creator.add(item);
     }
     creator.complete();
-
+  }
+  
+  private static void generateVenueStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     Collections.sort(music.getVenue(), com.bolsinga.music.Compare.getCompare(music).VENUE_STATS_COMPARATOR);
-    items = Collections.unmodifiableList(music.getVenue());
+    List<Venue> items = Collections.unmodifiableList(music.getVenue());
 
     int index = 0;
     String[] names = new String[items.size()];
@@ -548,10 +565,24 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
     List<Show> items = Collections.unmodifiableList(music.getShow());
 
+    Web.generateDatePages(backgrounder, items, encoder, lookup, links, timeStamp, outputDir);
+  }
+                
+  public static void generateDatePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Show> items, final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    ShowDocumentCreator creator = new ShowDocumentCreator(backgrounder, items, lookup, encoder, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
+    for (Show item : items) {
+      creator.add(item);
+    }
+    creator.complete();
+  }
+  
+  public static void generateDateStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
+    List<Show> items = Collections.unmodifiableList(music.getShow());
+
     Collection<Show> showCollection = null;
     TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(com.bolsinga.music.Compare.SHOW_STATS_COMPARATOR);
                 
-    ShowDocumentCreator creator = new ShowDocumentCreator(backgrounder, items, lookup, encoder, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Show item : items) {
       if (dates.containsKey(item)) {
         showCollection = dates.get(item);
@@ -561,10 +592,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
         showCollection.add(item);
         dates.put(item, showCollection);
       }
-                        
-      creator.add(item);
     }
-    creator.complete();
 
     int index = 0;
     String[] names = new String[dates.size()];
@@ -639,13 +667,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static void generateTracksPages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     Collections.sort(music.getAlbum(), com.bolsinga.music.Compare.ALBUM_COMPARATOR);
     List<Album> items = Collections.unmodifiableList(music.getAlbum());
-                
+
+    Web.generateTracksPages(backgrounder, items, lookup, links, timeStamp, outputDir);
+  }
+                  
+  public static void generateTracksPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Album> items, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     TracksDocumentCreator creator = new TracksDocumentCreator(backgrounder, items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Album item : items) {                
       creator.add(item);
     }
     creator.complete();
-
+  }
+  
+  private static void generateTracksStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     List<Artist> artists = music.getArtist();
     Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_TRACKS_COMPARATOR);
 
@@ -671,13 +705,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
       stats.add(makeTable(names, values, tableTitle, typeString));
       stats.complete();
     }
+  }
 
-    artists = music.getArtist();
+  private static void generateAlbumsStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    List<Artist> artists = music.getArtist();
     Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_ALBUMS_COMPARATOR);
 
-    names = new String[artists.size()];
-    values = new int[artists.size()];
-    index = 0;
+    String[] names = new String[artists.size()];
+    int[] values = new int[artists.size()];
+    int index = 0;
     
     for(Artist artist : artists) {
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), artist.getName()).toString();
