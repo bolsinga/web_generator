@@ -73,15 +73,15 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
 }
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
-  private final Collection<Artist> fArtists;
+  private final Map<String, String> fArtistIndex;
 
   // These change during the life-cycle of this object
   private Artist fLastArtist = null;
   private Artist fCurArtist  = null;
           
-  public ArtistDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Artist> artists, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+  public ArtistDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Map<String, String> artistIndex, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
-    fArtists = artists;
+    fArtistIndex = artistIndex;
   }
 
   public void add(final Artist item) {
@@ -119,20 +119,20 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
   }
     
   protected Element addIndexNavigator() {
-    return Web.addArtistIndexNavigator(fArtists, fLinks, getCurrentLetter());
+    return Web.addArtistIndexNavigator(fArtistIndex, getCurrentLetter());
   }
 }
 
 class VenueDocumentCreator extends MusicDocumentCreator {
-  private final Collection<Venue> fVenues;
+  private final Map<String, String> fVenueIndex;
 
   // These change during the life-cycle of this object
   private Venue fLastVenue = null;
   private Venue fCurVenue  = null;
     
-  public VenueDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Venue> venues, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+  public VenueDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Map<String, String> venueIndex, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
-    fVenues = venues;
+    fVenueIndex = venueIndex;
   }
 
   public void add(final Venue item) {
@@ -170,22 +170,22 @@ class VenueDocumentCreator extends MusicDocumentCreator {
   }
         
   protected Element addIndexNavigator() {
-    return Web.addVenueIndexNavigator(fVenues, fLinks, getCurrentLetter());
+    return Web.addVenueIndexNavigator(fVenueIndex, getCurrentLetter());
   }
 }
 
 class ShowDocumentCreator extends MusicDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
-  private final Collection<Show> fShows;
+  private final Map<String, String> fShowIndex;
 
   // These change during the life-cycle of this object
   private Show fLastShow = null;
   private Show fCurShow  = null;
 
-  public ShowDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Show> shows, final Lookup lookup, final com.bolsinga.web.Encode encoder, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+  public ShowDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Map<String, String> showIndex, final Lookup lookup, final com.bolsinga.web.Encode encoder, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
     fEncoder = encoder;
-    fShows = shows;
+    fShowIndex = showIndex;
   }
         
   public void add(final Show item) {
@@ -224,7 +224,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element addIndexNavigator() {
-    return Web.addShowIndexNavigator(fShows, fLinks, getCurrentLetter());
+    return Web.addShowIndexNavigator(fShowIndex, fLinks, getCurrentLetter());
   }
 }
 
@@ -312,15 +312,15 @@ class TracksStatisticsCreator extends StatisticsCreator {
 }
 
 class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
-  private final Collection<Album> fAlbums;
+  private final Map<String, String> fAlbumIndex;
 
   // These change during the life-cycle of this object
   private Album fLastAlbum = null;
   private Album fCurAlbum  = null;
           
-  public TracksDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Album> albums, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+  public TracksDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Map<String, String> albumIndex, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
-    fAlbums = albums;
+    fAlbumIndex = albumIndex;
   }
         
   public void add(final Album item) {
@@ -350,7 +350,7 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
   }
 
   protected Element addIndexNavigator() {
-    return Web.addAlbumIndexNavigator(fAlbums, fLinks, getCurrentLetter());
+    return Web.addAlbumIndexNavigator(fAlbumIndex, getCurrentLetter());
   }
 }
 
@@ -484,12 +484,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static void generateArtistPages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR);
     List<Artist> items = Collections.unmodifiableList(music.getArtist());
+    Map<String, String> index = Web.createArtistIndex(items, links);
     
-    Web.generateArtistPages(backgrounder, items, lookup, links, timeStamp, outputDir);
+    Web.generateArtistPages(backgrounder, items, index, lookup, links, timeStamp, outputDir);
   }
     
-  private static void generateArtistPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Artist> items, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
-    ArtistDocumentCreator creator = new ArtistDocumentCreator(backgrounder, items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
+  private static void generateArtistPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Artist> items, final Map<String, String> index, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    ArtistDocumentCreator creator = new ArtistDocumentCreator(backgrounder, index, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Artist item : items) {
       creator.add(item);
     }
@@ -524,12 +525,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static void generateVenuePages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     Collections.sort(music.getVenue(), com.bolsinga.music.Compare.VENUE_COMPARATOR);
     List<Venue> items = Collections.unmodifiableList(music.getVenue());
+    Map<String, String> index = Web.createVenueIndex(items, links);
     
-    Web.generateVenuePages(backgrounder, items, lookup, links, timeStamp, outputDir);
+    Web.generateVenuePages(backgrounder, items, index, lookup, links, timeStamp, outputDir);
   }
 
-  public static void generateVenuePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Venue> items, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
-    VenueDocumentCreator creator = new VenueDocumentCreator(backgrounder, items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
+  public static void generateVenuePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Venue> items, final Map<String, String> index, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    VenueDocumentCreator creator = new VenueDocumentCreator(backgrounder, index, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Venue item : items) {
       creator.add(item);
     }
@@ -564,12 +566,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static void generateDatePages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
     List<Show> items = Collections.unmodifiableList(music.getShow());
+    Map<String, String> index = Web.createShowIndex(items, links);
 
-    Web.generateDatePages(backgrounder, items, encoder, lookup, links, timeStamp, outputDir);
+    Web.generateDatePages(backgrounder, items, index, encoder, lookup, links, timeStamp, outputDir);
   }
                 
-  public static void generateDatePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Show> items, final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
-    ShowDocumentCreator creator = new ShowDocumentCreator(backgrounder, items, lookup, encoder, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
+  public static void generateDatePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Show> items, final Map<String, String> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    ShowDocumentCreator creator = new ShowDocumentCreator(backgrounder, index, lookup, encoder, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Show item : items) {
       creator.add(item);
     }
@@ -667,12 +670,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static void generateTracksPages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     Collections.sort(music.getAlbum(), com.bolsinga.music.Compare.ALBUM_COMPARATOR);
     List<Album> items = Collections.unmodifiableList(music.getAlbum());
-
-    Web.generateTracksPages(backgrounder, items, lookup, links, timeStamp, outputDir);
+    Map<String, String> index = Web.createAlbumIndex(items, links);
+    
+    Web.generateTracksPages(backgrounder, items, index, lookup, links, timeStamp, outputDir);
   }
                   
-  public static void generateTracksPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Album> items, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
-    TracksDocumentCreator creator = new TracksDocumentCreator(backgrounder, items, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
+  public static void generateTracksPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Album> items, final Map<String, String> index, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
+    TracksDocumentCreator creator = new TracksDocumentCreator(backgrounder, index, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Album item : items) {                
       creator.add(item);
     }
@@ -1073,17 +1077,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
-        
-  public static Element addArtistIndexNavigator(final Collection<Artist> artists, final Links links, final String curLetter) {
-    java.util.Map<String, String> m = new TreeMap<String, String>();
-
+  
+  private static Map<String, String> createArtistIndex(final Collection<Artist> artists, final Links links) {
+    Map<String, String> m = new TreeMap<String, String>();
     for (Artist art : artists) {
       String letter = links.getPageFileName(art);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(art));
       }
     }
-
+    return Collections.unmodifiableMap(m);
+  }
+    
+  public static Element addArtistIndexNavigator(final Map<String, String> m, final String curLetter) {
     Vector<Element> e = new Vector<Element>();
     for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
@@ -1097,16 +1103,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
-        
-  public static Element addVenueIndexNavigator(final Collection<Venue> venues, final Links links, final String curLetter) {
-    java.util.Map<String, String> m = new TreeMap<String, String>();
+  
+  private static Map<String, String> createVenueIndex(final Collection<Venue> venues, final Links links) {
+    Map<String, String> m = new TreeMap<String, String>();
     for (Venue v : venues) {
       String letter = links.getPageFileName(v);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(v));
       }
     }
-
+    return Collections.unmodifiableMap(m);
+  }
+  
+  public static Element addVenueIndexNavigator(final Map<String, String> m, final String curLetter) {
     Vector<Element> e = new Vector<Element>();
     for (String v : m.keySet()) {
       if (v.equals(curLetter)) {
@@ -1121,15 +1130,18 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
 
-  public static Element addAlbumIndexNavigator(final Collection<Album> items, final Links links, final String curLetter) {
-    java.util.Map<String, String> m = new TreeMap<String, String>();
+  private static Map<String, String> createAlbumIndex(final Collection<Album> items, final Links links) {
+    Map<String, String> m = new TreeMap<String, String>();
     for (Album alb : items) {
       String letter = links.getPageFileName(alb);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(alb));
       }
     }
+    return Collections.unmodifiableMap(m);
+  }
 
+  public static Element addAlbumIndexNavigator(final Map<String, String> m, final String curLetter) {
     Vector<Element> e = new Vector<Element>();
     for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
@@ -1187,15 +1199,18 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return t;
   }
         
-  public static Element addShowIndexNavigator(final Collection<Show> shows, final Links links, final String curLetter) {
-    java.util.Map<String, String> m = new TreeMap<String, String>();
+  private static Map<String, String> createShowIndex(final Collection<Show> shows, final Links links) {
+    Map<String, String> m = new TreeMap<String, String>();
     for (Show s : shows) {
       String letter = links.getPageFileName(s);
       if (!m.containsKey(letter)) {
         m.put(letter, links.getLinkToPage(s));
       }
     }
+    return Collections.unmodifiableMap(m);
+  }
 
+  public static Element addShowIndexNavigator(final Map<String, String> m, final Links links, final String curLetter) {
     Vector<Element> e = new Vector<Element>();
     for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
