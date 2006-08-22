@@ -225,6 +225,22 @@ public class Web implements com.bolsinga.web.Backgroundable {
     generateArchivePages(backgrounder, diary, encoder, startYear, outputDir);
   }
 
+  public void build(final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+    Web.build(fBackgrounder, diary, music, encoder, outputDir);
+  }
+
+  public static void build(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+    int startYear = Util.getStartYear(diary);
+    Links links = Links.getLinks(true);
+    Web.generateMainPage(encoder, music, diary, startYear, outputDir);
+
+    Map<String, String> entryIndex = Web.createEntryIndex(diary.getEntry(), links);
+    Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
+    for (Collection<Entry> entryGroup : entryGroups) {
+      Web.generateArchivePages(backgrounder, entryGroup, entryIndex, encoder, links, startYear, outputDir);
+    }
+  }
+
   public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
     Links links = Links.getLinks(false);
 
@@ -360,6 +376,26 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return Collections.unmodifiableMap(m);
   }
 
+  private static Collection<Collection<Entry>> getEntryGroups(final Diary diary, final Links links) {
+    // Each group is per page, so they are grouped by Entry who have the same starting sort letter.
+    HashMap<String, Collection<Entry>> result = new HashMap<String, Collection<Entry>>(diary.getEntry().size());
+    
+    for (Entry entry : diary.getEntry()) {
+      String key = links.getPageFileName(entry);
+      Collection<Entry> entryList;
+      if (result.containsKey(key)) {
+        entryList = result.get(key);
+        entryList.add(entry);
+      } else {
+        entryList = new Vector<Entry>();
+        entryList.add(entry);
+        result.put(key, entryList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
+  }
+
   public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final com.bolsinga.web.Encode encoder, final int startYear, final String outputDir) {
     Collections.sort(diary.getEntry(), Util.ENTRY_COMPARATOR);
     List<Entry> items = Collections.unmodifiableList(diary.getEntry());
@@ -369,7 +405,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Web.generateArchivePages(backgrounder, items, index, encoder, links, startYear, outputDir);
   }
                 
-  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final List<Entry> items, final Map<String, String> index, final com.bolsinga.web.Encode encoder, final Links links, final int startYear, final String outputDir) {
+  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final Map<String, String> index, final com.bolsinga.web.Encode encoder, final Links links, final int startYear, final String outputDir) {
     DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
     for (Entry item : items) {
       creator.add(item);
