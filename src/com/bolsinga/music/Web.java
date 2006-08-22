@@ -463,20 +463,134 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Links links = Links.getLinks(true);
     GregorianCalendar timeStamp = music.getTimestamp().toGregorianCalendar();
                 
-    generateArtistPages(backgrounder, music, lookup, links, timeStamp, outputDir);
+    Web.generateArtistPages(backgrounder, music, lookup, links, timeStamp, outputDir);
     Web.generateArtistStats(backgrounder, music, lookup, links, timeStamp, outputDir);
                 
-    generateVenuePages(backgrounder, music, lookup, links, timeStamp, outputDir);
+    Web.generateVenuePages(backgrounder, music, lookup, links, timeStamp, outputDir);
     Web.generateVenueStats(backgrounder, music, lookup, links, timeStamp, outputDir);
                 
-    generateDatePages(backgrounder, music, encoder, lookup, links, timeStamp, outputDir);
+    Web.generateDatePages(backgrounder, music, encoder, lookup, links, timeStamp, outputDir);
     Web.generateDateStats(backgrounder, music, encoder, lookup, links, timeStamp, outputDir);
                 
-    generateCityPages(backgrounder, music, lookup, links, timeStamp, outputDir);
+    Web.generateCityPages(backgrounder, music, lookup, links, timeStamp, outputDir);
                 
-    generateTracksPages(backgrounder, music, lookup, links, timeStamp, outputDir);
+    Web.generateTracksPages(backgrounder, music, lookup, links, timeStamp, outputDir);
     Web.generateTracksStats(backgrounder, music, lookup, links, timeStamp, outputDir);
     Web.generateAlbumsStats(backgrounder, music, lookup, links, timeStamp, outputDir);
+  }
+  
+  public void build(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+    Web.build(fBackgrounder, music, encoder, outputDir);
+  }
+
+  public static void build(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+    Lookup lookup = Lookup.getLookup(music);
+    Links links = Links.getLinks(true);
+    GregorianCalendar timeStamp = music.getTimestamp().toGregorianCalendar();
+
+    Map<String, String> artistIndex = Web.createArtistIndex(music.getArtist(), links);
+    Collection<Collection<Artist>> artistGroups = Web.getArtistGroups(music, links);
+    for (Collection<Artist> artistGroup : artistGroups) {
+      Web.generateArtistPages(backgrounder, artistGroup, artistIndex, lookup, links, timeStamp, outputDir);
+    }
+    
+    Map<String, String> venueIndex = Web.createVenueIndex(music.getVenue(), links);
+    Collection<Collection<Venue>> venueGroups = Web.getVenueGroups(music, links);
+    for (Collection<Venue> venueGroup : venueGroups) {
+      Web.generateVenuePages(backgrounder, venueGroup, venueIndex, lookup, links, timeStamp, outputDir);
+    }
+
+    Map<String, String> showIndex = Web.createShowIndex(music.getShow(), links);
+    Collection<Collection<Show>> showGroups = Web.getShowGroups(music, links);
+    for (Collection<Show> showGroup : showGroups) {
+      Web.generateDatePages(backgrounder, showGroup, showIndex, encoder, lookup, links, timeStamp, outputDir);
+    }
+
+    Map<String, String> albumIndex = Web.createAlbumIndex(music.getAlbum(), links);
+    Collection<Collection<Album>> albumGroups = Web.getAlbumGroups(music, links);
+    for (Collection<Album> albumGroup : albumGroups) {
+      Web.generateTracksPages(backgrounder, albumGroup, albumIndex, lookup, links, timeStamp, outputDir);
+    }
+  }
+
+  private static Collection<Collection<Artist>> getArtistGroups(final Music music, final Links links) {
+    // Each group is per page, so they are grouped by Artist who have the same starting sort letter.
+    HashMap<String, Collection<Artist>> result = new HashMap<String, Collection<Artist>>(music.getArtist().size());
+    
+    for (Artist artist : music.getArtist()) {
+      String key = links.getPageFileName(artist);
+      Collection<Artist> artistList;
+      if (result.containsKey(key)) {
+        artistList = result.get(key);
+        artistList.add(artist);
+      } else {
+        artistList = new Vector<Artist>();
+        artistList.add(artist);
+        result.put(key, artistList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
+  }
+
+  private static Collection<Collection<Venue>> getVenueGroups(final Music music, final Links links) {
+    // Each group is per page, so they are grouped by Venue who have the same starting sort letter.
+    HashMap<String, Collection<Venue>> result = new HashMap<String, Collection<Venue>>(music.getVenue().size());
+    
+    for (Venue venue : music.getVenue()) {
+      String key = links.getPageFileName(venue);
+      Collection<Venue> venueList;
+      if (result.containsKey(key)) {
+        venueList = result.get(key);
+        venueList.add(venue);
+      } else {
+        venueList = new Vector<Venue>();
+        venueList.add(venue);
+        result.put(key, venueList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
+  }
+
+  private static Collection<Collection<Show>> getShowGroups(final Music music, final Links links) {
+    // Each group is per page, so they are grouped by Show who have the same starting sort letter.
+    HashMap<String, Collection<Show>> result = new HashMap<String, Collection<Show>>(music.getShow().size());
+    
+    for (Show show : music.getShow()) {
+      String key = links.getPageFileName(show);
+      Collection<Show> showList;
+      if (result.containsKey(key)) {
+        showList = result.get(key);
+        showList.add(show);
+      } else {
+        showList = new Vector<Show>();
+        showList.add(show);
+        result.put(key, showList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
+  }
+
+  private static Collection<Collection<Album>> getAlbumGroups(final Music music, final Links links) {
+    // Each group is per page, so they are grouped by Show who have the same starting sort letter.
+    HashMap<String, Collection<Album>> result = new HashMap<String, Collection<Album>>(music.getAlbum().size());
+    
+    for (Album album : music.getAlbum()) {
+      String key = links.getPageFileName(album);
+      Collection<Album> albumList;
+      if (result.containsKey(key)) {
+        albumList = result.get(key);
+        albumList.add(album);
+      } else {
+        albumList = new Vector<Album>();
+        albumList.add(album);
+        result.put(key, albumList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
   }
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
