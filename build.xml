@@ -345,6 +345,7 @@
 
 <path id="generate_web_classpath">
         <path refid="music_classpath" />
+        <pathelement path="${jwsdp.home}/jwsdp-shared/lib/activation.jar" />
         <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
 
