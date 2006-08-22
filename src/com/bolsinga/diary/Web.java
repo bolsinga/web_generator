@@ -17,7 +17,7 @@ import javax.xml.bind.Marshaller;
 
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
-  private final List<Entry>  fEntries;
+  private final Map<String, String>  fEntryIndex;
   private final Links  fLinks;
   private final String fProgram;
   private final int fStartYear;
@@ -26,10 +26,10 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private Entry  fCurEntry;
   private Entry  fLastEntry;
         
-  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final List<Entry> entries, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
+  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Map<String, String> entryIndex, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
     super(backgrounder, outputDir);
     fEncoder = encoder;
-    fEntries = entries;
+    fEntryIndex = entryIndex;
     fLinks = links;
     fProgram = program;
     fStartYear = startYear;
@@ -84,20 +84,12 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected Element addIndexNavigator() {
-    java.util.Map<String, String> m = new TreeMap<String, String>();
-    for (Entry e : fEntries) {
-      String letter = fLinks.getPageFileName(e);
-      if (!m.containsKey(letter)) {
-        m.put(letter, fLinks.getLinkToPage(e));
-      }
-    }
-
     Vector<Element> e = new Vector<Element>();
-    for (String s : m.keySet()) {
+    for (String s : fEntryIndex.keySet()) {
       if (s.equals(getCurrentLetter())) {
         e.add(new StringElement(s));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA(m.get(s), s));
+        e.add(com.bolsinga.web.Util.createInternalA(fEntryIndex.get(s), s));
       }
     }
     e.add(fLinks.getRSSLink());
@@ -356,20 +348,32 @@ public class Web implements com.bolsinga.web.Backgroundable {
                 
     return diaryDiv;
   }
-        
+
+  private static Map<String, String> createEntryIndex(final Collection<Entry> entries, final Links links) {
+    Map<String, String> m = new TreeMap<String, String>();
+    for (Entry e : entries) {
+      String letter = links.getPageFileName(e);
+      if (!m.containsKey(letter)) {
+        m.put(letter, links.getLinkToPage(e));
+      }
+    }
+    return Collections.unmodifiableMap(m);
+  }
+
   public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final com.bolsinga.web.Encode encoder, final int startYear, final String outputDir) {
     Collections.sort(diary.getEntry(), Util.ENTRY_COMPARATOR);
-
     List<Entry> items = Collections.unmodifiableList(diary.getEntry());
-                    
     Links links = Links.getLinks(true);
+    Map<String, String> index = Web.createEntryIndex(items, links);
+    
+    Web.generateArchivePages(backgrounder, items, index, encoder, links, startYear, outputDir);
+  }
                 
-    DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, items, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
-
+  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final List<Entry> items, final Map<String, String> index, final com.bolsinga.web.Encode encoder, final Links links, final int startYear, final String outputDir) {
+    DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
     for (Entry item : items) {
       creator.add(item);
     }
-                
     creator.complete();
   }
 
