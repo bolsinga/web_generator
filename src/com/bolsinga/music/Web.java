@@ -73,13 +73,13 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
 }
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
-  private final List<Artist> fArtists;
+  private final Collection<Artist> fArtists;
 
   // These change during the life-cycle of this object
   private Artist fLastArtist = null;
   private Artist fCurArtist  = null;
           
-  public ArtistDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final List<Artist> artists, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+  public ArtistDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Artist> artists, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
     fArtists = artists;
   }
@@ -124,13 +124,13 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
 }
 
 class VenueDocumentCreator extends MusicDocumentCreator {
-  private final List<Venue> fVenues;
+  private final Collection<Venue> fVenues;
 
   // These change during the life-cycle of this object
   private Venue fLastVenue = null;
   private Venue fCurVenue  = null;
     
-  public VenueDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final List<Venue> venues, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+  public VenueDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Venue> venues, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
     fVenues = venues;
   }
@@ -176,13 +176,13 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 
 class ShowDocumentCreator extends MusicDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
-  private final List<Show> fShows;
+  private final Collection<Show> fShows;
 
   // These change during the life-cycle of this object
   private Show fLastShow = null;
   private Show fCurShow  = null;
 
-  public ShowDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final List<Show> shows, final Lookup lookup, final com.bolsinga.web.Encode encoder, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+  public ShowDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Show> shows, final Lookup lookup, final com.bolsinga.web.Encode encoder, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
     fEncoder = encoder;
     fShows = shows;
@@ -312,13 +312,13 @@ class TracksStatisticsCreator extends StatisticsCreator {
 }
 
 class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
-  private final List<Album> fAlbums;
+  private final Collection<Album> fAlbums;
 
   // These change during the life-cycle of this object
   private Album fLastAlbum = null;
   private Album fCurAlbum  = null;
           
-  public TracksDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final List<Album> albums, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
+  public TracksDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Album> albums, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
     fAlbums = albums;
   }
@@ -1038,7 +1038,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
         
-  public static Element addArtistIndexNavigator(final List<Artist> artists, final Links links, final String curLetter) {
+  public static Element addArtistIndexNavigator(final Collection<Artist> artists, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
 
     for (Artist art : artists) {
@@ -1062,7 +1062,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
         
-  public static Element addVenueIndexNavigator(final List<Venue> venues, final Links links, final String curLetter) {
+  public static Element addVenueIndexNavigator(final Collection<Venue> venues, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
     for (Venue v : venues) {
       String letter = links.getPageFileName(v);
@@ -1085,7 +1085,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
 
-  public static Element addAlbumIndexNavigator(final List<Album> items, final Links links, final String curLetter) {
+  public static Element addAlbumIndexNavigator(final Collection<Album> items, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
     for (Album alb : items) {
       String letter = links.getPageFileName(alb);
@@ -1151,7 +1151,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return t;
   }
         
-  public static Element addShowIndexNavigator(final List<Show> shows, final Links links, final String curLetter) {
+  public static Element addShowIndexNavigator(final Collection<Show> shows, final Links links, final String curLetter) {
     java.util.Map<String, String> m = new TreeMap<String, String>();
     for (Show s : shows) {
       String letter = links.getPageFileName(s);
