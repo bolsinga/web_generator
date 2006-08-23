@@ -484,31 +484,31 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   public static void build(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
-    Lookup lookup = Lookup.getLookup(music);
-    Links links = Links.getLinks(true);
-    GregorianCalendar timeStamp = music.getTimestamp().toGregorianCalendar();
+    final Lookup lookup = Lookup.getLookup(music);
+    final Links links = Links.getLinks(true);
+    final GregorianCalendar timeStamp = music.getTimestamp().toGregorianCalendar();
 
-    Map<String, String> artistIndex = Web.createArtistIndex(music.getArtist(), links);
+    final Map<String, String> artistIndex = Web.createArtistIndex(music.getArtist(), links);
     Collection<Collection<Artist>> artistGroups = Web.getArtistGroups(music, links);
-    for (Collection<Artist> artistGroup : artistGroups) {
+    for (final Collection<Artist> artistGroup : artistGroups) {
       Web.generateArtistPages(backgrounder, artistGroup, artistIndex, lookup, links, timeStamp, outputDir);
     }
     
-    Map<String, String> venueIndex = Web.createVenueIndex(music.getVenue(), links);
+    final Map<String, String> venueIndex = Web.createVenueIndex(music.getVenue(), links);
     Collection<Collection<Venue>> venueGroups = Web.getVenueGroups(music, links);
-    for (Collection<Venue> venueGroup : venueGroups) {
+    for (final Collection<Venue> venueGroup : venueGroups) {
       Web.generateVenuePages(backgrounder, venueGroup, venueIndex, lookup, links, timeStamp, outputDir);
     }
 
-    Map<String, String> showIndex = Web.createShowIndex(music.getShow(), links);
+    final Map<String, String> showIndex = Web.createShowIndex(music.getShow(), links);
     Collection<Collection<Show>> showGroups = Web.getShowGroups(music, links);
-    for (Collection<Show> showGroup : showGroups) {
+    for (final Collection<Show> showGroup : showGroups) {
       Web.generateDatePages(backgrounder, showGroup, showIndex, encoder, lookup, links, timeStamp, outputDir);
     }
 
-    Map<String, String> albumIndex = Web.createAlbumIndex(music.getAlbum(), links);
+    final Map<String, String> albumIndex = Web.createAlbumIndex(music.getAlbum(), links);
     Collection<Collection<Album>> albumGroups = Web.getAlbumGroups(music, links);
-    for (Collection<Album> albumGroup : albumGroups) {
+    for (final Collection<Album> albumGroup : albumGroups) {
       Web.generateTracksPages(backgrounder, albumGroup, albumIndex, lookup, links, timeStamp, outputDir);
     }
   }

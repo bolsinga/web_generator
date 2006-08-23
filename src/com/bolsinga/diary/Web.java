@@ -230,13 +230,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   public static void build(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
-    int startYear = Util.getStartYear(diary);
-    Links links = Links.getLinks(true);
+    final int startYear = Util.getStartYear(diary);
+    final Links links = Links.getLinks(true);
     Web.generateMainPage(encoder, music, diary, startYear, outputDir);
 
-    Map<String, String> entryIndex = Web.createEntryIndex(diary.getEntry(), links);
+    final Map<String, String> entryIndex = Web.createEntryIndex(diary.getEntry(), links);
     Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
-    for (Collection<Entry> entryGroup : entryGroups) {
+    for (final Collection<Entry> entryGroup : entryGroups) {
       Web.generateArchivePages(backgrounder, entryGroup, entryIndex, encoder, links, startYear, outputDir);
     }
   }
