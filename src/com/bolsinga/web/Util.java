@@ -18,11 +18,8 @@ public class Util {
 
   private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
-  private static final boolean sPrettyPrint;
+  private static final boolean sPrettyPrint = Boolean.getBoolean("web.pretty_containers");
   static {
-    String value = System.getProperty("web.pretty_containers");
-    sPrettyPrint = (value != null);
-
     try {
       sXMLDatatypeFactory = DatatypeFactory.newInstance();
     } catch (DatatypeConfigurationException e) {
