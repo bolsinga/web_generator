@@ -236,7 +236,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
   private static void generate_parallel(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     final int startYear = Util.getStartYear(diary);
     final Links links = Links.getLinks(true);
-    Web.generateMainPage(encoder, music, diary, startYear, outputDir);
+
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateMainPage(encoder, music, diary, startYear, outputDir);
+      }
+    });
 
     final Map<String, String> entryIndex = Web.createEntryIndex(diary.getEntry(), links);
     Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);

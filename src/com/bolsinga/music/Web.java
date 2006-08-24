@@ -501,6 +501,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
         }
       });
     }
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateArtistStats(backgrounder, music, lookup, links, timeStamp, outputDir);
+      }
+    });
     
     final Map<String, String> venueIndex = Web.createVenueIndex(music.getVenue(), links);
     Collection<Collection<Venue>> venueGroups = Web.getVenueGroups(music, links);
@@ -511,6 +516,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
         }
       });
     }
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateVenueStats(backgrounder, music, lookup, links, timeStamp, outputDir);
+      }
+    });
 
     final Map<String, String> showIndex = Web.createShowIndex(music.getShow(), links);
     Collection<Collection<Show>> showGroups = Web.getShowGroups(music, links);
@@ -521,6 +531,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
         }
       });
     }
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateDateStats(backgrounder, music, encoder, lookup, links, timeStamp, outputDir);
+      }
+    });
 
     final Map<String, String> albumIndex = Web.createAlbumIndex(music.getAlbum(), links);
     Collection<Collection<Album>> albumGroups = Web.getAlbumGroups(music, links);
@@ -531,6 +546,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
         }
       });
     }
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateTracksStats(backgrounder, music, lookup, links, timeStamp, outputDir);
+      }
+    });
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateAlbumsStats(backgrounder, music, lookup, links, timeStamp, outputDir);
+      }
+    });
   }
 
   private static Collection<Collection<Artist>> getArtistGroups(final Music music, final Links links) {
