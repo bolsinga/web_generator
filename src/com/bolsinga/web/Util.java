@@ -19,6 +19,10 @@ public class Util {
   private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
   private static final boolean sPrettyPrint = Boolean.getBoolean("web.pretty_containers");
+  
+  private static final String WEB_GENERATE_PARALLEL_DEFAULT = "false";
+  public static final boolean WEB_GENERATE_PARALLEL = System.getProperty("web.generate.parallel", Util.WEB_GENERATE_PARALLEL_DEFAULT).equals("true");
+  
   static {
     try {
       sXMLDatatypeFactory = DatatypeFactory.newInstance();

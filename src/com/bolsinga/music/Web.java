@@ -455,10 +455,18 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   public void generate(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
-    Web.generate(fBackgrounder, music, encoder, outputDir);
+    Web.generate(fBackgrounder, this, music, encoder, outputDir);
   }
-        
-  public static void generate(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+
+  public static void generate(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+    if (com.bolsinga.web.Util.WEB_GENERATE_PARALLEL) {
+      Web.generate_parallel(backgrounder, backgroundable, music, encoder, outputDir);
+    } else {
+      Web.generate_serial(backgrounder, music, encoder, outputDir);
+    }
+  }
+          
+  private static void generate_serial(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     Lookup lookup = Lookup.getLookup(music);
     Links links = Links.getLinks(true);
     GregorianCalendar timeStamp = music.getTimestamp().toGregorianCalendar();
@@ -478,12 +486,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Web.generateTracksStats(backgrounder, music, lookup, links, timeStamp, outputDir);
     Web.generateAlbumsStats(backgrounder, music, lookup, links, timeStamp, outputDir);
   }
-  
-  public void build(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
-    Web.build(fBackgrounder, this, music, encoder, outputDir);
-  }
 
-  public static void build(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  private static void generate_parallel(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     final Lookup lookup = Lookup.getLookup(music);
     final Links links = Links.getLinks(true);
     final GregorianCalendar timeStamp = music.getTimestamp().toGregorianCalendar();

@@ -101,13 +101,13 @@ public class Main implements com.bolsinga.web.Backgroundable {
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(fBackgrounder, music, diary);
 
     if (site) {
-      com.bolsinga.site.Site.generate(fBackgrounder, encoder, diary, music, output, "all");
+      com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "all");
     }
     if (musicsite) {
-      com.bolsinga.site.Site.generate(fBackgrounder, encoder, diary, music, output, "music");
+      com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "music");
     }
     if (diarysite) {
-      com.bolsinga.site.Site.generate(fBackgrounder, encoder, diary, music, output, "diary");
+      com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "diary");
     }
 
     return true;
