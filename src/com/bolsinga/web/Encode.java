@@ -369,7 +369,7 @@ class BackgroundEncoder implements com.bolsinga.web.Backgroundable {
 
 class HashEncode extends Encode {
 
-  private static final boolean sPrecalculateEncodings = (System.getProperty("site.precalculateencodings") != null);
+  private static final boolean sPrecalculateEncodings = Boolean.getBoolean("web.precalculateencodings");
   
   // Assume average of 25 words per entry.
   private static final int WORDS_PER_ENTRY = 25;
