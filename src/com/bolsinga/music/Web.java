@@ -537,6 +537,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     });
 
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateCityPages(backgrounder, music, lookup, links, timeStamp, outputDir);
+      }
+    });
+
     final Map<String, String> albumIndex = Web.createAlbumIndex(music.getAlbum(), links);
     Collection<Collection<Album>> albumGroups = Web.getAlbumGroups(music, links);
     for (final Collection<Album> albumGroup : albumGroups) {
