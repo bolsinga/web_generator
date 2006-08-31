@@ -19,8 +19,12 @@ class DocWriter implements Runnable {
   }
   
   public void run() {
+    DocWriter.writeFile(fDoc, fOutputDir, fLastPath);
+  }
+  
+  public static void writeFile(final XhtmlDocument doc, final String outputDir, final String lastPath) {
     try {
-      File f = new File(fOutputDir, fLastPath);
+      File f = new File(outputDir, lastPath);
       File parent = new File(f.getParent());
       if (!parent.exists()) {
         if (!parent.mkdirs()) {
@@ -28,7 +32,7 @@ class DocWriter implements Runnable {
         }
       }
       OutputStream os = new FileOutputStream(f);
-      fDoc.output(os);
+      doc.output(os);
       os.close();
     } catch (IOException ioe) {
       System.err.println("Exception: " + ioe);
@@ -39,6 +43,9 @@ class DocWriter implements Runnable {
 }
 
 public abstract class DocumentCreator implements Backgroundable {
+
+  private static final boolean sUseAsynchronousIO = Boolean.getBoolean("web.asynchronousio");
+
   private final Backgrounder fBackgrounder;
   private final String fOutputDir;
 
@@ -94,7 +101,11 @@ public abstract class DocumentCreator implements Backgroundable {
   protected void writeDocument() {
     fDocument.getBody().addElement(fMain);
 
-    fBackgrounder.execute(this, new DocWriter(fDocument, fOutputDir, getLastPath()));
+    if (DocumentCreator.sUseAsynchronousIO) {
+      fBackgrounder.execute(this, new DocWriter(fDocument, fOutputDir, getLastPath()));
+    } else {
+      DocWriter.writeFile(fDocument, fOutputDir, getLastPath());
+    }
   }
         
   protected String getTitle(final String type) {
