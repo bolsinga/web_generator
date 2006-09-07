@@ -17,6 +17,8 @@ import org.apache.ecs.filter.*;
 
 class EncodeTest implements com.bolsinga.web.Backgroundable {
 
+  private static final boolean ENCODE_TIMING = Boolean.getBoolean("site.times");
+
   private final com.bolsinga.web.Backgrounder fBackgrounder;
   
   EncodeTest(final com.bolsinga.web.Backgrounder backgrounder) {
@@ -34,36 +36,68 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
     
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(fBackgrounder, music, diary);
 
-    generateDiary(diary, encoder, outputDir);
+    long start, current;
 
+    start = System.currentTimeMillis();
+    generateDiary(diary, encoder, outputDir);
+    if (EncodeTest.ENCODE_TIMING) {
+      current = System.currentTimeMillis() - start;
+      System.err.println("e-Diary total: " + current);
+    }
+
+    start = System.currentTimeMillis();
     generateMusic(music, encoder, outputDir);
+    if (EncodeTest.ENCODE_TIMING) {
+      current = System.currentTimeMillis() - start;
+      System.err.println("sh-Music total: " + current);
+    }
   }
 
   static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
     List<Entry> items = diary.getEntry();
     StringBuffer buffer = new StringBuffer();
+    HashMap<String, Long> times = new HashMap<String, Long>(items.size());
+    long start, current;
 
     Collections.sort(items, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
 
     for (Entry item : items) {
+      start = System.currentTimeMillis();
       buffer.append(encoder.embedLinks(item, true));
+      if (EncodeTest.ENCODE_TIMING) {
+        current = System.currentTimeMillis() - start;
+        times.put(item.getId(), current);
+      }
     }
 
     StringBuffer sb = new StringBuffer();
     sb.append(encoder.getClass().getName() + "_diary.txt");
 
     writeDocument(buffer, outputDir, sb.toString());
+
+    if (EncodeTest.ENCODE_TIMING) {
+      for (String key : times.keySet()) {
+        System.err.println(key + ": " + times.get(key));
+      }
+    }
   }
 
   static void generateMusic(final Music music, final Encode encoder, final String outputDir) {
     List<Show> items = music.getShow();
     StringBuffer buffer = new StringBuffer();
+    HashMap<String, Long> times = new HashMap<String, Long>(items.size());
+    long start, current;
 
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
     for (Show item : items) {
       if (item.getComment() != null) {
+        start = System.currentTimeMillis();
         buffer.append(encoder.embedLinks(item, true));
+        if (EncodeTest.ENCODE_TIMING) {
+          current = System.currentTimeMillis() - start;
+          times.put(item.getId(), current);
+        }
       }
     }
 
@@ -71,6 +105,12 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
     sb.append(encoder.getClass().getName() + "_music.txt");
 
     writeDocument(buffer, outputDir, sb.toString());
+
+    if (EncodeTest.ENCODE_TIMING) {
+      for (String key : times.keySet()) {
+        System.err.println(key + ": " + times.get(key));
+      }
+    }
   }
 
   static void writeDocument(final StringBuffer buffer, final String outputDir, final String fileName) {
@@ -212,8 +252,11 @@ class EncoderData {
       // Be sure to not encode inside of HTML tags.
       Matcher html = sHTMLTagPattern.matcher(source);
       if (html.find()) {
+        // Group 1 may have HTML
         sb.append(EncoderData.addLinks(dataPattern, html.group(1), link));
+        // Group 2 is the HTML markup found
         sb.append(html.group(2));
+        // Group 4 has no HTML markup
         sb.append(EncoderData.addLinks(dataPattern, html.group(4), link));
       } else {
         do {
