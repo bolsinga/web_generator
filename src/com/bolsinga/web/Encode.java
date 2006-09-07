@@ -131,7 +131,7 @@ class EncoderData {
   
   private static final Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
   
-  private static final Pattern sHTMLTag = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  private static final Pattern sHTMLTagPattern = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
   // Don't use venues with lower case names, these are 'vague' venues.
   public static final Pattern sStartsLowerCase = Pattern.compile("\\p{Lower}.*");
@@ -187,6 +187,10 @@ class EncoderData {
   public static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
     String result = source;
 
+    // The general idea is to replace text not within HTML tags with links to each EncoderData pattern.
+
+    // This looks at the modified source for each EncoderData. This means it continually searches
+    // the modified source for HTML tags for each EncoderData.
     if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
       for (EncoderData data : encodings) {
         result = EncoderData.addLinks(data, result, upOneLevel);
@@ -195,16 +199,18 @@ class EncoderData {
 
     return result;
   }
-        
+
   private static String addLinks(final EncoderData data, final String source, final boolean upOneLevel) {
     String result = source;
-                                                
+
+    // Find the EncoderData pattern in the source
     Matcher entryMatch = data.getPattern().matcher(source);
     if (entryMatch.find()) {                        
 
       StringBuffer sb = new StringBuffer();
-                        
-      Matcher html = sHTMLTag.matcher(source);
+     
+      // Be sure to not encode inside of HTML tags.
+      Matcher html = sHTMLTagPattern.matcher(source);
       if (html.find()) {
         sb.append(EncoderData.addLinks(data, html.group(1), upOneLevel));
         sb.append(html.group(2));
