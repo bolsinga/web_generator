@@ -18,7 +18,9 @@ import org.apache.ecs.filter.*;
 class EncodeTest implements com.bolsinga.web.Backgroundable {
 
   private static final boolean ENCODE_TIMING = Boolean.getBoolean("site.times");
-
+  private static final boolean TEST_DIARY = true;
+  private static final boolean TEST_MUSIC = true;
+  
   private final com.bolsinga.web.Backgrounder fBackgrounder;
   
   EncodeTest(final com.bolsinga.web.Backgrounder backgrounder) {
@@ -38,18 +40,22 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
 
     long start, current;
 
-    start = System.currentTimeMillis();
-    generateDiary(diary, encoder, outputDir);
-    if (EncodeTest.ENCODE_TIMING) {
-      current = System.currentTimeMillis() - start;
-      System.err.println("e-Diary total: " + current);
+    if (EncodeTest.TEST_DIARY) {
+      start = System.currentTimeMillis();
+      generateDiary(diary, encoder, outputDir);
+      if (EncodeTest.ENCODE_TIMING) {
+        current = System.currentTimeMillis() - start;
+        System.err.println("e-Diary total: " + current);
+      }
     }
 
-    start = System.currentTimeMillis();
-    generateMusic(music, encoder, outputDir);
-    if (EncodeTest.ENCODE_TIMING) {
-      current = System.currentTimeMillis() - start;
-      System.err.println("sh-Music total: " + current);
+    if (EncodeTest.TEST_MUSIC) {
+      start = System.currentTimeMillis();
+      generateMusic(music, encoder, outputDir);
+      if (EncodeTest.ENCODE_TIMING) {
+        current = System.currentTimeMillis() - start;
+        System.err.println("sh-Music total: " + current);
+      }
     }
   }
 
