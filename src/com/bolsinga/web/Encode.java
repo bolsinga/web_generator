@@ -193,18 +193,18 @@ class EncoderData {
     // the modified source for HTML tags for each EncoderData.
     if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
       for (EncoderData data : encodings) {
-        result = EncoderData.addLinks(data, result, upOneLevel);
+        result = EncoderData.addLinks(data.getPattern(), result, data.getLink(upOneLevel));
       }
     }
 
     return result;
   }
 
-  private static String addLinks(final EncoderData data, final String source, final boolean upOneLevel) {
+  private static String addLinks(final Pattern dataPattern, final String source, final String link) {
     String result = source;
 
     // Find the EncoderData pattern in the source
-    Matcher entryMatch = data.getPattern().matcher(source);
+    Matcher entryMatch = dataPattern.matcher(source);
     if (entryMatch.find()) {                        
 
       StringBuffer sb = new StringBuffer();
@@ -212,12 +212,12 @@ class EncoderData {
       // Be sure to not encode inside of HTML tags.
       Matcher html = sHTMLTagPattern.matcher(source);
       if (html.find()) {
-        sb.append(EncoderData.addLinks(data, html.group(1), upOneLevel));
+        sb.append(EncoderData.addLinks(dataPattern, html.group(1), link));
         sb.append(html.group(2));
-        sb.append(EncoderData.addLinks(data, html.group(4), upOneLevel));
+        sb.append(EncoderData.addLinks(dataPattern, html.group(4), link));
       } else {
         do {
-          entryMatch.appendReplacement(sb, data.getLink(upOneLevel));
+          entryMatch.appendReplacement(sb, link);
         } while (entryMatch.find());
         entryMatch.appendTail(sb);
       }
