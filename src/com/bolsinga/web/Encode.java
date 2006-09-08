@@ -263,13 +263,32 @@ class EncoderData {
         // Group 2 is the HTML markup found
         sb.append(html.group(2));
         // Group 4 has no HTML markup
-        sb.append(EncoderData.addLinks(dataPattern, html.group(4), link));
+        sb.append(EncoderData.addLinksNoHTMLMarkup(dataPattern, html.group(4), link));
       } else {
         do {
           entryMatch.appendReplacement(sb, link);
         } while (entryMatch.find());
         entryMatch.appendTail(sb);
       }
+                        
+      result = sb.toString();
+    }
+                
+    return result;
+  }
+
+  private static String addLinksNoHTMLMarkup(final Pattern dataPattern, final String source, final String link) {
+    String result = source;
+
+    // Find the EncoderData pattern in the source
+    Matcher entryMatch = dataPattern.matcher(source);
+    if (entryMatch.find()) {                        
+      StringBuffer sb = new StringBuffer();
+      
+      do {
+        entryMatch.appendReplacement(sb, link);
+      } while (entryMatch.find());
+      entryMatch.appendTail(sb);
                         
       result = sb.toString();
     }
