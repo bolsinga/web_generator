@@ -175,7 +175,7 @@ public abstract class Encode {
 
 class EncoderData {
   
-  private static final Pattern sSpecialChars = Pattern.compile("([\\(\\)\\?])");
+  private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?])");
   
   private static final Pattern sHTMLTagPattern = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
@@ -234,6 +234,11 @@ class EncoderData {
     String result = source;
 
     // The general idea is to replace text not within HTML tags with links to each EncoderData pattern.
+    
+    // It may be best to have one Matcher that goes through one pattern for eache EncoderData.
+    // The EncoderData pattern will be to find the 'name' but not within HTML tags
+    // After each EncoderData is complete, the Matcher will be reset to the next EncoderData pattern and the freshly encoded source.
+    // This will also remove recursion from the algorithm.
 
     // This looks at the modified source for each EncoderData. This means it continually searches
     // the modified source for HTML tags for each EncoderData.
@@ -258,7 +263,7 @@ class EncoderData {
       // Be sure to not encode inside of HTML tags.
       Matcher html = sHTMLTagPattern.matcher(source);
       if (html.find()) {
-        // Group 1 may have HTML
+        // Group 1 may have HTML markup
         sb.append(EncoderData.addLinks(dataPattern, html.group(1), link));
         // Group 2 is the HTML markup found
         sb.append(html.group(2));
@@ -314,11 +319,8 @@ class EncoderData {
     
     sb.append("(^|\\W)(");
     
-    Matcher m = sSpecialChars.matcher(name);
-    while (m.find()) {
-      m.appendReplacement(sb, "\\\\$1");
-    }
-    m.appendTail(sb);
+    Matcher m = sSpecialCharsPattern.matcher(name);
+    sb.append(m.replaceAll("\\\\$1"));
     
     sb.append(")(\\W)");
     
