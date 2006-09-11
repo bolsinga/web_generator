@@ -270,10 +270,7 @@ class EncoderData {
         // Group 4 has no HTML markup
         sb.append(EncoderData.addLinksNoHTMLMarkup(dataPattern, html.group(4), link));
       } else {
-        do {
-          entryMatch.appendReplacement(sb, link);
-        } while (entryMatch.find());
-        entryMatch.appendTail(sb);
+        sb.append(entryMatch.replaceAll(link));
       }
                         
       result = sb.toString();
@@ -283,22 +280,9 @@ class EncoderData {
   }
 
   private static String addLinksNoHTMLMarkup(final Pattern dataPattern, final String source, final String link) {
-    String result = source;
-
     // Find the EncoderData pattern in the source
     Matcher entryMatch = dataPattern.matcher(source);
-    if (entryMatch.find()) {                        
-      StringBuffer sb = new StringBuffer();
-      
-      do {
-        entryMatch.appendReplacement(sb, link);
-      } while (entryMatch.find());
-      entryMatch.appendTail(sb);
-                        
-      result = sb.toString();
-    }
-                
-    return result;
+    return entryMatch.replaceAll(link);
   }
 
   String getName() {
