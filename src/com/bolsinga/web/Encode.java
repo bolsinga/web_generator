@@ -175,7 +175,7 @@ public abstract class Encode {
 
 class EncoderData {
   
-  private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?])");
+  private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?\\+])");
   
   private static final Pattern sHTMLTagPattern = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
