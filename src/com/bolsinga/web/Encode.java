@@ -125,7 +125,7 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
       File parent = new File(f.getParent());
       if (!parent.exists()) {
         if (!parent.mkdirs()) {
-          System.out.println("Can't: " + parent.getAbsolutePath());
+          System.out.println("EncodeTest cannot mkdirs: " + parent.getAbsolutePath());
         }
       }
       OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");

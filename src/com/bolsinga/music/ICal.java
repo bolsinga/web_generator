@@ -80,7 +80,7 @@ public class ICal {
       File parent = new File(f.getParent());
       if (!parent.exists()) {
         if (!parent.mkdirs()) {
-          System.out.println("Can't: " + parent.getAbsolutePath());
+          System.out.println("ICal cannot mkdirs: " + parent.getAbsolutePath());
         }
       }
       w = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");

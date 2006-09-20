@@ -267,7 +267,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       File parent = new File(f.getParent());
       if (!parent.exists()) {
         if (!parent.mkdirs()) {
-          System.out.println("Can't: " + parent.getAbsolutePath());
+          System.out.println("Web cannot mkdirs: " + parent.getAbsolutePath());
         }
       }
       OutputStream os = new FileOutputStream(f);

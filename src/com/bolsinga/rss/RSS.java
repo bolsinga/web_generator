@@ -67,7 +67,7 @@ public class RSS {
       File parent = new File(f.getParent());
       if (!parent.exists()) {
         if (!parent.mkdirs()) {
-          System.out.println("Can't: " + parent.getAbsolutePath());
+          System.out.println("RSS cannot mkdirs: " + parent.getAbsolutePath());
         }
       }
       os = new FileOutputStream(f);

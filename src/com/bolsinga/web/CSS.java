@@ -68,7 +68,7 @@ public class CSS {
       File parent = new File(f.getParent());
       if (!parent.exists()) {
         if (!parent.mkdirs()) {
-          System.out.println("Can't: " + parent.getAbsolutePath());
+          System.out.println("CSS cannot mkdirs: " + parent.getAbsolutePath());
         }
       }
       PrintWriter pw = new PrintWriter(new FileOutputStream(f));
