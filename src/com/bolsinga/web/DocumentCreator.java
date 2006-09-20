@@ -26,8 +26,8 @@ class DocWriter implements Runnable {
     try {
       File f = new File(outputDir, lastPath);
       File parent = new File(f.getParent());
-      if (!parent.exists()) {
-        if (!parent.mkdirs()) {
+      if (!parent.mkdirs()) {
+        if (!parent.exists()) {
           System.out.println("DocumentCreator cannot mkdirs: " + parent.getAbsolutePath());
         }
       }

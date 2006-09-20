@@ -66,8 +66,8 @@ public class CSS {
     try {
       File f = new File(outputDir, "layout.css");
       File parent = new File(f.getParent());
-      if (!parent.exists()) {
-        if (!parent.mkdirs()) {
+      if (!parent.mkdirs()) {
+        if (!parent.exists()) {
           System.out.println("CSS cannot mkdirs: " + parent.getAbsolutePath());
         }
       }

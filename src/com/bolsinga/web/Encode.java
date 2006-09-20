@@ -123,8 +123,8 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
     try {
       File f = new File(outputDir, fileName);
       File parent = new File(f.getParent());
-      if (!parent.exists()) {
-        if (!parent.mkdirs()) {
+      if (!parent.mkdirs()) {
+        if (!parent.exists()) {
           System.out.println("EncodeTest cannot mkdirs: " + parent.getAbsolutePath());
         }
       }

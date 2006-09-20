@@ -65,8 +65,8 @@ public class RSS {
     try {
       File f = new File(outputDir, "rss/rss.xml");
       File parent = new File(f.getParent());
-      if (!parent.exists()) {
-        if (!parent.mkdirs()) {
+      if (!parent.mkdirs()) {
+        if (!parent.exists()) {
           System.out.println("RSS cannot mkdirs: " + parent.getAbsolutePath());
         }
       }

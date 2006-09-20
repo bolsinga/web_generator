@@ -78,8 +78,8 @@ public class ICal {
     try {
       File f = new File(outputDir, "ical/" + name + ".ics");
       File parent = new File(f.getParent());
-      if (!parent.exists()) {
-        if (!parent.mkdirs()) {
+      if (!parent.mkdirs()) {
+        if (!parent.exists()) {
           System.out.println("ICal cannot mkdirs: " + parent.getAbsolutePath());
         }
       }
