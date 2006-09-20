@@ -220,20 +220,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   public static void generate(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
-    if (com.bolsinga.web.Util.WEB_GENERATE_PARALLEL) {
-      Web.generate_parallel(backgrounder, backgroundable, diary, music, encoder, outputDir);
-    } else {
-      Web.generate_serial(backgrounder, diary, music, encoder, outputDir);
-    }
-  }
-  
-  private static void generate_serial(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
-    int startYear = Util.getStartYear(diary);
-    generateMainPage(encoder, music, diary, startYear, outputDir);
-    generateArchivePages(backgrounder, diary, encoder, startYear, outputDir);
-  }
-
-  private static void generate_parallel(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     final int startYear = Util.getStartYear(diary);
     final Links links = Links.getLinks(true);
 

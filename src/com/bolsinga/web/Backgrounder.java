@@ -66,7 +66,7 @@ public class Backgrounder {
   private static Backgrounder sBackgrounder = null;
   private static final Object sBackgrounderLock = new Object();
 
-  private static final int DEFAULT_POOL_THREAD_COUNT = 3;
+  private static final int DEFAULT_POOL_THREAD_COUNT = Runtime.getRuntime().availableProcessors();
   private static final int sPoolThreadCount = Integer.getInteger("web.poolthreadcount", Backgrounder.DEFAULT_POOL_THREAD_COUNT);
   
   private final ExecutorService fExec = new BackgrounderThreadPoolExecutor(Backgrounder.sPoolThreadCount);
