@@ -92,9 +92,10 @@ public class Site implements com.bolsinga.web.Backgroundable {
       rssTime = System.currentTimeMillis() - start;
     }
     
-    if (System.getProperty("site.times") != null) {
+    if ((System.getProperty("site.times") != null) && !com.bolsinga.web.Util.WEB_GENERATE_PARALLEL) {
       displayTime(diaryTime, "diary");
       displayTime(musicTime, "music");
+      displayTime(diaryTime + musicTime, "Total diary & music");
       displayTime(icalTime, "ical");
       displayTime(rssTime, "rss");
     }
