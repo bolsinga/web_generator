@@ -61,7 +61,7 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
 
   static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
     List<Entry> items = diary.getEntry();
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;
 
@@ -76,7 +76,7 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(encoder.getClass().getName() + "_diary.txt");
 
     writeDocument(buffer, outputDir, sb.toString());
@@ -90,7 +90,7 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
 
   static void generateMusic(final Music music, final Encode encoder, final String outputDir) {
     List<Show> items = music.getShow();
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;
 
@@ -107,7 +107,7 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(encoder.getClass().getName() + "_music.txt");
 
     writeDocument(buffer, outputDir, sb.toString());
@@ -119,7 +119,7 @@ class EncodeTest implements com.bolsinga.web.Backgroundable {
     }
   }
 
-  static void writeDocument(final StringBuffer buffer, final String outputDir, final String fileName) {
+  private static void writeDocument(final StringBuilder buffer, final String outputDir, final String fileName) {
     try {
       File f = new File(outputDir, fileName);
       File parent = new File(f.getParent());
@@ -258,7 +258,7 @@ class EncoderData {
     Matcher entryMatch = dataPattern.matcher(source);
     if (entryMatch.find()) {                        
 
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
      
       // Be sure to not encode inside of HTML tags.
       Matcher html = sHTMLTagPattern.matcher(source);
@@ -299,7 +299,7 @@ class EncoderData {
   }
 
   private static String createRegex(final String name) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     
     sb.append("(^|\\W)(");
     
@@ -312,7 +312,7 @@ class EncoderData {
   }
   
   private static String getLink(final String link) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     
     sb.append("$1");
     sb.append(link);

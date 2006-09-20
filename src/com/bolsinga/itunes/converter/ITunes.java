@@ -287,7 +287,7 @@ public class ITunes {
         
   private static Album addAlbum(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String name, final Artist artist) throws JAXBException {
     Album result = null;
-    StringBuffer keyBuffer = new StringBuffer();
+    StringBuilder keyBuffer = new StringBuilder();
     keyBuffer.append(name);
     if (artist != null) {
       keyBuffer.append(artist.getName());

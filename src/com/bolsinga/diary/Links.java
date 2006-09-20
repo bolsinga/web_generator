@@ -35,7 +35,7 @@ public class Links {
   }
 
   public String getPagePath(final Entry entry) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
 
     sb.append(ARCHIVES_DIR);
     sb.append(File.separator);
@@ -46,7 +46,7 @@ public class Links {
   }
 
   public String getLinkToPage(final Entry entry) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     if (fUpOneLevel) {
       sb.append("..");
@@ -62,7 +62,7 @@ public class Links {
   }
         
   public String getLinkTo(final Entry entry) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     sb.append(getLinkToPage(entry));
     sb.append(HASH);
@@ -84,7 +84,7 @@ public class Links {
   }
 
   public String getRSSURL() {
-    StringBuffer url = new StringBuffer();
+    StringBuilder url = new StringBuilder();
     if (fUpOneLevel) {
       url.append("..");
       url.append(File.separator);
@@ -105,7 +105,7 @@ public class Links {
   }
 
   public String getStyleSheetLink() {
-    StringBuffer url = new StringBuffer();
+    StringBuilder url = new StringBuilder();
     if (fUpOneLevel) {
       url.append("..");
       url.append(File.separator);
@@ -125,7 +125,7 @@ public class Links {
   }
         
   public a getLinkToHome() {
-    StringBuffer url = new StringBuffer();
+    StringBuilder url = new StringBuilder();
     if (fUpOneLevel) {
       url.append("..");
       url.append(File.separator);

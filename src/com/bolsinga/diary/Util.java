@@ -81,7 +81,7 @@ public class Util {
   private static void createHeaders(final Statement stmt, final Diary diary) throws SQLException {
     ResultSet rset = null;
     try {
-      StringBuffer data = new StringBuffer();
+      StringBuilder data = new StringBuilder();
       
       rset = stmt.executeQuery("SELECT * FROM header;");
       while (rset.next()) {
@@ -100,7 +100,7 @@ public class Util {
   private static void createSides(final Statement stmt, final Diary diary) throws SQLException {
     ResultSet rset = null;
     try {
-      StringBuffer data = new StringBuffer();
+      StringBuilder data = new StringBuilder();
       
       rset = stmt.executeQuery("SELECT * FROM side;");
       while (rset.next()) {
@@ -119,7 +119,7 @@ public class Util {
   private static void createFriends(final Statement stmt, final Diary diary) throws SQLException {
     ResultSet rset = null;
     try {
-      StringBuffer data = new StringBuffer();
+      StringBuilder data = new StringBuilder();
       
       rset = stmt.executeQuery("SELECT * FROM friend;");
       while (rset.next()) {

@@ -115,7 +115,7 @@ public class ICal {
     date.set(Calendar.MONTH, d.getMonth().intValue() - 1);
     date.set(Calendar.DAY_OF_MONTH, d.getDay().intValue());
                 
-    StringBuffer summary = new StringBuffer();
+    StringBuilder summary = new StringBuilder();
     String url = null;
 
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();

@@ -185,7 +185,7 @@ public class MySQLImporter {
   }
 
   private static String toSQLenum(final List<JAXBElement<String>> strings) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     for (JAXBElement<String> js : strings) {
       String s = js.getValue();
       if (sb.length() != 0) {

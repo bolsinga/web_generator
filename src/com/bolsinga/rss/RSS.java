@@ -85,7 +85,7 @@ public class RSS {
   }
         
   private static String getTitle(final Show show) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     
     sb.append(com.bolsinga.music.Util.toString(show.getDate()));
     sb.append(" - ");
@@ -115,7 +115,7 @@ public class RSS {
     TRssItem item = objFactory.createTRssItem();
     List<Object> itemElements = item.getTitleOrDescriptionOrLink();
 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(com.bolsinga.web.Util.getSettings().getContact());
     sb.append(" (");
     sb.append(System.getProperty("user.name"));

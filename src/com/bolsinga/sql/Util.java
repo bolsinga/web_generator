@@ -14,7 +14,7 @@ public class Util {
   }
 
   private static String constructInsert(final String table, final String[] rowItems) {
-    StringBuffer sb = new StringBuffer("INSERT INTO ");
+    StringBuilder sb = new StringBuilder("INSERT INTO ");
     sb.append(table);
     sb.append(" VALUES (");
 
@@ -35,7 +35,7 @@ public class Util {
   }
 
   public static void truncate(final Statement stmt, final String table) throws SQLException {
-    StringBuffer sb = new StringBuffer("TRUNCATE ");
+    StringBuilder sb = new StringBuilder("TRUNCATE ");
     sb.append(table);
 
     stmt.execute(sb.toString());
@@ -61,7 +61,7 @@ public class Util {
   
   private static String quote(final String s) {
     if (s != null) {
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       sb.append("'");
       sb.append(Util.encodeSQLString(s));
       sb.append("'");

@@ -257,7 +257,7 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
   }
 
   protected String getLastPath() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(fDirectory);
     sb.append(File.separator);
     sb.append(fFileName);
@@ -885,37 +885,37 @@ public class Web implements com.bolsinga.web.Backgroundable {
                 
     Vector<Element> e = new Vector<Element>();
                 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(music.getArtist().size());
     sb.append(" ");
     sb.append(links.getArtistLink());
     e.add(new StringElement(sb.toString()));
 
-    sb = new StringBuffer();
+    sb = new StringBuilder();
     sb.append(music.getShow().size());
     sb.append(" ");
     sb.append(links.getShowLink());
     e.add(new StringElement(sb.toString()));
 
-    sb = new StringBuffer();
+    sb = new StringBuilder();
     sb.append(music.getVenue().size());
     sb.append(" ");
     sb.append(links.getVenueLink());
     e.add(new StringElement(sb.toString()));
 
-    sb = new StringBuffer();
+    sb = new StringBuilder();
     sb.append(Lookup.getLookup(music).getCities().size());
     sb.append(" ");
     sb.append(links.getCityLink());
     e.add(new StringElement(sb.toString()));
 
-    sb = new StringBuffer();
+    sb = new StringBuilder();
     sb.append(music.getSong().size());
     sb.append(" ");
     sb.append(links.getTracksLink());
     e.add(new StringElement(sb.toString()));
 
-    sb = new StringBuffer();
+    sb = new StringBuilder();
     sb.append(music.getAlbum().size());
     sb.append(" ");
     sb.append(links.getAlbumsLink());
@@ -976,7 +976,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     if (shows != null) {
       for (Show show : shows) {
         Vector<Element> se = new Vector<Element>();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
         while (bi.hasNext()) {
           Artist performer = (Artist)bi.next().getValue();
@@ -1029,7 +1029,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
         String showLink = links.getLinkTo(show);
         
         Vector<Element> se = new Vector<Element>();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
         while (bi.hasNext()) {
           Artist performer = (Artist)bi.next().getValue();
@@ -1061,7 +1061,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
         
   private static ul getShowListing(final Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
     while (bi.hasNext()) {
       Artist performer = (Artist)bi.next().getValue();
@@ -1108,13 +1108,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
     // CSS.TRACKS_ITEM
     Vector<Element> e = new Vector<Element>();
                 
-    StringBuffer sb;
+    StringBuilder sb;
     Artist artist = null;
     Song song;
                 
     boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
                 
-    sb = new StringBuffer();
+    sb = new StringBuilder();
     sb.append(com.bolsinga.web.Util.createNamedTarget(album.getId(), album.getTitle()));
     if (!isCompilation) {
       artist = (Artist)album.getPerformer();
@@ -1133,7 +1133,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Vector<Element> ae = new Vector<Element>();
     for (JAXBElement<Object> jsong : album.getSong()) {
       song = (Song)jsong.getValue();
-      sb = new StringBuffer();
+      sb = new StringBuilder();
       if (isCompilation) {
         artist = (Artist)song.getPerformer();
         sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), artist.getName()));
@@ -1197,7 +1197,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     for (JAXBElement<Object> jalbum : albums) {
       Album album = (Album)jalbum.getValue();
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(album), album.getTitle()));
       com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
       if (albumRelease != null) {

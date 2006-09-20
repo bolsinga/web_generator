@@ -354,7 +354,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
                 
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("archives/");
     sb.append(Calendar.getInstance().get(Calendar.YEAR)); // LocalTime OK
     sb.append(".html");

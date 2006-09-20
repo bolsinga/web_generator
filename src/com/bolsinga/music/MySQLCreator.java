@@ -50,7 +50,7 @@ class MySQLCreator {
   }
 
   private String toXMLID(final String prefix, final long sqlID) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(prefix);
     sb.append(sqlID - 1);
     return sb.toString();
@@ -340,7 +340,7 @@ class MySQLCreator {
     Song song = null;
 
     try {
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
       sb.append("SELECT * FROM song ORDER BY track, album_id;");
 
       rset = stmt.executeQuery(sb.toString());

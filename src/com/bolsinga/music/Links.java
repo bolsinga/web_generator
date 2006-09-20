@@ -96,7 +96,7 @@ public class Links {
   }
         
   public String getPagePath(final Artist artist) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(ARTIST_DIR);
     sb.append(File.separator);
     sb.append(getPageFileName(artist));
@@ -105,7 +105,7 @@ public class Links {
   }
         
   public String getPagePath(final Venue venue) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(VENUE_DIR);
     sb.append(File.separator);
     sb.append(getPageFileName(venue));
@@ -114,7 +114,7 @@ public class Links {
   }
         
   public String getPagePath(final Show show) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(SHOW_DIR);
     sb.append(File.separator);
     sb.append(getPageFileName(show));
@@ -123,7 +123,7 @@ public class Links {
   }
 
   public String getPagePath(final Album album) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append(TRACKS_DIR);
     sb.append(File.separator);
     sb.append(getPageFileName(album));
@@ -132,7 +132,7 @@ public class Links {
   }
 
   public String getLinkToPage(final Artist artist) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     if (fUpOneLevel) {
       sb.append("..");
@@ -147,7 +147,7 @@ public class Links {
   }
         
   public String getLinkToPage(final Venue venue) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     if (fUpOneLevel) {
       sb.append("..");
@@ -162,7 +162,7 @@ public class Links {
   }
         
   public String getLinkToPage(final Show show) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     if (fUpOneLevel) {
       sb.append("..");
@@ -177,7 +177,7 @@ public class Links {
   }
         
   public String getLinkToPage(final Album album) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     if (fUpOneLevel) {
       sb.append("..");
@@ -192,7 +192,7 @@ public class Links {
   }
 
   public String getLinkTo(final Artist artist) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     sb.append(getLinkToPage(artist));
     sb.append(HASH);
@@ -202,7 +202,7 @@ public class Links {
   }
         
   public String getLinkTo(final Venue venue) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     sb.append(getLinkToPage(venue));
     sb.append(HASH);
@@ -212,7 +212,7 @@ public class Links {
   }
         
   public String getLinkTo(final Show show) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     sb.append(getLinkToPage(show));
     sb.append(HASH);
@@ -222,7 +222,7 @@ public class Links {
   }
         
   public String getLinkTo(final Album album) {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     sb.append(getLinkToPage(album));
     sb.append(HASH);
@@ -232,7 +232,7 @@ public class Links {
   }
 
   public a getArtistLink() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
       sb.append(File.separator);
@@ -245,7 +245,7 @@ public class Links {
   }
                 
   public a getShowLink() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
       sb.append(File.separator);
@@ -258,7 +258,7 @@ public class Links {
   }
         
   public a getTracksLink() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
       sb.append(File.separator);
@@ -271,7 +271,7 @@ public class Links {
   }
 
   public a getAlbumsLink() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
       sb.append(File.separator);
@@ -284,7 +284,7 @@ public class Links {
   }
 
   public a getVenueLink() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
       sb.append(File.separator);
@@ -297,7 +297,7 @@ public class Links {
   }
         
   public a getCityLink() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
       sb.append(File.separator);
@@ -310,7 +310,7 @@ public class Links {
   }
 
   public a getICalLink() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     sb.append("webcal:");
     if (fUpOneLevel) {
       sb.append("..");
@@ -332,7 +332,7 @@ public class Links {
   }
         
   public String getStyleSheetLink() {
-    StringBuffer url = new StringBuffer();
+    StringBuilder url = new StringBuilder();
     if (fUpOneLevel) {
       url.append("..");
       url.append(File.separator);
@@ -352,7 +352,7 @@ public class Links {
   }
 
   public a getLinkToHome() {
-    StringBuffer url = new StringBuffer();
+    StringBuilder url = new StringBuilder();
     if (fUpOneLevel) {
       url.append("..");
       url.append(File.separator);

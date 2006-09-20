@@ -79,7 +79,7 @@ public class Util {
         
   public static String convertToParagraphs(final String data) {
     // Convert each line to <p> tags
-    StringBuffer tagged = new StringBuffer();
+    StringBuilder tagged = new StringBuilder();
     if (data != null) {
       String[] lines = data.split("\\n");
       for (int i = 0; i < lines.length; i++) {
@@ -143,7 +143,7 @@ public class Util {
   }
 
   public static String getGenerator() {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
                 
     sb.append(com.bolsinga.web.Util.getResourceString("program"));
                 
@@ -176,7 +176,7 @@ public class Util {
   }
 
   public static String getCopyright(final int startYear) {
-    StringBuffer cp = new StringBuffer();
+    StringBuilder cp = new StringBuilder();
                 
     int cur_year = Calendar.getInstance().get(Calendar.YEAR); // LocalTime OK
                 
