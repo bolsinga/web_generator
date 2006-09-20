@@ -6,7 +6,11 @@ import java.util.*;
 
 public class VEvent {
 
-  private static final DateFormat sFormatter = new SimpleDateFormat("yyyyMMdd");
+  private static final ThreadLocal<DateFormat> sFormatter = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      return new SimpleDateFormat("yyyyMMdd");
+    }
+  };
         
   private final Calendar fDate;
   private final String fSummary;
@@ -60,11 +64,11 @@ public class VEvent {
     end.add(Calendar.DATE, 1);
 
     w.write("DTSTART;VALUE=DATE:");
-    w.write(sFormatter.format(fDate.getTime()));
+    w.write(sFormatter.get().format(fDate.getTime()));
     w.write("\r\n");
                 
     w.write("DTEND;VALUE=DATE:");
-    w.write(sFormatter.format(end.getTime()));
+    w.write(sFormatter.get().format(end.getTime()));
     w.write("\r\n");
   }
 }

@@ -18,7 +18,11 @@ public class Links {
   public  static final String RSS_DIR      = "rss";
   private static final String HASH         = "#";
     
-  private static final DateFormat sArchivePageFormat = new SimpleDateFormat("yyyy");
+  private static final ThreadLocal<DateFormat> sArchivePageFormat = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      return new SimpleDateFormat("yyyy");
+    }
+  };
 
   private final boolean fUpOneLevel;
         
@@ -31,7 +35,7 @@ public class Links {
   }
         
   public String getPageFileName(final Entry entry) {
-    return sArchivePageFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
+    return sArchivePageFormat.get().format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
 
   public String getPagePath(final Entry entry) {

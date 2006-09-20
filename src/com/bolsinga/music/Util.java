@@ -11,9 +11,21 @@ import com.bolsinga.music.data.*;
 
 public class Util {
 
-  private static final DateFormat sMonthFormat      = new SimpleDateFormat("MMMM");
-  public  static final DateFormat sWebFormat        = new SimpleDateFormat("M/d/yyyy");
-  private static final DecimalFormat sPercentFormat = new DecimalFormat("##.##");
+  private static final ThreadLocal<DateFormat> sMonthFormat      = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      return new SimpleDateFormat("MMMM");
+    }
+  };
+  public  static final ThreadLocal<DateFormat> sWebFormat        = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      return new SimpleDateFormat("M/d/yyyy");
+    }
+  };
+  private static final ThreadLocal<DecimalFormat> sPercentFormat = new ThreadLocal<DecimalFormat>() {
+    public DecimalFormat initialValue() {
+      return new DecimalFormat("##.##");
+    }
+  };
         
   public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.Date date) {
     Calendar localTime = Calendar.getInstance(); // LocalTime OK
@@ -35,7 +47,7 @@ public class Util {
   public static String toString(final com.bolsinga.music.data.Date date) {
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
-      return sWebFormat.format(Util.toCalendarUTC(date).getTime());
+      return sWebFormat.get().format(Util.toCalendarUTC(date).getTime());
     } else {
       Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
                           ((date.getDay() != null) ? date.getDay() : BigInteger.ZERO),
@@ -47,12 +59,12 @@ public class Util {
   public static String toMonth(final com.bolsinga.music.data.Date date) {
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
-      return sMonthFormat.format(Util.toCalendarUTC(date).getTime());
+      return sMonthFormat.get().format(Util.toCalendarUTC(date).getTime());
     } else {
       Calendar d = Calendar.getInstance(); // UTC isn't relevant here.
       if (date.getMonth() != null) {
         d.set(Calendar.MONTH, date.getMonth().intValue() - 1);
-        return sMonthFormat.format(d.getTime());
+        return sMonthFormat.get().format(d.getTime());
       } else {
         return com.bolsinga.web.Util.getResourceString("unknownmonth");
       }
@@ -60,7 +72,7 @@ public class Util {
   }
         
   public static String toString(final double value) {
-    return sPercentFormat.format(value);
+    return sPercentFormat.get().format(value);
   }
 
   public static Music createMusic(final String sourceFile) {

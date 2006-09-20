@@ -8,13 +8,16 @@ import java.util.*;
  */
 
 public class Util {
-  private static final DateFormat sRSSDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-  static {
-    sRSSDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-  }
+  private static final ThreadLocal<DateFormat> sRSSDateFormat = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      DateFormat result = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+      result.setTimeZone(TimeZone.getTimeZone("UTC"));
+      return result;
+    }
+  };
         
   public static String getRSSDate(final GregorianCalendar c) {
-    return sRSSDateFormat.format(c.getTime());
+    return sRSSDateFormat.get().format(c.getTime());
   }
         
   public static com.bolsinga.rss.data.TImage createLogo(final com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {

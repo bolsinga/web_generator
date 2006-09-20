@@ -20,8 +20,16 @@ public class MySQLImporter {
   private static long sRelationID = 0;
   private static final Object sRelationLock = new Object();
 
-  private static final DateFormat sSQLFormat = new SimpleDateFormat("yyyy-M-d");
-  private static final MessageFormat sUnknownFormat = new MessageFormat("{2, number,####}-{0, number,integer}-{1, number,####}");
+  private static final ThreadLocal<DateFormat> sSQLFormat = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      return new SimpleDateFormat("yyyy-M-d");
+    }
+  };
+  private static final ThreadLocal<MessageFormat> sUnknownFormat = new ThreadLocal<MessageFormat>() {
+    public MessageFormat initialValue() {
+      return new MessageFormat("{2, number,####}-{0, number,integer}-{1, number,####}");
+    }
+  };
 
   public static void main(String[] args) {
     if ((args.length != 3) && (args.length != 4)) {
@@ -412,12 +420,12 @@ public class MySQLImporter {
   private static String toSQLString(final com.bolsinga.music.data.Date date) {
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
-      return sSQLFormat.format(com.bolsinga.music.Util.toCalendarUTC(date).getTime());
+      return sSQLFormat.get().format(com.bolsinga.music.Util.toCalendarUTC(date).getTime());
     } else {
       Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
                           ((date.getDay() != null) ? date.getDay() : BigInteger.ZERO),
                           ((date.getYear() != null) ? date.getYear() : BigInteger.valueOf(1900)) };
-      return sUnknownFormat.format(args);
+      return sUnknownFormat.get().format(args);
     }
   }
 

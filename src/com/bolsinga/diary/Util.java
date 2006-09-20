@@ -10,8 +10,16 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 public class Util {
-  public  static final DateFormat sWebFormat   = new SimpleDateFormat("M/d/yyyy");
-  private static final DateFormat sMonthFormat = new SimpleDateFormat("MMMM");
+  public  static final ThreadLocal<DateFormat> sWebFormat   = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      return new SimpleDateFormat("M/d/yyyy");
+    }
+  };
+  private static final ThreadLocal<DateFormat> sMonthFormat = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      return new SimpleDateFormat("MMMM");
+    }
+  };
 
   public static final Comparator<Entry> ENTRY_COMPARATOR = new Comparator<Entry>() {
       public int compare(final Entry e1, final Entry e2) {
@@ -21,11 +29,11 @@ public class Util {
     };
 
   public static String getTitle(final Entry entry) {
-    return sWebFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
+    return sWebFormat.get().format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
         
   public static String getMonth(final Entry entry) {
-    return sMonthFormat.format(entry.getTimestamp().toGregorianCalendar().getTime());
+    return sMonthFormat.get().format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
 
   public static int getStartYear(final Diary diary) {

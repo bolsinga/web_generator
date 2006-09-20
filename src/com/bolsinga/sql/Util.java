@@ -8,10 +8,13 @@ import java.util.regex.*;
 public class Util {
   private static final Pattern sSQL = Pattern.compile("'");
 
-  private static final DateFormat sSQLDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  static {
-    sSQLDateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-  }
+  private static final ThreadLocal<DateFormat> sSQLDateTimeFormat = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      DateFormat result = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      result.setTimeZone(TimeZone.getTimeZone("UTC"));
+      return result;
+    }
+  };
 
   private static String constructInsert(final String table, final String[] rowItems) {
     StringBuilder sb = new StringBuilder("INSERT INTO ");
@@ -44,19 +47,19 @@ public class Util {
   public static GregorianCalendar toCalendarUTC(final String sqlDATETIME) {
     java.util.Date d = null;
     try {
-      d = sSQLDateTimeFormat.parse(sqlDATETIME);
+      d = sSQLDateTimeFormat.get().parse(sqlDATETIME);
     } catch (ParseException e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();
       System.exit(1);
     }
-    GregorianCalendar c = new GregorianCalendar(sSQLDateTimeFormat.getTimeZone());
+    GregorianCalendar c = new GregorianCalendar(sSQLDateTimeFormat.get().getTimeZone());
     c.setTime(d);
     return c;
   }
 
   public static String toDATETIME(final GregorianCalendar c) {
-    return sSQLDateTimeFormat.format(c.getTime());
+    return sSQLDateTimeFormat.get().format(c.getTime());
   }
   
   private static String quote(final String s) {
