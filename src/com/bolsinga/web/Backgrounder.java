@@ -44,6 +44,7 @@ class BackgrounderThreadPoolExecutor extends ThreadPoolExecutor {
   protected void terminated() {
     try {
       if (System.getProperty("site.times") != null) {
+        System.out.println("Core Pool Size: " + getCorePoolSize());
         // This time is the time taken adding up all threads across all CPUs.
         // It will be longer than the 'class time' below. This will get 
         // shorter as the tasks become more efficient.
