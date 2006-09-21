@@ -4,15 +4,15 @@ import java.io.*;
 import java.text.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 class DocWriter implements Runnable {
-  private final XhtmlDocument fDoc;
+  private final Document fDoc;
   private final String fOutputDir;
   private final String fLastPath;
   
-  public DocWriter(final XhtmlDocument doc, final String outputDir, final String lastPath) {
+  public DocWriter(final Document doc, final String outputDir, final String lastPath) {
     fDoc = doc;
     fOutputDir = outputDir;
     fLastPath = lastPath;
@@ -22,7 +22,7 @@ class DocWriter implements Runnable {
     DocWriter.writeFile(fDoc, fOutputDir, fLastPath);
   }
   
-  public static void writeFile(final XhtmlDocument doc, final String outputDir, final String lastPath) {
+  public static void writeFile(final Document doc, final String outputDir, final String lastPath) {
     try {
       File f = new File(outputDir, lastPath);
       File parent = new File(f.getParent());
@@ -50,8 +50,8 @@ public abstract class DocumentCreator implements Backgroundable {
   private final String fOutputDir;
 
   // These change during the life-cycle of this object
-  private XhtmlDocument fDocument = null;
-  private div fMain = null;
+  private Document fDocument = null;
+  private Div fMain = null;
         
   protected DocumentCreator(final Backgrounder backgrounder, final String outputDir) {
     fBackgrounder = backgrounder;
@@ -62,8 +62,8 @@ public abstract class DocumentCreator implements Backgroundable {
   protected abstract String getTitle();
 
   protected abstract boolean needNewDocument();
-  protected abstract XhtmlDocument createDocument();
-  protected abstract div getHeaderDiv();
+  protected abstract Document createDocument();
+  protected abstract Div getHeaderDiv();
     
   protected abstract String getLastPath();
   protected abstract String getCurrentLetter();
@@ -86,7 +86,7 @@ public abstract class DocumentCreator implements Backgroundable {
     getMain().addElement(getCurrentElement());
   }
     
-  protected div getMain() {
+  protected Div getMain() {
     if ((fDocument == null) || needNewDocument()) {
       close();
             

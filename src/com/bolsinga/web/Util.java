@@ -3,7 +3,7 @@ package com.bolsinga.web;
 import java.util.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 import javax.xml.bind.*;
@@ -46,17 +46,17 @@ public class Util {
     return new GregorianCalendar(TimeZone.getTimeZone("UTC"));
   }
 
-  public static link getIconLink() {
-    link result = new link();
+  public static Link getIconLink() {
+    Link result = new Link();
     result.setRel("SHORTCUT ICON");
     result.setHref(Util.getSettings().getIco());
     return result;
   }
         
-  public static img getLogo() {
+  public static IMG getLogo() {
     com.bolsinga.settings.data.Image image = Util.getSettings().getLogoImage();
 
-    img i = new img(image.getLocation());
+    IMG i = new IMG(image.getLocation());
     i.setHeight(image.getHeight().intValue());
     i.setWidth(image.getWidth().intValue());
     i.setAlt(image.getAlt());
@@ -65,13 +65,13 @@ public class Util {
     return i;
   }
         
-  public static ul convertToUnOrderedList(final String data) {
-    ul list = new ul();
+  public static UL convertToUnOrderedList(final String data) {
+    UL list = new UL();
                 
     // Convert each line to a li tag.
     String[] lines = data.split("\\n");
     for (int i = 0; i < lines.length; i++) {
-      list.addElement(new li(lines[i]));
+      list.addElement(new LI(lines[i]));
     }
                 
     return list;
@@ -83,25 +83,25 @@ public class Util {
     if (data != null) {
       String[] lines = data.split("\\n");
       for (int i = 0; i < lines.length; i++) {
-        tagged.append(new p().addElement(lines[i]));
+        tagged.append(new P().addElement(lines[i]));
       }
     }
     return tagged.toString();
   }
         
-  public static div createDiv(final String className) {
-    div d = new div();
+  public static Div createDiv(final String className) {
+    Div d = new Div();
     d.setClass(className);
     d.setPrettyPrint(Util.getPrettyPrint());
     return d;
   }
         
-  public static a createInternalA(final String url, final String value) {
+  public static A createInternalA(final String url, final String value) {
     return Util.createInternalA(url, value, null);
   }
         
-  public static a createInternalA(final String url, final String value, final String title) {
-    a an = new a(url, value);
+  public static A createInternalA(final String url, final String value, final String title) {
+    A an = new A(url, value);
     an.setClass(CSS.INTERNAL);
     if (title != null) {
       an.setTitle(title);
@@ -109,19 +109,19 @@ public class Util {
     return an;
   }
     
-  public static a createNamedTarget(final String name, final String value) {
-    a an = new a();
+  public static A createNamedTarget(final String name, final String value) {
+    A an = new A();
     an.setName(name);
     an.addElement("t", value);
     return an;
   }
 
-  public static ul createUnorderedList(final Vector<org.apache.ecs.Element> elements) {
-    ul list = new ul();
+  public static UL createUnorderedList(final Vector<org.apache.ecs.Element> elements) {
+    UL list = new UL();
     list.setPrettyPrint(Util.getPrettyPrint());
 
     for (org.apache.ecs.Element e : elements) {
-      li item = new li(e);
+      LI item = new LI(e);
       item.setPrettyPrint(Util.getPrettyPrint());
       list.addElement(item);
     }
@@ -129,12 +129,12 @@ public class Util {
     return list;
   }
 
-  public static ol createOrderedList(final Vector<org.apache.ecs.Element> elements) {
-    ol list = new ol();
+  public static OL createOrderedList(final Vector<org.apache.ecs.Element> elements) {
+    OL list = new OL();
     list.setPrettyPrint(Util.getPrettyPrint());
 
     for (org.apache.ecs.Element e : elements) {
-      li item = new li(e);
+      LI item = new LI(e);
       item.setPrettyPrint(Util.getPrettyPrint());
       list.addElement(item);
     }

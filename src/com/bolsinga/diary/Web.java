@@ -9,7 +9,7 @@ import java.text.*;
 import java.util.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 import javax.xml.bind.JAXBContext;
@@ -49,13 +49,13 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     return ((fLastEntry == null) || !fLinks.getPageFileName(fLastEntry).equals(getCurrentLetter()));
   }
 
-  protected XhtmlDocument createDocument() {
+  protected Document createDocument() {
     return Web.createDocument(getTitle(), fStartYear, fLinks);
   }
 
-  protected div getHeaderDiv() {
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_HEADER);
-    d.addElement(new h1().addElement(getTitle()));
+  protected Div getHeaderDiv() {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_HEADER);
+    d.addElement(new H1().addElement(getTitle()));
     d.addElement(com.bolsinga.web.Util.getLogo());
     d.addElement(addWebNavigator(fProgram, fLinks));
     d.addElement(addIndexNavigator());
@@ -94,7 +94,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     }
     e.add(fLinks.getRSSLink());
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -103,12 +103,12 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     Vector<Element> e = new Vector<Element>();
                 
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
-    e.add(new a(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
+    e.add(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
     e.add(links.getLinkToHome());
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_MENU);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_MENU);
     Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
-    d.addElement(new h4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
+    d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -243,12 +243,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
     Links links = Links.getLinks(false);
 
-    XhtmlDocument doc = createDocument(diary.getTitle(), startYear, links);
+    Document doc = createDocument(diary.getTitle(), startYear, links);
 
     doc.getBody().addElement(generateColumn1(diary.getStatic(), diary.getFriends()));
                 
-    div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
-    div header = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_HEADER);
+    Div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
+    Div header = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_HEADER);
     String headerText = diary.getHeader();
     if (headerText != null) {
       header.addElement(com.bolsinga.web.Util.convertToUnOrderedList(headerText));
@@ -257,7 +257,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     main.addElement(generateDiary(encoder, diary, music, links));
     doc.getBody().addElement(main);
                 
-    div mainCol2 = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL2);
+    Div mainCol2 = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL2);
     int previewCount = com.bolsinga.web.Util.getSettings().getPreviewCount().intValue();
     mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music, previewCount));
     doc.getBody().addElement(mainCol2);
@@ -280,50 +280,50 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
   }
 
-  private static div createMainStatics(final String statics) {
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_STATIC);
-    d.addElement(new h4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
+  private static Div createMainStatics(final String statics) {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_STATIC);
+    d.addElement(new H4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
     if (statics != null) {
       d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(statics));
     }
     return d;
   }
 
-  private static div createMainLinks(final String friends) {
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_LINKS);
-    d.addElement(new h4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
+  private static Div createMainLinks(final String friends) {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_LINKS);
+    d.addElement(new H4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
     if (friends != null) {
       d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(friends));
     }
     return d;
   }
 
-  private static div generateColumn1(final String statics, final String friends) {
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL1);
+  private static Div generateColumn1(final String statics, final String friends) {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL1);
     d.addElement(Web.createMainStatics(statics));
     d.addElement(Web.createMainLinks(friends));
     return d;
   }
         
-  public static XhtmlDocument createDocument(final String title, final int startYear, final Links links) {
-    XhtmlDocument d = new XhtmlDocument(ECSDefaults.getDefaultCodeset());
+  public static Document createDocument(final String title, final int startYear, final Links links) {
+    Document d = new Document(ECSDefaults.getDefaultCodeset());
                 
     d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
                 
-    d.setDoctype(new org.apache.ecs.Doctype.XHtml10Strict());
+    d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
     d.appendTitle(title);
                 
-    head h = d.getHead();
+    Head h = d.getHead();
     h.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
     h.addElement(com.bolsinga.web.Util.getIconLink());
     h.addElement(links.getLinkToRSS());
     h.addElement(links.getLinkToStyleSheet());
                 
-    h.addElement(new meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
-    h.addElement(new meta().setContent(System.getProperty("user.name")).setName("Author"));
-    h.addElement(new meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
-    h.addElement(new meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
-    h.addElement(new meta().setContent(com.bolsinga.web.Util.getCopyright(startYear)).setName("Copyright"));
+    h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
+    h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
+    h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
+    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
+    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(startYear)).setName("Copyright"));
 
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
                                                 
@@ -331,10 +331,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
         
   private static Element generateDiary(final com.bolsinga.web.Encode encoder, final Diary diary, final Music music, final Links links) {
-    div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
+    Div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
                 
     Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
-    diaryDiv.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
+    diaryDiv.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
                 
     diaryDiv.addElement(links.getRSSLink());
 
@@ -359,7 +359,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     sb.append(Calendar.getInstance().get(Calendar.YEAR)); // LocalTime OK
     sb.append(".html");
                 
-    diaryDiv.addElement(new h2().addElement(com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("archives"))));
+    diaryDiv.addElement(new H2().addElement(com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("archives"))));
                 
     return diaryDiv;
   }
@@ -412,11 +412,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
     creator.complete();
   }
 
-  public static ul addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
+  public static UL addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
     // CSS.DIARY_ENTRY
     Vector<Element> e = new Vector<Element>();
-    e.add(new h2().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
-    e.add(new h4().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(entry), com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"))));
+    e.add(new H2().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
+    e.add(new H4().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(entry), com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"))));
     e.add(new StringElement(Web.encodedComment(encoder, entry, upOneLevel)));
     return com.bolsinga.web.Util.createUnorderedList(e);
   }

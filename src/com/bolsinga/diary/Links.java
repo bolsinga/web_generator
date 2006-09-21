@@ -7,7 +7,7 @@ import java.text.*;
 import java.util.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 public class Links {
@@ -75,16 +75,16 @@ public class Links {
     return sb.toString();
   }
         
-  public a getRSSLink() {
+  public A getRSSLink() {
     com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getRssImage();
 
-    img i = new img(image.getLocation());
+    IMG i = new IMG(image.getLocation());
     i.setHeight(image.getHeight().intValue());
     i.setWidth(image.getWidth().intValue());
     i.setAlt(image.getAlt());
     i.setTitle(image.getAlt());
                 
-    return new a(getRSSURL(), i.toString()); // rss feed URL
+    return new A(getRSSURL(), i.toString()); // rss feed URL
   }
 
   public String getRSSURL() {
@@ -99,8 +99,8 @@ public class Links {
     return url.toString();
   }
         
-  public link getLinkToRSS() {
-    link result = new link();
+  public Link getLinkToRSS() {
+    Link result = new Link();
     result.setRel("alternate");
     result.setType("application/rss+xml");
     result.setTitle("RSS");
@@ -120,15 +120,15 @@ public class Links {
     return url.toString();
   }
 
-  public link getLinkToStyleSheet() {
-    link result = new link();
+  public Link getLinkToStyleSheet() {
+    Link result = new Link();
     result.setRel("stylesheet");
     result.setType("text/css");
     result.setHref(getStyleSheetLink());
     return result;
   }
         
-  public a getLinkToHome() {
+  public A getLinkToHome() {
     StringBuilder url = new StringBuilder();
     if (fUpOneLevel) {
       url.append("..");

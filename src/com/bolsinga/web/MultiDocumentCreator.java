@@ -1,12 +1,12 @@
 package com.bolsinga.web;
 
 import org.apache.ecs.*;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 public abstract class MultiDocumentCreator extends DocumentCreator {
   // This changes during the life-cycle of this object
-  private li fSubsection = null;
+  private LI fSubsection = null;
     
   protected MultiDocumentCreator(final Backgrounder backgrounder, final String outputDir) {
     super(backgrounder, outputDir);
@@ -19,21 +19,21 @@ public abstract class MultiDocumentCreator extends DocumentCreator {
     getSubsection().addElement(getCurrentElement());
   }
 
-  private li getSubsection() {
+  private LI getSubsection() {
     if ((fSubsection == null) || needNewSubsection() || needNewDocument()) {
-      div mainDiv = getMain();
+      Div mainDiv = getMain();
             
-      ul list = new ul();
+      UL list = new UL();
       list.setClass(com.bolsinga.web.CSS.DOC_SUB);
       list.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
             
-      fSubsection = new li();
+      fSubsection = new LI();
       fSubsection.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
       list.addElement(fSubsection);
             
       Element e = getSubsectionTitle();
       if (e != null) {
-        fSubsection.addElement(new h2().addElement(e));
+        fSubsection.addElement(new H2().addElement(e));
       }
             
       mainDiv.addElement(list);

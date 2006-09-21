@@ -9,7 +9,7 @@ import java.text.*;
 import java.util.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 import javax.xml.bind.JAXBContext;
@@ -30,13 +30,13 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
     fProgram = program;
   }
 
-  protected XhtmlDocument createDocument() {
+  protected Document createDocument() {
     return Web.createHTMLDocument(fLinks, getTitle());
   }
 
-  protected div getHeaderDiv() {
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
-    d.addElement(new h1().addElement(getTitle()));
+  protected Div getHeaderDiv() {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
+    d.addElement(new H1().addElement(getTitle()));
     d.addElement(com.bolsinga.web.Util.getLogo());
     d.addElement(fLinks.addWebNavigator(fTimeStamp, fProgram));
     d.addElement(addIndexNavigator());
@@ -58,13 +58,13 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
     fProgram = program;
   }
 
-  protected XhtmlDocument createDocument() {
+  protected Document createDocument() {
     return Web.createHTMLDocument(fLinks, getTitle());
   }
 
-  protected div getHeaderDiv() {
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
-    d.addElement(new h1().addElement(getTitle()));
+  protected Div getHeaderDiv() {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
+    d.addElement(new H1().addElement(getTitle()));
     d.addElement(com.bolsinga.web.Util.getLogo());
     d.addElement(fLinks.addWebNavigator(fTimeStamp, fProgram));
     d.addElement(addIndexNavigator());
@@ -234,7 +234,7 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
   private final String fDirectory;
 
   // This changes during the life-cycle of this object
-  private table  fCurTable  = null;
+  private Table  fCurTable  = null;
 
   public StatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program, final String filename, final String title, final String directory) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
@@ -243,7 +243,7 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
     fDirectory = directory;
   }
 
-  public void add(final table t) {
+  public void add(final Table t) {
     fCurTable = t;
     add();
   }
@@ -304,8 +304,8 @@ class TracksStatisticsCreator extends StatisticsCreator {
       e.add(new StringElement(com.bolsinga.web.Util.getResourceString("albums")));
     }
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_MENU);
-    d.addElement(new h4(com.bolsinga.web.Util.getResourceString("view")));
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_MENU);
+    d.addElement(new H4(com.bolsinga.web.Util.getResourceString("view")));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -921,20 +921,20 @@ public class Web implements com.bolsinga.web.Backgroundable {
     sb.append(links.getAlbumsLink());
     e.add(new StringElement(sb.toString()));
 
-    div dm = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MENU);
+    Div dm = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MENU);
     dm.addElement(com.bolsinga.web.Util.getLogo());
     Object[] genArgs = { music.getTimestamp().toGregorianCalendar().getTime() };
-    dm.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), genArgs)));
+    dm.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), genArgs)));
     dm.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     dm.addElement(links.getICalLink());
                 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MAIN);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MAIN);
     d.addElement(dm);
                 
-    div dr = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_RECENT);
+    Div dr = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_RECENT);
                 
     Object[] countArgs = { new Integer(lastShowsCount) };
-    dr.addElement(new h3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("lastshows"), countArgs)));
+    dr.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("lastshows"), countArgs)));
 
     Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(music.getShow());
@@ -944,8 +944,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     for (int i = 0; i < lastShowsCount; i++) {
       Show item = items.get(i);
 
-      div ds = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_SHOW);
-      ds.addElement(new h4(com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), Util.toString(item.getDate()))));
+      Div ds = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_SHOW);
+      ds.addElement(new H4(com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), Util.toString(item.getDate()))));
       ds.addElement(getShowListing(links, item));
                         
       dr.addElement(ds);
@@ -994,7 +994,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
         se.add(new StringElement(sb.toString()));
                             
         Venue venue = (Venue)show.getVenue();
-        a venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), venue.getName());
+        A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), venue.getName());
         Location l = (Location)venue.getLocation();
         se.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
                             
@@ -1005,8 +1005,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
           se.add(com.bolsinga.web.Util.createInternalA(showLink, com.bolsinga.web.Util.getResourceString("showsummary")));
         }
                             
-        div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_SHOW);
-        d.addElement(new h3().addElement(com.bolsinga.web.Util.createInternalA(showLink, Util.toString(show.getDate()))));
+        Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_SHOW);
+        d.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(showLink, Util.toString(show.getDate()))));
         d.addElement(com.bolsinga.web.Util.createUnorderedList(se));
         e.add(d);
       }
@@ -1049,8 +1049,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
           se.add(com.bolsinga.web.Util.createInternalA(showLink, com.bolsinga.web.Util.getResourceString("showsummary")));
         }
         
-        div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_SHOW);
-        d.addElement(new h3().addElement(com.bolsinga.web.Util.createInternalA(showLink, Util.toString(show.getDate()))));
+        Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_SHOW);
+        d.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(showLink, Util.toString(show.getDate()))));
         d.addElement(com.bolsinga.web.Util.createUnorderedList(se));
         e.add(d);                        
       }
@@ -1059,7 +1059,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  private static ul getShowListing(final Links links, final Show show) {
+  private static UL getShowListing(final Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
@@ -1075,7 +1075,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     e.add(new StringElement(sb.toString()));
                 
     Venue venue = (Venue)show.getVenue();
-    a venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), venue.getName());
+    A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), venue.getName());
     Location l = (Location)venue.getLocation();
     e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
                 
@@ -1092,7 +1092,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     // CSS.SHOW_ITEM
     Vector<Element> e = new Vector<Element>();
 
-    e.add(new h3().addElement(com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
+    e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
 
     e.add(Web.getShowListing(links, show));
 
@@ -1128,7 +1128,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       sb.append(")");
     }
 
-    e.add(new h2().addElement(sb.toString()));
+    e.add(new H2().addElement(sb.toString()));
 
     Vector<Element> ae = new Vector<Element>();
     for (JAXBElement<Object> jsong : album.getSong()) {
@@ -1157,7 +1157,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  public static div addRelations(final Lookup lookup, final Links links, final Artist artist) {
+  public static Div addRelations(final Lookup lookup, final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
     for (Artist art : lookup.getRelations(artist)) {
       if (art.equals(artist)) {
@@ -1167,13 +1167,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_RELATION);
-    d.addElement(new h3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_RELATION);
+    d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
         
-  public static div addRelations(final Lookup lookup, final Links links, final Venue venue) {
+  public static Div addRelations(final Lookup lookup, final Links links, final Venue venue) {
     Vector<Element> e = new Vector<Element>();
     for (Venue v : lookup.getRelations(venue)) {
       if (v.equals(venue)) {
@@ -1183,13 +1183,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_RELATION);
-    d.addElement(new h3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_RELATION);
+    d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
 
-  public static div addTracks(final Links links, final Artist artist) {
+  public static Div addTracks(final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
     List<JAXBElement<Object>> albums = artist.getAlbum();
@@ -1208,8 +1208,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
       e.add(new StringElement(sb.toString()));
     }
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_TRACKS);
-    d.addElement(new h3().addElement(com.bolsinga.web.Util.getResourceString("albums")));
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_TRACKS);
+    d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("albums")));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1235,7 +1235,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1261,7 +1261,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1287,23 +1287,23 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
         
-  public static table makeTable(final String[] names, final int[] values, final String caption, final String header) {
-    table t = new table();
+  public static Table makeTable(final String[] names, final int[] values, final String caption, final String header) {
+    Table t = new Table();
     t.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
-    caption capt = new caption();
+    Caption capt = new Caption();
     capt.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
     capt.addElement(caption);
     t.addElement(capt);
-    tr trow = new tr().addElement(new th(header)).addElement(new th("#")).addElement(new th("%"));
+    TR trow = new TR().addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
     trow.setClass(com.bolsinga.web.CSS.TABLE_HEADER);
     trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
     t.addElement(trow);
-    th thh = null;
+    TH thh = null;
                 
     int total = 0;
     int i;
@@ -1312,24 +1312,24 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
 
     for (i = 0; i < values.length; i++) {
-      trow = new tr();
+      trow = new TR();
       trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
       trow.setClass((((i + 1) % 2) != 0) ? com.bolsinga.web.CSS.TABLE_ROW : com.bolsinga.web.CSS.TABLE_ROW_ALT);
-      thh = new th(names[i]);
+      thh = new TH(names[i]);
       thh.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
       trow.addElement(thh);
-      trow.addElement(new td(Integer.toString(values[i])).setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint()));
-      trow.addElement(new td(Util.toString((double)values[i] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint()));
+      trow.addElement(new TD(Integer.toString(values[i])).setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint()));
+      trow.addElement(new TD(Util.toString((double)values[i] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint()));
                         
       t.addElement(trow);
     }
                 
-    trow = new tr();
+    trow = new TR();
     trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
     trow.setClass(com.bolsinga.web.CSS.TABLE_FOOTER);
-    trow.addElement(new th(Integer.toString(names.length)));
-    trow.addElement(new th(Integer.toString(total)));
-    trow.addElement(new th());
+    trow.addElement(new TH(Integer.toString(names.length)));
+    trow.addElement(new TH(Integer.toString(total)));
+    trow.addElement(new TH());
     t.addElement(trow);
                 
     return t;
@@ -1357,29 +1357,29 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
     e.add(links.getICalLink());
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
         
-  static XhtmlDocument createHTMLDocument(final Links links, final String title) {
-    XhtmlDocument d = new XhtmlDocument(ECSDefaults.getDefaultCodeset());
+  static Document createHTMLDocument(final Links links, final String title) {
+    Document d = new Document(ECSDefaults.getDefaultCodeset());
 
     d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
                 
-    d.setDoctype(new org.apache.ecs.Doctype.XHtml10Strict());
+    d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
     d.appendTitle(title);
                 
-    head h = d.getHead();
+    Head h = d.getHead();
     h.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
     h.addElement(com.bolsinga.web.Util.getIconLink());
     h.addElement(links.getLinkToStyleSheet());
 
-    h.addElement(new meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
-    h.addElement(new meta().setContent(System.getProperty("user.name")).setName("Author"));
-    h.addElement(new meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
-    h.addElement(new meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
-    h.addElement(new meta().setContent(com.bolsinga.web.Util.getCopyright(START_YEAR)).setName("Copyright"));
+    h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
+    h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
+    h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
+    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
+    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(START_YEAR)).setName("Copyright"));
 
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
 

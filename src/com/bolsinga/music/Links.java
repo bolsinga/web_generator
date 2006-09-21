@@ -9,7 +9,7 @@ import java.text.*;
 import java.util.*;
 
 import org.apache.ecs.*;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
 public class Links {
@@ -40,10 +40,10 @@ public class Links {
     fUpOneLevel = upOneLevel;
   }
         
-  public div addWebNavigator(final GregorianCalendar cal, final String program) {
+  public Div addWebNavigator(final GregorianCalendar cal, final String program) {
     Vector<Element> e = new Vector<Element>();
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
-    e.add(new a(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
+    e.add(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
     e.add(getLinkToHome());
     e.add(getArtistLink());
     e.add(getTracksLink());
@@ -51,9 +51,9 @@ public class Links {
     e.add(getVenueLink());
     e.add(getCityLink());
 
-    div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
     Object[] args = { cal.getTime() };
-    d.addElement(new h4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
+    d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -231,7 +231,7 @@ public class Links {
     return sb.toString();
   }
 
-  public a getArtistLink() {
+  public A getArtistLink() {
     StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
@@ -244,7 +244,7 @@ public class Links {
     return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("bands"));
   }
                 
-  public a getShowLink() {
+  public A getShowLink() {
     StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
@@ -257,7 +257,7 @@ public class Links {
     return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("dates"));
   }
         
-  public a getTracksLink() {
+  public A getTracksLink() {
     StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
@@ -270,7 +270,7 @@ public class Links {
     return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("tracks"));
   }
 
-  public a getAlbumsLink() {
+  public A getAlbumsLink() {
     StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
@@ -283,7 +283,7 @@ public class Links {
     return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("albums"));
   }
 
-  public a getVenueLink() {
+  public A getVenueLink() {
     StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
@@ -296,7 +296,7 @@ public class Links {
     return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("venues"));
   }
         
-  public a getCityLink() {
+  public A getCityLink() {
     StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
       sb.append("..");
@@ -309,7 +309,7 @@ public class Links {
     return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("cities"));
   }
 
-  public a getICalLink() {
+  public A getICalLink() {
     StringBuilder sb = new StringBuilder();
     sb.append("webcal:");
     if (fUpOneLevel) {
@@ -322,13 +322,13 @@ public class Links {
 
     com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getIcalImage();
 
-    img i = new img(image.getLocation());
+    IMG i = new IMG(image.getLocation());
     i.setHeight(image.getHeight().intValue());
     i.setWidth(image.getWidth().intValue());
     i.setAlt(image.getAlt());
     i.setTitle(image.getAlt());
                 
-    return new a(sb.toString(), i.toString()); // ical: URL
+    return new A(sb.toString(), i.toString()); // ical: URL
   }
         
   public String getStyleSheetLink() {
@@ -343,15 +343,15 @@ public class Links {
     return url.toString();
   }
 
-  public link getLinkToStyleSheet() {
-    link result = new link();
+  public Link getLinkToStyleSheet() {
+    Link result = new Link();
     result.setRel("stylesheet");
     result.setType("text/css");
     result.setHref(getStyleSheetLink());
     return result;
   }
 
-  public a getLinkToHome() {
+  public A getLinkToHome() {
     StringBuilder url = new StringBuilder();
     if (fUpOneLevel) {
       url.append("..");
