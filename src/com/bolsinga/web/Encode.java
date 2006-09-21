@@ -11,10 +11,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.*;
 
-import org.apache.ecs.*;
-import org.apache.ecs.xhtml.*;
-import org.apache.ecs.filter.*;
-
 class EncodeTest implements com.bolsinga.web.Backgroundable {
 
   private static final boolean ENCODE_TIMING = Boolean.getBoolean("site.times");
