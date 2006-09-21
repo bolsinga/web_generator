@@ -17,7 +17,7 @@ import javax.xml.bind.Marshaller;
 
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
-  private final Map<String, String>  fEntryIndex;
+  private final java.util.Map<String, String>  fEntryIndex;
   private final Links  fLinks;
   private final String fProgram;
   private final int fStartYear;
@@ -26,7 +26,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private Entry  fCurEntry;
   private Entry  fLastEntry;
         
-  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Map<String, String> entryIndex, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
+  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, String> entryIndex, final com.bolsinga.web.Encode encoder, final Links links, final String outputDir, final String program, final int startYear) {
     super(backgrounder, outputDir);
     fEncoder = encoder;
     fEntryIndex = entryIndex;
@@ -229,7 +229,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     });
 
-    final Map<String, String> entryIndex = Web.createEntryIndex(diary.getEntry(), links);
+    final java.util.Map<String, String> entryIndex = Web.createEntryIndex(diary.getEntry(), links);
     Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
     for (final Collection<Entry> entryGroup : entryGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
@@ -364,8 +364,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return diaryDiv;
   }
 
-  private static Map<String, String> createEntryIndex(final Collection<Entry> entries, final Links links) {
-    Map<String, String> m = new TreeMap<String, String>();
+  private static java.util.Map<String, String> createEntryIndex(final Collection<Entry> entries, final Links links) {
+    java.util.Map<String, String> m = new TreeMap<String, String>();
     for (Entry e : entries) {
       String letter = links.getPageFileName(e);
       if (!m.containsKey(letter)) {
@@ -399,12 +399,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Collections.sort(diary.getEntry(), Util.ENTRY_COMPARATOR);
     List<Entry> items = Collections.unmodifiableList(diary.getEntry());
     Links links = Links.getLinks(true);
-    Map<String, String> index = Web.createEntryIndex(items, links);
+    java.util.Map<String, String> index = Web.createEntryIndex(items, links);
     
     Web.generateArchivePages(backgrounder, items, index, encoder, links, startYear, outputDir);
   }
                 
-  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final Map<String, String> index, final com.bolsinga.web.Encode encoder, final Links links, final int startYear, final String outputDir) {
+  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final java.util.Map<String, String> index, final com.bolsinga.web.Encode encoder, final Links links, final int startYear, final String outputDir) {
     DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
     for (Entry item : items) {
       creator.add(item);
