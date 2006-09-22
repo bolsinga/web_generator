@@ -408,7 +408,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
 
     com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(backgrounder, music, null);
+    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, null);
     Web web = new Web(backgrounder);
     web.generate(music, encoder, output);
     web.complete();
