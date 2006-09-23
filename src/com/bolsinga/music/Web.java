@@ -654,7 +654,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
     StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.ARTIST_DIR);
-    stats.add(makeTable(names, values, tableTitle, typeString));
+    stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("artiststatsummary")));
     stats.complete();
   }
         
@@ -695,7 +695,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
     StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.VENUE_DIR);
-    stats.add(makeTable(names, values, tableTitle, typeString));
+    stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("venuestatsummary")));
     stats.complete();
   }
         
@@ -751,7 +751,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
     StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.SHOW_DIR);
-    stats.add(makeTable(names, values, tableTitle, typeString));
+    stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("datestatssummary")));
     stats.complete();
   }
         
@@ -799,7 +799,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
     StatisticsCreator creator = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.CITIES_DIR);
-    creator.add(makeTable(names, values, tableTitle, typeString));
+    creator.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("citystatsummary")));
     creator.complete();
   }
 
@@ -842,7 +842,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
 
       StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
-      stats.add(makeTable(names, values, tableTitle, typeString));
+      stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("trackstatsummary")));
       stats.complete();
     }
   }
@@ -870,7 +870,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
 
       StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
-      stats.add(makeTable(names, values, tableTitle, typeString));
+      stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("albumstatsummary")));
       stats.complete();
     }
   }
@@ -1297,8 +1297,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
         
-  public static Table makeTable(final String[] names, final int[] values, final String caption, final String header) {
+  public static Table makeTable(final String[] names, final int[] values, final String caption, final String header, final String summary) {
     Table t = new Table();
+    t.setSummary(summary);
     t.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
     Caption capt = new Caption();
     capt.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
