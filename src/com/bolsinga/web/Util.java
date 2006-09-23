@@ -1,6 +1,7 @@
 package com.bolsinga.web;
 
 import java.util.*;
+import java.util.regex.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
@@ -28,6 +29,12 @@ public class Util {
       e.printStackTrace();
       System.exit(1);
     }
+  }
+
+  // todo: this ought to look for any of the full &amp; &lt; or &gt; patterns instead of a subset
+  private static final Pattern sHTMLPattern = Pattern.compile("&([^agl])");
+  public static String toHTMLSafe(final String s) {
+    return sHTMLPattern.matcher(s).replaceAll("&amp;$1");
   }
         
   public static boolean getPrettyPrint() {

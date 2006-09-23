@@ -516,10 +516,12 @@ class HashEncode extends Encode {
   }
   
   private String embedLinks(final Object obj, final String source, final boolean upOneLevel) {
+    String result = null;
     if ((fEncodables != null) && (fEncodables.containsKey(obj))) {
-      return EncoderData.addLinks(source, upOneLevel, fEncodables.get(obj));
+      result = EncoderData.addLinks(source, upOneLevel, fEncodables.get(obj));
     } else {
-      return source;
+      result = source;
     }
+    return com.bolsinga.web.Util.toHTMLSafe(result);
   }
 }

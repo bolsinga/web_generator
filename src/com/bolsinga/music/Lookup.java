@@ -9,6 +9,12 @@ public class Lookup {
 
   private static Lookup sLookup = null;
         
+  private final HashMap<String, String> fArtistHTMLMap =
+    new HashMap<String, String>();
+  private final HashMap<String, String> fAlbumHTMLMap =
+    new HashMap<String, String>();
+  private final HashMap<String, String> fVenueHTMLMap =
+    new HashMap<String, String>();
   private final HashMap<String, Collection<Show>> fArtistMap =
     new HashMap<String, Collection<Show>>();
   private final HashMap<String, Collection<Show>> fVenueMap =
@@ -32,6 +38,18 @@ public class Lookup {
   private Lookup(final Music music) {
     String id = null;
     Collection<Show> showCollection = null;
+    
+    for (Artist performer : music.getArtist()) {
+      fArtistHTMLMap.put(performer.getId(), com.bolsinga.web.Util.toHTMLSafe(performer.getName()));
+    }
+
+    for (Album album : music.getAlbum()) {
+      fAlbumHTMLMap.put(album.getId(), com.bolsinga.web.Util.toHTMLSafe(album.getTitle()));
+    }
+
+    for (Venue venue : music.getVenue()) {
+      fVenueHTMLMap.put(venue.getId(), com.bolsinga.web.Util.toHTMLSafe(venue.getName()));
+    }
 
     List<Show> shows = music.getShow();
     for (Show show : shows) {
@@ -114,6 +132,18 @@ public class Lookup {
         }
       }
     }
+  }
+  
+  public String getHTMLName(final Artist artist) {
+    return fArtistHTMLMap.get(artist.getId());
+  }
+
+  public String getHTMLName(final Album album) {
+    return fAlbumHTMLMap.get(album.getId());
+  }
+  
+  public String getHTMLName(final Venue venue) {
+    return fVenueHTMLMap.get(venue.getId());
   }
         
   public Collection<Show> getShows(final Artist artist) {

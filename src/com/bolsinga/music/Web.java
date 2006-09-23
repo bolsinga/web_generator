@@ -103,7 +103,7 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element getSubsectionTitle() {
-    return com.bolsinga.web.Util.createNamedTarget(fCurArtist.getId(), fCurArtist.getName());
+    return com.bolsinga.web.Util.createNamedTarget(fCurArtist.getId(), fLookup.getHTMLName(fCurArtist));
   }
 
   protected String getLastPath() {
@@ -154,7 +154,7 @@ class VenueDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element getSubsectionTitle() {
-    return com.bolsinga.web.Util.createNamedTarget(fCurVenue.getId(), fCurVenue.getName());
+    return com.bolsinga.web.Util.createNamedTarget(fCurVenue.getId(), fLookup.getHTMLName(fCurVenue));
   }
 
   protected String getLastPath() {
@@ -220,7 +220,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fEncoder, fLinks, fCurShow);
+    return Web.addItem(fEncoder, fLookup, fLinks, fCurShow);
   }
 
   protected Element addIndexNavigator() {
@@ -346,7 +346,7 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fLinks, fCurAlbum);
+    return Web.addItem(fLookup, fLinks, fCurAlbum);
   }
 
   protected Element addIndexNavigator() {
@@ -641,7 +641,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
     for (Artist item : items) {
-      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
+      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), lookup.getHTMLName(item)).toString();
       Collection<Show> shows = lookup.getShows(item);
       values[index] = (shows != null) ? shows.size() : 0;
                         
@@ -682,7 +682,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String[] names = new String[items.size()];
     int[] values = new int[items.size()];
     for (Venue item : items) {
-      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), item.getName()).toString();
+      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), lookup.getHTMLName(item)).toString();
       Collection<Show> shows = lookup.getShows(item);
       values[index] = (shows != null) ? shows.size() : 0;
                         
@@ -828,7 +828,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     int[] values = new int[artists.size()];
     
     for (Artist artist : artists) {
-      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), artist.getName()).toString();
+      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist)).toString();
       values[index] = Util.trackCount(artist);
                         
       index++;
@@ -856,7 +856,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     int index = 0;
     
     for(Artist artist : artists) {
-      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), artist.getName()).toString();
+      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist)).toString();
       values[index] = (artist.getAlbum() != null) ? artist.getAlbum().size() : 0;
                         
       index++;
@@ -903,8 +903,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
     sb.append(links.getVenueLink());
     e.add(new StringElement(sb.toString()));
 
+    Lookup lookup = Lookup.getLookup(music);
+    
     sb = new StringBuilder();
-    sb.append(Lookup.getLookup(music).getCities().size());
+    sb.append(lookup.getCities().size());
     sb.append(" ");
     sb.append(links.getCityLink());
     e.add(new StringElement(sb.toString()));
@@ -946,7 +948,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
       Div ds = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_SHOW);
       ds.addElement(new H4(com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), Util.toString(item.getDate()))));
-      ds.addElement(getShowListing(links, item));
+      ds.addElement(getShowListing(lookup, links, item));
                         
       dr.addElement(ds);
     }
@@ -965,7 +967,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Vector<Element> e = new Vector<Element>();
 
     if (artist.getAlbum().size() > 0) {
-      e.add(Web.addTracks(links, artist));
+      e.add(Web.addTracks(lookup, links, artist));
     }
                 
     if (lookup.getRelations(artist) != null) {
@@ -980,11 +982,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
         Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
         while (bi.hasNext()) {
           Artist performer = (Artist)bi.next().getValue();
-                                    
+          
+          String htmlName = lookup.getHTMLName(performer);
           if (artist.equals(performer)) {
-            sb.append(performer.getName());
+            sb.append(htmlName);
           } else {
-            sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
+            sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), htmlName));
           }
                                     
           if (bi.hasNext()) {
@@ -994,7 +997,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
         se.add(new StringElement(sb.toString()));
                             
         Venue venue = (Venue)show.getVenue();
-        A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), venue.getName());
+        A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue));
         Location l = (Location)venue.getLocation();
         se.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
                             
@@ -1033,7 +1036,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
         Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
         while (bi.hasNext()) {
           Artist performer = (Artist)bi.next().getValue();
-          sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
+          sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer)));
           
           if (bi.hasNext()) {
             sb.append(", ");
@@ -1042,7 +1045,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
         se.add(new StringElement(sb.toString()));
         
         Location l = (Location)venue.getLocation();
-        se.add(new StringElement(venue.getName() + ", " + l.getCity() + ", " + l.getState()));
+        se.add(new StringElement(lookup.getHTMLName(venue) + ", " + l.getCity() + ", " + l.getState()));
         
         String comment = show.getComment();
         if (comment != null) {
@@ -1059,14 +1062,14 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
         
-  private static UL getShowListing(final Links links, final Show show) {
+  private static UL getShowListing(final Lookup lookup, final Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
     while (bi.hasNext()) {
       Artist performer = (Artist)bi.next().getValue();
                         
-      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), performer.getName()));
+      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer)));
                         
       if (bi.hasNext()) {
         sb.append(", ");
@@ -1075,26 +1078,26 @@ public class Web implements com.bolsinga.web.Backgroundable {
     e.add(new StringElement(sb.toString()));
                 
     Venue venue = (Venue)show.getVenue();
-    A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), venue.getName());
+    A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue));
     Location l = (Location)venue.getLocation();
     e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
                 
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
 
-  public static Element addItem(final com.bolsinga.web.Encode encoder, final Show show) {
+  public static Element addItem(final com.bolsinga.web.Encode encoder, final Lookup lookup, final Show show) {
     Links links = Links.getLinks(false);
 
-    return Web.addItem(encoder, links, show);
+    return Web.addItem(encoder, lookup, links, show);
   }
 
-  public static Element addItem(final com.bolsinga.web.Encode encoder, final Links links, final Show show) {
+  public static Element addItem(final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final Show show) {
     // CSS.SHOW_ITEM
     Vector<Element> e = new Vector<Element>();
 
     e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
 
-    e.add(Web.getShowListing(links, show));
+    e.add(Web.getShowListing(lookup, links, show));
 
     String comment = show.getComment();
     if (comment != null) {
@@ -1104,7 +1107,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
 
-  public static Element addItem(final Links links, final Album album) {
+  public static Element addItem(final Lookup lookup, final Links links, final Album album) {
     // CSS.TRACKS_ITEM
     Vector<Element> e = new Vector<Element>();
                 
@@ -1115,11 +1118,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
     boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
                 
     sb = new StringBuilder();
-    sb.append(com.bolsinga.web.Util.createNamedTarget(album.getId(), album.getTitle()));
+    sb.append(com.bolsinga.web.Util.createNamedTarget(album.getId(), lookup.getHTMLName(album)));
     if (!isCompilation) {
       artist = (Artist)album.getPerformer();
       sb.append(" - ");
-      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), artist.getName()));
+      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist)));
     }
     com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
     if (albumRelease != null) {
@@ -1136,11 +1139,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
       sb = new StringBuilder();
       if (isCompilation) {
         artist = (Artist)song.getPerformer();
-        sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), artist.getName()));
+        sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist)));
         sb.append(" - ");
       }
                         
-      sb.append(song.getTitle());
+      sb.append(com.bolsinga.web.Util.toHTMLSafe(song.getTitle()));
                         
       if (albumRelease == null) {
         com.bolsinga.music.data.Date songRelease = song.getReleaseDate();
@@ -1160,10 +1163,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Div addRelations(final Lookup lookup, final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
     for (Artist art : lookup.getRelations(artist)) {
+      String htmlName = lookup.getHTMLName(art);
       if (art.equals(artist)) {
-        e.add(new StringElement(art.getName()));
+        e.add(new StringElement(htmlName));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(art), art.getName()));
+        e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(art), htmlName));
       }
     }
 
@@ -1176,10 +1180,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Div addRelations(final Lookup lookup, final Links links, final Venue venue) {
     Vector<Element> e = new Vector<Element>();
     for (Venue v : lookup.getRelations(venue)) {
+      String htmlName = lookup.getHTMLName(v);
       if (v.equals(venue)) {
-        e.add(new StringElement(v.getName()));
+        e.add(new StringElement(htmlName));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(v), v.getName()));
+        e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(v), htmlName));
       }
     }
 
@@ -1189,7 +1194,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
 
-  public static Div addTracks(final Links links, final Artist artist) {
+  public static Div addTracks(final Lookup lookup, final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
     List<JAXBElement<Object>> albums = artist.getAlbum();
@@ -1198,7 +1203,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     for (JAXBElement<Object> jalbum : albums) {
       Album album = (Album)jalbum.getValue();
       StringBuilder sb = new StringBuilder();
-      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(album), album.getTitle()));
+      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(album), lookup.getHTMLName(album)));
       com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
       if (albumRelease != null) {
         sb.append(" (");
