@@ -10,7 +10,7 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 public class Util {
-  public  static final ThreadLocal<DateFormat> sWebFormat   = new ThreadLocal<DateFormat>() {
+  private static final ThreadLocal<DateFormat> sWebFormat   = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
       return new SimpleDateFormat("M/d/yyyy");
     }

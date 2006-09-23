@@ -16,7 +16,7 @@ public class Util {
       return new SimpleDateFormat("MMMM");
     }
   };
-  public  static final ThreadLocal<DateFormat> sWebFormat        = new ThreadLocal<DateFormat>() {
+  private static final ThreadLocal<DateFormat> sWebFormat        = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
       return new SimpleDateFormat("M/d/yyyy");
     }
