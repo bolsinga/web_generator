@@ -1383,7 +1383,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
-    h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
+    if (!com.bolsinga.web.Util.getHideTimeStamp()) {
+      h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
+    }
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(START_YEAR)).setName("Copyright"));
 

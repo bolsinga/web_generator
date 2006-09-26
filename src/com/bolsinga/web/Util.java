@@ -20,6 +20,7 @@ public class Util {
   private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
   private static final boolean sPrettyPrint = Boolean.getBoolean("web.pretty_containers");
+  private static final boolean sHideTimeStamp = Boolean.getBoolean("web.hide_time_stamp");
   
   static {
     try {
@@ -39,6 +40,10 @@ public class Util {
         
   public static boolean getPrettyPrint() {
     return sPrettyPrint;
+  }
+  
+  public static boolean getHideTimeStamp() {
+    return sHideTimeStamp;
   }
 
   public static XMLGregorianCalendar toXMLGregorianCalendar(final GregorianCalendar cal) {
@@ -155,7 +160,9 @@ public class Util {
     sb.append(com.bolsinga.web.Util.getResourceString("program"));
                 
     sb.append(" (built: ");
-    sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
+    if (!Util.getHideTimeStamp()) {
+      sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
+    }
     sb.append(" running ");
     sb.append(System.getProperty("java.runtime.name"));
     sb.append(" (");
