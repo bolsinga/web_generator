@@ -399,15 +399,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return Collections.unmodifiableCollection(result.values());
   }
 
-  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final com.bolsinga.web.Encode encoder, final int startYear, final String outputDir) {
-    Collections.sort(diary.getEntry(), Util.ENTRY_COMPARATOR);
-    List<Entry> items = Collections.unmodifiableList(diary.getEntry());
-    Links links = Links.getLinks(true);
-    java.util.Map<String, String> index = Web.createEntryIndex(items, links);
-    
-    Web.generateArchivePages(backgrounder, items, index, encoder, links, startYear, outputDir);
-  }
-                
   public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final java.util.Map<String, String> index, final com.bolsinga.web.Encode encoder, final Links links, final int startYear, final String outputDir) {
     DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
     for (Entry item : items) {

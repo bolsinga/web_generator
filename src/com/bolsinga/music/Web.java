@@ -616,14 +616,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
-        
-  public static void generateArtistPages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
-    Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR);
-    List<Artist> items = Collections.unmodifiableList(music.getArtist());
-    java.util.Map<String, String> index = Web.createArtistIndex(items, links);
-    
-    Web.generateArtistPages(backgrounder, items, index, lookup, links, timeStamp, outputDir);
-  }
     
   private static void generateArtistPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Artist> items, final java.util.Map<String, String> index, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     ArtistDocumentCreator creator = new ArtistDocumentCreator(backgrounder, index, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
@@ -656,14 +648,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.ARTIST_DIR);
     stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("artiststatsummary")));
     stats.complete();
-  }
-        
-  public static void generateVenuePages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
-    Collections.sort(music.getVenue(), com.bolsinga.music.Compare.VENUE_COMPARATOR);
-    List<Venue> items = Collections.unmodifiableList(music.getVenue());
-    java.util.Map<String, String> index = Web.createVenueIndex(items, links);
-    
-    Web.generateVenuePages(backgrounder, items, index, lookup, links, timeStamp, outputDir);
   }
 
   public static void generateVenuePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Venue> items, final java.util.Map<String, String> index, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
@@ -698,15 +682,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("venuestatsummary")));
     stats.complete();
   }
-        
-  public static void generateDatePages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
-    Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
-    List<Show> items = Collections.unmodifiableList(music.getShow());
-    java.util.Map<String, String> index = Web.createShowIndex(items, links);
 
-    Web.generateDatePages(backgrounder, items, index, encoder, lookup, links, timeStamp, outputDir);
-  }
-                
   public static void generateDatePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Show> items, final java.util.Map<String, String> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     ShowDocumentCreator creator = new ShowDocumentCreator(backgrounder, index, lookup, encoder, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Show item : items) {
@@ -803,14 +779,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     creator.complete();
   }
 
-  public static void generateTracksPages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
-    Collections.sort(music.getAlbum(), com.bolsinga.music.Compare.ALBUM_COMPARATOR);
-    List<Album> items = Collections.unmodifiableList(music.getAlbum());
-    java.util.Map<String, String> index = Web.createAlbumIndex(items, links);
-    
-    Web.generateTracksPages(backgrounder, items, index, lookup, links, timeStamp, outputDir);
-  }
-                  
   public static void generateTracksPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Album> items, final java.util.Map<String, String> index, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir) {
     TracksDocumentCreator creator = new TracksDocumentCreator(backgrounder, index, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"));
     for (Album item : items) {                
