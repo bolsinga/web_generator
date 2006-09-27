@@ -94,7 +94,7 @@ public class Lookup {
           Collection<Artist> rArtists;
           id = ((Artist)o).getId();
           if (!fArtistRelationMap.containsKey(id)) {
-            rArtists = new HashSet<Artist>();
+            rArtists = new TreeSet<Artist>(Compare.ARTIST_COMPARATOR);
             fArtistRelationMap.put(id, rArtists);
           }
           for (JAXBElement<Object> ja : rel.getMember()) {
@@ -106,7 +106,7 @@ public class Lookup {
           Collection<Venue> rVenues;
           id = ((Venue)o).getId();
           if (!fVenueRelationMap.containsKey(id)) {
-            rVenues = new HashSet<Venue>();
+            rVenues = new TreeSet<Venue>(Compare.VENUE_COMPARATOR);
             fVenueRelationMap.put(id, rVenues);
           }
           for (JAXBElement<Object> jv : rel.getMember()) {
@@ -118,7 +118,7 @@ public class Lookup {
           Collection<Label> rLabels;
           id = ((Label)o).getId();
           if (!fLabelRelationMap.containsKey(id)) {
-            rLabels = new HashSet<Label>();
+            rLabels = new TreeSet<Label>(Compare.LABEL_COMPARATOR);
             fLabelRelationMap.put(id, rLabels);
           }
           for (JAXBElement<Object> jl : rel.getMember()) {
