@@ -1268,14 +1268,14 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Table makeTable(final String[] names, final int[] values, final String caption, final String header, final String summary) {
     Table t = new Table();
     t.setSummary(summary);
-    t.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    t.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
     Caption capt = new Caption();
-    capt.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    capt.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
     capt.addElement(caption);
     t.addElement(capt);
     TR trow = new TR().addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
     trow.setClass(com.bolsinga.web.CSS.TABLE_HEADER);
-    trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
     t.addElement(trow);
     TH thh = null;
                 
@@ -1287,19 +1287,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     for (i = 0; i < values.length; i++) {
       trow = new TR();
-      trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+      trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
       trow.setClass((((i + 1) % 2) != 0) ? com.bolsinga.web.CSS.TABLE_ROW : com.bolsinga.web.CSS.TABLE_ROW_ALT);
       thh = new TH(names[i]);
-      thh.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+      thh.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
       trow.addElement(thh);
-      trow.addElement(new TD(Integer.toString(values[i])).setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint()));
-      trow.addElement(new TD(Util.toString((double)values[i] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint()));
+      trow.addElement(new TD(Integer.toString(values[i])).setPrettyPrint(com.bolsinga.web.Util.getDebugOutput()));
+      trow.addElement(new TD(Util.toString((double)values[i] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getDebugOutput()));
                         
       t.addElement(trow);
     }
                 
     trow = new TR();
-    trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
     trow.setClass(com.bolsinga.web.CSS.TABLE_FOOTER);
     trow.addElement(new TH(Integer.toString(names.length)));
     trow.addElement(new TH(Integer.toString(total)));
@@ -1339,25 +1339,25 @@ public class Web implements com.bolsinga.web.Backgroundable {
   static Document createHTMLDocument(final Links links, final String title) {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
 
-    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
                 
     d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
     d.appendTitle(title);
                 
     Head h = d.getHead();
-    h.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    h.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
     h.addElement(com.bolsinga.web.Util.getIconLink());
     h.addElement(links.getLinkToStyleSheet());
 
     h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
-    if (!com.bolsinga.web.Util.getHideTimeStamp()) {
+    if (!com.bolsinga.web.Util.getDebugOutput()) {
       h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
     }
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(START_YEAR)).setName("Copyright"));
 
-    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
 
     return d;
   }

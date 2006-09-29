@@ -19,8 +19,7 @@ public class Util {
 
   private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
-  private static final boolean sPrettyPrint = Boolean.getBoolean("web.pretty_containers");
-  private static final boolean sHideTimeStamp = Boolean.getBoolean("web.hide_time_stamp");
+  private static final boolean sDebugOutput = Boolean.getBoolean("web.debug_output");
   
   static {
     try {
@@ -38,12 +37,8 @@ public class Util {
     return sHTMLPattern.matcher(s).replaceAll("&amp;$1");
   }
         
-  public static boolean getPrettyPrint() {
-    return sPrettyPrint;
-  }
-  
-  public static boolean getHideTimeStamp() {
-    return sHideTimeStamp;
+  public static boolean getDebugOutput() {
+    return sDebugOutput;
   }
 
   public static XMLGregorianCalendar toXMLGregorianCalendar(final GregorianCalendar cal) {
@@ -104,7 +99,7 @@ public class Util {
   public static Div createDiv(final String className) {
     Div d = new Div();
     d.setClass(className);
-    d.setPrettyPrint(Util.getPrettyPrint());
+    d.setPrettyPrint(Util.getDebugOutput());
     return d;
   }
         
@@ -130,11 +125,11 @@ public class Util {
 
   public static UL createUnorderedList(final Vector<org.apache.ecs.Element> elements) {
     UL list = new UL();
-    list.setPrettyPrint(Util.getPrettyPrint());
+    list.setPrettyPrint(Util.getDebugOutput());
 
     for (org.apache.ecs.Element e : elements) {
       LI item = new LI(e);
-      item.setPrettyPrint(Util.getPrettyPrint());
+      item.setPrettyPrint(Util.getDebugOutput());
       list.addElement(item);
     }
 
@@ -143,11 +138,11 @@ public class Util {
 
   public static OL createOrderedList(final Vector<org.apache.ecs.Element> elements) {
     OL list = new OL();
-    list.setPrettyPrint(Util.getPrettyPrint());
+    list.setPrettyPrint(Util.getDebugOutput());
 
     for (org.apache.ecs.Element e : elements) {
       LI item = new LI(e);
-      item.setPrettyPrint(Util.getPrettyPrint());
+      item.setPrettyPrint(Util.getDebugOutput());
       list.addElement(item);
     }
 
@@ -156,53 +151,59 @@ public class Util {
 
   public static String getGenerator() {
     StringBuilder sb = new StringBuilder();
-                
-    sb.append(com.bolsinga.web.Util.getResourceString("program"));
-                
-    sb.append(" (built: ");
-    if (!Util.getHideTimeStamp()) {
+
+    if (Util.getDebugOutput()) {
+      sb.append("generator information");
+    } else {
+      sb.append(com.bolsinga.web.Util.getResourceString("program"));
+                  
+      sb.append(" (built: ");
       sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
+      sb.append(" running ");
+      sb.append(System.getProperty("java.runtime.name"));
+      sb.append(" (");
+      sb.append(System.getProperty("java.runtime.version"));
+      sb.append(") ");
+      sb.append(System.getProperty("java.vm.name"));
+      sb.append(" (");
+      sb.append(System.getProperty("java.vm.version"));
+      sb.append(") - ");
+      sb.append(System.getProperty("java.vm.vendor"));
+      sb.append(" ");
+      sb.append(System.getProperty("os.name"));
+      sb.append(" ");
+      sb.append(System.getProperty("os.version"));
+      sb.append(" ");
+      sb.append(System.getProperty("os.arch"));
+                  
+      sb.append(" [");
+      sb.append(com.bolsinga.web.Util.getResourceString("copyright"));
+      sb.append("]");
+                  
+      sb.append(")");
     }
-    sb.append(" running ");
-    sb.append(System.getProperty("java.runtime.name"));
-    sb.append(" (");
-    sb.append(System.getProperty("java.runtime.version"));
-    sb.append(") ");
-    sb.append(System.getProperty("java.vm.name"));
-    sb.append(" (");
-    sb.append(System.getProperty("java.vm.version"));
-    sb.append(") - ");
-    sb.append(System.getProperty("java.vm.vendor"));
-    sb.append(" ");
-    sb.append(System.getProperty("os.name"));
-    sb.append(" ");
-    sb.append(System.getProperty("os.version"));
-    sb.append(" ");
-    sb.append(System.getProperty("os.arch"));
-                
-    sb.append(" [");
-    sb.append(com.bolsinga.web.Util.getResourceString("copyright"));
-    sb.append("]");
-                
-    sb.append(")");
                 
     return sb.toString();
   }
 
   public static String getCopyright(final int startYear) {
     StringBuilder cp = new StringBuilder();
-                
-    int cur_year = Calendar.getInstance().get(Calendar.YEAR); // LocalTime OK
-                
-    cp.append("Contents Copyright (c) ");
-    cp.append(startYear);
-    if (startYear != cur_year) {
-      cp.append(" - ");
-      cp.append(cur_year);
+    
+    if (Util.getDebugOutput()) {
+      cp.append("copyright year");
+    } else {
+      int cur_year = Calendar.getInstance().get(Calendar.YEAR); // LocalTime OK
+                  
+      cp.append("Contents Copyright (c) ");
+      cp.append(startYear);
+      if (startYear != cur_year) {
+        cp.append(" - ");
+        cp.append(cur_year);
+      }
+                  
+      cp.append(" ");
+      cp.append(System.getProperty("user.name"));
     }
-                
-    cp.append(" ");
-    cp.append(System.getProperty("user.name"));
                 
     return cp.toString();
   }

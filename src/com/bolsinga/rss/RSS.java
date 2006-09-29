@@ -144,7 +144,7 @@ public class RSS {
       channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRssRoot()));
       channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.Util.getSettings().getRssDescription()));
       channelElements.add(objFactory.createTRssChannelGenerator(com.bolsinga.web.Util.getGenerator()));
-      if (!com.bolsinga.web.Util.getHideTimeStamp()) {
+      if (!com.bolsinga.web.Util.getDebugOutput()) {
         channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.web.Util.nowUTC())));
       }
       channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.Util.getSettings().getContact()));

@@ -103,11 +103,17 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     Vector<Element> e = new Vector<Element>();
                 
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
+    if (com.bolsinga.web.Util.getDebugOutput()) {
+      args2[1] = null;
+    }
     e.add(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
     e.add(links.getLinkToHome());
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_MENU);
     Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
+    if (com.bolsinga.web.Util.getDebugOutput()) {
+      args[0] = "today";
+    }
     d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
@@ -308,26 +314,26 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Document createDocument(final String title, final int startYear, final Links links) {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
                 
-    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
                 
     d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
     d.appendTitle(title);
                 
     Head h = d.getHead();
-    h.setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    h.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
     h.addElement(com.bolsinga.web.Util.getIconLink());
     h.addElement(links.getLinkToRSS());
     h.addElement(links.getLinkToStyleSheet());
                 
     h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
-    if (!com.bolsinga.web.Util.getHideTimeStamp()) {
+    if (!com.bolsinga.web.Util.getDebugOutput()) {
       h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
     }
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(startYear)).setName("Copyright"));
 
-    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyPrint());
+    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
                                                 
     return d;
   }
@@ -336,6 +342,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
                 
     Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
+    if (com.bolsinga.web.Util.getDebugOutput()) {
+      args[0] = "today";
+    }
     diaryDiv.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
                 
     diaryDiv.addElement(links.getRSSLink());

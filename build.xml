@@ -373,7 +373,7 @@
 <!--    Add the following property to any web using code to have the output's
                 container tags be pretty printed. This can assist in debugging the output.
 
-                <sysproperty key="web.pretty_containers" value="true" />
+                <sysproperty key="web.debug_output" value="true" />
 -->
 
 <target name="generateMusicWeb" depends="music, jar, prepare_output">
