@@ -110,11 +110,10 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     e.add(links.getLinkToHome());
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_MENU);
-    Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
-    if (com.bolsinga.web.Util.getDebugOutput()) {
-      args[0] = "today";
+    if (!com.bolsinga.web.Util.getDebugOutput()) {
+      Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
+      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     }
-    d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -341,11 +340,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
   private static Element generateDiary(final com.bolsinga.web.Encode encoder, final Diary diary, final Music music, final Links links) {
     Div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
                 
-    Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
-    if (com.bolsinga.web.Util.getDebugOutput()) {
-      args[0] = "today";
+    if (!com.bolsinga.web.Util.getDebugOutput()) {
+      Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
+      diaryDiv.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
     }
-    diaryDiv.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
                 
     diaryDiv.addElement(links.getRSSLink());
 
