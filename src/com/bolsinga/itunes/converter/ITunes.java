@@ -318,7 +318,7 @@ public class ITunes {
     Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed, playCount);
             
     // Add the song to the album
-    List<JAXBElement<Object>> songs = album.getSong();
+    List<JAXBElement<Object>> songs = album.getSong(); // Modification required.
     songs.add(objFactory.createAlbumSong(song));
             
     // Add the album to the artist if it isn't there already.
@@ -330,7 +330,7 @@ public class ITunes {
     if (!artistAlbums.contains(album.getId())) {
       artistAlbums.add(album.getId());
       JAXBElement<Object> jalbum = objFactory.createArtistAlbum(album);
-      artist.getAlbum().add(jalbum);
+      artist.getAlbum().add(jalbum); // Modification required.
     }
   }
         
@@ -372,14 +372,16 @@ public class ITunes {
   private static void sortAlbumOrder(final com.bolsinga.music.data.Music music) {
     List<Artist> artists = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
     for (Artist a : artists) {
-      Collections.sort(a.getAlbum(), com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
+      List<JAXBElement<Object>> albums = a.getAlbum(); // Modification required.
+      Collections.sort(albums, com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
     }
   }
 
   private static void sortAlbumsSongOrder(final com.bolsinga.music.data.Music music) {
     List<Album> albums = com.bolsinga.music.Util.getAlbumsUnmodifiable(music);
     for (Album a : albums) {
-      Collections.sort(a.getSong(), com.bolsinga.music.Compare.JAXB_SONG_ORDER_COMPARATOR);
+      List<JAXBElement<Object>> songs = a.getSong(); // Modification required.
+      Collections.sort(songs, com.bolsinga.music.Compare.JAXB_SONG_ORDER_COMPARATOR);
     }
   }
         
@@ -394,7 +396,7 @@ public class ITunes {
       }
                         
       albumYear = -1;
-      List<JAXBElement<Object>> songs = a.getSong();
+      List<JAXBElement<Object>> songs = com.bolsinga.music.Util.getSongsUnmodifiable(a);
       for (JAXBElement<Object> song : songs) {
         date = ((Song)song.getValue()).getReleaseDate();
         if (date != null) {

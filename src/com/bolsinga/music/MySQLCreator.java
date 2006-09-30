@@ -362,7 +362,7 @@ class MySQLCreator {
         if (!artistAlbums.contains(album.getId())) {
           artistAlbums.add(album.getId());
           JAXBElement<Object> jalbum = objFactory.createArtistAlbum(album);
-          artist.getAlbum().add(jalbum);
+          artist.getAlbum().add(jalbum); // Modification required.
         }
 
         String songID = toXMLID("s", rset.getLong("id"));
@@ -406,7 +406,7 @@ class MySQLCreator {
           song.setDigitized(true);
         }
 
-        album.getSong().add(objFactory.createAlbumSong(song));
+        album.getSong().add(objFactory.createAlbumSong(song)); // Modification required.
         music.getSong().add(song); // Modification required.
       }
     } finally {

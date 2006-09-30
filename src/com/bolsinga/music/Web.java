@@ -835,9 +835,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
     int[] values = new int[artists.size()];
     int index = 0;
     
-    for(Artist artist : artists) {
+    for (Artist artist : artists) {
       names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist)).toString();
-      values[index] = (artist.getAlbum() != null) ? artist.getAlbum().size() : 0;
+      List<JAXBElement<Object>> albums = Util.getAlbumsUnmodifiable(artist);
+      values[index] = (albums != null) ? albums.size() : 0;
                         
       index++;
     }
@@ -945,7 +946,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     // CSS.ARTIST_ITEM
     Vector<Element> e = new Vector<Element>();
 
-    if (artist.getAlbum().size() > 0) {
+    if (Util.getAlbumsUnmodifiable(artist).size() > 0) {
       e.add(Web.addTracks(lookup, links, artist));
     }
                 
@@ -1113,7 +1114,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     e.add(new H2().addElement(sb.toString()));
 
     Vector<Element> ae = new Vector<Element>();
-    for (JAXBElement<Object> jsong : album.getSong()) {
+    List<JAXBElement<Object>> songs = Util.getSongsUnmodifiable(album);
+    for (JAXBElement<Object> jsong : songs) {
       song = (Song)jsong.getValue();
       sb = new StringBuilder();
       if (isCompilation) {
@@ -1176,7 +1178,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Div addTracks(final Lookup lookup, final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
-    List<JAXBElement<Object>> albums = artist.getAlbum();
+    List<JAXBElement<Object>> albums = Util.getAlbumsCopy(artist);
     Collections.sort(albums, com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
 
     for (JAXBElement<Object> jalbum : albums) {

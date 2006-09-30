@@ -130,6 +130,22 @@ public class Util {
   public static List<Show> getShowsCopy(final Music music) {
     return new ArrayList<Show>(music.getShow());
   }
+  
+  public static List<JAXBElement<Object>> getAlbumsUnmodifiable(final Artist artist) {
+    return Collections.unmodifiableList(artist.getAlbum());
+  }
+  
+  public static List<JAXBElement<Object>> getAlbumsCopy(final Artist artist) {
+    return new ArrayList<JAXBElement<Object>>(artist.getAlbum());
+  }
+
+  public static List<JAXBElement<Object>> getSongsUnmodifiable(final Album album) {
+    return Collections.unmodifiableList(album.getSong());
+  }
+  
+  public static List<JAXBElement<Object>> getSongsCopy(final Album album) {
+    return new ArrayList<JAXBElement<Object>>(album.getSong());
+  }
 
   public static Music createMusic(final String sourceFile) {
     Music music = null;
@@ -179,11 +195,12 @@ public class Util {
         
   public static int trackCount(final Artist artist) {
     int tracks = 0;
-    List<JAXBElement<Object>> albums = artist.getAlbum();
+    List<JAXBElement<Object>> albums = Util.getAlbumsUnmodifiable(artist);
     if (albums != null) {
       for (JAXBElement<Object> jalbum : albums) {
         Album album = (Album)jalbum.getValue();
-        for (JAXBElement<Object> jsong : album.getSong()) {
+        List<JAXBElement<Object>> songs = Util.getSongsUnmodifiable(album);
+        for (JAXBElement<Object> jsong : songs) {
           Song song = (Song)jsong.getValue();
           if (song.getPerformer().equals(artist)) {
             tracks++;

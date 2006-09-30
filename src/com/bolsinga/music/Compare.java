@@ -261,10 +261,13 @@ public class Compare {
         
   public static final Comparator<Artist> ARTIST_ALBUMS_COMPARATOR = new Comparator<Artist>() {
       public int compare(final Artist r1, final Artist r2) {
-        int albums1 = (r1.getAlbum() != null) ? r1.getAlbum().size() : 0;
-        int albums2 = (r2.getAlbum() != null) ? r2.getAlbum().size() : 0;
+        List<JAXBElement<Object>> albums1 = Util.getAlbumsUnmodifiable(r1);
+        List<JAXBElement<Object>> albums2 = Util.getAlbumsUnmodifiable(r2);
+        
+        int albumsCount1 = (albums1 != null) ? albums1.size() : 0;
+        int albumsCount2 = (albums2 != null) ? albums2.size() : 0;
                         
-        int result = albums2 - albums1;
+        int result = albumsCount2 - albumsCount1;
         if (result == 0) {
           result = ARTIST_COMPARATOR.compare(r1, r2);
         }

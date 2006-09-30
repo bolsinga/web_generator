@@ -256,7 +256,7 @@ public class MySQLImporter {
   }
 
   private static void importSongs(final Statement stmt, final Album album) throws SQLException {
-    List<JAXBElement<Object>> items = album.getSong();
+    List<JAXBElement<Object>> items = Util.getSongsUnmodifiable(album);
     for (JAXBElement<Object> jitem : items) {
       Song item = (Song)jitem.getValue();
       try {
