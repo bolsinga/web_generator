@@ -234,7 +234,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     });
 
-    final java.util.Map<String, String> entryIndex = Web.createEntryIndex(diary.getEntry(), links);
+    final java.util.Map<String, String> entryIndex = Web.createEntryIndex(com.bolsinga.diary.Util.getEntriesUnmodifiable(diary), links);
     Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
     for (final Collection<Entry> entryGroup : entryGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
@@ -387,10 +387,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   private static Collection<Collection<Entry>> getEntryGroups(final Diary diary, final Links links) {
-    // Each group is per page, so they are grouped by Entry who have the same starting sort letter.
-    HashMap<String, Collection<Entry>> result = new HashMap<String, Collection<Entry>>(diary.getEntry().size());
+    List<Entry> entries = com.bolsinga.diary.Util.getEntriesCopy(diary);
     
-    for (Entry entry : diary.getEntry()) {
+    // Each group is per page, so they are grouped by Entry who have the same starting sort letter.
+    // They are sorted within each group, as they are placed onto the Vector<Entry> in order.
+    HashMap<String, Collection<Entry>> result = new HashMap<String, Collection<Entry>>(entries.size());
+    
+    Collections.sort(entries, Util.ENTRY_COMPARATOR);
+    
+    for (Entry entry : entries) {
       String key = links.getPageFileName(entry);
       Collection<Entry> entryList;
       if (result.containsKey(key)) {

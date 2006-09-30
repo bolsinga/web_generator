@@ -88,7 +88,7 @@ public class Diary {
     com.bolsinga.diary.data.Entry xEntry = null;
     int index = comments.size() - 1;
 
-    List<com.bolsinga.diary.data.Entry> entries = diary.getEntry();
+    List<com.bolsinga.diary.data.Entry> entries = diary.getEntry(); // Modification required.
     
     for (Comments oldComment : comments) {
       xEntry = objFactory.createEntry();

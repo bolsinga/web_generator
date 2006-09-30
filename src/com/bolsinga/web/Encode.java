@@ -47,7 +47,7 @@ class EncodeTest {
   }
 
   static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
-    List<Entry> items = diary.getEntry();
+    List<Entry> items = com.bolsinga.diary.Util.getEntriesCopy(diary);
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;
@@ -322,7 +322,7 @@ class HashEncode extends Encode {
     if (music != null) {
       List<Show> shows = music.getShow();
       int numShows = (shows != null) ? shows.size() : 0;
-      List<Entry> entries = (diary != null) ? diary.getEntry() : null;
+      List<Entry> entries = (diary != null) ? com.bolsinga.diary.Util.getEntriesUnmodifiable(diary) : null;
       int numDiary = (entries != null) ? entries.size() : 0;
       int numEncoded = numShows + numDiary;
       HashMap<String, HashSet<Object>> encodedMap = new HashMap<String, HashSet<Object>>(numEncoded * WORDS_PER_ENTRY);
@@ -435,7 +435,7 @@ class HashEncode extends Encode {
   
   private void getDiaryWords(final Diary diary, final HashMap<String, HashSet<Object>> encodedMap) {
     if (diary != null) {
-      List<Entry> items = diary.getEntry();
+      Collection<Entry> items = com.bolsinga.diary.Util.getEntriesUnmodifiable(diary);
 
       for (Entry item : items) {
         addEncodedWords(item.getComment(), encodedMap, item, items.size());

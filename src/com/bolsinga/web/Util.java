@@ -220,9 +220,9 @@ public class Util {
       shows = Collections.unmodifiableList(music.getShow());
     }
 
-    Collections.sort(diary.getEntry(), com.bolsinga.diary.Util.ENTRY_COMPARATOR);
-    Collections.reverse(diary.getEntry());
-    List<Entry> entries = Collections.unmodifiableList(diary.getEntry());
+    List<Entry> entries = com.bolsinga.diary.Util.getEntriesCopy(diary);
+    Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
+    Collections.reverse(entries);
     
     List<Object> items = new Vector<Object>(count * 2);
     if (shows != null) {

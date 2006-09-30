@@ -10,6 +10,8 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 public class Util {
+  private static int sStartYear = 0;
+  
   private static final ThreadLocal<DateFormat> sWebFormat   = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
       return new SimpleDateFormat("M/d/yyyy");
@@ -37,14 +39,27 @@ public class Util {
   }
 
   public static int getStartYear(final Diary diary) {
-    List<Entry> items = diary.getEntry();
-    Entry item = null;
+    synchronized (Util.class) {
+      if (sStartYear == 0) {
+        List<Entry> items = Util.getEntriesCopy(diary);
+        Entry item = null;
 
-    Collections.sort(items, Util.ENTRY_COMPARATOR);
+        Collections.sort(items, Util.ENTRY_COMPARATOR);
 
-    item = items.get(0);
+        item = items.get(0);
 
-    return item.getTimestamp().getYear();
+        sStartYear = item.getTimestamp().getYear();
+      }
+    }
+    return sStartYear;
+  }
+  
+  public static List<Entry> getEntriesUnmodifiable(final Diary diary) {
+    return Collections.unmodifiableList(diary.getEntry());
+  }
+
+  public static List<Entry> getEntriesCopy(final Diary diary) {
+    return new ArrayList<Entry>(diary.getEntry());
   }
     
   public static com.bolsinga.diary.data.Diary createDiary(final String sourceFile) {
@@ -77,7 +92,7 @@ public class Util {
         entry.setComment(rset.getString("comment"));
         entry.setId("e" + (rset.getLong("id") - 1));
         
-        diary.getEntry().add(entry);
+        diary.getEntry().add(entry);  // Modification required.
       }
     } finally {
       if (rset != null) {
