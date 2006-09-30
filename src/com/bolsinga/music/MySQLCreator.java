@@ -150,7 +150,7 @@ class MySQLCreator {
     
     item.setId(xmlID);
     
-    music.getArtist().add(item);
+    music.getArtist().add(item); // Modification required.
     
     synchronized (artistsLock) {
       artists.put(xmlID, item);
@@ -231,7 +231,7 @@ class MySQLCreator {
       albums.put(xmlID, item);
     }
     
-    music.getAlbum().add(item);
+    music.getAlbum().add(item); // Modification required.
     
     return item;
   }
@@ -253,7 +253,7 @@ class MySQLCreator {
       venues.put(xmlID, item);
     }
     
-    music.getVenue().add(item);
+    music.getVenue().add(item); // Modification required.
   
     return item;
   }
@@ -407,7 +407,7 @@ class MySQLCreator {
         }
 
         album.getSong().add(objFactory.createAlbumSong(song));
-        music.getSong().add(song);
+        music.getSong().add(song); // Modification required.
       }
     } finally {
       if (rset != null) {
@@ -468,7 +468,7 @@ class MySQLCreator {
         
         show.setComment(rset.getString("comment"));
         
-        music.getShow().add(show);
+        music.getShow().add(show); // Modification required.
       }
     } finally {
       if (rset != null) {
@@ -489,7 +489,7 @@ class MySQLCreator {
         if (relationID != lastRelationID) {
           // Add the last relation
           if (relation != null) {
-            music.getRelation().add(relation);
+            music.getRelation().add(relation); // Modification required.
           }
           
           // Create a new relation
@@ -513,7 +513,7 @@ class MySQLCreator {
         }
       }
       if (relation != null) {
-        music.getRelation().add(relation);
+        music.getRelation().add(relation); // Modification required.
       }
     } finally {
       if (rset != null) {

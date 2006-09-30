@@ -305,7 +305,7 @@ public class ITunes {
       result.getFormat().add(objFactory.createAlbumFormat(FORMAT_DIGITAL_FILE));
       result.setId("a" + sAlbums.size());
                         
-      music.getAlbum().add(result);
+      music.getAlbum().add(result); // Modification required.
       sAlbums.put(key, result);
     } else {
       result = sAlbums.get(key);
@@ -335,7 +335,7 @@ public class ITunes {
   }
         
   private static Song createSong(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final Artist artist, final String songTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount) throws JAXBException {
-    List<Song> songs = music.getSong();
+    List<Song> songs = music.getSong(); // Modification required.
             
     Song result = null;
             
@@ -370,21 +370,21 @@ public class ITunes {
   }
         
   private static void sortAlbumOrder(final com.bolsinga.music.data.Music music) {
-    List<Artist> artists = music.getArtist();
+    List<Artist> artists = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
     for (Artist a : artists) {
       Collections.sort(a.getAlbum(), com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
     }
   }
 
   private static void sortAlbumsSongOrder(final com.bolsinga.music.data.Music music) {
-    List<Album> albums = music.getAlbum();
+    List<Album> albums = com.bolsinga.music.Util.getAlbumsUnmodifiable(music);
     for (Album a : albums) {
       Collections.sort(a.getSong(), com.bolsinga.music.Compare.JAXB_SONG_ORDER_COMPARATOR);
     }
   }
         
   private static void setAlbumYears(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music) throws JAXBException {
-    List<Album> albums = music.getAlbum();
+    List<Album> albums = com.bolsinga.music.Util.getAlbumsUnmodifiable(music);
     int albumYear, songYear;
     com.bolsinga.music.data.Date date;
     for (Album a : albums) {

@@ -75,6 +75,62 @@ public class Util {
     return sPercentFormat.get().format(value);
   }
 
+  public static List<Venue> getVenuesUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getVenue());
+  }
+
+  public static List<Venue> getVenuesCopy(final Music music) {
+    return new ArrayList<Venue>(music.getVenue());
+  }
+
+  public static List<Artist> getArtistsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getArtist());
+  }
+
+  public static List<Artist> getArtistsCopy(final Music music) {
+    return new ArrayList<Artist>(music.getArtist());
+  }
+
+  public static List<Label> getLabelsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getLabel());
+  }
+
+  public static List<Label> getLabelsCopy(final Music music) {
+    return new ArrayList<Label>(music.getLabel());
+  }
+
+  public static List<Relation> getRelationsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getRelation());
+  }
+
+  public static List<Relation> getRelationsCopy(final Music music) {
+    return new ArrayList<Relation>(music.getRelation());
+  }
+
+  public static List<Song> getSongsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getSong());
+  }
+
+  public static List<Song> getSongsCopy(final Music music) {
+    return new ArrayList<Song>(music.getSong());
+  }
+
+  public static List<Album> getAlbumsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getAlbum());
+  }
+
+  public static List<Album> getAlbumsCopy(final Music music) {
+    return new ArrayList<Album>(music.getAlbum());
+  }
+
+  public static List<Show> getShowsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getShow());
+  }
+
+  public static List<Show> getShowsCopy(final Music music) {
+    return new ArrayList<Show>(music.getShow());
+  }
+
   public static Music createMusic(final String sourceFile) {
     Music music = null;
     try {

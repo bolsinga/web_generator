@@ -139,6 +139,7 @@ public class Compare {
     };
 
   public static void tidy(final Music music) {
+    // This is run during testing only, so modificaiton is expected.
     List<Artist> artists = music.getArtist();
     Collections.sort(artists, Compare.ARTIST_ID_COMPARATOR);
     for (Artist a : artists) {

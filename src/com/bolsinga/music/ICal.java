@@ -94,11 +94,11 @@ public class ICal {
   }
         
   public static void generate(final Music music, final String name, final Writer w) {                
-    Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
+    List<Show> items = Util.getShowsCopy(music);
+    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
                     
     VCalendar cal = new VCalendar(name);
 
-    List<Show> items = Collections.unmodifiableList(music.getShow());
     for (Show item : items) {
       boolean unknown = com.bolsinga.web.Util.convert(item.getDate().isUnknown());
       if (!unknown) {

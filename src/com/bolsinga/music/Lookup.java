@@ -39,19 +39,19 @@ public class Lookup {
     String id = null;
     Collection<Show> showCollection = null;
     
-    for (Artist performer : music.getArtist()) {
+    for (Artist performer : com.bolsinga.music.Util.getArtistsUnmodifiable(music)) {
       fArtistHTMLMap.put(performer.getId(), com.bolsinga.web.Util.toHTMLSafe(performer.getName()));
     }
 
-    for (Album album : music.getAlbum()) {
+    for (Album album : com.bolsinga.music.Util.getAlbumsUnmodifiable(music)) {
       fAlbumHTMLMap.put(album.getId(), com.bolsinga.web.Util.toHTMLSafe(album.getTitle()));
     }
 
-    for (Venue venue : music.getVenue()) {
+    for (Venue venue : com.bolsinga.music.Util.getVenuesUnmodifiable(music)) {
       fVenueHTMLMap.put(venue.getId(), com.bolsinga.web.Util.toHTMLSafe(venue.getName()));
     }
 
-    List<Show> shows = music.getShow();
+    List<Show> shows = com.bolsinga.music.Util.getShowsUnmodifiable(music);
     for (Show show : shows) {
       id = ((Venue)show.getVenue()).getId();
       if (fVenueMap.containsKey(id)) {
@@ -86,8 +86,9 @@ public class Lookup {
         }
       }
     }
-                
-    for (Relation rel : music.getRelation()) {
+    
+    List<Relation> relations = Util.getRelationsUnmodifiable(music);
+    for (Relation rel : relations) {
       for (JAXBElement<Object> jo : rel.getMember()) {
         Object o = jo.getValue();
         if (o instanceof Artist) {

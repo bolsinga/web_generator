@@ -69,7 +69,8 @@ public class Music {
     String s;
     HashSet<String> bands = new HashSet<String>();
     
-    for (Artist artist : music.getArtist()) {
+    List<Artist> artists = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
+    for (Artist artist : artists) {
       s = artist.getName().toLowerCase();
       if (bands.contains(s)) {
         System.out.println(s);
@@ -108,7 +109,7 @@ public class Music {
         
     convert(objFactory, music, shows);
 
-    Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR);
+    Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR); // Modification required.
 
     createRelations(objFactory, music, relations);
                 
@@ -141,7 +142,7 @@ public class Music {
       xVenue.setLocation(xLocation);
       xVenue.setId("v" + index++);
                         
-      music.getVenue().add(xVenue);
+      music.getVenue().add(xVenue); // Modification required.
                         
       sVenues.put(name, xVenue);
     }
@@ -186,7 +187,7 @@ public class Music {
         System.exit(1);
       }
                         
-      music.getRelation().add(xRelation);
+      music.getRelation().add(xRelation); // Modification required.
     }
   }
         
@@ -234,7 +235,7 @@ public class Music {
       if (sBandSorts.containsKey(name)) {
         result.setSortname(sBandSorts.get(name));
       }
-      music.getArtist().add(result);
+      music.getArtist().add(result); // Modification required.
       sArtists.put(name, result);
     } else {
       result = sArtists.get(name);
@@ -276,7 +277,7 @@ public class Music {
       }
       xShow.setId("sh" + index++);
                         
-      music.getShow().add(xShow);
+      music.getShow().add(xShow); // Modification required.
     }
   }
         

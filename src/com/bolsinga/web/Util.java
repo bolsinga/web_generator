@@ -215,9 +215,9 @@ public class Util {
   public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final boolean includeMusic) {
     List<Show> shows = null;
     if (includeMusic) {
-      Collections.sort(music.getShow(), com.bolsinga.music.Compare.SHOW_COMPARATOR);
-      Collections.reverse(music.getShow());
-      shows = Collections.unmodifiableList(music.getShow());
+      shows = com.bolsinga.music.Util.getShowsCopy(music);
+      Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
+      Collections.reverse(shows);
     }
 
     List<Entry> entries = com.bolsinga.diary.Util.getEntriesCopy(diary);

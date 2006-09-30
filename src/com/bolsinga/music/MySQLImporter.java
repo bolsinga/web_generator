@@ -176,7 +176,7 @@ public class MySQLImporter {
   }
 
   private static void importLabels(final Statement stmt, final Music music) throws SQLException {
-    List<Label> items = music.getLabel();
+    List<Label> items = Util.getLabelsUnmodifiable(music);
     for (Label item : items) {
       try {
         MySQLImporter.importLabel(stmt, item);
@@ -290,7 +290,7 @@ public class MySQLImporter {
   }
 
   private static void importAlbums(final Statement stmt, final Music music) throws SQLException {
-    List<Album> items = music.getAlbum();
+    List<Album> items = Util.getAlbumsUnmodifiable(music);
     for (Album item : items) {
       try {
         MySQLImporter.importAlbum(stmt, item);
@@ -334,7 +334,7 @@ public class MySQLImporter {
   }
 
   private static void importArtists(final Statement stmt, final Music music) throws SQLException {
-    List<Artist> items = music.getArtist();
+    List<Artist> items = Util.getArtistsUnmodifiable(music);
     for (Artist item : items) {
       try {
         MySQLImporter.importArtist(stmt, item);
@@ -377,7 +377,7 @@ public class MySQLImporter {
   }
 
   private static void importVenues(final Statement stmt, final Music music) throws SQLException {
-    List<Venue> items = music.getVenue();
+    List<Venue> items = Util.getVenuesUnmodifiable(music);
     for (Venue item : items) {
       try {
         MySQLImporter.importVenue(stmt, item);
@@ -448,7 +448,7 @@ public class MySQLImporter {
   }
 
   private static void importShows(final Statement stmt, final Music music) throws SQLException {
-    List<Show> items = music.getShow();
+    List<Show> items = Util.getShowsUnmodifiable(music);
     for (Show item : items) {
       try {
         MySQLImporter.importShow(stmt, item);
@@ -490,7 +490,8 @@ public class MySQLImporter {
   }
 
   private static void importRelations(final Statement stmt, final Music music) throws SQLException {
-    for (Relation item : music.getRelation()) {
+    List<Relation> items = Util.getRelationsUnmodifiable(music);
+    for (Relation item : items) {
       try {
         MySQLImporter.importRelation(stmt, item);
       } catch (SQLException e) {
