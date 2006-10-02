@@ -52,6 +52,8 @@ public class ITunes {
   private static final String TK_BPM                  = "BPM";
   private static final String TK_ALBUM_ARTIST         = "Album Artist";
   private static final String TK_EXPLICIT             = "Explicit";
+  private static final String TK_SKIP_COUNT           = "Skip Count";
+  private static final String TK_SKIP_DATE            = "Skip Date";
     
   private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
   private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
@@ -157,6 +159,8 @@ public class ITunes {
     sITunesKeys.add(TK_BPM);
     sITunesKeys.add(TK_ALBUM_ARTIST);
     sITunesKeys.add(TK_EXPLICIT);
+    sITunesKeys.add(TK_SKIP_COUNT);
+    sITunesKeys.add(TK_SKIP_DATE);
   }
         
   public static void addMusic(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String itunesFile) throws JAXBException {
