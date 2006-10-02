@@ -20,6 +20,7 @@ public class Util {
   private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
   private static final boolean sDebugOutput = Boolean.getBoolean("web.debug_output");
+  private static final String sLineSeparator = System.getProperty("line.separator");
   
   static {
     try {
@@ -91,6 +92,9 @@ public class Util {
       String[] lines = data.split("\\n");
       for (int i = 0; i < lines.length; i++) {
         tagged.append(new P().addElement(lines[i]));
+        if (Util.getDebugOutput()) {
+          tagged.append(sLineSeparator);
+        }
       }
     }
     return tagged.toString();
