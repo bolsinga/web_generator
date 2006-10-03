@@ -124,7 +124,7 @@ public class RSS {
     itemElements.add(objFactory.createTRssItemTitle(title));
     itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(cal)));
     itemElements.add(objFactory.createTRssItemAuthor(sb.toString()));
-    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRssRoot() + link));
+    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRoot() + link));
     itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(description)));
                 
     channel.getItem().add(item);
@@ -141,7 +141,7 @@ public class RSS {
       String diaryTitle = diary.getTitle();
       
       channelElements.add(objFactory.createTRssChannelTitle(diaryTitle));
-      channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRssRoot()));
+      channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRoot()));
       channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.Util.getSettings().getRssDescription()));
       channelElements.add(objFactory.createTRssChannelGenerator(com.bolsinga.web.Util.getGenerator()));
       if (!com.bolsinga.web.Util.getDebugOutput()) {
@@ -150,7 +150,7 @@ public class RSS {
       channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.Util.getSettings().getContact()));
 
       TImage logo = com.bolsinga.rss.Util.createLogo(objFactory);
-      logo.setLink(com.bolsinga.web.Util.getSettings().getRssRoot());
+      logo.setLink(com.bolsinga.web.Util.getSettings().getRoot());
       logo.setDescription(diaryTitle);
                         
       channelElements.add(objFactory.createTRssChannelImage(logo));

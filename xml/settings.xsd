@@ -25,7 +25,7 @@
       <xs:element name="rssFile" type="xs:string" minOccurs="1" maxOccurs="1" />
       <xs:element name="diaryCount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
       <xs:element name="recentCount" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
-      <xs:element name="rssRoot" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
+      <xs:element name="root" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
       <xs:element name="rssDescription" type="xs:string" minOccurs="1" maxOccurs="1" />
       <xs:element name="icalName" type="xs:string" minOccurs="1" maxOccurs="1" />
       <xs:element name="linksTitle" type="xs:string" minOccurs="1" maxOccurs="1" />
