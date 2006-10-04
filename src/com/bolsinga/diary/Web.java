@@ -89,7 +89,9 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
       if (s.equals(getCurrentLetter())) {
         e.add(new StringElement(s));
       } else {
-        e.add(com.bolsinga.web.Util.createInternalA(fEntryIndex.get(s), s));
+        Object[] args = { s };
+        String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
+        e.add(com.bolsinga.web.Util.createInternalA(fEntryIndex.get(s), s, t));
       }
     }
     e.add(fLinks.getRSSLink());
@@ -369,8 +371,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     sb.append("archives/");
     sb.append(Calendar.getInstance().get(Calendar.YEAR)); // LocalTime OK
     sb.append(".html");
-                
-    diaryDiv.addElement(new H2().addElement(com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("archives"))));
+    
+    diaryDiv.addElement(new H2().addElement(com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("archives"), com.bolsinga.web.Util.getResourceString("archivestitle"))));
                 
     return diaryDiv;
   }

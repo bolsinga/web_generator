@@ -74,6 +74,11 @@ public class Util {
   public static String toString(final double value) {
     return sPercentFormat.get().format(value);
   }
+  
+  public static String createTitle(final String resource, final String name) {
+    Object[] args = { name };
+    return MessageFormat.format(com.bolsinga.web.Util.getResourceString(resource), args);
+  }
 
   public static List<Venue> getVenuesUnmodifiable(final Music music) {
     return Collections.unmodifiableList(music.getVenue());

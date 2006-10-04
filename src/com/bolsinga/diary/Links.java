@@ -135,6 +135,7 @@ public class Links {
       url.append(File.separator);
     }
     url.append("index.html");
-    return com.bolsinga.web.Util.createInternalA(url.toString(), com.bolsinga.web.Util.getResourceString("home"));
+    String h = com.bolsinga.web.Util.getResourceString("home");
+    return com.bolsinga.web.Util.createInternalA(url.toString(), h, h);
   }
 }

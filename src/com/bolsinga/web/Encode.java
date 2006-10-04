@@ -184,8 +184,7 @@ class EncoderData {
     fName = artist.getName();
     fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
-    Object[] args = { fName };
-    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoartist"), args);
+    String t = com.bolsinga.music.Util.createTitle("moreinfoartist", fName);
     
     fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString());
     fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString());
@@ -195,8 +194,7 @@ class EncoderData {
     fName = venue.getName();
     fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
-    Object[] args = { fName };
-    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfovenue"), args);
+    String t = com.bolsinga.music.Util.createTitle("moreinfovenue", fName);
     
     fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString());
     fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString());
@@ -206,8 +204,7 @@ class EncoderData {
     fName = album.getTitle();
     fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
-    Object[] args = { fName };
-    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoalbum"), args);
+    String t = com.bolsinga.music.Util.createTitle("moreinfoalbum", fName);
     
     fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString());
     fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString());
