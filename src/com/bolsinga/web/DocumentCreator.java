@@ -109,8 +109,7 @@ public abstract class DocumentCreator implements Backgroundable {
   }
         
   protected String getTitle(final String type) {
-    Object[] args = { getCurrentLetter(), type };
-    return MessageFormat.format(com.bolsinga.web.Util.getResourceString("htmltitle"), args);
+    return Util.createPageTitle(getCurrentLetter(), type);
   }
         
   protected void finalize() throws Throwable {

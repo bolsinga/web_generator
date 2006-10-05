@@ -1,5 +1,6 @@
 package com.bolsinga.web;
 
+import java.text.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -52,6 +53,11 @@ public class Util {
 
   public static GregorianCalendar nowUTC() {
     return new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+  }
+  
+  public static String createPageTitle(final String specialty, final String type) {
+    Object[] args = { specialty, type };
+    return MessageFormat.format(com.bolsinga.web.Util.getResourceString("htmltitle"), args);
   }
 
   public static Link getIconLink() {
