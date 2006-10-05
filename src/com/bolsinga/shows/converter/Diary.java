@@ -118,9 +118,9 @@ public class Diary {
     day = Integer.parseInt(dayString);
     year = Integer.parseInt(yearString);
 
-    // When reading them from the text files, assume noon local time.
+    int diaryTime = com.bolsinga.web.Util.getSettings().getDiaryEntryTime().intValue();
     localTime.clear();
-    localTime.set(year, month - 1, day, 12, 0);
+    localTime.set(year, month - 1, day, diaryTime, 0);
 
     // Convert to UTC.
     GregorianCalendar result = com.bolsinga.web.Util.nowUTC();

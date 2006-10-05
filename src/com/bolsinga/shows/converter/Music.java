@@ -11,6 +11,8 @@ import com.bolsinga.music.data.*;
 
 public class Music {
 
+  private static final int UNKNOWN_YEAR = 1900;
+  
   private static final HashMap<String, com.bolsinga.music.data.Venue> sVenues =
     new HashMap<String, com.bolsinga.music.data.Venue>();
   private static final HashMap<String, String> sBandSorts = new HashMap<String, String>();
@@ -207,7 +209,7 @@ public class Music {
     day = Integer.parseInt(dayString);
     year = Integer.parseInt(yearString);
                 
-    if ((month == 0) || (day == 0) || (year == 1900)) {
+    if ((month == 0) || (day == 0) || (year == UNKNOWN_YEAR)) {
       result.setUnknown(true);
     }
                 
@@ -219,7 +221,7 @@ public class Music {
       result.setDay(new java.math.BigInteger(dayString));
     }
                 
-    if (year != 1900) {
+    if (year != UNKNOWN_YEAR) {
       result.setYear(new java.math.BigInteger(yearString));
     }
                 

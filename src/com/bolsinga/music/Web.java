@@ -22,7 +22,7 @@ class IndexPair {
   
   public IndexPair(final String link, final String title) {
     fLink = link;
-    fTitle = (title != null) ? title : "TEMP";
+    fTitle = title;
   }
   
   public final String getLink() {
@@ -375,9 +375,6 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
 public class Web implements com.bolsinga.web.Backgroundable {
 
   private static final boolean GENERATE_XML = false;
-       
-  // This is the first year of this data.
-  private static final int START_YEAR = 2003;
 
   final com.bolsinga.web.Backgrounder fBackgrounder;
    
@@ -1408,7 +1405,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
     }
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
-    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(START_YEAR)).setName("Copyright"));
+    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue())).setName("Copyright"));
 
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
 

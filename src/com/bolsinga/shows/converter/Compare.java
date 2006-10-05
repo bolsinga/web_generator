@@ -17,6 +17,7 @@ public class Compare {
     day = Integer.parseInt(dayString);
     year = Integer.parseInt(yearString);
 
+    // Converts to an unusually obtained integer (I believe it assures where 'unknown' dates get sorted)
     return (year * 10000) + (month * 100) + day;
   }
 

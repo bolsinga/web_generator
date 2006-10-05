@@ -31,9 +31,9 @@ public class Util {
     Calendar localTime = Calendar.getInstance(); // LocalTime OK
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
-      // Set shows to 9 PM local time.
+      int showTime = com.bolsinga.web.Util.getSettings().getShowTime().intValue();
       localTime.clear();
-      localTime.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue(), 12 + 9, 0);
+      localTime.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue(), showTime, 0);
     } else {
       System.err.println("Can't convert Unknown com.bolsinga.music.data.Date");
       System.exit(1);
