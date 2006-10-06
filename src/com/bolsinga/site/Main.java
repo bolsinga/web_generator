@@ -63,6 +63,8 @@ public class Main implements com.bolsinga.web.Backgroundable {
       return false;
     }
 
+    com.bolsinga.web.Util.createSettings(settingsFile);
+
     if (musicXML || diaryXML) {
       if (musicXML) {
         com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, musicFile);
@@ -82,8 +84,6 @@ public class Main implements com.bolsinga.web.Backgroundable {
       }
       return true;
     }
-
-    com.bolsinga.web.Util.createSettings(settingsFile);
 
     boolean useDB = command.matches(".*-db$");
 
