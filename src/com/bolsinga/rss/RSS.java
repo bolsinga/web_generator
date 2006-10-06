@@ -124,7 +124,7 @@ public class RSS {
     itemElements.add(objFactory.createTRssItemTitle(title));
     itemElements.add(objFactory.createTRssItemPubDate(com.bolsinga.rss.Util.getRSSDate(cal)));
     itemElements.add(objFactory.createTRssItemAuthor(sb.toString()));
-    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRoot() + link));
+    itemElements.add(objFactory.createTRssItemLink(com.bolsinga.web.Util.getSettings().getRoot() + "/" + link));
     itemElements.add(objFactory.createTRssItemDescription(com.bolsinga.web.Util.convertToParagraphs(description)));
                 
     channel.getItem().add(item);
