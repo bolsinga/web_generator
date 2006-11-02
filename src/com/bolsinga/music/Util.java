@@ -76,7 +76,7 @@ public class Util {
   }
   
   public static String createTitle(final String resource, final String name) {
-    Object[] args = { name };
+    Object[] args = { com.bolsinga.web.Util.toHTMLSafe(name) };
     return MessageFormat.format(com.bolsinga.web.Util.getResourceString(resource), args);
   }
 
