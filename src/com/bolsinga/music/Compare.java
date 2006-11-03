@@ -43,16 +43,16 @@ public class Compare {
     String lower = s.toLowerCase();
     int len = s.length();
     if (lower.startsWith(THE)) {
-      return s.substring(THE.length(), len);
+      lower = lower.substring(THE.length(), len);
     }
     if (lower.startsWith(A)) {
-      return s.substring(A.length(), len);
+      lower = lower.substring(A.length(), len);
     }
     if (lower.startsWith(AN)) {
-      return s.substring(AN.length(), len);
+      lower = lower.substring(AN.length(), len);
     }
     if (lower.startsWith(THEE)) {
-      return s.substring(THEE.length(), len);
+      lower = lower.substring(THEE.length(), len);
     }
                 
     Matcher m = sChomp.matcher(lower);
