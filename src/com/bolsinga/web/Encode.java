@@ -163,7 +163,7 @@ class EncoderData {
   private static final Pattern sHTMLTagPattern = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
   // Don't use venues with lower case names, these are 'vague' venues.
-  public static final Pattern sStartsLowerCase = Pattern.compile("\\p{Lower}.*");
+  public static final Pattern sStartsLowerCase = Pattern.compile("^\\p{Lower}+$");
   
   private final String fName;
   private final Pattern fPattern;
@@ -309,7 +309,7 @@ class HashEncode extends Encode {
   // Assume average of 3 words per name
   private static final int WORDS_PER_NAME = 3;
 
-  private static final Pattern sRootURLPattern = Pattern.compile("(@@ROOT_URL@@)");
+  private static final Pattern sRootURLPattern = Pattern.compile("@@ROOT_URL@@");
   
   // The key is the Show or Entry. The value is a TreeSet containing the EncoderData
   //  that are applicable to the given key. Only these EncoderDatas will be used

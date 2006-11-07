@@ -15,7 +15,7 @@ public class Compare {
   private static final String A    = "a ";
   private static final String AN   = "an ";
     
-  private static final Pattern sChomp = Pattern.compile("\\W*");
+  private static final Pattern sChomp = Pattern.compile("\\W");
         
   private static Compare sCompare = null;
         

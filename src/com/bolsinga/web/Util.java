@@ -22,6 +22,7 @@ public class Util {
   private static com.bolsinga.settings.data.Settings sSettings = null;
   private static final boolean sDebugOutput = Boolean.getBoolean("web.debug_output");
   private static final String sLineSeparator = System.getProperty("line.separator");
+  private static final Pattern sHTMLPattern = Pattern.compile("&([^agl])");
   
   static {
     try {
@@ -33,8 +34,6 @@ public class Util {
     }
   }
 
-  // todo: this ought to look for any of the full &amp; &lt; or &gt; patterns instead of a subset
-  private static final Pattern sHTMLPattern = Pattern.compile("&([^agl])");
   public static String toHTMLSafe(final String s) {
     return sHTMLPattern.matcher(s).replaceAll("&amp;$1");
   }
