@@ -158,6 +158,8 @@ public abstract class Encode {
 
 class EncoderData {
   
+  // This becomes the regex string of "()?+" It will properly escape these characters when
+  //  building each regex below.
   private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?\\+])");
   
   private static final Pattern sHTMLTagPattern = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
@@ -455,13 +457,13 @@ class HashEncode extends Encode {
     List<Artist> items = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
 
     for (final Artist item : items) {
-      addWords(item.getName(), encoderMap,
-               new EncodeItem() {
-                 public EncoderData encode(Object value) {
-                   return new EncoderData(item, standardLinks, upLinks);
-                 }
-               },
-               item, items.size());
+      EncodeItem encodeItem = new EncodeItem() {
+        private EncoderData fEncoderData = new EncoderData(item, standardLinks, upLinks);
+        public EncoderData encode(Object value) {
+          return fEncoderData;
+        }
+      };
+      addWords(item.getName(), encoderMap, encodeItem, item, items.size());
     }
   }
 
@@ -470,13 +472,13 @@ class HashEncode extends Encode {
 
     for (final Venue item : items) {
       if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
-        addWords(item.getName(), encoderMap,
-                 new EncodeItem() {
-                   public EncoderData encode(Object value) {
-                     return new EncoderData(item, standardLinks, upLinks);
-                   }
-                 },
-                 item, items.size());
+        EncodeItem encodeItem = new EncodeItem() {
+          private EncoderData fEncoderData = new EncoderData(item, standardLinks, upLinks);
+          public EncoderData encode(Object value) {
+            return fEncoderData;
+          }
+        };
+        addWords(item.getName(), encoderMap, encodeItem, item, items.size());
       }
     }
   }
@@ -495,13 +497,13 @@ class HashEncode extends Encode {
 
     for (final Album item : items) {
       if (!artists.contains(item.getTitle())) {
-        addWords(item.getTitle(), encoderMap,
-                 new EncodeItem() {
-                   public EncoderData encode(Object value) {
-                     return new EncoderData(item, standardLinks, upLinks);
-                   }
-                 },
-                 item, items.size());
+        EncodeItem encodeItem = new EncodeItem() {
+          private EncoderData fEncoderData = new EncoderData(item, standardLinks, upLinks);
+          public EncoderData encode(Object value) {
+            return fEncoderData;
+          }
+        };
+        addWords(item.getTitle(), encoderMap, encodeItem, item, items.size());
       }
     }
   }
