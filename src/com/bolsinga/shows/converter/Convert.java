@@ -215,15 +215,23 @@ public class Convert {
         CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
         
         Matcher staticMatcher = sStaticPattern.matcher(cb);
-        while (staticMatcher.find()) {
-          String entry = staticMatcher.group(1);
-          Matcher locationMatcher = sLocationPattern.matcher(entry);
-          if (locationMatcher.find()) {
-            Matcher dataMatcher = sDataPattern.matcher(entry);
-          if (dataMatcher.find()) {
-            statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
-          }
-          }
+        if (staticMatcher.find()) {
+          do {
+            String entry = staticMatcher.group(1);
+            Matcher locationMatcher = sLocationPattern.matcher(entry);
+            if (locationMatcher.find()) {
+              Matcher dataMatcher = sDataPattern.matcher(entry);
+              if (dataMatcher.find()) {
+                statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
+              } else {
+                System.err.println("No Data: " + entry);
+              }
+            } else {
+              System.err.println("No Location: " + entry);
+            }
+          } while (staticMatcher.find());
+        } else {
+          System.err.println("No statics: " + cb);
         }
       } finally {
         if (fc != null) {
@@ -252,15 +260,23 @@ public class Convert {
         CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
         
         Matcher commentMatcher = sCommentPattern.matcher(cb);
-        while (commentMatcher.find()) {
-          String entry = commentMatcher.group(1);
-          Matcher dateMatcher = sDatePattern.matcher(entry);
-          if (dateMatcher.find()) {
-            Matcher dataMatcher = sDataPattern.matcher(entry);
-            if (dataMatcher.find()) {
-              comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
+        if (commentMatcher.find()) {
+          do {
+            String entry = commentMatcher.group(1);
+            Matcher dateMatcher = sDatePattern.matcher(entry);
+            if (dateMatcher.find()) {
+              Matcher dataMatcher = sDataPattern.matcher(entry);
+              if (dataMatcher.find()) {
+                comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
+              } else {
+                System.err.println("No data: " + entry);
+              }
+            } else {
+              System.err.println("No date: " + entry);
             }
-          }
+          } while (commentMatcher.find());
+        } else {
+          System.err.println("No comment: " + cb);
         }
       } finally {
         if (fc != null) {
