@@ -170,7 +170,7 @@ class EncoderData {
   private static final Pattern sStartsWord = Pattern.compile("^\\w");
   private static final Pattern sEndsWord = Pattern.compile("\\w$");
   
-  // See createRegex() and getLink() below.
+  // See createRegex() below.
   private static final String sLinkGroup = "$1";
   
   private final String fName;
@@ -194,8 +194,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfoartist", fName);
     
-    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString());
-    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString());
+    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString();
+    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString();
   }
   
   EncoderData(final Venue venue, final Links standardLinks, final Links upLinks) {
@@ -204,8 +204,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfovenue", fName);
     
-    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString());
-    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString());
+    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString();
+    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString();
   }
   
   EncoderData(final Album album, final Links standardLinks, final Links upLinks) {
@@ -214,8 +214,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfoalbum", fName);
     
-    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString());
-    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString());
+    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
+    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
   }
 
   public static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
@@ -307,14 +307,6 @@ class EncoderData {
     if (sEndsWord.matcher(name).find()) {
       sb.append("\\b");
     }
-    
-    return sb.toString();
-  }
-  
-  private static String getLink(final String link) {
-    StringBuilder sb = new StringBuilder();
-    
-    sb.append(link);
     
     return sb.toString();
   }
