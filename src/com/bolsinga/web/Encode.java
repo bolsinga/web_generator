@@ -158,14 +158,17 @@ public abstract class Encode {
 
 class EncoderData {
   
-  // This becomes the regex string of "()?+" It will properly escape these characters when
+  // This becomes the regex string of "()?+." It will properly escape these characters when
   //  building each regex below.
-  private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?\\+])");
+  private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?\\+\\.])");
   
   private static final Pattern sHTMLTagPattern = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
   // Don't use venues with lower case names, these are 'vague' venues.
   public static final Pattern sStartsLowerCase = Pattern.compile("^\\p{Lower}+$");
+  
+  // See createRegex() and getLink() below.
+  private static final String sLinkGroup = "$2";
   
   private final String fName;
   private final Pattern fPattern;
@@ -188,8 +191,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfoartist", fName);
     
-    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), "$2", t).toString());
-    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), "$2", t).toString());
+    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString());
+    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString());
   }
   
   EncoderData(final Venue venue, final Links standardLinks, final Links upLinks) {
@@ -198,8 +201,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfovenue", fName);
     
-    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), "$2", t).toString());
-    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), "$2", t).toString());
+    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString());
+    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString());
   }
   
   EncoderData(final Album album, final Links standardLinks, final Links upLinks) {
@@ -208,8 +211,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfoalbum", fName);
     
-    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), "$2", t).toString());
-    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), "$2", t).toString());
+    fStandardLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString());
+    fUpLink = EncoderData.getLink(com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString());
   }
 
   public static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
@@ -239,7 +242,6 @@ class EncoderData {
     // Find the EncoderData pattern in the source
     Matcher entryMatch = dataPattern.matcher(source);
     if (entryMatch.find()) {                        
-
       StringBuilder sb = new StringBuilder();
      
       // Be sure to not encode inside of HTML tags.
