@@ -8,7 +8,8 @@ import java.util.*;
 import java.util.regex.*;
 
 public class Convert {
-        
+  
+  // The *? construct is a reluctant quantifier. This means it is not greedy, and matches the first it can.
   private static final Pattern sStaticPattern   = Pattern.compile("<static>(.*?)</static>", Pattern.DOTALL);
   private static final Pattern sLocationPattern = Pattern.compile("<location>(.*?)</location>", Pattern.DOTALL);
   private static final Pattern sDataPattern     = Pattern.compile("<data>(.*?)</data>", Pattern.DOTALL);
