@@ -55,8 +55,10 @@ public class Links {
     e.add(getCityLink());
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
-    Object[] args = { cal.getTime() };
-    d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
+    if (!com.bolsinga.web.Util.getDebugOutput()) {
+      Object[] args = { cal.getTime() };
+      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
+    }
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
