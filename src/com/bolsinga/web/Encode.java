@@ -167,8 +167,11 @@ class EncoderData {
   // Don't use venues with lower case names, these are 'vague' venues.
   public static final Pattern sStartsLowerCase = Pattern.compile("^\\p{Lower}+$");
   
+  private static final Pattern sStartsWord = Pattern.compile("^\\w");
+  private static final Pattern sEndsWord = Pattern.compile("\\w$");
+  
   // See createRegex() and getLink() below.
-  private static final String sLinkGroup = "$2";
+  private static final String sLinkGroup = "$1";
   
   private final String fName;
   private final Pattern fPattern;
@@ -285,12 +288,25 @@ class EncoderData {
   private static String createRegex(final String name) {
     StringBuilder sb = new StringBuilder();
     
-    sb.append("(^|\\W)(");
+    // \b will not count punctuation before or after a name (such as Dinosaur Jr.)
+    // \W will match the surrounding whitespace, taking it out of the replacement, which 
+    //   is most likely why the extra groupings were there
+    // See page 240 in O'Reilly Mastering Regular Expressions 1st edition 7th printing
+    
+    // Only add word separator if name starts with a word
+    if (sStartsWord.matcher(name).find()) {
+      sb.append("\\b");
+    }
+    sb.append("(");
     
     Matcher m = sSpecialCharsPattern.matcher(name);
     sb.append(m.replaceAll("\\\\$1"));
     
-    sb.append(")(\\W)");
+    sb.append(")");
+    // Only add word separator if name ends with a word
+    if (sEndsWord.matcher(name).find()) {
+      sb.append("\\b");
+    }
     
     return sb.toString();
   }
@@ -298,9 +314,7 @@ class EncoderData {
   private static String getLink(final String link) {
     StringBuilder sb = new StringBuilder();
     
-    sb.append("$1");
     sb.append(link);
-    sb.append("$3");
     
     return sb.toString();
   }
