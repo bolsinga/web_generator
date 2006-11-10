@@ -162,7 +162,7 @@ class EncoderData {
   //  building each regex below.
   private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?\\+\\.])");
   
-  private static final Pattern sHTMLTagPattern = Pattern.compile("(.*)(<([a-z][a-z0-9]*)[^>]*>[^<]*</\\3>)(.*)", Pattern.DOTALL);
+  private static final Pattern sHTMLTagPattern = Pattern.compile("<([a-z][a-z0-9]*)[^>]*>[^<]*</\\1>", Pattern.DOTALL);
 
   // Don't use venues with lower case names, these are 'vague' venues.
   public static final Pattern sStartsLowerCase = Pattern.compile("^\\p{Lower}+$");
@@ -250,12 +250,13 @@ class EncoderData {
       // Be sure to not encode inside of HTML tags.
       Matcher html = sHTMLTagPattern.matcher(source);
       if (html.find()) {
-        // Group 1 may have HTML markup
-        sb.append(EncoderData.addLinks(dataPattern, html.group(1), link));
-        // Group 2 is the HTML markup found
-        sb.append(html.group(2));
-        // Group 4 has no HTML markup
-        sb.append(EncoderData.addLinksNoHTMLMarkup(dataPattern, html.group(4), link));
+        int offset = 0;
+        do {
+          sb.append(EncoderData.addLinksNoHTMLMarkup(dataPattern, source.substring(offset, html.start()), link));
+          sb.append(source.substring(html.start(), html.end()));
+          offset = html.end();
+        } while (html.find());
+        sb.append(EncoderData.addLinksNoHTMLMarkup(dataPattern, source.substring(offset, html.regionEnd()), link));
       } else {
         sb.append(entryMatch.replaceAll(link));
       }
