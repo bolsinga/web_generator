@@ -5,10 +5,10 @@
 <property name="output.dir" value="/tmp/web" />
 
 <target name="upload">
-  <ftp    server="ftp.io.com"
-          userid="bolsinga"
+  <ftp    server="${ftp.site}"
+          userid="${ftp.user}"
           password="${ftp.password}"
-          remotedir="public-web"
+          remotedir="${ftp.remote_dir}"
           verbose="yes" >
     <fileset dir="${output.dir}">
       <include name="index.html" />
@@ -26,10 +26,10 @@
 </target>
 
 <target name="uploadDiary">
-  <ftp    server="ftp.io.com"
-          userid="bolsinga"
+  <ftp    server="${ftp.site}"
+          userid="${ftp.user}"
           password="${ftp.password}"
-          remotedir="public-web"
+          remotedir="${ftp.remote_dir}"
           verbose="yes" >
     <fileset dir="${output.dir}">
       <include name="index.html" />

@@ -40,4 +40,4 @@ PRG="$0"
 PROG_HOME=`dirname "$PRG"`
 PROG_HOME=`cd "$PROG_HOME" && pwd`
 
-ant -f $PROG_HOME/lib/upload.xml -Doutput.dir=$SITE_DIR -Dftp.password=$FTP_PASSWORD $TYPE
+ant -f $PROG_HOME/lib/upload.xml -Doutput.dir=$SITE_DIR -Dftp.user=bolsinga -Dftp.site=ftp.io.com -Dftp.password=$FTP_PASSWORD -Dftp.remote_dir=public-web $TYPE
