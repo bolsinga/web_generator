@@ -2,9 +2,6 @@
 
 <project name="web_generator" default="package" basedir=".">
 
-<!--    This assumes that jwsdp is installed at ${lib.dir}/jwsdp-1_3/ 
-                Otherwise can be set with "ant -Djwsdp.home=..." -->
-
 <property name="legacy_data.dir" value="../data/" />
 <property name="itunes.dir" value="../data/" />
 <property name="data.dir" value="../data/" />
