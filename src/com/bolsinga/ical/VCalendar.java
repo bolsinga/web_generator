@@ -23,13 +23,13 @@ public class VCalendar {
   public void output(final Writer w) {
     try {
       VCalendar.write(w, "BEGIN:VCALENDAR");
+      VCalendar.write(w, "VERSION:2.0");
       
       StringBuilder sb = new StringBuilder();
       sb.append("X-WR-CALNAME:");
       sb.append(fName);
       VCalendar.write(w, sb.toString());
       VCalendar.write(w, "CALSCALE:GREGORIAN");
-      VCalendar.write(w, "VERSION:2.0");
 
       for (VEvent event : fEvents) {
         event.output(w);
