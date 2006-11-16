@@ -14,13 +14,11 @@ public class VEvent {
         
   private final Calendar fDate;
   private final String fSummary;
-  private final String fURL;
   private final String fUID;
         
-  public VEvent(final Calendar date, final String summary, final String url, final String uid) {
+  public VEvent(final Calendar date, final String summary, final String uid) {
     fDate = date;
     fSummary = summary;
-    fURL = url;
     fUID = uid;
   }
 
@@ -39,13 +37,6 @@ public class VEvent {
       sb.append("SUMMARY:");
       sb.append(fSummary);
       VCalendar.write(w, sb.toString());
-                        
-      if (fURL != null) {
-        sb = new StringBuilder();
-        sb.append("URL;VALUE=URI:");
-        sb.append(fURL);
-        VCalendar.write(w, sb.toString());
-        }
 
       VCalendar.write(w, "RRULE:FREQ=YEARLY;INTERVAL=1");
 

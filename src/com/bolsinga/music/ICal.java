@@ -116,7 +116,6 @@ public class ICal {
     date.set(Calendar.DAY_OF_MONTH, d.getDay().intValue());
                 
     StringBuilder summary = new StringBuilder();
-    String url = null;
 
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
     while (bi.hasNext()) {
@@ -137,6 +136,6 @@ public class ICal {
     summary.append(d.getYear());
     summary.append(")");
                 
-    calendar.add(new VEvent(date, summary.toString(), url, show.getId()));
+    calendar.add(new VEvent(date, summary.toString(), show.getId()));
   }
 }
