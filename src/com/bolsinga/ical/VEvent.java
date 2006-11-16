@@ -26,30 +26,30 @@ public class VEvent {
 
   public void output(final Writer w) {
     try {
-      w.write("BEGIN:VEVENT");
-      w.write("\r\n");
+      VCalendar.write(w, "BEGIN:VEVENT");
 
       writeAllDay(w);
-                        
-      w.write("UID:");
-      w.write(fUID);
-      w.write("\r\n");
-                        
-      w.write("SUMMARY:");
-      w.write(fSummary);
-      w.write("\r\n");
+      
+      StringBuilder sb = new StringBuilder();
+      sb.append("UID:");
+      sb.append(fUID);
+      VCalendar.write(w, sb.toString());
+      
+      sb = new StringBuilder();
+      sb.append("SUMMARY:");
+      sb.append(fSummary);
+      VCalendar.write(w, sb.toString());
                         
       if (fURL != null) {
-        w.write("URL;VALUE=URI:");
-        w.write(fURL);
-        w.write("\r\n");
-      }
+        sb = new StringBuilder();
+        sb.append("URL;VALUE=URI:");
+        sb.append(fURL);
+        VCalendar.write(w, sb.toString());
+        }
 
-      w.write("RRULE:FREQ=YEARLY;INTERVAL=1");
-      w.write("\r\n");
+      VCalendar.write(w, "RRULE:FREQ=YEARLY;INTERVAL=1");
 
-      w.write("END:VEVENT");
-      w.write("\r\n");
+      VCalendar.write(w, "END:VEVENT");
 
       w.flush();
     } catch (IOException ioe) {
@@ -63,12 +63,14 @@ public class VEvent {
     Calendar end = (Calendar)fDate.clone();
     end.add(Calendar.DATE, 1);
 
-    w.write("DTSTART;VALUE=DATE:");
-    w.write(sFormatter.get().format(fDate.getTime()));
-    w.write("\r\n");
-                
-    w.write("DTEND;VALUE=DATE:");
-    w.write(sFormatter.get().format(end.getTime()));
-    w.write("\r\n");
+    StringBuilder sb = new StringBuilder();
+    sb.append("DTSTART;VALUE=DATE:");
+    sb.append(sFormatter.get().format(fDate.getTime()));
+    VCalendar.write(w, sb.toString());
+    
+    sb = new StringBuilder();
+    sb.append("DTEND;VALUE=DATE:");
+    sb.append(sFormatter.get().format(end.getTime()));
+    VCalendar.write(w, sb.toString());
   }
 }

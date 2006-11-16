@@ -14,25 +14,28 @@ public class VCalendar {
   public void add(final VEvent event) {
     fEvents.add(event);
   }
-        
+
+  public static void write(Writer w, String s) throws IOException {
+    w.write(s);
+    w.write("\r\n");
+  }
+  
   public void output(final Writer w) {
     try {
-      w.write("BEGIN:VCALENDAR");
-      w.write("\r\n");
-      w.write("X-WR-CALNAME:");
-      w.write(fName);
-      w.write("\r\n");
-      w.write("CALSCALE:GREGORIAN");
-      w.write("\r\n");
-      w.write("VERSION:2.0");
-      w.write("\r\n");
+      VCalendar.write(w, "BEGIN:VCALENDAR");
+      
+      StringBuilder sb = new StringBuilder();
+      sb.append("X-WR-CALNAME:");
+      sb.append(fName);
+      VCalendar.write(w, sb.toString());
+      VCalendar.write(w, "CALSCALE:GREGORIAN");
+      VCalendar.write(w, "VERSION:2.0");
 
       for (VEvent event : fEvents) {
         event.output(w);
       }
 
-      w.write("END:VCALENDAR");
-      w.write("\r\n");
+      VCalendar.write(w, "END:VCALENDAR");
                         
       w.flush();
     } catch (IOException ioe) {
