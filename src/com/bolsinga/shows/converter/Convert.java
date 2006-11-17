@@ -67,9 +67,9 @@ public class Convert {
   public static List<Relation> relation(final String filename) throws IOException {
     Vector<Relation> relations = new Vector<Relation>();
 
-    LineNumberReader in = null;
+    BufferedReader in = null;
     try {
-      in = new LineNumberReader(new FileReader(filename));
+      in = new BufferedReader(new FileReader(filename));
       String s = null;
       StringTokenizer st = null;
       while ((s = in.readLine()) != null) {
@@ -95,9 +95,9 @@ public class Convert {
   public static List<BandMap> bandsort(final String filename) throws IOException {
     Vector<BandMap> bandMaps = new Vector<BandMap>();
                 
-    LineNumberReader in = null;
+    BufferedReader in = null;
     try {
-      in = new LineNumberReader(new FileReader(filename));
+      in = new BufferedReader(new FileReader(filename));
       String s = null;
       StringTokenizer st = null;
       while ((s = in.readLine()) != null) {
@@ -117,9 +117,9 @@ public class Convert {
   public static List<Venue> venuemap(final String filename) throws IOException {
     Vector<Venue> venues = new Vector<Venue>();
                 
-    LineNumberReader in = null;
+    BufferedReader in = null;
     try {
-      in = new LineNumberReader(new FileReader(filename));
+      in = new BufferedReader(new FileReader(filename));
       String s = null;
       StringTokenizer st = null;
 
@@ -162,9 +162,9 @@ public class Convert {
         
     Vector<Show> shows = new Vector<Show>();
 
-    LineNumberReader in = null;
+    BufferedReader in = null;
     try {
-      in = new LineNumberReader(new FileReader(filename));
+      in = new BufferedReader(new FileReader(filename));
       String l = null;
       StringTokenizer st = null, bt = null;
       while ((l = in.readLine()) != null) {
