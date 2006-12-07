@@ -54,6 +54,8 @@ public class ITunes {
   private static final String TK_EXPLICIT             = "Explicit";
   private static final String TK_SKIP_COUNT           = "Skip Count";
   private static final String TK_SKIP_DATE            = "Skip Date";
+  private static final String TK_RELEASE_DATE         = "Release Date";
+  private static final String TK_PODCAST              = "Podcast";
     
   private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
   private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
@@ -161,6 +163,8 @@ public class ITunes {
     sITunesKeys.add(TK_EXPLICIT);
     sITunesKeys.add(TK_SKIP_COUNT);
     sITunesKeys.add(TK_SKIP_DATE);
+    sITunesKeys.add(TK_RELEASE_DATE);
+    sITunesKeys.add(TK_PODCAST);
   }
         
   public static void addMusic(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String itunesFile) throws JAXBException {
@@ -213,6 +217,7 @@ public class ITunes {
     int index = -1, year = -1;
     boolean compilation = false;
     boolean isVideo = false;
+    boolean isPodcast = false;
             
     while (i.hasNext()) {
       JAXBElement<Object> jokey = (JAXBElement<Object>)i.next();
@@ -263,6 +268,11 @@ public class ITunes {
         isVideo = (jovalue != null);
         continue;
       }
+      if (key.equals(TK_PODCAST)) {
+        // Ignore the value, but it needs to be pulled.
+        isPodcast = (jovalue != null);
+        continue;
+      }
 
       if (!sITunesKeys.contains(key)) {
         System.out.println("iTunes added a new key: " + key);
@@ -273,7 +283,7 @@ public class ITunes {
       albumTitle = songTitle + " - Single";
     }
 
-    if (!isVideo) {
+    if (!isVideo && !isPodcast) {
       ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
