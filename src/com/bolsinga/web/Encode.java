@@ -128,6 +128,8 @@ class EncodeTest {
 
 public abstract class Encode {
 
+  private static final Pattern sRootURLPattern = Pattern.compile("@@ROOT_URL@@");
+
   // NOTE: With the current set of data (2006-08-02) there is a 210:1 ratio of up to std links!
 
   private static Encode sEncode = null;
@@ -149,6 +151,10 @@ public abstract class Encode {
       sEncode = new HashEncode(music, diary);
     }
     return sEncode;
+  }
+  
+  public static String encodeROOT_URL(final String s) {
+    return sRootURLPattern.matcher(s).replaceAll(com.bolsinga.web.Util.getSettings().getRoot());
   }
 
   public abstract String embedLinks(Show show, boolean upOneLevel);
@@ -319,8 +325,6 @@ class HashEncode extends Encode {
   private static final int WORDS_PER_ENTRY = 25;
   // Assume average of 3 words per name
   private static final int WORDS_PER_NAME = 3;
-
-  private static final Pattern sRootURLPattern = Pattern.compile("@@ROOT_URL@@");
   
   // The key is the Show or Entry. The value is a TreeSet containing the EncoderData
   //  that are applicable to the given key. Only these EncoderDatas will be used
@@ -523,7 +527,7 @@ class HashEncode extends Encode {
 
   public String embedLinks(final Entry entry, final boolean upOneLevel) {
     String result = embedLinks(entry, entry.getComment(), upOneLevel);
-    return sRootURLPattern.matcher(result).replaceAll(com.bolsinga.web.Util.getSettings().getRoot());
+    return Encode.encodeROOT_URL(result);
   }
   
   private String embedLinks(final Object obj, final String source, final boolean upOneLevel) {
