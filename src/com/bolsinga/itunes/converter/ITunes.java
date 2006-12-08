@@ -2,6 +2,7 @@ package com.bolsinga.itunes.converter;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 
 import javax.xml.bind.*;
 import javax.xml.datatype.*;
@@ -71,7 +72,12 @@ public class ITunes {
   private static final HashSet<String> sITunesKeys = new HashSet<String>();
   
   private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
-        
+  
+  private static final Pattern sLTPattern = Pattern.compile("<");
+  private static final String sLTReplacement = "&lt;";
+  private static final Pattern sGTPattern = Pattern.compile(">");
+  private static final String sGTReplacement = "&gt;";
+  
   public static void main(String[] args) {
     if (args.length != 2) {
       System.out.println("Usage: ITunes [itunes] [output]");
@@ -347,14 +353,25 @@ public class ITunes {
       artist.getAlbum().add(jalbum); // Modification required.
     }
   }
-        
+  
+  private static String cleanHTML(final String s) {
+    // This is strictly for the song "Bad Days <aurally excited version>".
+    // This keeps 'bad' titles out of the XML for simplicity sake.
+    String result = sGTPattern.matcher(sLTPattern.matcher(s).replaceAll(sLTReplacement)).replaceAll(sGTReplacement);
+    if (!result.equals(s)) {
+      System.out.println("ORIG: " + s + " NEW: " + result);
+    }
+    return result;
+  }
+  
   private static Song createSong(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final Artist artist, final String songTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount) throws JAXBException {
     List<Song> songs = music.getSong(); // Modification required.
             
     Song result = null;
             
     result = objFactory.createSong();
-    result.setTitle(songTitle);
+    String cleanTitle = ITunes.cleanHTML(songTitle);
+    result.setTitle(cleanTitle);
     result.setPerformer(artist);
     result.setLastPlayed(lastPlayed);
     result.setPlayCount(java.math.BigInteger.valueOf(playCount));
