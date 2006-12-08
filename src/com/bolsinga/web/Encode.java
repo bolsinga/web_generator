@@ -129,6 +129,8 @@ class EncodeTest {
 public abstract class Encode {
 
   private static final Pattern sRootURLPattern = Pattern.compile("@@ROOT_URL@@");
+  
+  private static final Pattern sHTMLTagPattern = Pattern.compile("<([a-z][a-z0-9]*)[^>]*>[^<]*</\\1>", Pattern.DOTALL);
 
   // NOTE: With the current set of data (2006-08-02) there is a 210:1 ratio of up to std links!
 
@@ -157,6 +159,23 @@ public abstract class Encode {
     return sRootURLPattern.matcher(s).replaceAll(com.bolsinga.web.Util.getSettings().getRoot());
   }
 
+  public static String encodeUntagged(final String source, final UntaggedEncoder encoder) {
+    StringBuilder sb = new StringBuilder();
+    Matcher html = sHTMLTagPattern.matcher(source);
+    if (html.find()) {
+      int offset = 0;
+      do {
+        sb.append(encoder.encodeUntagged(source.substring(offset, html.start())));
+        sb.append(source.substring(html.start(), html.end()));
+        offset = html.end();
+      } while (html.find());
+      sb.append(encoder.encodeUntagged(source.substring(offset, html.regionEnd())));
+    } else {
+      sb.append(encoder.encodeUntagged(source));
+    }
+    return sb.toString();
+  }
+
   public abstract String embedLinks(Show show, boolean upOneLevel);
 
   public abstract String embedLinks(Entry entry, boolean upOneLevel);
@@ -167,8 +186,6 @@ class EncoderData {
   // This becomes the regex string of "()?+." It will properly escape these characters when
   //  building each regex below.
   private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?\\+\\.])");
-  
-  private static final Pattern sHTMLTagPattern = Pattern.compile("<([a-z][a-z0-9]*)[^>]*>[^<]*</\\1>", Pattern.DOTALL);
 
   // Don't use venues with lower case names, these are 'vague' venues.
   public static final Pattern sStartsLowerCase = Pattern.compile("^\\p{Lower}+$");
@@ -244,30 +261,19 @@ class EncoderData {
 
     return result;
   }
-
+  
   private static String addLinks(final Pattern dataPattern, final String source, final String link) {
     String result = source;
 
     // Find the EncoderData pattern in the source
     Matcher entryMatch = dataPattern.matcher(source);
     if (entryMatch.find()) {                        
-      StringBuilder sb = new StringBuilder();
-     
       // Be sure to not encode inside of HTML tags.
-      Matcher html = sHTMLTagPattern.matcher(source);
-      if (html.find()) {
-        int offset = 0;
-        do {
-          sb.append(EncoderData.addLinksNoHTMLMarkup(dataPattern, source.substring(offset, html.start()), link));
-          sb.append(source.substring(html.start(), html.end()));
-          offset = html.end();
-        } while (html.find());
-        sb.append(EncoderData.addLinksNoHTMLMarkup(dataPattern, source.substring(offset, html.regionEnd()), link));
-      } else {
-        sb.append(entryMatch.replaceAll(link));
-      }
-                        
-      result = sb.toString();
+      result = Encode.encodeUntagged(source, new UntaggedEncoder() {
+        public String encodeUntagged(final String s) {
+          return EncoderData.addLinksNoHTMLMarkup(dataPattern, s, link);
+        }
+      });
     }
                 
     return result;

@@ -23,6 +23,8 @@ public class Util {
   private static final boolean sDebugOutput = Boolean.getBoolean("web.debug_output");
   private static final String sLineSeparator = System.getProperty("line.separator");
   private static final Pattern sHTMLPattern = Pattern.compile("&([^agl])");
+  private static final Pattern sNewLinePattern = Pattern.compile("\\n");
+  private static String sNewLineReplacement = null;
   
   static {
     try {
@@ -32,6 +34,13 @@ public class Util {
       e.printStackTrace();
       System.exit(1);
     }
+
+    StringBuilder sb = new StringBuilder();
+    if (Util.getDebugOutput()) {
+      sb.append(sLineSeparator);
+    }
+    sb.append(new P());
+    sNewLineReplacement = sb.toString();
   }
 
   public static String toHTMLSafe(final String s) {
@@ -91,16 +100,14 @@ public class Util {
   }
         
   public static String convertToParagraphs(final String data) {
-    // Convert each line to <p> tags
+    // Convert each line to <p> tags except when within a tag...
     StringBuilder tagged = new StringBuilder();
     if (data != null) {
-      String[] lines = data.split("\\n");
-      for (int i = 0; i < lines.length; i++) {
-        tagged.append(new P().addElement(lines[i]));
-        if (Util.getDebugOutput()) {
-          tagged.append(sLineSeparator);
+      tagged.append(new P().addElement(Encode.encodeUntagged(data, new UntaggedEncoder() {
+        public String encodeUntagged(final String s) {
+          return sNewLinePattern.matcher(s).replaceAll(sNewLineReplacement);
         }
-      }
+      })));
     }
     return tagged.toString();
   }
