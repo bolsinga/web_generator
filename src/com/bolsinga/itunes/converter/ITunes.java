@@ -357,11 +357,7 @@ public class ITunes {
   private static String cleanHTML(final String s) {
     // This is strictly for the song "Bad Days <aurally excited version>".
     // This keeps 'bad' titles out of the XML for simplicity sake.
-    String result = sGTPattern.matcher(sLTPattern.matcher(s).replaceAll(sLTReplacement)).replaceAll(sGTReplacement);
-    if (!result.equals(s)) {
-      System.out.println("ORIG: " + s + " NEW: " + result);
-    }
-    return result;
+    return sGTPattern.matcher(sLTPattern.matcher(s).replaceAll(sLTReplacement)).replaceAll(sGTReplacement);
   }
   
   private static Song createSong(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final Artist artist, final String songTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount) throws JAXBException {
