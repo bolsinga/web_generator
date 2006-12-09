@@ -156,7 +156,10 @@ public abstract class Encode {
   }
   
   public static String encodeROOT_URL(final String s) {
-    return sRootURLPattern.matcher(s).replaceAll(com.bolsinga.web.Util.getSettings().getRoot());
+    if (s != null) {
+      return sRootURLPattern.matcher(s).replaceAll(com.bolsinga.web.Util.getSettings().getRoot());
+    }
+    return null;
   }
 
   public static String encodeUntagged(final String source, final UntaggedEncoder encoder) {
