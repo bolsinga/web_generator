@@ -1315,49 +1315,42 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
-        
+    
   public static Table makeTable(final String[] names, final int[] values, final String caption, final String header, final String summary) {
-    Table t = new Table();
-    t.setSummary(summary);
-    t.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
-    Caption capt = new Caption();
-    capt.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
-    capt.addElement(caption);
-    t.addElement(capt);
-    TR trow = new TR().addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
-    trow.setClass(com.bolsinga.web.CSS.TABLE_HEADER);
-    trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
-    t.addElement(trow);
-    TH thh = null;
-                
-    int total = 0;
+    int runningTotal = 0;
     int i;
     for (i = 0; i < values.length; i++) {
-      total += values[i];
+      runningTotal += values[i];
     }
+    final int total = runningTotal;
+    
+    return com.bolsinga.web.Util.makeTable(caption, summary, new com.bolsinga.web.TableHandler() {
+      public TR getHeaderRow() {
+        return new TR().addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
+      }
 
-    for (i = 0; i < values.length; i++) {
-      trow = new TR();
-      trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
-      trow.setClass((((i + 1) % 2) != 0) ? com.bolsinga.web.CSS.TABLE_ROW : com.bolsinga.web.CSS.TABLE_ROW_ALT);
-      thh = new TH(names[i]);
-      thh.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
-      trow.addElement(thh);
-      trow.addElement(new TD(Integer.toString(values[i])).setPrettyPrint(com.bolsinga.web.Util.getDebugOutput()));
-      trow.addElement(new TD(Util.toString((double)values[i] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getDebugOutput()));
-                        
-      t.addElement(trow);
-    }
-                
-    trow = new TR();
-    trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
-    trow.setClass(com.bolsinga.web.CSS.TABLE_FOOTER);
-    trow.addElement(new TH(Integer.toString(names.length)));
-    trow.addElement(new TH(Integer.toString(total)));
-    trow.addElement(new TH());
-    t.addElement(trow);
-                
-    return t;
+      public int getRowCount() {
+        return values.length;
+      }
+      
+      public TR getRow(final int row) {
+        TR trow = new TR();
+        TH thh = new TH(names[row]);
+        thh.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+        trow.addElement(thh);
+        trow.addElement(new TD(Integer.toString(values[row])).setPrettyPrint(com.bolsinga.web.Util.getDebugOutput()));
+        trow.addElement(new TD(Util.toString((double)values[row] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getDebugOutput()));
+        return trow;
+      }
+      
+      public TR getFooterRow() {
+        TR trow = new TR();
+        trow.addElement(new TH(Integer.toString(names.length)));
+        trow.addElement(new TH(Integer.toString(total)));
+        trow.addElement(new TH());
+        return trow;
+      }
+    });
   }
         
   private static java.util.Map<String, IndexPair> createShowIndex(final Collection<Show> shows, final Links links) {

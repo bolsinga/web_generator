@@ -164,6 +164,41 @@ public class Util {
 
     return list;
   }
+  
+  public static Table makeTable(final String caption, final String summary, final TableHandler handler) {
+    Table t = new Table();
+    t.setSummary(summary);
+    t.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    Caption capt = new Caption();
+    capt.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    capt.addElement(caption);
+    t.addElement(capt);
+    
+    TR trow = handler.getHeaderRow();
+    trow.setClass(com.bolsinga.web.CSS.TABLE_HEADER);
+    trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    t.addElement(trow);
+
+    int i = 0;
+    int count = handler.getRowCount();
+    while (i < count) {
+      trow = handler.getRow(i);
+      
+      trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+      trow.setClass((((i + 1) % 2) != 0) ? com.bolsinga.web.CSS.TABLE_ROW : com.bolsinga.web.CSS.TABLE_ROW_ALT);
+
+      t.addElement(trow);
+
+      i++;
+    }
+    
+    trow = handler.getFooterRow();
+    trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    trow.setClass(com.bolsinga.web.CSS.TABLE_FOOTER);
+    t.addElement(trow);
+                
+    return t;
+  }
 
   public static String getGenerator() {
     StringBuilder sb = new StringBuilder();
