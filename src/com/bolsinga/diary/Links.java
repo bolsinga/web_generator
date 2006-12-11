@@ -12,11 +12,11 @@ import org.apache.ecs.filter.*;
 
 public class Links {
 
-  public  static final String HTML_EXT     = ".html";
-  public  static final String ARCHIVES_DIR = "archives";
-  public  static final String STYLES_DIR   = "styles";
-  public  static final String RSS_DIR      = "rss";
-  private static final String HASH         = "#";
+  public static final String HTML_EXT     = ".html";
+  public static final String ARCHIVES_DIR = "archives";
+  public static final String STYLES_DIR   = "styles";
+  public static final String RSS_DIR      = "rss";
+  public static final String HASH         = "#";
     
   private static final ThreadLocal<DateFormat> sArchivePageFormat = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
@@ -86,6 +86,12 @@ public class Links {
                 
     return new A(getRSSURL(), i.toString()); // rss feed URL
   }
+  
+  public A getOverviewLink() {
+    return com.bolsinga.web.Util.createInternalA( getOverviewURL(),
+                                                  com.bolsinga.web.Util.getResourceString("archivesoverview"),
+                                                  com.bolsinga.web.Util.getResourceString("archivestitle"));
+  }
 
   public String getRSSURL() {
     StringBuilder url = new StringBuilder();
@@ -96,6 +102,19 @@ public class Links {
     url.append(RSS_DIR);
     url.append(File.separator);
     url.append(com.bolsinga.web.Util.getSettings().getRssFile());
+    return url.toString();
+  }
+  
+  public String getOverviewURL() {
+    StringBuilder url = new StringBuilder();
+    if (fUpOneLevel) {
+      url.append("..");
+      url.append(File.separator);
+    }
+    url.append(ARCHIVES_DIR);
+    url.append(File.separator);
+    url.append("overview");
+    url.append(HTML_EXT);
     return url.toString();
   }
         
@@ -134,7 +153,8 @@ public class Links {
       url.append("..");
       url.append(File.separator);
     }
-    url.append("index.html");
+    url.append("index");
+    url.append(HTML_EXT);
     String h = com.bolsinga.web.Util.getResourceString("home");
     return com.bolsinga.web.Util.createInternalA(url.toString(), h, h);
   }

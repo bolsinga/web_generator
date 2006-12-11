@@ -22,6 +22,11 @@ public class Util {
       return new SimpleDateFormat("MMMM");
     }
   };
+  private static final ThreadLocal<DateFormat> sShortMonthFormat = new ThreadLocal<DateFormat>() {
+    public DateFormat initialValue() {
+      return new SimpleDateFormat("MMM");
+    }
+  };
 
   public static final Comparator<Entry> ENTRY_COMPARATOR = new Comparator<Entry>() {
       public int compare(final Entry e1, final Entry e2) {
@@ -33,9 +38,17 @@ public class Util {
   public static String getTitle(final Entry entry) {
     return sWebFormat.get().format(entry.getTimestamp().toGregorianCalendar().getTime());
   }
-        
+  
+  public static String getMonth(final Calendar month) {
+    return sMonthFormat.get().format(month.getTime());
+  }
+  
   public static String getMonth(final Entry entry) {
-    return sMonthFormat.get().format(entry.getTimestamp().toGregorianCalendar().getTime());
+    return Util.getMonth(entry.getTimestamp().toGregorianCalendar());
+  }
+  
+  public static String getShortMonthName(final Calendar month) {
+    return sShortMonthFormat.get().format(month.getTime());
   }
 
   public static int getStartYear(final Diary diary) {

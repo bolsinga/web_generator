@@ -79,7 +79,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected Element addIndexNavigator() {
-    return Web.addEntryIndexNavigator(fEntryIndex, getCurrentLetter(), fLinks.getRSSLink());
+    return Web.addEntryIndexNavigator(fEntryIndex, getCurrentLetter(), fLinks);
   }
 }
 
@@ -199,7 +199,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
 
     final java.util.Map<String, String> entryIndex = Web.createEntryIndex(com.bolsinga.diary.Util.getEntriesUnmodifiable(diary), links);
-    Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
+    final Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
     for (final Collection<Entry> entryGroup : entryGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
@@ -207,6 +207,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
         }
       });
     }
+    
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateOverviewPage(diary, entryGroups, entryIndex, links, startYear, outputDir);
+      }
+    });
   }
   
   private static void createFile(final Document doc, final String filename, final String outputDir) {
@@ -332,13 +338,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
         System.exit(1);
       }
     }
-                
-    StringBuilder sb = new StringBuilder();
-    sb.append("archives/");
-    sb.append(Calendar.getInstance().get(Calendar.YEAR)); // LocalTime OK
-    sb.append(".html");
     
-    diaryDiv.addElement(new H2().addElement(com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("archives"), com.bolsinga.web.Util.getResourceString("archivestitle"))));
+    diaryDiv.addElement(new H2().addElement(links.getOverviewLink()));
                 
     return diaryDiv;
   }
@@ -359,7 +360,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     
     // Each group is per page, so they are grouped by Entry who have the same starting sort letter.
     // They are sorted within each group, as they are placed onto the Vector<Entry> in order.
-    HashMap<String, Collection<Entry>> result = new HashMap<String, Collection<Entry>>(entries.size());
+    TreeMap<String, Collection<Entry>> result = new TreeMap<String, Collection<Entry>>();
     
     Collections.sort(entries, Util.ENTRY_COMPARATOR);
     
@@ -384,22 +385,48 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(new H1().addElement(title));
     d.addElement(com.bolsinga.web.Util.getLogo());
     d.addElement(Web.addWebNavigator(program, links));
-    d.addElement(Web.addEntryIndexNavigator(entryIndex, curLetter, links.getRSSLink()));
+    d.addElement(Web.addEntryIndexNavigator(entryIndex, curLetter, links));
     return d;
   }
   
-  static Element addEntryIndexNavigator(final java.util.Map<String, String> entryIndex, final String curLetter, final Element rss) {
+  static Element getLinkToEntryMonthYear(final String year, final int month, final String value, final java.util.Map<String, String> entryIndex) {
+    Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.MONTH, month);
+    String monthStr = Util.getMonth(cal);
+    
+    StringBuilder url = new StringBuilder();
+    url.append(entryIndex.get(year));
+    url.append(Links.HASH);
+    url.append(monthStr);
+    
+    StringBuilder tip = new StringBuilder();
+    tip.append(monthStr);
+    tip.append(", ");
+    tip.append(year);
+    
+    Object[] args = { tip.toString() };
+    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
+    
+    return com.bolsinga.web.Util.createInternalA(url.toString(), value, t);
+  }
+  
+  static Element getLinkToEntryYear(final String year, final java.util.Map<String, String> entryIndex) {
+    Object[] args = { year };
+    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
+    return com.bolsinga.web.Util.createInternalA(entryIndex.get(year), year, t);
+  }
+  
+  static Element addEntryIndexNavigator(final java.util.Map<String, String> entryIndex, final String curLetter, final Links links) {
     Vector<Element> e = new Vector<Element>();
+    e.add(links.getOverviewLink());
     for (String s : entryIndex.keySet()) {
       if (s.equals(curLetter)) {
         e.add(new StringElement(s));
       } else {
-        Object[] args = { s };
-        String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
-        e.add(com.bolsinga.web.Util.createInternalA(entryIndex.get(s), s, t));
+        e.add(Web.getLinkToEntryYear(s, entryIndex));
       }
     }
-    e.add(rss);
+    e.add(links.getRSSLink());
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
@@ -431,6 +458,120 @@ public class Web implements com.bolsinga.web.Backgroundable {
       creator.add(item);
     }
     creator.complete();
+  }
+  
+  private static Table createOverviewTable(final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, String> entryIndex, final int startYear) {
+    final String totalStr = com.bolsinga.web.Util.getResourceString("archivestotal");
+
+    // entryGroups has as many items as the number of years. Add one for the final footer total row.
+    // There are 12 months in a year, Add two, one for the year, and one for the total column.
+    String[][] runningTable = new String[entryGroups.size() + 1][12 + 2];
+    int[] monthTotals = new int[12];
+    String[] curRow;
+    
+    int row = 0;
+    for (final Collection<Entry> entryGroup : entryGroups) {
+      curRow = runningTable[row];
+      
+      String year = Integer.toString(startYear + row);
+      
+      curRow[0] = new TD(Web.getLinkToEntryYear(year, entryIndex)).toString();
+      
+      int[] groupMonthTotals = new int[12];
+      for (Entry entry : entryGroup) {
+        Calendar cal = entry.getTimestamp().toGregorianCalendar();
+        groupMonthTotals[cal.get(Calendar.MONTH) - Calendar.JANUARY]++;
+      }
+      
+      for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {
+        int val = groupMonthTotals[i - Calendar.JANUARY];
+        
+        String content = Integer.toString(val);
+        if (val != 0) {
+          content = Web.getLinkToEntryMonthYear(year, i, content, entryIndex).toString();
+        }
+        curRow[(i - Calendar.JANUARY) + 1] = new TD(content).toString();
+        
+        monthTotals[i - Calendar.JANUARY] += val;
+      }
+      
+      curRow[13] = new TD(Integer.toString(entryGroup.size())).toString();
+      
+      row++;
+    }
+    
+    curRow = runningTable[runningTable.length - 1];
+    curRow[0] = new TH(totalStr).toString();
+    
+    for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {
+      curRow[(i - Calendar.JANUARY) + 1] = new TH(Integer.toString(monthTotals[i - Calendar.JANUARY])).toString();
+    }
+    int totalEntries = 0;
+    for (int cnt : monthTotals) {
+      totalEntries += cnt;
+    }
+    curRow[13] = new TH(Integer.toString(totalEntries)).toString();
+    
+    final String[][] table = runningTable;
+    
+    return com.bolsinga.web.Util.makeTable( com.bolsinga.web.Util.getResourceString("archivesoverview"),
+                                            com.bolsinga.web.Util.getResourceString("archivesoverviewsummary"), 
+                                            new com.bolsinga.web.TableHandler() {
+      public TR getHeaderRow() {
+        TR trow = new TR().addElement(new TH());
+        Calendar cal = Calendar.getInstance();
+        for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {
+          cal.set(Calendar.MONTH, i);
+          trow.addElement(new TH(Util.getShortMonthName(cal)));
+        }
+        trow.addElement(new TH(totalStr));
+        return trow;
+      }
+      
+      public int getRowCount() {
+        // Last 'row' in table is totals row.
+        return table.length - 1;
+      }
+      
+      private TR fillRow(final String[] rowData) {
+        TR trow = new TR();
+        for (int i = 0; i < rowData.length; i++) {
+          trow.addElement(rowData[i]);
+        }
+        return trow;
+      }
+      
+      public TR getRow(final int row) {
+        String[] curRow = table[row];
+        return fillRow(curRow);
+      }
+      
+      public TR getFooterRow() {
+        String[] curRow = table[getRowCount()];
+        return fillRow(curRow);
+      }
+    });
+  }
+  
+  public static void generateOverviewPage(final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, String> entryIndex, final Links links, final int startYear, final String outputDir) {
+    final String docTitle = com.bolsinga.web.Util.getResourceString("archivesoverview");
+
+    Document doc = Web.createDocument(docTitle, startYear, links);
+
+    Div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
+
+    main.addElement(Web.getHeaderDiv(docTitle, com.bolsinga.web.Util.getResourceString("program"), links, entryIndex, null));
+
+    main.addElement(Web.createOverviewTable(entryGroups, entryIndex, startYear));
+
+    doc.getBody().addElement(main);
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(outputDir);
+    sb.append(File.separator);
+    sb.append(Links.ARCHIVES_DIR);
+    
+    Web.createFile(doc, "overview.html", sb.toString());
   }
 
   public static UL addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
