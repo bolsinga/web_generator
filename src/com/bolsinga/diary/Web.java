@@ -17,7 +17,7 @@ import javax.xml.bind.Marshaller;
 
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
-  private final java.util.Map<String, String>  fEntryIndex;
+  private final java.util.Map<String, String> fEntryIndex;
   private final Links  fLinks;
   private final String fProgram;
   private final int fStartYear;
@@ -84,40 +84,11 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected Element addIndexNavigator() {
-    Vector<Element> e = new Vector<Element>();
-    for (String s : fEntryIndex.keySet()) {
-      if (s.equals(getCurrentLetter())) {
-        e.add(new StringElement(s));
-      } else {
-        Object[] args = { s };
-        String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
-        e.add(com.bolsinga.web.Util.createInternalA(fEntryIndex.get(s), s, t));
-      }
-    }
-    e.add(fLinks.getRSSLink());
-
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_INDEX);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
-    return d;
+    return Web.addEntryIndexNavigator(fEntryIndex, getCurrentLetter(), fLinks.getRSSLink());
   }
         
   private Element addWebNavigator(final String program, final Links links) {
-    Vector<Element> e = new Vector<Element>();
-                
-    Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
-    if (com.bolsinga.web.Util.getDebugOutput()) {
-      args2[1] = null;
-    }
-    e.add(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
-    e.add(links.getLinkToHome());
-
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_MENU);
-    if (!com.bolsinga.web.Util.getDebugOutput()) {
-      Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
-      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
-    }
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
-    return d;
+    return Web.addWebNavigator(program, links);
   }
 }
 
@@ -417,6 +388,43 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return Collections.unmodifiableCollection(result.values());
   }
 
+  static Element addEntryIndexNavigator(final java.util.Map<String, String> entryIndex, final String curLetter, final Element rss) {
+    Vector<Element> e = new Vector<Element>();
+    for (String s : entryIndex.keySet()) {
+      if (s.equals(curLetter)) {
+        e.add(new StringElement(s));
+      } else {
+        Object[] args = { s };
+        String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
+        e.add(com.bolsinga.web.Util.createInternalA(entryIndex.get(s), s, t));
+      }
+    }
+    e.add(rss);
+
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_INDEX);
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    return d;
+  }
+  
+  static Element addWebNavigator(final String program, final Links links) {
+    Vector<Element> e = new Vector<Element>();
+                
+    Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
+    if (com.bolsinga.web.Util.getDebugOutput()) {
+      args2[1] = null;
+    }
+    e.add(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
+    e.add(links.getLinkToHome());
+
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_MENU);
+    if (!com.bolsinga.web.Util.getDebugOutput()) {
+      Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
+      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
+    }
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    return d;
+  }
+  
   public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final java.util.Map<String, String> index, final com.bolsinga.web.Encode encoder, final Links links, final int startYear, final String outputDir) {
     DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
     for (Entry item : items) {
