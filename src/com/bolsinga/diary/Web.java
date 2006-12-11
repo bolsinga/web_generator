@@ -54,12 +54,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected Div getHeaderDiv() {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_HEADER);
-    d.addElement(new H1().addElement(getTitle()));
-    d.addElement(com.bolsinga.web.Util.getLogo());
-    d.addElement(addWebNavigator(fProgram, fLinks));
-    d.addElement(addIndexNavigator());
-    return d;
+    return Web.getHeaderDiv(getTitle(), fProgram, fLinks, fEntryIndex, getCurrentLetter());
   }
 
   protected boolean needNewSubsection() {
@@ -85,10 +80,6 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
 
   protected Element addIndexNavigator() {
     return Web.addEntryIndexNavigator(fEntryIndex, getCurrentLetter(), fLinks.getRSSLink());
-  }
-        
-  private Element addWebNavigator(final String program, final Links links) {
-    return Web.addWebNavigator(program, links);
   }
 }
 
@@ -388,6 +379,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return Collections.unmodifiableCollection(result.values());
   }
 
+  static Div getHeaderDiv(final String title, final String program, final Links links, final java.util.Map<String, String> entryIndex, final String curLetter) {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_HEADER);
+    d.addElement(new H1().addElement(title));
+    d.addElement(com.bolsinga.web.Util.getLogo());
+    d.addElement(Web.addWebNavigator(program, links));
+    d.addElement(Web.addEntryIndexNavigator(entryIndex, curLetter, links.getRSSLink()));
+    return d;
+  }
+  
   static Element addEntryIndexNavigator(final java.util.Map<String, String> entryIndex, final String curLetter, final Element rss) {
     Vector<Element> e = new Vector<Element>();
     for (String s : entryIndex.keySet()) {
@@ -406,7 +406,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
   
-  static Element addWebNavigator(final String program, final Links links) {
+  private static Element addWebNavigator(final String program, final Links links) {
     Vector<Element> e = new Vector<Element>();
                 
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
