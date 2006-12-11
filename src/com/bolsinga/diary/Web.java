@@ -246,6 +246,25 @@ public class Web implements com.bolsinga.web.Backgroundable {
       });
     }
   }
+  
+  private static void createFile(final Document doc, final String filename, final String outputDir) {
+    try {
+      File f = new File(outputDir, filename);
+      File parent = new File(f.getParent());
+      if (!parent.mkdirs()) {
+        if (!parent.exists()) {
+          System.out.println("Web cannot mkdirs: " + parent.getAbsolutePath());
+        }
+      }
+      OutputStream os = new FileOutputStream(f);
+      doc.output(os);
+      os.close();
+    } catch (IOException ioe) {
+      System.err.println("Exception: " + ioe);
+      ioe.printStackTrace();
+      System.exit(1);
+    }
+  }
 
   public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
     Links links = Links.getLinks(false);
@@ -268,23 +287,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     int previewCount = com.bolsinga.web.Util.getSettings().getPreviewCount().intValue();
     mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music, previewCount));
     doc.getBody().addElement(mainCol2);
-                
-    try {
-      File f = new File(outputDir, "index.html");
-      File parent = new File(f.getParent());
-      if (!parent.mkdirs()) {
-        if (!parent.exists()) {
-          System.out.println("Web cannot mkdirs: " + parent.getAbsolutePath());
-        }
-      }
-      OutputStream os = new FileOutputStream(f);
-      doc.output(os);
-      os.close();
-    } catch (IOException ioe) {
-      System.err.println("Exception: " + ioe);
-      ioe.printStackTrace();
-      System.exit(1);
-    }
+    
+    Web.createFile(doc, "index.html", outputDir);
   }
 
   private static Div createMainStatics(final String statics) {
