@@ -89,8 +89,8 @@ public class Links {
   
   public A getOverviewLink() {
     return com.bolsinga.web.Util.createInternalA( getOverviewURL(),
-                                                  com.bolsinga.web.Util.getResourceString("archivesoverview"),
-                                                  com.bolsinga.web.Util.getResourceString("archivestitle"));
+                                                  com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"),
+                                                  com.bolsinga.web.Util.getResourceString("archivesoverview"));
   }
 
   public String getRSSURL() {

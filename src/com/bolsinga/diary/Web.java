@@ -554,7 +554,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
   
   public static void generateOverviewPage(final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, String> entryIndex, final Links links, final int startYear, final String outputDir) {
-    final String docTitle = com.bolsinga.web.Util.getResourceString("archivesoverview");
+    final String docTitle = com.bolsinga.web.Util.getResourceString("archivesoverviewtitle");
 
     Document doc = Web.createDocument(docTitle, startYear, links);
 
