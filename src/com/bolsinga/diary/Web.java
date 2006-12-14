@@ -574,13 +574,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Web.createFile(doc, "overview.html", sb.toString());
   }
 
-  public static UL addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
-    // CSS.DIARY_ENTRY
+  public static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
     e.add(new H2().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
     e.add(new H4().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(entry), com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"))));
     e.add(new StringElement(Web.encodedComment(encoder, entry, upOneLevel)));
-    return com.bolsinga.web.Util.createUnorderedList(e);
+
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_ENTRY);
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    return d;
   }
         
   private static String encodedComment(com.bolsinga.web.Encode encoder, Entry entry, boolean upOneLevel) {

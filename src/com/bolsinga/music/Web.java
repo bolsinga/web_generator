@@ -52,6 +52,7 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
     return Web.createHTMLDocument(fLinks, getTitle());
   }
 
+  // Combine with other CSSS.MUSIC_HEADER
   protected Div getHeaderDiv() {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
     d.addElement(new H1().addElement(getTitle()));
@@ -80,6 +81,7 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
     return Web.createHTMLDocument(fLinks, getTitle());
   }
 
+  // Combine with other CSSS.MUSIC_HEADER
   protected Div getHeaderDiv() {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
     d.addElement(new H1().addElement(getTitle()));
@@ -966,7 +968,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
         
   public static Element addItem(final Lookup lookup, final Links links, final Artist artist) {
-    // CSS.ARTIST_ITEM
     Vector<Element> e = new Vector<Element>();
 
     if (Util.getAlbumsUnmodifiable(artist).size() > 0) {
@@ -1020,12 +1021,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
         e.add(d);
       }
     }
-                
-    return com.bolsinga.web.Util.createUnorderedList(e);
+    
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_ITEM);
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    return d;
   }
         
   public static Element addItem(final Lookup lookup, final Links links, final Venue venue) {
-    // CSS.VENUE_ITEM
     Vector<Element> e = new Vector<Element>();
                 
     if (lookup.getRelations(venue) != null) {
@@ -1067,7 +1069,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
                 
-    return com.bolsinga.web.Util.createUnorderedList(e);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_ITEM);
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    return d;
   }
         
   private static UL getShowListing(final Lookup lookup, final Links links, final Show show) {
@@ -1102,7 +1106,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   public static Element addItem(final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final Show show) {
-    // CSS.SHOW_ITEM
     Vector<Element> e = new Vector<Element>();
 
     e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
@@ -1113,12 +1116,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
     if (comment != null) {
       e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(encoder, show, true)));
     }
-                
-    return com.bolsinga.web.Util.createUnorderedList(e);
+
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_ITEM);
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    return d;
   }
 
   public static Element addItem(final Lookup lookup, final Links links, final Album album) {
-    // CSS.TRACKS_ITEM
     Vector<Element> e = new Vector<Element>();
                 
     StringBuilder sb;
@@ -1170,7 +1174,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
     e.add(com.bolsinga.web.Util.createOrderedList(ae));
 
-    return com.bolsinga.web.Util.createUnorderedList(e);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_ITEM);
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    return d;
   }
         
   public static Div addRelations(final Lookup lookup, final Links links, final Artist artist) {
