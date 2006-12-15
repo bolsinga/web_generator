@@ -1342,10 +1342,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
       public TR getRow(final int row) {
         TR trow = new TR();
         TH thh = new TH(names[row]);
-        thh.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+        thh.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
         trow.addElement(thh);
-        trow.addElement(new TD(Integer.toString(values[row])).setPrettyPrint(com.bolsinga.web.Util.getDebugOutput()));
-        trow.addElement(new TD(Util.toString((double)values[row] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getDebugOutput()));
+        trow.addElement(new TD(Integer.toString(values[row])).setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput()));
+        trow.addElement(new TD(Util.toString((double)values[row] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput()));
         return trow;
       }
       
@@ -1390,13 +1390,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
   static Document createHTMLDocument(final Links links, final String title) {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
 
-    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
                 
     d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
     d.appendTitle(title);
                 
     Head h = d.getHead();
-    h.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    h.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
     h.addElement(com.bolsinga.web.Util.getIconLink());
     h.addElement(links.getLinkToStyleSheet());
 
@@ -1408,7 +1408,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue())).setName("Copyright"));
 
-    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
 
     return d;
   }

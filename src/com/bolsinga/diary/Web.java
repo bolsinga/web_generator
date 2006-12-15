@@ -287,13 +287,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Document createDocument(final String title, final int startYear, final Links links) {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
                 
-    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
                 
     d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
     d.appendTitle(title);
                 
     Head h = d.getHead();
-    h.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    h.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
     h.addElement(com.bolsinga.web.Util.getIconLink());
     h.addElement(links.getLinkToRSS());
     h.addElement(links.getLinkToStyleSheet());
@@ -306,7 +306,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(startYear)).setName("Copyright"));
 
-    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
                                                 
     return d;
   }

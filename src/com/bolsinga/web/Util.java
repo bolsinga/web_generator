@@ -21,6 +21,7 @@ public class Util {
   private static DatatypeFactory sXMLDatatypeFactory = null;
   private static com.bolsinga.settings.data.Settings sSettings = null;
   private static final boolean sDebugOutput = Boolean.getBoolean("web.debug_output");
+  private static final boolean sPrettyOutput = Boolean.parseBoolean(System.getProperty("web.pretty_output", Boolean.valueOf(sDebugOutput).toString()));
   private static final String sLineSeparator = System.getProperty("line.separator");
   private static final Pattern sHTMLPattern = Pattern.compile("&([^agl])");
   private static final Pattern sNewLinePattern = Pattern.compile("\\n");
@@ -36,7 +37,7 @@ public class Util {
     }
 
     StringBuilder sb = new StringBuilder();
-    if (Util.getDebugOutput()) {
+    if (Util.getPrettyOutput()) {
       sb.append(sLineSeparator);
     }
     sb.append(new P());
@@ -46,7 +47,11 @@ public class Util {
   public static String toHTMLSafe(final String s) {
     return sHTMLPattern.matcher(s).replaceAll("&amp;$1");
   }
-        
+
+  public static boolean getPrettyOutput() {
+    return sPrettyOutput;
+  }
+  
   public static boolean getDebugOutput() {
     return sDebugOutput;
   }
@@ -115,7 +120,7 @@ public class Util {
   public static Div createDiv(final String className) {
     Div d = new Div();
     d.setClass(className);
-    d.setPrettyPrint(Util.getDebugOutput());
+    d.setPrettyPrint(Util.getPrettyOutput());
     return d;
   }
         
@@ -149,11 +154,11 @@ public class Util {
 
   public static UL createUnorderedList(final Vector<org.apache.ecs.Element> elements) {
     UL list = new UL();
-    list.setPrettyPrint(Util.getDebugOutput());
+    list.setPrettyPrint(Util.getPrettyOutput());
 
     for (org.apache.ecs.Element e : elements) {
       LI item = new LI(e);
-      item.setPrettyPrint(Util.getDebugOutput());
+      item.setPrettyPrint(Util.getPrettyOutput());
       list.addElement(item);
     }
 
@@ -162,11 +167,11 @@ public class Util {
 
   public static OL createOrderedList(final Vector<org.apache.ecs.Element> elements) {
     OL list = new OL();
-    list.setPrettyPrint(Util.getDebugOutput());
+    list.setPrettyPrint(Util.getPrettyOutput());
 
     for (org.apache.ecs.Element e : elements) {
       LI item = new LI(e);
-      item.setPrettyPrint(Util.getDebugOutput());
+      item.setPrettyPrint(Util.getPrettyOutput());
       list.addElement(item);
     }
 
@@ -176,15 +181,15 @@ public class Util {
   public static Table makeTable(final String caption, final String summary, final TableHandler handler) {
     Table t = new Table();
     t.setSummary(summary);
-    t.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    t.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
     Caption capt = new Caption();
-    capt.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    capt.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
     capt.addElement(caption);
     t.addElement(capt);
     
     TR trow = handler.getHeaderRow();
     trow.setClass(com.bolsinga.web.CSS.TABLE_HEADER);
-    trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
     t.addElement(trow);
 
     int i = 0;
@@ -192,7 +197,7 @@ public class Util {
     while (i < count) {
       trow = handler.getRow(i);
       
-      trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+      trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
       trow.setClass((((i + 1) % 2) != 0) ? com.bolsinga.web.CSS.TABLE_ROW : com.bolsinga.web.CSS.TABLE_ROW_ALT);
 
       t.addElement(trow);
@@ -201,7 +206,7 @@ public class Util {
     }
     
     trow = handler.getFooterRow();
-    trow.setPrettyPrint(com.bolsinga.web.Util.getDebugOutput());
+    trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
     trow.setClass(com.bolsinga.web.CSS.TABLE_FOOTER);
     t.addElement(trow);
                 
