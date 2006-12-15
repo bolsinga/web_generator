@@ -52,14 +52,8 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
     return Web.createHTMLDocument(fLinks, getTitle());
   }
 
-  // Combine with other CSSS.MUSIC_HEADER
   protected Div getHeaderDiv() {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
-    d.addElement(new H1().addElement(getTitle()));
-    d.addElement(com.bolsinga.web.Util.getLogo());
-    d.addElement(fLinks.addWebNavigator(fTimeStamp, fProgram));
-    d.addElement(addIndexNavigator());
-    return d;
+    return Web.getHeaderDiv(getTitle(), fLinks.addWebNavigator(fTimeStamp, fProgram), addIndexNavigator());
   }
 }
 
@@ -81,14 +75,8 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
     return Web.createHTMLDocument(fLinks, getTitle());
   }
 
-  // Combine with other CSSS.MUSIC_HEADER
   protected Div getHeaderDiv() {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
-    d.addElement(new H1().addElement(getTitle()));
-    d.addElement(com.bolsinga.web.Util.getLogo());
-    d.addElement(fLinks.addWebNavigator(fTimeStamp, fProgram));
-    d.addElement(addIndexNavigator());
-    return d;
+    return Web.getHeaderDiv(getTitle(), fLinks.addWebNavigator(fTimeStamp, fProgram), addIndexNavigator());
   }
 }
 
@@ -1410,6 +1398,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
 
+    return d;
+  }
+  
+  static Div getHeaderDiv(final String title, final Element webNav, final Element indexNav) {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
+    d.addElement(new H1().addElement(title));
+    d.addElement(com.bolsinga.web.Util.getLogo());
+    d.addElement(webNav);
+    d.addElement(indexNav);
     return d;
   }
 }
