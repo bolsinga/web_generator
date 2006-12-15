@@ -577,7 +577,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
     e.add(new H2().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
-    e.add(new H4().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(entry), com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"))));
+    e.add(new H4().addElement(com.bolsinga.web.Util.createPermaLink(links.getLinkTo(entry))));
     e.add(new StringElement(Web.encodedComment(encoder, entry, upOneLevel)));
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);

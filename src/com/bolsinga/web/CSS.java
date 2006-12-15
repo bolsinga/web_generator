@@ -15,6 +15,7 @@ public class CSS {
   public static final String DIARY_MENU      = "diary_menu";
                                                
   public static final String INTERNAL        = "int";
+  public static final String PERMANENT       = "perm";
                                                
   public static final String MAIN_COL1       = "main_col1";
   public static final String MAIN_COL2       = "main_col2";
@@ -83,6 +84,7 @@ public class CSS {
     writeCSSDeclaration(pw, DIARY_HEADER);
     writeCSSDeclaration(pw, DIARY_MENU);
     writeCSSDeclaration(pw, INTERNAL);
+    writeCSSDeclaration(pw, PERMANENT);
     writeCSSDeclaration(pw, MAIN_COL1);
     writeCSSDeclaration(pw, MAIN_COL2);
     writeCSSDeclaration(pw, MAIN_DIARY);

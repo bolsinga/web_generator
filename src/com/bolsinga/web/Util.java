@@ -124,8 +124,16 @@ public class Util {
   }
         
   public static A createInternalA(final String url, final String value, final String title) {
+    return internalA(url, value, title, CSS.INTERNAL);
+  }
+  
+  public static A createPermaLink(final String url) {
+    return internalA(url, com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"), CSS.PERMANENT);
+  }
+  
+  private static A internalA(final String url, final String value, final String title, final String cssClass) {
     A an = new A(url, value);
-    an.setClass(CSS.INTERNAL);
+    an.setClass(cssClass);
     if (title != null) {
       an.setTitle(title);
     }
