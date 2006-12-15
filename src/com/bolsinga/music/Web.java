@@ -1022,7 +1022,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
     
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_ITEM);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1069,7 +1069,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
                 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_ITEM);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1117,7 +1117,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(encoder, show, true)));
     }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_ITEM);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1174,7 +1174,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
     e.add(com.bolsinga.web.Util.createOrderedList(ae));
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_ITEM);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1191,7 +1191,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_RELATION);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_RELATION);
     d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
@@ -1209,7 +1209,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_RELATION);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_RELATION);
     d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
@@ -1263,7 +1263,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1290,7 +1290,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1317,7 +1317,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -1382,7 +1382,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
     e.add(links.getICalLink());
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }

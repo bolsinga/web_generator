@@ -3,15 +3,15 @@ package com.bolsinga.web;
 import java.io.*;
 
 public class CSS {
-  public static final String ARTIST_INDEX    = "artist_index";
-  public static final String ARTIST_ITEM     = "artist_item";
-  public static final String ARTIST_RELATION = "artist_relation";
+
+  public static final String ENTRY_INDEX     = "entry_index";
+  public static final String ENTRY_ITEM      = "entry_item";
+  public static final String ENTRY_RELATION  = "entry_relation";
+  
   public static final String ARTIST_SHOW     = "artist_show";
   public static final String ARTIST_TRACKS   = "artist_tracks";
                                                
-  public static final String DIARY_ENTRY     = "diary_entry";
   public static final String DIARY_HEADER    = "diary_header";
-  public static final String DIARY_INDEX     = "diary_index";
   public static final String DIARY_MENU      = "diary_menu";
                                                
   public static final String INTERNAL        = "int";
@@ -36,16 +36,9 @@ public class CSS {
   public static final String PREVIEW_SHOW    = "preview_show";
                                                
   public static final String SHOW_COMMENT    = "show_comment";
-  public static final String SHOW_INDEX      = "show_index";
-  public static final String SHOW_ITEM       = "show_item";
                                                
-  public static final String TRACKS_INDEX    = "tracks_index";
-  public static final String TRACKS_ITEM     = "tracks_item";
   public static final String TRACKS_MENU     = "tracks_menu";
                                                
-  public static final String VENUE_INDEX     = "venue_index";
-  public static final String VENUE_ITEM      = "venue_item";
-  public static final String VENUE_RELATION  = "venue_relation";
   public static final String VENUE_SHOW      = "venue_show";
                                                
   public static final String TABLE_HEADER    = "table_header";
@@ -82,14 +75,12 @@ public class CSS {
   }
         
   public static void generate(final PrintWriter pw) {
-    writeCSSDeclaration(pw, ARTIST_INDEX);
-    writeCSSDeclaration(pw, ARTIST_ITEM);
-    writeCSSDeclaration(pw, ARTIST_RELATION);
+    writeCSSDeclaration(pw, ENTRY_INDEX);
+    writeCSSDeclaration(pw, ENTRY_ITEM);
+    writeCSSDeclaration(pw, ENTRY_RELATION);
     writeCSSDeclaration(pw, ARTIST_SHOW);
     writeCSSDeclaration(pw, ARTIST_TRACKS);
-    writeCSSDeclaration(pw, DIARY_ENTRY);
     writeCSSDeclaration(pw, DIARY_HEADER);
-    writeCSSDeclaration(pw, DIARY_INDEX);
     writeCSSDeclaration(pw, DIARY_MENU);
     writeCSSDeclaration(pw, INTERNAL);
     writeCSSDeclaration(pw, MAIN_COL1);
@@ -108,14 +99,7 @@ public class CSS {
     writeCSSDeclaration(pw, PREVIEW_RECENT);
     writeCSSDeclaration(pw, PREVIEW_SHOW);
     writeCSSDeclaration(pw, SHOW_COMMENT);
-    writeCSSDeclaration(pw, SHOW_INDEX);
-    writeCSSDeclaration(pw, SHOW_ITEM);
-    writeCSSDeclaration(pw, TRACKS_INDEX);
-    writeCSSDeclaration(pw, TRACKS_ITEM);
     writeCSSDeclaration(pw, TRACKS_MENU);
-    writeCSSDeclaration(pw, VENUE_INDEX);
-    writeCSSDeclaration(pw, VENUE_ITEM);
-    writeCSSDeclaration(pw, VENUE_RELATION);
     writeCSSDeclaration(pw, VENUE_SHOW);
     writeCSSDeclaration(pw, TABLE_HEADER);
     writeCSSDeclaration(pw, TABLE_ROW);

@@ -428,7 +428,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
     e.add(links.getRSSLink());
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_INDEX);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
@@ -580,7 +580,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     e.add(new H4().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(entry), com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"))));
     e.add(new StringElement(Web.encodedComment(encoder, entry, upOneLevel)));
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_ENTRY);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
