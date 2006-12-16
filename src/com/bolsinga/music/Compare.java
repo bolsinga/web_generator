@@ -235,7 +235,13 @@ public class Compare {
   public static final Comparator<Album> ALBUM_ORDER_COMPARATOR = new Comparator<Album>() {
       public int compare(final Album r1, final Album r2) {
         // The Integer.MAX_VALUE assures that 'unknown' album dates are after the known ones.
-        return ((r1.getReleaseDate() != null) ? r1.getReleaseDate().getYear().intValue() : Integer.MAX_VALUE) - ((r2.getReleaseDate() != null) ? r2.getReleaseDate().getYear().intValue() : 3000);
+        int date1 = (r1.getReleaseDate() != null) ? r1.getReleaseDate().getYear().intValue() : Integer.MAX_VALUE;
+        int date2 = (r2.getReleaseDate() != null) ? r2.getReleaseDate().getYear().intValue() : Integer.MAX_VALUE;
+        int result = date2 - date1;
+        if (result == 0) {
+          result = ALBUM_COMPARATOR.compare(r1, r2);
+        }
+        return result;
       }
     };
 
