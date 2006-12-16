@@ -419,7 +419,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
   static Element addEntryIndexNavigator(final java.util.Map<String, String> entryIndex, final String curLetter, final Links links) {
     Vector<Element> e = new Vector<Element>();
     org.apache.ecs.Element curElement = null;
-    e.add(links.getOverviewLink());
+    org.apache.ecs.Element overview = links.getOverviewLink();
+    if (curLetter == null) {
+      curElement = overview;
+    }
+    e.add(overview);
     for (String s : entryIndex.keySet()) {
       if (s.equals(curLetter)) {
         curElement = new StringElement(s);
