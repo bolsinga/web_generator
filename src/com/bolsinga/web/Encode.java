@@ -156,8 +156,12 @@ public abstract class Encode {
   }
   
   public static String encodeROOT_URL(final String s) {
+    return Encode.encodeROOT_URL(s, com.bolsinga.web.Util.getSettings().getRoot());
+  }
+  
+  public static String encodeROOT_URL(final String s, final String replacement) {
     if (s != null) {
-      return sRootURLPattern.matcher(s).replaceAll(com.bolsinga.web.Util.getSettings().getRoot());
+      return sRootURLPattern.matcher(s).replaceAll(replacement);
     }
     return null;
   }
@@ -536,7 +540,7 @@ class HashEncode extends Encode {
 
   public String embedLinks(final Entry entry, final boolean upOneLevel) {
     String result = embedLinks(entry, entry.getComment(), upOneLevel);
-    return Encode.encodeROOT_URL(result);
+    return Encode.encodeROOT_URL(result, com.bolsinga.diary.Links.getLinks(upOneLevel).getLevelOnly());
   }
   
   private String embedLinks(final Object obj, final String source, final boolean upOneLevel) {

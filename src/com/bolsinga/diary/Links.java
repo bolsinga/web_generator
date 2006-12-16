@@ -17,6 +17,9 @@ public class Links {
   public static final String STYLES_DIR   = "styles";
   public static final String RSS_DIR      = "rss";
   public static final String HASH         = "#";
+  
+  private static final String CUR_DIR     = ".";
+  private static final String PAR_DIR     = "..";
     
   private static final ThreadLocal<DateFormat> sArchivePageFormat = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
@@ -47,10 +50,20 @@ public class Links {
     fUpOneLevel = upOneLevel;
   }
   
-  public String getLevel() {
+  public String getLevelOnly() {
     StringBuilder sb = new StringBuilder();
     if (fUpOneLevel) {
-      sb.append("..");
+      sb.append(Links.PAR_DIR);
+    } else {
+      sb.append(Links.CUR_DIR);
+    }
+    return sb.toString();
+  }
+  
+  String getLevel() {
+    StringBuilder sb = new StringBuilder();
+    if (fUpOneLevel) {
+      sb.append(Links.PAR_DIR);
       sb.append(File.separator);
     }
     return sb.toString();
