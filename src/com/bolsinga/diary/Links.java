@@ -46,6 +46,15 @@ public class Links {
   Links(final boolean upOneLevel) {
     fUpOneLevel = upOneLevel;
   }
+  
+  public String getLevel() {
+    StringBuilder sb = new StringBuilder();
+    if (fUpOneLevel) {
+      sb.append("..");
+      sb.append(File.separator);
+    }
+    return sb.toString();
+  }
         
   public String getPageFileName(final Entry entry) {
     return sArchivePageFormat.get().format(entry.getTimestamp().toGregorianCalendar().getTime());
@@ -64,11 +73,8 @@ public class Links {
 
   public String getLinkToPage(final Entry entry) {
     StringBuilder sb = new StringBuilder();
-                
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    
+    sb.append(getLevel());
                 
     sb.append(ARCHIVES_DIR);
     sb.append(File.separator);
@@ -108,10 +114,7 @@ public class Links {
 
   public String getRSSURL() {
     StringBuilder url = new StringBuilder();
-    if (fUpOneLevel) {
-      url.append("..");
-      url.append(File.separator);
-    }
+    url.append(getLevel());
     url.append(RSS_DIR);
     url.append(File.separator);
     url.append(com.bolsinga.web.Util.getSettings().getRssFile());
@@ -120,10 +123,7 @@ public class Links {
   
   public String getOverviewURL() {
     StringBuilder url = new StringBuilder();
-    if (fUpOneLevel) {
-      url.append("..");
-      url.append(File.separator);
-    }
+    url.append(getLevel());
     url.append(ARCHIVES_DIR);
     url.append(File.separator);
     url.append("overview");
@@ -142,10 +142,7 @@ public class Links {
 
   public String getStyleSheetLink() {
     StringBuilder url = new StringBuilder();
-    if (fUpOneLevel) {
-      url.append("..");
-      url.append(File.separator);
-    }
+    url.append(getLevel());
     url.append(STYLES_DIR);
     url.append(File.separator);
     url.append(com.bolsinga.web.Util.getSettings().getCssFile());
@@ -162,10 +159,7 @@ public class Links {
         
   public A getLinkToHome() {
     StringBuilder url = new StringBuilder();
-    if (fUpOneLevel) {
-      url.append("..");
-      url.append(File.separator);
-    }
+    url.append(getLevel());
     url.append("index");
     url.append(HTML_EXT);
     String h = com.bolsinga.web.Util.getResourceString("home");

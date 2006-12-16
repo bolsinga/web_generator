@@ -52,7 +52,16 @@ public class Links {
   Links(final boolean upOneLevel) {
     fUpOneLevel = upOneLevel;
   }
-        
+
+  public String getLevel() {
+    StringBuilder sb = new StringBuilder();
+    if (fUpOneLevel) {
+      sb.append("..");
+      sb.append(File.separator);
+    }
+    return sb.toString();
+  }
+
   public Div addWebNavigator(final GregorianCalendar cal, final String program) {
     Vector<Element> e = new Vector<Element>();
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
@@ -151,11 +160,7 @@ public class Links {
 
   public String getLinkToPage(final Artist artist) {
     StringBuilder sb = new StringBuilder();
-                
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(ARTIST_DIR);
     sb.append(File.separator);
     sb.append(getPageFileName(artist));
@@ -167,10 +172,7 @@ public class Links {
   public String getLinkToPage(final Venue venue) {
     StringBuilder sb = new StringBuilder();
                 
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(VENUE_DIR);
     sb.append(File.separator);
     sb.append(getPageFileName(venue));
@@ -182,10 +184,7 @@ public class Links {
   public String getLinkToPage(final Show show) {
     StringBuilder sb = new StringBuilder();
                 
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(SHOW_DIR);
     sb.append(File.separator);
     sb.append(getPageFileName(show));
@@ -197,10 +196,7 @@ public class Links {
   public String getLinkToPage(final Album album) {
     StringBuilder sb = new StringBuilder();
                 
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(TRACKS_DIR);
     sb.append(File.separator);
     sb.append(getPageFileName(album));
@@ -251,10 +247,7 @@ public class Links {
 
   public A getArtistLink() {
     StringBuilder sb = new StringBuilder();
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(ARTIST_DIR);
     sb.append(File.separator);
     sb.append(STATS);
@@ -264,10 +257,7 @@ public class Links {
                 
   public A getShowLink() {
     StringBuilder sb = new StringBuilder();
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(SHOW_DIR);
     sb.append(File.separator);
     sb.append(STATS);
@@ -277,10 +267,7 @@ public class Links {
         
   public A getTracksLink() {
     StringBuilder sb = new StringBuilder();
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(TRACKS_DIR);
     sb.append(File.separator);
     sb.append(STATS);
@@ -290,10 +277,7 @@ public class Links {
 
   public A getAlbumsLink() {
     StringBuilder sb = new StringBuilder();
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(TRACKS_DIR);
     sb.append(File.separator);
     sb.append(ALBUM_STATS);
@@ -303,10 +287,7 @@ public class Links {
 
   public A getVenueLink() {
     StringBuilder sb = new StringBuilder();
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(VENUE_DIR);
     sb.append(File.separator);
     sb.append(STATS);
@@ -316,10 +297,7 @@ public class Links {
         
   public A getCityLink() {
     StringBuilder sb = new StringBuilder();
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(CITIES_DIR);
     sb.append(File.separator);
     sb.append(STATS);
@@ -330,10 +308,7 @@ public class Links {
   public A getICalLink() {
     StringBuilder sb = new StringBuilder();
     sb.append("webcal:");
-    if (fUpOneLevel) {
-      sb.append("..");
-      sb.append(File.separator);
-    }
+    sb.append(getLevel());
     sb.append(ICAL_DIR);
     sb.append(File.separator);
     sb.append(com.bolsinga.web.Util.getSettings().getIcalName() + ".ics");
@@ -351,10 +326,7 @@ public class Links {
         
   public String getStyleSheetLink() {
     StringBuilder url = new StringBuilder();
-    if (fUpOneLevel) {
-      url.append("..");
-      url.append(File.separator);
-    }
+    url.append(getLevel());
     url.append(STYLES_DIR);
     url.append(File.separator);
     url.append(com.bolsinga.web.Util.getSettings().getCssFile());
@@ -371,10 +343,7 @@ public class Links {
 
   public A getLinkToHome() {
     StringBuilder url = new StringBuilder();
-    if (fUpOneLevel) {
-      url.append("..");
-      url.append(File.separator);
-    }
+    url.append(getLevel());
     url.append("index.html");
     String h = com.bolsinga.web.Util.getResourceString("home");
     return com.bolsinga.web.Util.createInternalA(url.toString(), h, h);
