@@ -153,12 +153,19 @@ public class Util {
   }
 
   public static UL createUnorderedList(final Vector<org.apache.ecs.Element> elements) {
+    return Util.createUnorderedList(elements, null);
+  }
+
+  public static UL createUnorderedList(final Vector<org.apache.ecs.Element> elements, final org.apache.ecs.Element curElement) {
     UL list = new UL();
     list.setPrettyPrint(Util.getPrettyOutput());
 
     for (org.apache.ecs.Element e : elements) {
       LI item = new LI(e);
       item.setPrettyPrint(Util.getPrettyOutput());
+      if (e.equals(curElement)) {
+        item.setClass(CSS.ACTIVE);
+      }
       list.addElement(item);
     }
 

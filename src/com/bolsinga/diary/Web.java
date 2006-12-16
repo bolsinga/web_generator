@@ -418,10 +418,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
   
   static Element addEntryIndexNavigator(final java.util.Map<String, String> entryIndex, final String curLetter, final Links links) {
     Vector<Element> e = new Vector<Element>();
+    org.apache.ecs.Element curElement = null;
     e.add(links.getOverviewLink());
     for (String s : entryIndex.keySet()) {
       if (s.equals(curLetter)) {
-        e.add(new StringElement(s));
+        curElement = new StringElement(s);
+        e.add(curElement);
       } else {
         e.add(Web.getLinkToEntryYear(s, entryIndex));
       }
@@ -429,7 +431,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     e.add(links.getRSSLink());
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
   

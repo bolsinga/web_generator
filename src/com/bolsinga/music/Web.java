@@ -304,17 +304,20 @@ class TracksStatisticsCreator extends StatisticsCreator {
 
   protected Element addIndexNavigator() {
     Vector<Element> e = new Vector<Element>();
+    org.apache.ecs.Element curElement = null;
     if (fTracksStats) {
-      e.add(new StringElement(com.bolsinga.web.Util.getResourceString("tracks")));
+      curElement = new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
+      e.add(curElement);
       e.add(fLinks.getAlbumsLink());
     } else {
       e.add(fLinks.getTracksLink());
-      e.add(new StringElement(com.bolsinga.web.Util.getResourceString("albums")));
+      curElement = new StringElement(com.bolsinga.web.Util.getResourceString("albums"));
+      e.add(curElement);
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_MENU);
     d.addElement(new H4(com.bolsinga.web.Util.getResourceString("view")));
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
 }
@@ -1169,10 +1172,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
         
   public static Div addRelations(final Lookup lookup, final Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
+    org.apache.ecs.Element curElement = null;
     for (Artist art : lookup.getRelations(artist)) {
       String htmlName = lookup.getHTMLName(art);
       if (art.equals(artist)) {
-        e.add(new StringElement(htmlName));
+        curElement = new StringElement(htmlName);
+        e.add(curElement);
       } else {
         String t = com.bolsinga.music.Util.createTitle("moreinfoartist", art.getName());
         e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(art), htmlName, t));
@@ -1181,16 +1186,18 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_RELATION);
     d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
         
   public static Div addRelations(final Lookup lookup, final Links links, final Venue venue) {
     Vector<Element> e = new Vector<Element>();
+    org.apache.ecs.Element curElement = null;
     for (Venue v : lookup.getRelations(venue)) {
       String htmlName = lookup.getHTMLName(v);
       if (v.equals(venue)) {
-        e.add(new StringElement(htmlName));
+        curElement = new StringElement(htmlName);
+        e.add(curElement);
       } else {
         String t = com.bolsinga.music.Util.createTitle("moreinfovenue", v.getName());
         e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(v), htmlName, t));
@@ -1199,7 +1206,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_RELATION);
     d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
 
@@ -1242,9 +1249,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
     
   public static Element addArtistIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter) {
     Vector<Element> e = new Vector<Element>();
+    org.apache.ecs.Element curElement = null;
     for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
-        e.add(new StringElement(s));
+        curElement = new StringElement(s);
+        e.add(curElement);
       } else {
         IndexPair p = m.get(s);
         e.add(com.bolsinga.web.Util.createInternalA(p.getLink(), s, p.getTitle()));
@@ -1252,7 +1261,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
   
@@ -1269,9 +1278,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
   
   public static Element addVenueIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter) {
     Vector<Element> e = new Vector<Element>();
+    org.apache.ecs.Element curElement = null;
     for (String v : m.keySet()) {
       if (v.equals(curLetter)) {
-        e.add(new StringElement(v));
+        curElement = new StringElement(v);
+        e.add(curElement);
       } else {
         IndexPair p = m.get(v);
         e.add(com.bolsinga.web.Util.createInternalA(p.getLink(), v, p.getTitle()));
@@ -1279,7 +1290,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
 
@@ -1296,9 +1307,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   public static Element addAlbumIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter) {
     Vector<Element> e = new Vector<Element>();
+    org.apache.ecs.Element curElement = null;
     for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
-        e.add(new StringElement(s));
+        curElement = new StringElement(s);
+        e.add(curElement);
       } else {
         IndexPair p = m.get(s);
         e.add(com.bolsinga.web.Util.createInternalA(p.getLink(), s, p.getTitle()));
@@ -1306,7 +1319,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
     
@@ -1360,9 +1373,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   public static Element addShowIndexNavigator(final java.util.Map<String, IndexPair> m, final Links links, final String curLetter) {
     Vector<Element> e = new Vector<Element>();
+    org.apache.ecs.Element curElement = null;
     for (String s : m.keySet()) {
       if (s.equals(curLetter)) {
-        e.add(new StringElement(s));
+        curElement = new StringElement(s);
+        e.add(curElement);
       } else {
         IndexPair p = m.get(s);
         e.add(com.bolsinga.web.Util.createInternalA(p.getLink(), s, p.getTitle()));
@@ -1371,7 +1386,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     e.add(links.getICalLink());
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
         
