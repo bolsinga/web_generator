@@ -31,9 +31,22 @@ public class Links {
   private static final String HASH        = "#";
         
   private final boolean fUpOneLevel;
+  
+  private static Links sStdLinks = null;
+  private static Links sUpLinks = null;
         
-  public static Links getLinks(final boolean upOneLevel) {
-    return new Links(upOneLevel);
+  public static synchronized Links getLinks(final boolean upOneLevel) {
+    if (upOneLevel) {
+      if (sUpLinks == null) {
+        sUpLinks = new Links(upOneLevel);
+      }
+      return sUpLinks;
+    } else {
+      if (sStdLinks == null) {
+        sStdLinks = new Links(upOneLevel);
+      }
+      return sStdLinks;
+    }
   }
         
   Links(final boolean upOneLevel) {
