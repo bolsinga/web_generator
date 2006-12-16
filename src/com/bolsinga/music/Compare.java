@@ -237,7 +237,7 @@ public class Compare {
         // The Integer.MAX_VALUE assures that 'unknown' album dates are after the known ones.
         int date1 = (r1.getReleaseDate() != null) ? r1.getReleaseDate().getYear().intValue() : Integer.MAX_VALUE;
         int date2 = (r2.getReleaseDate() != null) ? r2.getReleaseDate().getYear().intValue() : Integer.MAX_VALUE;
-        int result = date2 - date1;
+        int result = date1 - date2;
         if (result == 0) {
           result = ALBUM_COMPARATOR.compare(r1, r2);
         }
