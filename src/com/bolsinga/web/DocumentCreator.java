@@ -68,7 +68,6 @@ public abstract class DocumentCreator implements Backgroundable {
   protected abstract String getLastPath();
   protected abstract String getCurrentLetter();
   protected abstract Element getCurrentElement();
-  protected abstract Element addIndexNavigator();
   
   public void complete() {
     close();

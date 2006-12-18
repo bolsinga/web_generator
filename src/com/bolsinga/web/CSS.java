@@ -12,7 +12,6 @@ public class CSS {
   public static final String ARTIST_TRACKS   = "artist_tracks";
                                                
   public static final String DIARY_HEADER    = "diary_header";
-  public static final String DIARY_MENU      = "diary_menu";
                                                
   public static final String INTERNAL        = "int";
   public static final String PERMANENT       = "perm";
@@ -83,7 +82,6 @@ public class CSS {
     writeCSSDeclaration(pw, ARTIST_SHOW);
     writeCSSDeclaration(pw, ARTIST_TRACKS);
     writeCSSDeclaration(pw, DIARY_HEADER);
-    writeCSSDeclaration(pw, DIARY_MENU);
     writeCSSDeclaration(pw, INTERNAL);
     writeCSSDeclaration(pw, PERMANENT);
     writeCSSDeclaration(pw, ACTIVE);

@@ -106,7 +106,10 @@ public class Links {
                 
     return sb.toString();
   }
-        
+
+  // Many tools automatically handle RSS links. Perhaps it is time to have a 'special' feeds
+  //  page, which will provide this link as well as the iCal link. Then ATOM can go onto this
+  //  page in the future as well.
   public A getRSSLink() {
     com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getRssImage();
 

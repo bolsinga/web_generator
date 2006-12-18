@@ -55,6 +55,8 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
   protected Div getHeaderDiv() {
     return Web.getHeaderDiv(getTitle(), fLinks.addWebNavigator(fTimeStamp, fProgram), addIndexNavigator());
   }
+  
+  protected abstract Element addIndexNavigator();
 }
 
 abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
@@ -78,6 +80,8 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
   protected Div getHeaderDiv() {
     return Web.getHeaderDiv(getTitle(), fLinks.addWebNavigator(fTimeStamp, fProgram), addIndexNavigator());
   }
+
+  protected abstract Element addIndexNavigator();
 }
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
