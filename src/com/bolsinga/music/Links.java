@@ -61,29 +61,6 @@ public class Links {
     }
     return sb.toString();
   }
-
-  public Div addWebNavigator(final GregorianCalendar cal, final String program) {
-    Vector<Element> e = new Vector<Element>();
-    Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
-    if (com.bolsinga.web.Util.getDebugOutput()) {
-      args2[1] = null;
-    }
-    e.add(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
-    e.add(getLinkToHome());
-    e.add(getArtistLink());
-    e.add(getTracksLink());
-    e.add(getShowLink());
-    e.add(getVenueLink());
-    e.add(getCityLink());
-
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
-    if (!com.bolsinga.web.Util.getDebugOutput()) {
-      Object[] args = { cal.getTime() };
-      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
-    }
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
-    return d;
-  }
         
   public String getPageFileName(final String name) {
     String file = Compare.simplify(name).substring(0, 1).toUpperCase();
