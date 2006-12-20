@@ -241,25 +241,33 @@ public class Links {
     sb.append(HTML_EXT);
     return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("dates"), com.bolsinga.web.Util.getResourceString("datestats"));
   }
-        
+
   public A getTracksLink() {
+    return getTracksLink(com.bolsinga.web.Util.getResourceString("tracks"));
+  }
+  
+  public A getTracksLink(final String t) {
     StringBuilder sb = new StringBuilder();
     sb.append(getLevel());
     sb.append(TRACKS_DIR);
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("tracks"), com.bolsinga.web.Util.getResourceString("trackstats"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("trackstats"));
   }
 
   public A getAlbumsLink() {
+    return getAlbumsLink(com.bolsinga.web.Util.getResourceString("albums"));
+  }
+  
+  public A getAlbumsLink(final String t) {
     StringBuilder sb = new StringBuilder();
     sb.append(getLevel());
     sb.append(TRACKS_DIR);
     sb.append(File.separator);
     sb.append(ALBUM_STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("albums"), com.bolsinga.web.Util.getResourceString("albumstats"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("albumstats"));
   }
 
   public A getVenueLink() {

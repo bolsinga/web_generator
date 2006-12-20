@@ -333,26 +333,7 @@ class TracksStatisticsCreator extends StatisticsCreator {
   }
 
   protected Div getHeaderDiv() {
-    return Web.getHeaderDiv(getTitle(), Web.addWebNavigator(fLinks, fTimeStamp, getProgram()), addIndexNavigator());
-  }
-
-  private Element addIndexNavigator() {
-    Vector<Element> e = new Vector<Element>();
-    org.apache.ecs.Element curElement = null;
-    if (fTracksStats) {
-      curElement = new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
-      e.add(curElement);
-      e.add(fLinks.getAlbumsLink());
-    } else {
-      e.add(fLinks.getTracksLink());
-      curElement = new StringElement(com.bolsinga.web.Util.getResourceString("albums"));
-      e.add(curElement);
-    }
-
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.TRACKS_MENU);
-    d.addElement(new H4(com.bolsinga.web.Util.getResourceString("view")));
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
-    return d;
+    return Web.getHeaderDiv(getTitle(), Web.addWebNavigator(fLinks, fTimeStamp, getProgram()), null);
   }
 }
 
@@ -863,14 +844,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
                         
       index++;
     }
-                
+
     {
       String typeString = com.bolsinga.web.Util.getResourceString("artist");
-      Object typeArgs[] = { typeString };
-      String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("tracksby"), typeArgs);
+      String tracksTableTitle = com.bolsinga.web.Util.getResourceString("tracksby");
+      String albumsTableTitle = links.getAlbumsLink(com.bolsinga.web.Util.getResourceString("albumsby")).toString();
       Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
-
+      Object titleArgs[] = { tracksTableTitle, albumsTableTitle };
+      String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumtrackstitle"), titleArgs);
+      
       StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
       stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("trackstatsummary")));
       stats.complete();
@@ -896,10 +879,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     {
       String typeString = com.bolsinga.web.Util.getResourceString("artist");
-      Object typeArgs[] = { typeString };
-      String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumsby"), typeArgs);
+      String tracksTableTitle = links.getTracksLink(com.bolsinga.web.Util.getResourceString("tracksby")).toString();
+      String albumsTableTitle = com.bolsinga.web.Util.getResourceString("albumsby");
       Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
+      Object titleArgs[] = { tracksTableTitle, albumsTableTitle };
+      String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumtrackstitle"), titleArgs);
 
       StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), pageTitle, Links.TRACKS_DIR);
       stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("albumstatsummary")));

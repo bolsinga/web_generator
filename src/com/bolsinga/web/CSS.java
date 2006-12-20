@@ -38,8 +38,6 @@ public class CSS {
                                                
   public static final String SHOW_COMMENT    = "show_comment";
                                                
-  public static final String TRACKS_MENU     = "tracks_menu";
-                                               
   public static final String VENUE_SHOW      = "venue_show";
                                                
   public static final String TABLE_HEADER    = "table_header";
@@ -101,7 +99,6 @@ public class CSS {
     writeCSSDeclaration(pw, PREVIEW_RECENT);
     writeCSSDeclaration(pw, PREVIEW_SHOW);
     writeCSSDeclaration(pw, SHOW_COMMENT);
-    writeCSSDeclaration(pw, TRACKS_MENU);
     writeCSSDeclaration(pw, VENUE_SHOW);
     writeCSSDeclaration(pw, TABLE_HEADER);
     writeCSSDeclaration(pw, TABLE_ROW);
