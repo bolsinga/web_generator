@@ -1367,9 +1367,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   static Element addIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter, final Links links, final boolean hasICalLink) {
-    Vector<Element> e = new Vector<Element>();
-    org.apache.ecs.Element curElement = null;
     if (m != null) {
+      Vector<Element> e = new Vector<Element>();
+      org.apache.ecs.Element curElement = null;
       for (String s : m.keySet()) {
         if (s.equals(curLetter)) {
           curElement = new StringElement(s);
@@ -1379,14 +1379,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
           e.add(com.bolsinga.web.Util.createInternalA(p.getLink(), s, p.getTitle()));
         }
       }
-    }
-    if (hasICalLink) {
-      e.add(links.getICalLink());
-    }
+      if (hasICalLink) {
+        e.add(links.getICalLink());
+      }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
-    return d;
+      Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
+      d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
+      return d;
+    } else {
+      return null;
+    }
   }
 
   static Div addWebNavigator(final Links links, final GregorianCalendar cal, final String program) {
