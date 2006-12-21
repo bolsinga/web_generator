@@ -13,11 +13,10 @@
     <fileset dir="${output.dir}">
       <include name="index.html" />
       <include name="archives/*" />
+      <include name="alt/*" />
       <include name="bands/*" />
       <include name="cities/*" />
       <include name="dates/*" />
-      <include name="ical/*" />
-      <include name="rss/rss.xml" />
       <include name="styles/*" />
       <include name="tracks/*" />
       <include name="venues/*" />
