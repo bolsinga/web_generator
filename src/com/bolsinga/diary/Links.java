@@ -15,7 +15,7 @@ public class Links {
   public static final String HTML_EXT     = ".html";
   public static final String ARCHIVES_DIR = "archives";
   public static final String STYLES_DIR   = "styles";
-  public static final String RSS_DIR      = "rss";
+  public static final String ALT_DIR      = "alt";
   public static final String HASH         = "#";
   
   private static final String CUR_DIR     = ".";
@@ -110,6 +110,11 @@ public class Links {
   // Many tools automatically handle RSS links. Perhaps it is time to have a 'special' feeds
   //  page, which will provide this link as well as the iCal link. Then ATOM can go onto this
   //  page in the future as well.
+  public String getRSSAlt() {
+    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getRssImage();
+    return image.getAlt();
+  }
+  
   public A getRSSLink() {
     com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getRssImage();
 
@@ -131,7 +136,7 @@ public class Links {
   public String getRSSURL() {
     StringBuilder url = new StringBuilder();
     url.append(getLevel());
-    url.append(RSS_DIR);
+    url.append(ALT_DIR);
     url.append(File.separator);
     url.append(com.bolsinga.web.Util.getSettings().getRssFile());
     return url.toString();

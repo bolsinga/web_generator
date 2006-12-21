@@ -21,7 +21,7 @@ public class Links {
   public  static final String SHOW_DIR    = "dates";
   public  static final String CITIES_DIR  = "cities";
   public  static final String RSS_DIR     = "rss";
-  public  static final String ICAL_DIR    = "ical";
+  public  static final String ICAL_DIR    = "alt";
   public  static final String TRACKS_DIR  = "tracks";
   public  static final String STYLES_DIR  = "styles";
         
@@ -288,6 +288,11 @@ public class Links {
     sb.append(STATS);
     sb.append(HTML_EXT);
     return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("cities"), com.bolsinga.web.Util.getResourceString("citystats"));
+  }
+
+  public String getICalAlt() {
+    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getIcalImage();
+    return image.getAlt();
   }
 
   public A getICalLink() {

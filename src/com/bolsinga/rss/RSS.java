@@ -63,7 +63,7 @@ public class RSS {
   public static void generate(final Diary diary, final Music music, final String outputDir) {
     OutputStream os = null;
     try {
-      File f = new File(outputDir, "rss/rss.xml");
+      File f = new File(outputDir, "alt/rss.xml");
       File parent = new File(f.getParent());
       if (!parent.mkdirs()) {
         if (!parent.exists()) {

@@ -54,7 +54,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 
   protected Div getHeaderDiv() {
-    return Web.getHeaderDiv(getTitle(), fProgram, fLinks, fEntryIndex, getCurrentLetter());
+    return Web.getHeaderDivWithNavigator(getTitle(), fProgram, fLinks, fEntryIndex, getCurrentLetter());
   }
 
   protected boolean needNewSubsection() {
@@ -209,6 +209,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
         Web.generateOverviewPage(diary, entryGroups, entryIndex, links, startYear, outputDir);
       }
     });
+    
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateAltPage(diary, music, links, startYear, outputDir);
+      }
+    });
   }
   
   private static void createFile(final Document doc, final String filename, final String outputDir) {
@@ -314,8 +320,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
       diaryDiv.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
     }
-                
-    diaryDiv.addElement(links.getRSSLink());
 
     int mainPageEntryCount = com.bolsinga.web.Util.getSettings().getDiaryCount().intValue();
     boolean includeMusic = com.bolsinga.web.Util.getSettings().isMainPageHasMusic();
@@ -376,7 +380,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return Collections.unmodifiableCollection(result.values());
   }
 
-  static Div getHeaderDiv(final String title, final String program, final Links links, final java.util.Map<String, String> entryIndex, final String curLetter) {
+  static Div getHeaderDivWithNavigator(final String title, final String program, final Links links, final java.util.Map<String, String> entryIndex, final String curLetter) {
+    Div d = Web.getHeaderDiv(title, program, links);
+
+    d.addElement(Web.addEntryIndexNavigator(entryIndex, curLetter, links));
+    
+    return d;
+  }
+  
+  static Div getHeaderDiv(final String title, final String program, final Links links) {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_HEADER);
     d.addElement(new H1().addElement(title));
     d.addElement(com.bolsinga.web.Util.getLogo());
@@ -392,11 +404,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(new A(
       MessageFormat.format( com.bolsinga.web.Util.getResourceString("mailto"), args2), 
                             com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
-
-    d.addElement(links.getRSSLink());
-
-    d.addElement(Web.addEntryIndexNavigator(entryIndex, curLetter, links));
     
+    d.addElement(links.getLinkToHome());
     return d;
   }
   
@@ -428,8 +437,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
   
   static Element addEntryIndexNavigator(final java.util.Map<String, String> entryIndex, final String curLetter, final Links links) {
+    if (entryIndex == null) {
+      return null;
+    }
+    
     Vector<Element> e = new Vector<Element>();
-    e.add(links.getLinkToHome());
     org.apache.ecs.Element curElement = null;
     if (curLetter == null) {
       curElement = new StringElement(com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"));
@@ -437,6 +449,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     } else {
       e.add(links.getOverviewLink());
     }
+
     for (String s : entryIndex.keySet()) {
       if (s.equals(curLetter)) {
         curElement = new StringElement(s);
@@ -559,7 +572,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     Div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
 
-    main.addElement(Web.getHeaderDiv(docTitle, com.bolsinga.web.Util.getResourceString("program"), links, entryIndex, null));
+    main.addElement(Web.getHeaderDivWithNavigator(docTitle, com.bolsinga.web.Util.getResourceString("program"), links, entryIndex, null));
 
     main.addElement(Web.createOverviewTable(entryGroups, entryIndex, startYear));
 
@@ -571,6 +584,39 @@ public class Web implements com.bolsinga.web.Backgroundable {
     sb.append(Links.ARCHIVES_DIR);
     
     Web.createFile(doc, "overview.html", sb.toString());
+  }
+
+  private static void generateAltContent(final Div main) {
+    com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(false);
+    com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(false);
+
+    // RSS
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
+    d.addElement(diaryLinks.getRSSLink());
+    d.addElement(new StringElement(diaryLinks.getRSSAlt()));
+    main.addElement(d);
+    
+    // iCal
+    d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
+    d.addElement(musicLinks.getICalLink());
+    d.addElement(new StringElement(musicLinks.getICalAlt()));
+    main.addElement(d);
+  }
+  
+  public static void generateAltPage(final Diary diary, final Music music, final Links links, final int startYear, final String outputDir) {
+    final String docTitle = com.bolsinga.web.Util.getResourceString("alttitle");
+
+    Document doc = Web.createDocument(docTitle, startYear, links);
+
+    Div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
+
+    main.addElement(Web.getHeaderDiv(docTitle, com.bolsinga.web.Util.getResourceString("program"), links));
+    
+    Web.generateAltContent(main);
+
+    doc.getBody().addElement(main);
+    
+    Web.createFile(doc, "alt/index.html", outputDir);
   }
 
   public static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {

@@ -4,6 +4,12 @@ import java.io.*;
 
 public class CSS {
 
+  // Have these be set for long or short names based upon DEBUGOUTPUT.
+  // Short names can go into production and reduce the size of the CSS and HTML
+  // reducing the bandwidth.
+  
+  // Also instead of having layout.css in the ~/Site repository,
+  // generate it from the code so that the CSS rules are DEBUGOUTPUT or not.
   public static final String ENTRY_INDEX     = "entry_index";
   public static final String ENTRY_ITEM      = "entry_item";
   public static final String ENTRY_RELATION  = "entry_relation";

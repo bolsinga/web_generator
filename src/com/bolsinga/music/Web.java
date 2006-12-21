@@ -55,11 +55,10 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
   protected Div getHeaderDiv() {
     return Web.getHeaderDiv(  getTitle(),
                               Web.addWebNavigator(fLinks, fTimeStamp, fProgram),
-                              Web.addIndexNavigator(getIndex(), getCurrentLetter(), fLinks, getNeedsICalLink()));
+                              Web.addIndexNavigator(getIndex(), getCurrentLetter(), fLinks));
   }
   
   protected abstract java.util.Map<String, IndexPair> getIndex();
-  protected abstract boolean getNeedsICalLink();
 }
 
 abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
@@ -87,11 +86,10 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
   protected Div getHeaderDiv() {
     return Web.getHeaderDiv(  getTitle(),
                               Web.addWebNavigator(fLinks, fTimeStamp, fProgram),
-                              Web.addIndexNavigator(getIndex(), getCurrentLetter(), fLinks, getNeedsICalLink()));
+                              Web.addIndexNavigator(getIndex(), getCurrentLetter(), fLinks));
   }
 
   protected abstract java.util.Map<String, IndexPair> getIndex();
-  protected abstract boolean getNeedsICalLink();
 }
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
@@ -143,10 +141,6 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
   protected java.util.Map<String, IndexPair> getIndex() {
     return fArtistIndex;
   }
-
-  protected boolean getNeedsICalLink() {
-    return false;
-  }
 }
 
 class VenueDocumentCreator extends MusicDocumentCreator {
@@ -197,10 +191,6 @@ class VenueDocumentCreator extends MusicDocumentCreator {
 
   protected java.util.Map<String, IndexPair> getIndex() {
     return fVenueIndex;
-  }
-
-  protected boolean getNeedsICalLink() {
-    return false;
   }
 }
 
@@ -256,10 +246,6 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   protected java.util.Map<String, IndexPair> getIndex() {
     return fShowIndex;
   }
-
-  protected boolean getNeedsICalLink() {
-    return true;
-  }
 }
 
 class StatisticsCreator extends SingleSectionMusicDocumentCreator {
@@ -309,10 +295,6 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
         
   protected java.util.Map<String, IndexPair> getIndex() {
     return null;
-  }
-  
-  protected boolean getNeedsICalLink() {
-    return false;
   }
 }
 
@@ -377,10 +359,6 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
 
   protected java.util.Map<String, IndexPair> getIndex() {
     return fAlbumIndex;
-  }
-  
-  protected boolean getNeedsICalLink() {
-    return false;
   }
 }
 
@@ -947,7 +925,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
       dm.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), genArgs)));
     }
     dm.addElement(com.bolsinga.web.Util.createUnorderedList(e));
-    dm.addElement(links.getICalLink());
                 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MAIN);
     d.addElement(dm);
@@ -1366,7 +1343,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
 
-  static Element addIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter, final Links links, final boolean hasICalLink) {
+  static Element addIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter, final Links links) {
     if (m != null) {
       Vector<Element> e = new Vector<Element>();
       org.apache.ecs.Element curElement = null;
@@ -1378,9 +1355,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
           IndexPair p = m.get(s);
           e.add(com.bolsinga.web.Util.createInternalA(p.getLink(), s, p.getTitle()));
         }
-      }
-      if (hasICalLink) {
-        e.add(links.getICalLink());
       }
 
       Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
