@@ -587,8 +587,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   private static void generateAltContent(final Div main) {
-    com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(false);
-    com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(false);
+    com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(true);
+    com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(true);
 
     // RSS
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
