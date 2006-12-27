@@ -63,7 +63,7 @@ public class CSS {
         
   public static void generate(final String outputDir) {
     try {
-      File f = new File(outputDir, "layout.css");
+      File f = new File(outputDir, com.bolsinga.web.Util.getSettings().getCssFile());
       File parent = new File(f.getParent());
       if (!parent.mkdirs()) {
         if (!parent.exists()) {
