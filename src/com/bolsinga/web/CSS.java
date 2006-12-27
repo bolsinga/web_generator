@@ -40,8 +40,6 @@ public class CSS {
                                                
   public static final String PREVIEW_MAIN    = "preview_main";
   public static final String PREVIEW_MENU    = "preview_menu";
-  public static final String PREVIEW_RECENT  = "preview_recent";
-  public static final String PREVIEW_SHOW    = "preview_show";
                                                
   public static final String SHOW_COMMENT    = "show_comment";
                                                
@@ -104,8 +102,6 @@ public class CSS {
     writeCSSDeclaration(pw, MUSIC_MENU);
     writeCSSDeclaration(pw, PREVIEW_MAIN);
     writeCSSDeclaration(pw, PREVIEW_MENU);
-    writeCSSDeclaration(pw, PREVIEW_RECENT);
-    writeCSSDeclaration(pw, PREVIEW_SHOW);
     writeCSSDeclaration(pw, SHOW_COMMENT);
     writeCSSDeclaration(pw, VENUE_SHOW);
     writeCSSDeclaration(pw, TABLE_HEADER);

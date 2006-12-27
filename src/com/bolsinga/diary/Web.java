@@ -257,8 +257,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     doc.getBody().addElement(main);
                 
     Div mainCol2 = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL2);
-    int previewCount = com.bolsinga.web.Util.getSettings().getPreviewCount().intValue();
-    mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music, previewCount));
+    mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music));
     doc.getBody().addElement(mainCol2);
     
     Web.createHTMLFile(doc, "index", outputDir);

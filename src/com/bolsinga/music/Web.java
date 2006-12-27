@@ -942,12 +942,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
   }
         
-  public static Element generatePreview(final String sourceFile, final int lastShowsCount) {
+  public static Element generatePreview(final String sourceFile) {
     Music music = Util.createMusic(sourceFile);
-    return generatePreview(music, lastShowsCount);
+    return generatePreview(music);
   }
         
-  public static Element generatePreview(final Music music, final int lastShowsCount) {
+  public static Element generatePreview(final Music music) {
     Links links = Links.getLinks(false);
                 
     Vector<Element> e = new Vector<Element>();
@@ -1000,29 +1000,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
                 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MAIN);
     d.addElement(dm);
-                
-    Div dr = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_RECENT);
-                
-    Object[] countArgs = { new Integer(lastShowsCount) };
-    dr.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("lastshows"), countArgs)));
 
-    List<Show> items = Util.getShowsCopy(music);
-    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
-    Collections.reverse(items);
-    
-    for (int i = 0; i < lastShowsCount; i++) {
-      Show item = items.get(i);
-
-      Div ds = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_SHOW);
-      String dateString = Util.toString(item.getDate());
-      ds.addElement(new H4(com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), dateString, dateString)));
-      ds.addElement(getShowListing(lookup, links, item));
-                        
-      dr.addElement(ds);
-    }
-
-    d.addElement(dr);
-                
     return d;
   }
         
