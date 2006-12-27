@@ -222,23 +222,31 @@ public class Links {
   }
 
   public A getArtistLink() {
+    return getArtistLink(com.bolsinga.web.Util.getResourceString("bands"));
+  }
+  
+  public A getArtistLink(final String t) {
     StringBuilder sb = new StringBuilder();
     sb.append(getLevel());
     sb.append(ARTIST_DIR);
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("bands"), com.bolsinga.web.Util.getResourceString("artiststats"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("artiststats"));
   }
                 
   public A getShowLink() {
+    return getShowLink(com.bolsinga.web.Util.getResourceString("dates"));
+  }
+
+  public A getShowLink(final String t) {
     StringBuilder sb = new StringBuilder();
     sb.append(getLevel());
     sb.append(SHOW_DIR);
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("dates"), com.bolsinga.web.Util.getResourceString("datestats"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("datestats"));
   }
 
   public A getTracksLink() {
@@ -270,23 +278,31 @@ public class Links {
   }
 
   public A getVenueLink() {
+    return getVenueLink(com.bolsinga.web.Util.getResourceString("venues"));
+  }
+
+  public A getVenueLink(final String t) {
     StringBuilder sb = new StringBuilder();
     sb.append(getLevel());
     sb.append(VENUE_DIR);
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("venues"), com.bolsinga.web.Util.getResourceString("venuestats"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("venuestats"));
   }
         
   public A getCityLink() {
+    return getCityLink(com.bolsinga.web.Util.getResourceString("cities"));
+  }
+
+  public A getCityLink(final String t) {
     StringBuilder sb = new StringBuilder();
     sb.append(getLevel());
     sb.append(CITIES_DIR);
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), com.bolsinga.web.Util.getResourceString("cities"), com.bolsinga.web.Util.getResourceString("citystats"));
+    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("citystats"));
   }
 
   public String getICalAlt() {

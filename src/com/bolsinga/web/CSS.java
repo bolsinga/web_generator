@@ -38,9 +38,6 @@ public class CSS {
   public static final String MUSIC_HEADER    = "music_header";
   public static final String MUSIC_MENU      = "music_menu";
                                                
-  public static final String PREVIEW_MAIN    = "preview_main";
-  public static final String PREVIEW_MENU    = "preview_menu";
-                                               
   public static final String SHOW_COMMENT    = "show_comment";
                                                
   public static final String VENUE_SHOW      = "venue_show";
@@ -100,8 +97,6 @@ public class CSS {
     writeCSSDeclaration(pw, DOC_SUB);
     writeCSSDeclaration(pw, MUSIC_HEADER);
     writeCSSDeclaration(pw, MUSIC_MENU);
-    writeCSSDeclaration(pw, PREVIEW_MAIN);
-    writeCSSDeclaration(pw, PREVIEW_MENU);
     writeCSSDeclaration(pw, SHOW_COMMENT);
     writeCSSDeclaration(pw, VENUE_SHOW);
     writeCSSDeclaration(pw, TABLE_HEADER);

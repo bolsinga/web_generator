@@ -941,66 +941,46 @@ public class Web implements com.bolsinga.web.Backgroundable {
       stats.complete();
     }
   }
-        
-  public static Element generatePreview(final String sourceFile) {
-    Music music = Util.createMusic(sourceFile);
-    return generatePreview(music);
+
+  private static String createPreviewLine(final int count, final String name) {
+      Object[] args = { Integer.valueOf(count), name };
+      return MessageFormat.format(com.bolsinga.web.Util.getResourceString("previewformat"), args);
   }
         
   public static Element generatePreview(final Music music) {
-    Links links = Links.getLinks(false);
-                
-    Vector<Element> e = new Vector<Element>();
-                
-    StringBuilder sb = new StringBuilder();
-    sb.append(Util.getArtistsUnmodifiable(music).size());
-    sb.append(" ");
-    sb.append(links.getArtistLink());
-    e.add(new StringElement(sb.toString()));
-
-    sb = new StringBuilder();
-    sb.append(Util.getShowsUnmodifiable(music).size());
-    sb.append(" ");
-    sb.append(links.getShowLink());
-    e.add(new StringElement(sb.toString()));
-
-    sb = new StringBuilder();
-    sb.append(Util.getVenuesUnmodifiable(music).size());
-    sb.append(" ");
-    sb.append(links.getVenueLink());
-    e.add(new StringElement(sb.toString()));
-
-    Lookup lookup = Lookup.getLookup(music);
-    
-    sb = new StringBuilder();
-    sb.append(lookup.getCities().size());
-    sb.append(" ");
-    sb.append(links.getCityLink());
-    e.add(new StringElement(sb.toString()));
-
-    sb = new StringBuilder();
-    sb.append(Util.getSongsUnmodifiable(music).size());
-    sb.append(" ");
-    sb.append(links.getTracksLink());
-    e.add(new StringElement(sb.toString()));
-
-    sb = new StringBuilder();
-    sb.append(Util.getAlbumsUnmodifiable(music).size());
-    sb.append(" ");
-    sb.append(links.getAlbumsLink());
-    e.add(new StringElement(sb.toString()));
-
-    Div dm = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MENU);
-    dm.addElement(com.bolsinga.web.Util.getLogo());
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
+    d.addElement(com.bolsinga.web.Util.getLogo());
     if (!com.bolsinga.web.Util.getDebugOutput()) {
       Object[] genArgs = { music.getTimestamp().toGregorianCalendar().getTime() };
-      dm.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), genArgs)));
+      d.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), genArgs)));
     }
-    dm.addElement(com.bolsinga.web.Util.createUnorderedList(e));
                 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.PREVIEW_MAIN);
-    d.addElement(dm);
+    Links links = Links.getLinks(false);
 
+    Vector<Element> e = new Vector<Element>();
+    e.add(links.getArtistLink(Web.createPreviewLine(  Util.getArtistsUnmodifiable(music).size(),
+                                                      com.bolsinga.web.Util.getResourceString("bands"))));
+
+    e.add(links.getShowLink(Web.createPreviewLine(  Util.getShowsUnmodifiable(music).size(),
+                                                    com.bolsinga.web.Util.getResourceString("dates"))));
+
+    e.add(links.getVenueLink(Web.createPreviewLine( Util.getVenuesUnmodifiable(music).size(),
+                                                    com.bolsinga.web.Util.getResourceString("venues"))));
+
+    e.add(links.getCityLink(Web.createPreviewLine(  Lookup.getLookup(music).getCities().size(),
+                                                    com.bolsinga.web.Util.getResourceString("cities"))));
+
+    e.add(links.getTracksLink(Web.createPreviewLine(  Util.getSongsUnmodifiable(music).size(),
+                                                      com.bolsinga.web.Util.getResourceString("tracks"))));
+
+    e.add(links.getAlbumsLink(Web.createPreviewLine(  Util.getAlbumsUnmodifiable(music).size(),
+                                                      com.bolsinga.web.Util.getResourceString("albums"))));
+                
+    Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
+    indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+
+    d.addElement(indexNavigator);
+    
     return d;
   }
         
@@ -1432,17 +1412,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
       d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
     }
 
-    Div indexNavigator = null;
     Vector<Element> e = new Vector<Element>();
     e.add(links.getLinkToHome());
     
     e.add(navigator.getArtistNavigator());
-    e.add(navigator.getTrackNavigator());
     e.add(navigator.getShowNavigator());
     e.add(navigator.getVenueNavigator());
     e.add(navigator.getCityNavigator());
+    e.add(navigator.getTrackNavigator());
     
-    indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
+    Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
     indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e, navigator.getCurrentNavigator()));
     
     d.addElement(indexNavigator);
