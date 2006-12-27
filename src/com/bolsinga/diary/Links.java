@@ -15,7 +15,7 @@ public class Links {
   public static final String HTML_EXT     = ".html";
   public static final String ARCHIVES_DIR = "archives";
   public static final String STYLES_DIR   = "styles";
-  public static final String ALT_DIR      = "alt";
+  public static final String ALT_DIR      = com.bolsinga.music.Links.ALT_DIR;
   public static final String HASH         = "#";
   
   private static final String CUR_DIR     = ".";

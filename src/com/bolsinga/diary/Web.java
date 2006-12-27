@@ -615,8 +615,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Web.generateAltContent(main);
 
     doc.getBody().addElement(main);
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(outputDir);
+    sb.append(File.separator);
+    sb.append(Links.ALT_DIR);
     
-    Web.createFile(doc, "alt/index.html", outputDir);
+    Web.createFile(doc, "index.html", sb.toString());
   }
 
   public static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {

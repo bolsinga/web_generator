@@ -21,7 +21,7 @@ public class Links {
   public  static final String SHOW_DIR    = "dates";
   public  static final String CITIES_DIR  = "cities";
   public  static final String RSS_DIR     = "rss";
-  public  static final String ICAL_DIR    = "alt";
+  public  static final String ALT_DIR     = "alt";
   public  static final String TRACKS_DIR  = "tracks";
   public  static final String STYLES_DIR  = "styles";
         
@@ -299,7 +299,7 @@ public class Links {
     StringBuilder sb = new StringBuilder();
     sb.append("webcal:");
     sb.append(getLevel());
-    sb.append(ICAL_DIR);
+    sb.append(ALT_DIR);
     sb.append(File.separator);
     sb.append(com.bolsinga.web.Util.getSettings().getIcalName() + ".ics");
 
