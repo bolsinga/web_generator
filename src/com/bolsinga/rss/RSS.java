@@ -67,7 +67,7 @@ public class RSS {
       sb.append(outputDir);
       sb.append(File.separator);
       sb.append(com.bolsinga.diary.Links.ALT_DIR);
-      File f = new File(sb.toString(), "rss.xml");
+      File f = new File(sb.toString(), com.bolsinga.web.Util.getSettings().getRssFile());
       File parent = new File(f.getParent());
       if (!parent.mkdirs()) {
         if (!parent.exists()) {
