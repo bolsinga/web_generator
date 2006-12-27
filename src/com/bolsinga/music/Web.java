@@ -34,6 +34,38 @@ class IndexPair {
   }
 }
 
+class Navigator {
+  private final Links fLinks;
+  
+  public Navigator(final Links links) {
+    fLinks = links;
+  }
+  
+  public Element getArtistNavigator() {
+    return fLinks.getArtistLink();
+  }
+  
+  public Element getTrackNavigator() {
+    return fLinks.getTracksLink();
+  }
+  
+  public Element getShowNavigator() {
+    return fLinks.getShowLink();
+  }
+  
+  public Element getVenueNavigator() {
+    return fLinks.getVenueLink();
+  }
+  
+  public Element getCityNavigator() {
+    return fLinks.getCityLink();
+  }
+  
+  public Element getCurrentNavigator() {
+    return null;
+  }
+}
+
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   protected final GregorianCalendar fTimeStamp;
   protected final Lookup fLookup;
@@ -52,20 +84,18 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
     return Web.createHTMLDocument(fLinks, getTitle());
   }
 
-  protected Div getHeaderDiv() {
-    return Web.getHeaderDiv(  getTitle(),
-                              Web.addWebNavigator(fLinks, fTimeStamp, fProgram),
-                              Web.addIndexNavigator(getIndex(), getCurrentLetter(), fLinks));
-  }
+  protected abstract Navigator getNavigator();
   
-  protected abstract java.util.Map<String, IndexPair> getIndex();
+  protected Div getHeaderDiv() {
+    return Web.getHeaderDiv(getTitle(), fProgram, fTimeStamp, fLinks, getNavigator());
+  }
 }
 
 abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
   protected final GregorianCalendar fTimeStamp;
   protected final Lookup fLookup;
   protected final Links fLinks;
-  private final String  fProgram;
+  protected final String fProgram;
 
   protected SingleSectionMusicDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program) {
     super(backgrounder, outputDir);
@@ -74,22 +104,10 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
     fLinks = links;
     fProgram = program;
   }
-
-  protected String getProgram() {
-    return fProgram;
-  }
   
   protected Document createDocument() {
     return Web.createHTMLDocument(fLinks, getTitle());
   }
-
-  protected Div getHeaderDiv() {
-    return Web.getHeaderDiv(  getTitle(),
-                              Web.addWebNavigator(fLinks, fTimeStamp, fProgram),
-                              Web.addIndexNavigator(getIndex(), getCurrentLetter(), fLinks));
-  }
-
-  protected abstract java.util.Map<String, IndexPair> getIndex();
 }
 
 class ArtistDocumentCreator extends MusicDocumentCreator {
@@ -137,9 +155,13 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
   protected Element getCurrentElement() {
     return Web.addItem(fLookup, fLinks, fCurArtist);
   }
-
-  protected java.util.Map<String, IndexPair> getIndex() {
-    return fArtistIndex;
+  
+  protected Navigator getNavigator() {
+    return new Navigator(fLinks) {
+      public Element getArtistNavigator() {
+        return Web.addCurrentIndexNavigator(fArtistIndex, getCurrentLetter(), super.getArtistNavigator());
+      }
+    };
   }
 }
 
@@ -189,8 +211,12 @@ class VenueDocumentCreator extends MusicDocumentCreator {
     return Web.addItem(fLookup, fLinks, fCurVenue);
   }
 
-  protected java.util.Map<String, IndexPair> getIndex() {
-    return fVenueIndex;
+  protected Navigator getNavigator() {
+    return new Navigator(fLinks) {
+      public Element getVenueNavigator() {
+        return Web.addCurrentIndexNavigator(fVenueIndex, getCurrentLetter(), super.getVenueNavigator());
+      }
+    };
   }
 }
 
@@ -242,9 +268,13 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   protected Element getCurrentElement() {
     return Web.addItem(fEncoder, fLookup, fLinks, fCurShow);
   }
-
-  protected java.util.Map<String, IndexPair> getIndex() {
-    return fShowIndex;
+  
+  protected Navigator getNavigator() {
+    return new Navigator(fLinks) {
+      public Element getShowNavigator() {
+        return Web.addCurrentIndexNavigator(fShowIndex, getCurrentLetter(), super.getShowNavigator());
+      }
+    };
   }
 }
 
@@ -252,15 +282,17 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
   private final String fFileName;
   private final String fTitle;
   private final String fDirectory;
-
+  private final Navigator fNavigator;
+  
   // This changes during the life-cycle of this object
   private Table  fCurTable  = null;
 
-  public StatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program, final String filename, final String title, final String directory) {
+  public StatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program, final String filename, final String title, final String directory, final Navigator navigator) {
     super(backgrounder, lookup, links, timeStamp, outputDir, program);
     fFileName = filename;
     fTitle = title;
     fDirectory = directory;
+    fNavigator = navigator;
   }
 
   public void add(final Table t) {
@@ -292,9 +324,9 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
   protected Element getCurrentElement() {
     return fCurTable;
   }
-        
-  protected java.util.Map<String, IndexPair> getIndex() {
-    return null;
+
+  protected Div getHeaderDiv() {
+    return Web.getHeaderDiv(getTitle(), fProgram, fTimeStamp, fLinks, fNavigator);
   }
 }
 
@@ -310,12 +342,16 @@ class TracksStatisticsCreator extends StatisticsCreator {
   }
 
   private TracksStatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final Links links, final GregorianCalendar timeStamp, final String outputDir, final String program, final String filename, final boolean isTracksStats, final String title, final String directory) {
-    super(backgrounder, lookup, links, timeStamp, outputDir, program, filename, title, directory);
+    super(backgrounder, lookup, links, timeStamp, outputDir, program, filename, title, directory, new Navigator(links) {
+      public Element getTrackNavigator() {
+        return getCurrentNavigator();
+      }
+      
+      public Element getCurrentNavigator() {
+        return new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
+      }
+    });
     fTracksStats = isTracksStats;
-  }
-
-  protected Div getHeaderDiv() {
-    return Web.getHeaderDiv(getTitle(), Web.addWebNavigator(fLinks, fTimeStamp, getProgram()), null);
   }
 }
 
@@ -357,8 +393,12 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
     return Web.addItem(fLookup, fLinks, fCurAlbum);
   }
 
-  protected java.util.Map<String, IndexPair> getIndex() {
-    return fAlbumIndex;
+  protected Div getHeaderDiv() {
+    return Web.getHeaderDiv(getTitle(), fProgram, fTimeStamp, fLinks, new Navigator(fLinks) {
+      public Element getTrackNavigator() {
+        return Web.addCurrentIndexNavigator(fAlbumIndex, getCurrentLetter(), super.getTrackNavigator());
+      }
+    });
   }
 }
 
@@ -663,7 +703,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.ARTIST_DIR);
+    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.ARTIST_DIR, new Navigator(links) {
+      public Element getArtistNavigator() {
+        return getCurrentNavigator();
+      }
+      
+      public Element getCurrentNavigator() {
+        return new StringElement(com.bolsinga.web.Util.getResourceString("bands"));
+      }
+    });
     stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("artiststatsummary")));
     stats.complete();
   }
@@ -697,7 +745,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.VENUE_DIR);
+    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.VENUE_DIR, new Navigator(links) {
+      public Element getVenueNavigator() {
+        return getCurrentNavigator();
+      }
+      
+      public Element getCurrentNavigator() {
+        return new StringElement(com.bolsinga.web.Util.getResourceString("venues"));
+      }
+    });
     stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("venuestatsummary")));
     stats.complete();
   }
@@ -746,7 +802,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.SHOW_DIR);
+    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.SHOW_DIR, new Navigator(links) {
+      public Element getShowNavigator() {
+        return getCurrentNavigator();
+      }
+      
+      public Element getCurrentNavigator() {
+        return new StringElement(com.bolsinga.web.Util.getResourceString("dates"));
+      }
+    });
     stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("datestatssummary")));
     stats.complete();
   }
@@ -794,7 +858,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator creator = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.CITIES_DIR);
+    StatisticsCreator creator = new StatisticsCreator(backgrounder, lookup, links, timeStamp, outputDir, com.bolsinga.web.Util.getResourceString("program"), Links.STATS, pageTitle, Links.CITIES_DIR, new Navigator(links) {
+      public Element getCityNavigator() {
+        return getCurrentNavigator();
+      }
+      
+      public Element getCurrentNavigator() {
+        return new StringElement(com.bolsinga.web.Util.getResourceString("cities"));
+      }
+    });
     creator.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("citystatsummary")));
     creator.complete();
   }
@@ -1342,8 +1414,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     return d;
   }
-
-  static Element addIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter, final Links links) {
+  
+  static Element addCurrentIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter, final Element parentElement) {
+    ElementContainer ec = new ElementContainer();
+    ec.addElement(parentElement);
     if (m != null) {
       Vector<Element> e = new Vector<Element>();
       org.apache.ecs.Element curElement = null;
@@ -1357,43 +1431,44 @@ public class Web implements com.bolsinga.web.Backgroundable {
         }
       }
 
-      Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
+      Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX_SUB);
       d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
-      return d;
-    } else {
-      return null;
-    }
-  }
 
-  static Div addWebNavigator(final Links links, final GregorianCalendar cal, final String program) {
-    Vector<Element> e = new Vector<Element>();
+      ec.addElement(d);
+    }
+    return ec;
+  }
+  
+  static Div getHeaderDiv(final String title, final String program, final GregorianCalendar cal, final Links links, final Navigator navigator) {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
+    d.addElement(new H1().addElement(title));
+    d.addElement(com.bolsinga.web.Util.getLogo());
+    
     Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
     if (com.bolsinga.web.Util.getDebugOutput()) {
       args2[1] = null;
     }
-    e.add(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
-    e.add(links.getLinkToHome());
-    e.add(links.getArtistLink());
-    e.add(links.getTracksLink());
-    e.add(links.getShowLink());
-    e.add(links.getVenueLink());
-    e.add(links.getCityLink());
-
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_MENU);
+    d.addElement(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
     if (!com.bolsinga.web.Util.getDebugOutput()) {
       Object[] args = { cal.getTime() };
       d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
     }
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
-    return d;
-  }
-  
-  static Div getHeaderDiv(final String title, final Element webNav, final Element indexNav) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
-    d.addElement(new H1().addElement(title));
-    d.addElement(com.bolsinga.web.Util.getLogo());
-    d.addElement(webNav);
-    d.addElement(indexNav);
+
+    Div indexNavigator = null;
+    Vector<Element> e = new Vector<Element>();
+    e.add(links.getLinkToHome());
+    
+    e.add(navigator.getArtistNavigator());
+    e.add(navigator.getTrackNavigator());
+    e.add(navigator.getShowNavigator());
+    e.add(navigator.getVenueNavigator());
+    e.add(navigator.getCityNavigator());
+    
+    indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
+    indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e, navigator.getCurrentNavigator()));
+    
+    d.addElement(indexNavigator);
+    
     return d;
   }
 }

@@ -11,6 +11,7 @@ public class CSS {
   // Also instead of having layout.css in the ~/Site repository,
   // generate it from the code so that the CSS rules are DEBUGOUTPUT or not.
   public static final String ENTRY_INDEX     = "entry_index";
+  public static final String ENTRY_INDEX_SUB = "entry_index_sub";
   public static final String ENTRY_ITEM      = "entry_item";
   public static final String ENTRY_RELATION  = "entry_relation";
   
@@ -81,6 +82,7 @@ public class CSS {
         
   public static void generate(final PrintWriter pw) {
     writeCSSDeclaration(pw, ENTRY_INDEX);
+    writeCSSDeclaration(pw, ENTRY_INDEX_SUB);
     writeCSSDeclaration(pw, ENTRY_ITEM);
     writeCSSDeclaration(pw, ENTRY_RELATION);
     writeCSSDeclaration(pw, ARTIST_SHOW);
