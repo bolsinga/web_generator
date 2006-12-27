@@ -317,11 +317,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
         
   private static Element generateDiary(final com.bolsinga.web.Encode encoder, final Diary diary, final Music music, final Links links) {
     Div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
-                
-    if (!com.bolsinga.web.Util.getDebugOutput()) {
-      Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
-      diaryDiv.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
-    }
 
     int mainPageEntryCount = com.bolsinga.web.Util.getSettings().getDiaryCount().intValue();
     boolean includeMusic = com.bolsinga.web.Util.getSettings().isMainPageHasMusic();
@@ -401,7 +396,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
     if (!com.bolsinga.web.Util.getDebugOutput()) {
       Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
-      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
+      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
     }
     d.addElement(new A(
       MessageFormat.format( com.bolsinga.web.Util.getResourceString("mailto"), args2), 

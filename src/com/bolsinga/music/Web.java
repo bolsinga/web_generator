@@ -994,7 +994,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     dm.addElement(com.bolsinga.web.Util.getLogo());
     if (!com.bolsinga.web.Util.getDebugOutput()) {
       Object[] genArgs = { music.getTimestamp().toGregorianCalendar().getTime() };
-      dm.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), genArgs)));
+      dm.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), genArgs)));
     }
     dm.addElement(com.bolsinga.web.Util.createUnorderedList(e));
                 
@@ -1429,7 +1429,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(new A(MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args2), com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
     if (!com.bolsinga.web.Util.getDebugOutput()) {
       Object[] args = { cal.getTime() };
-      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generated"), args)));
+      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
     }
 
     Div indexNavigator = null;
