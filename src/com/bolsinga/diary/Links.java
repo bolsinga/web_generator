@@ -12,7 +12,7 @@ import org.apache.ecs.filter.*;
 
 public class Links {
 
-  public static final String HTML_EXT     = ".html";
+  public static final String HTML_EXT     = com.bolsinga.music.Links.HTML_EXT;
   public static final String ARCHIVES_DIR = "archives";
   public static final String STYLES_DIR   = "styles";
   public static final String ALT_DIR      = com.bolsinga.music.Links.ALT_DIR;

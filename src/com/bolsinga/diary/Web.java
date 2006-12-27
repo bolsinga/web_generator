@@ -217,9 +217,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
   }
   
-  private static void createFile(final Document doc, final String filename, final String outputDir) {
+  private static void createHTMLFile(final Document doc, final String filename, final String outputDir) {
     try {
-      File f = new File(outputDir, filename);
+      StringBuffer sb = new StringBuffer();
+      sb.append(filename);
+      sb.append(Links.HTML_EXT);
+      File f = new File(outputDir, sb.toString());
       File parent = new File(f.getParent());
       if (!parent.mkdirs()) {
         if (!parent.exists()) {
@@ -258,7 +261,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music, previewCount));
     doc.getBody().addElement(mainCol2);
     
-    Web.createFile(doc, "index.html", outputDir);
+    Web.createHTMLFile(doc, "index", outputDir);
   }
 
   private static Div createMainStatics(final String statics) {
@@ -583,7 +586,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     sb.append(File.separator);
     sb.append(Links.ARCHIVES_DIR);
     
-    Web.createFile(doc, "overview.html", sb.toString());
+    Web.createHTMLFile(doc, "overview", sb.toString());
   }
 
   private static void generateAltContent(final Div main) {
@@ -621,7 +624,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     sb.append(File.separator);
     sb.append(Links.ALT_DIR);
     
-    Web.createFile(doc, "index.html", sb.toString());
+    Web.createHTMLFile(doc, "index", sb.toString());
   }
 
   public static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {

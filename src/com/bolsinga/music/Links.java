@@ -334,7 +334,8 @@ public class Links {
   public A getLinkToHome() {
     StringBuilder url = new StringBuilder();
     url.append(getLevel());
-    url.append("index.html");
+    url.append("index");
+    url.append(Links.HTML_EXT);
     String h = com.bolsinga.web.Util.getResourceString("home");
     return com.bolsinga.web.Util.createInternalA(url.toString(), h, h);
   }
