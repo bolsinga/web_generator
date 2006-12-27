@@ -33,7 +33,7 @@
     <fileset dir="${output.dir}">
       <include name="index.html" />
       <include name="archives/*" />
-      <include name="rss/rss.xml" />
+      <include name="alt/*" />
     </fileset>
   </ftp>
 </target>
