@@ -20,7 +20,6 @@ public class Links {
   public  static final String VENUE_DIR   = "venues";
   public  static final String SHOW_DIR    = "dates";
   public  static final String CITIES_DIR  = "cities";
-  public  static final String RSS_DIR     = "rss";
   public  static final String ALT_DIR     = "alt";
   public  static final String TRACKS_DIR  = "tracks";
   public  static final String STYLES_DIR  = "styles";
