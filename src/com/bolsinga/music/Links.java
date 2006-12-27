@@ -27,7 +27,7 @@ public class Links {
   private static final String OTHER       = "other";
   public  static final String STATS       = "stats";
   public  static final String ALBUM_STATS = "albumstats";
-  private static final String HASH        = "#";
+  public  static final String HASH        = "#";
         
   private final boolean fUpOneLevel;
   
