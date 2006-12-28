@@ -264,7 +264,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   private static Div createMainStatics(final String statics) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_STATIC);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_OFFSITE);
     d.addElement(new H4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
     if (statics != null) {
       d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(statics));
@@ -273,7 +273,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   private static Div createMainLinks(final String friends) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_LINKS);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_OFFSITE);
     d.addElement(new H4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
     if (friends != null) {
       d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(friends));
