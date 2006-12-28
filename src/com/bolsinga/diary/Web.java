@@ -583,21 +583,45 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Web.createHTMLFile(doc, "overview", sb.toString());
   }
 
-  private static void generateAltContent(final Div main) {
+  private static Element generateAltContent(final Diary diary, final int startYear) {
     com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(true);
     com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(true);
 
-    // RSS
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
-    d.addElement(diaryLinks.getRSSLink());
-    d.addElement(new StringElement(diaryLinks.getRSSAlt()));
-    main.addElement(d);
+    // Add data from diary colophon
+    UL list = com.bolsinga.web.Util.convertToUnOrderedList(diary.getColophon());
     
+    Vector<Element> e = new Vector<Element>();
+    
+    {
+    // Add the name of the program
+    Object[] args = { new Code(com.bolsinga.web.Util.getGenerator()).toString() };
+    e.addElement(new StringElement(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generatedby"), args)));
+    }
+    
+    {
+    // Add date generated
+    Object[] args = { new Code(com.bolsinga.web.Util.nowUTC().getTime().toString()).toString() };
+    e.addElement(new StringElement(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generatedon"), args)));
+    }
+    
+    // Add the copyright
+    e.addElement(new StringElement(com.bolsinga.web.Util.getCopyright(startYear)));
+
+    {
+    // RSS
+    Object[] args = { diaryLinks.getRSSLink().toString(), diaryLinks.getRSSAlt() };
+    e.addElement(new StringElement(MessageFormat.format(com.bolsinga.web.Util.getResourceString("singlespace"), args)));
+    }
+    
+    {
     // iCal
-    d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
-    d.addElement(musicLinks.getICalLink());
-    d.addElement(new StringElement(musicLinks.getICalAlt()));
-    main.addElement(d);
+    Object[] args = { musicLinks.getICalLink().toString(), musicLinks.getICalAlt() };
+    e.addElement(new StringElement(MessageFormat.format(com.bolsinga.web.Util.getResourceString("singlespace"), args)));
+    }
+
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.COLOPHON);
+    d.addElement(com.bolsinga.web.Util.appendToUnorderedList(list, e));
+    return d;
   }
   
   public static void generateAltPage(final Diary diary, final Music music, final Links links, final int startYear, final String outputDir) {
@@ -609,7 +633,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     main.addElement(Web.getHeaderDiv(docTitle, com.bolsinga.web.Util.getResourceString("program"), links));
     
-    Web.generateAltContent(main);
+    main.addElement(Web.generateAltContent(diary, startYear));
 
     doc.getBody().addElement(main);
 

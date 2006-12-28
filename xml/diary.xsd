@@ -21,6 +21,7 @@
 <xs:element name="header" type="xs:string" />
 <xs:element name="friends" type="xs:string" />
 <xs:element name="title" type="xs:string" />
+<xs:element name="colophon" type="xs:string" />
 
 <!-- Define Diary -->
 <xs:element name="diary">
@@ -31,6 +32,7 @@
 			<xs:element ref="static" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="header" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="friends" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="colophon" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="entry" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>

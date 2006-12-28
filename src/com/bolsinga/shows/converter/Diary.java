@@ -78,6 +78,8 @@ public class Diary {
         diary.setFriends(oldStatic.getData());
       } else if (location.equalsIgnoreCase("title")) {
         diary.setTitle(oldStatic.getData());
+      } else if (location.equalsIgnoreCase("colophon")) {
+        diary.setColophon(oldStatic.getData());
       } else {
         System.err.println("Unknown statics location: " + location);
       }

@@ -174,6 +174,16 @@ public class Util {
 
     return list;
   }
+  
+  public static UL appendToUnorderedList(final UL list, final Vector<org.apache.ecs.Element> elements) {
+    for (org.apache.ecs.Element e : elements) {
+      LI item = new LI(e);
+      item.setPrettyPrint(Util.getPrettyOutput());
+      list.addElement(item);
+    }
+
+    return list;
+  }
 
   public static OL createOrderedList(final Vector<org.apache.ecs.Element> elements) {
     OL list = new OL();

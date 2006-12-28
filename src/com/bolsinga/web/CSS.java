@@ -15,6 +15,8 @@ public class CSS {
   public static final String ENTRY_ITEM      = "entry_item";
   public static final String ENTRY_RELATION  = "entry_relation";
   
+  public static final String COLOPHON        = "colophon";
+  
   public static final String ARTIST_SHOW     = "artist_show";
   public static final String ARTIST_TRACKS   = "artist_tracks";
                                                
@@ -79,6 +81,7 @@ public class CSS {
     writeCSSDeclaration(pw, ENTRY_INDEX_SUB);
     writeCSSDeclaration(pw, ENTRY_ITEM);
     writeCSSDeclaration(pw, ENTRY_RELATION);
+    writeCSSDeclaration(pw, COLOPHON);
     writeCSSDeclaration(pw, ARTIST_SHOW);
     writeCSSDeclaration(pw, ARTIST_TRACKS);
     writeCSSDeclaration(pw, DIARY_HEADER);
