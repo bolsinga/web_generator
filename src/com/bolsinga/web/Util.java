@@ -94,11 +94,14 @@ public class Util {
         
   public static UL convertToUnOrderedList(final String data) {
     UL list = new UL();
+    list.setPrettyPrint(Util.getPrettyOutput());
                 
     // Convert each line to a li tag.
     String[] lines = data.split("\\n");
     for (int i = 0; i < lines.length; i++) {
-      list.addElement(new LI(lines[i]));
+      LI item = new LI(lines[i]);
+      item.setPrettyPrint(Util.getPrettyOutput());
+      list.addElement(item);
     }
                 
     return list;
