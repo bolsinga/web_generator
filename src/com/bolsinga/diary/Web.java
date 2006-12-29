@@ -232,7 +232,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   private static Element generateMainContent(final Diary diary, final Music music, final com.bolsinga.web.Links links, final com.bolsinga.web.Encode encoder) {
     ElementContainer ec = new ElementContainer();
-    ec.addElement(Web.generateColumn1(diary.getStatic(), diary.getFriends()));
+    ec.addElement(Web.generateStaticHeader(diary));
     ec.addElement(com.bolsinga.web.Util.convertToUnOrderedList(diary.getHeader()));
     ec.addElement(Web.generateDiary(encoder, diary, music, links));
     return ec;
@@ -250,28 +250,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
     page.complete();
   }
 
-  private static Div createMainStatics(final String statics) {
+  private static Div createStaticsOffsite(final String title, final String data) {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.STATICS_OFFSITE);
-    d.addElement(new H4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
-    if (statics != null) {
-      d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(statics));
+    d.addElement(new H4(title));
+    if (data != null) {
+      d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(data));
     }
     return d;
   }
-
-  private static Div createMainLinks(final String friends) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.STATICS_OFFSITE);
-    d.addElement(new H4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
-    if (friends != null) {
-      d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(friends));
-    }
-    return d;
-  }
-
-  private static Div generateColumn1(final String statics, final String friends) {
+  
+  private static Div generateStaticHeader(final Diary diary) {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.STATICS_HEADER);
-    d.addElement(Web.createMainStatics(statics));
-    d.addElement(Web.createMainLinks(friends));
+    d.addElement(Web.createStaticsOffsite(com.bolsinga.web.Util.getSettings().getLinksTitle(), diary.getStatic()));
+    d.addElement(Web.createStaticsOffsite(com.bolsinga.web.Util.getSettings().getFriendsTitle(), diary.getFriends()));
     return d;
   }
         
