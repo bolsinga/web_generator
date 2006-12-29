@@ -219,13 +219,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
       });
     }
 
-/*    
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateOverviewPage(diary, entryGroups, entryIndex, links, startYear, outputDir);
+        Web.generateOverviewPage(backgrounder, diary, entryGroups, entryIndex, links, startYear, outputDir);
       }
     });
-*/    
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
@@ -373,31 +371,14 @@ public class Web implements com.bolsinga.web.Backgroundable {
     
     return Collections.unmodifiableCollection(result.values());
   }
-
-  static Div getHeaderDivWithNavigator(final String title, final String program, final com.bolsinga.web.Links links, final java.util.Map<String, String> entryIndex, final String curLetter) {
-    Div d = Web.getHeaderDiv(title, program, links);
-
-    d.addElement(Web.addEntryIndexNavigator(entryIndex, curLetter, links));
-    
-    return d;
-  }
   
-  static Div getHeaderDiv(final String title, final String program, final com.bolsinga.web.Links links) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.NAV_HEADER);
-    d.addElement(new H1().addElement(title));
-    d.addElement(com.bolsinga.web.Util.getLogo());
-    
-    d.addElement(links.getLinkToHome());
-    return d;
-  }
-  
-  static Element getLinkToEntryMonthYear(final String year, final int month, final String value, final java.util.Map<String, String> entryIndex) {
+  static Element getLinkToEntryMonthYear(final String year, final int month, final String value, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex) {
     Calendar cal = Calendar.getInstance();
     cal.set(Calendar.MONTH, month);
     String monthStr = Util.getMonth(cal);
     
     StringBuilder url = new StringBuilder();
-    url.append(entryIndex.get(year));
+    url.append(entryIndex.get(year).getLink());
     url.append(com.bolsinga.web.Links.HASH);
     url.append(monthStr);
     
@@ -412,40 +393,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return com.bolsinga.web.Util.createInternalA(url.toString(), value, t);
   }
   
-  static Element getLinkToEntryYear(final String year, final java.util.Map<String, String> entryIndex) {
-    Object[] args = { year };
-    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
-    return com.bolsinga.web.Util.createInternalA(entryIndex.get(year), year, t);
-  }
-  
-  static Element addEntryIndexNavigator(final java.util.Map<String, String> entryIndex, final String curLetter, final com.bolsinga.web.Links links) {
-    if (entryIndex == null) {
-      return null;
-    }
-    
-    Vector<Element> e = new Vector<Element>();
-    org.apache.ecs.Element curElement = null;
-    if (curLetter == null) {
-      curElement = new StringElement(com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"));
-      e.add(curElement);
-    } else {
-      e.add(links.getOverviewLink());
-    }
-
-    for (String s : entryIndex.keySet()) {
-      if (s.equals(curLetter)) {
-        curElement = new StringElement(s);
-        e.add(curElement);
-      } else {
-        e.add(Web.getLinkToEntryYear(s, entryIndex));
-      }
-    }
-
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
-    return d;
-  }
-  
   public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
     DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, startYear);
     for (Entry item : items) {
@@ -454,7 +401,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     creator.complete();
   }
   
-  private static Table createOverviewTable(final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, String> entryIndex, final int startYear) {
+  private static Table createOverviewTable(final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final int startYear) {
     final String totalStr = com.bolsinga.web.Util.getResourceString("archivestotal");
 
     // entryGroups has as many items as the number of years. Add one for the final footer total row.
@@ -469,7 +416,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
       
       String year = Integer.toString(startYear + row);
       
-      curRow[0] = new TD(Web.getLinkToEntryYear(year, entryIndex)).toString();
+      com.bolsinga.web.IndexPair p = entryIndex.get(year);
+      curRow[0] = new TD(com.bolsinga.web.Util.createInternalA(p.getLink(), year, p.getTitle())).toString();
       
       int[] groupMonthTotals = new int[12];
       for (Entry entry : entryGroup) {
@@ -547,28 +495,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
   }
 
-/*
-  public static void generateOverviewPage(final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, String> entryIndex, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
-    final String docTitle = com.bolsinga.web.Util.getResourceString("archivesoverviewtitle");
-
-    Document doc = Web.createDocument(docTitle, startYear, links);
-
-    Div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
-
-    main.addElement(Web.getHeaderDivWithNavigator(docTitle, com.bolsinga.web.Util.getResourceString("program"), links, entryIndex, null));
-
-    main.addElement(Web.createOverviewTable(entryGroups, entryIndex, startYear));
-
-    doc.getBody().addElement(main);
-
-    StringBuilder sb = new StringBuilder();
-    sb.append(outputDir);
-    sb.append(File.separator);
-    sb.append(com.bolsinga.web.Links.ARCHIVES_DIR);
-    
-    Web.createHTMLFile(doc, "overview", sb.toString());
+  public static void generateOverviewPage(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
+    com.bolsinga.web.SingleElementDocumentCreator page = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, "overview", com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"), com.bolsinga.web.Links.ARCHIVES_DIR, new com.bolsinga.web.Navigator(links) {
+      public Element getOverviewNavigator() {
+        return getCurrentNavigator();
+      }
+      
+      public Element getCurrentNavigator() {
+        return new StringElement(com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"));
+      }
+    });
+    page.add(Web.createOverviewTable(entryGroups, entryIndex, startYear));
+    page.complete();
   }
-*/
 
   private static Element generateAltContent(final Diary diary, final com.bolsinga.web.Links links, final String program, final int startYear) {
     // Add data from diary colophon
