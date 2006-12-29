@@ -266,7 +266,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   }
 
   protected Element getCurrentElement() {
-    return Web.addItem(fEncoder, fLookup, fLinks, fCurShow);
+    return Web.addItem(fEncoder, fLookup, fLinks, fCurShow, true);
   }
   
   protected Navigator getNavigator() {
@@ -1120,13 +1120,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return com.bolsinga.web.Util.createUnorderedList(e);
   }
 
-  public static Element addItem(final com.bolsinga.web.Encode encoder, final Lookup lookup, final Show show) {
-    Links links = Links.getLinks(false);
-
-    return Web.addItem(encoder, lookup, links, show);
-  }
-
-  public static Element addItem(final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final Show show) {
+  public static Element addItem(final com.bolsinga.web.Encode encoder, final Lookup lookup, final Links links, final Show show, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
 
     e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
@@ -1135,7 +1129,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     String comment = show.getComment();
     if (comment != null) {
-      e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(encoder, show, true)));
+      e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(encoder, show, upOneLevel)));
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);

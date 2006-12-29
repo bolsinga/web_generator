@@ -322,13 +322,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     boolean includeMusic = com.bolsinga.web.Util.getSettings().isMainPageHasMusic();
     
     com.bolsinga.music.Lookup lookup = com.bolsinga.music.Lookup.getLookup(music);
+    com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(false);
 
     List<Object> items = com.bolsinga.web.Util.getRecentItems(mainPageEntryCount, music, diary, includeMusic);
     for (Object o : items) {
       if (o instanceof com.bolsinga.diary.data.Entry) {
         diaryDiv.addElement(Web.addItem(encoder, (com.bolsinga.diary.data.Entry)o, links, false));
       } else if (o instanceof com.bolsinga.music.data.Show) {
-        diaryDiv.addElement(com.bolsinga.music.Web.addItem(encoder, lookup, (com.bolsinga.music.data.Show)o));
+        // This appears at the top level
+        diaryDiv.addElement(com.bolsinga.music.Web.addItem(encoder, lookup, musicLinks, (com.bolsinga.music.data.Show)o, false));
       } else {
         System.err.println("Unknown recent item." + o.toString());
         Thread.dumpStack();
