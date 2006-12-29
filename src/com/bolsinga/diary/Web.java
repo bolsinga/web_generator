@@ -79,6 +79,19 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   }
 }
 
+class DiarySingleDocumentCreator extends com.bolsinga.web.SingleElementDocumentCreator {
+  private final int fStartYear;
+
+  public DiarySingleDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String filename, final String title, final String directory, final com.bolsinga.web.Navigator navigator, final int startYear) {
+    super(backgrounder, links, outputDir, filename, title, directory, navigator);
+    fStartYear = startYear;
+  }
+  
+  protected String getCopyright() {
+    return com.bolsinga.web.Util.getCopyright(fStartYear);
+  }
+}
+
 public class Web implements com.bolsinga.web.Backgroundable {
 
   private static final boolean GENERATE_XML = false;
@@ -212,13 +225,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
         Web.generateOverviewPage(diary, entryGroups, entryIndex, links, startYear, outputDir);
       }
     });
+*/    
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateAltPage(diary, music, links, startYear, outputDir);
+        Web.generateAltPage(backgrounder, diary, links, startYear, outputDir);
       }
     });
-*/    
   }
 
 /*  
@@ -557,9 +570,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 */
 
-  private static Element generateAltContent(final Diary diary, final String program, final int startYear) {
-    com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
-
+  private static Element generateAltContent(final Diary diary, final com.bolsinga.web.Links links, final String program, final int startYear) {
     // Add data from diary colophon
     UL list = com.bolsinga.web.Util.convertToUnOrderedList(diary.getColophon());
     
@@ -607,29 +618,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
 
-/*  
-  public static void generateAltPage(final Diary diary, final Music music, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
-    final String docTitle = com.bolsinga.web.Util.getResourceString("alttitle");
-
-    Document doc = Web.createDocument(docTitle, startYear, links);
-
-    Div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
-
-    String program = com.bolsinga.web.Util.getResourceString("program");
-    main.addElement(Web.getHeaderDiv(docTitle, program, links));
-    
-    main.addElement(Web.generateAltContent(diary, program, startYear));
-
-    doc.getBody().addElement(main);
-
-    StringBuilder sb = new StringBuilder();
-    sb.append(outputDir);
-    sb.append(File.separator);
-    sb.append(com.bolsinga.web.Links.ALT_DIR);
-    
-    Web.createHTMLFile(doc, "index", sb.toString());
+  public static void generateAltPage(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
+    com.bolsinga.web.SingleElementDocumentCreator altPage = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, "index", com.bolsinga.web.Util.getResourceString("alttitle"), com.bolsinga.web.Links.ALT_DIR, new com.bolsinga.web.Navigator(links) {
+      public Element getColophonNavigator() {
+        return getCurrentNavigator();
+      }
+      
+      public Element getCurrentNavigator() {
+        return new StringElement(com.bolsinga.web.Util.getResourceString("alttitle"));
+      }
+    });
+    altPage.add(Web.generateAltContent(diary, links, com.bolsinga.web.Util.getResourceString("program"), startYear));
+    altPage.complete();
   }
-*/
 
   public static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final com.bolsinga.web.Links links, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
