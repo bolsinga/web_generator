@@ -585,7 +585,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Web.createHTMLFile(doc, "overview", sb.toString());
   }
 
-  private static Element generateAltContent(final Diary diary, final int startYear) {
+  private static Element generateAltContent(final Diary diary, final String program, final int startYear) {
     com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(true);
     com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(true);
 
@@ -593,6 +593,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
     UL list = com.bolsinga.web.Util.convertToUnOrderedList(diary.getColophon());
     
     Vector<Element> e = new Vector<Element>();
+    
+    {
+    // Add email contact
+    Object[] args = { com.bolsinga.web.Util.getSettings().getContact(), program };
+    if (com.bolsinga.web.Util.getDebugOutput()) {
+      args[1] = null;
+    }
+    e.addElement(new A( MessageFormat.format(com.bolsinga.web.Util.getResourceString("mailto"), args),
+                        com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
+    }
     
     {
     // Add the name of the program
@@ -633,9 +643,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     Div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
 
-    main.addElement(Web.getHeaderDiv(docTitle, com.bolsinga.web.Util.getResourceString("program"), links));
+    String program = com.bolsinga.web.Util.getResourceString("program");
+    main.addElement(Web.getHeaderDiv(docTitle, program, links));
     
-    main.addElement(Web.generateAltContent(diary, startYear));
+    main.addElement(Web.generateAltContent(diary, program, startYear));
 
     doc.getBody().addElement(main);
 
