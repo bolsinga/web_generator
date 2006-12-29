@@ -43,8 +43,10 @@ public class SingleElementDocumentCreator extends DocumentCreator {
 
   protected String getLastPath() {
     StringBuilder sb = new StringBuilder();
-    sb.append(fDirectory);
-    sb.append(File.separator);
+    if (fDirectory != null) {
+      sb.append(fDirectory);
+      sb.append(File.separator);
+    }
     sb.append(fFileName);
     sb.append(Links.HTML_EXT);
     return sb.toString();
