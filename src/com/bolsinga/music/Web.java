@@ -893,12 +893,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
         if (comment != null) {
           se.add(com.bolsinga.web.Util.createInternalA(showLink, com.bolsinga.web.Util.getResourceString("showsummary"), com.bolsinga.web.Util.getResourceString("showsummarytitle")));
         }
-                            
-        Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_SHOW);
+        
+        ElementContainer ec = new ElementContainer(); // Artist Show
         String dateString = Util.toString(show.getDate());
-        d.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(showLink, dateString, dateString)));
-        d.addElement(com.bolsinga.web.Util.createUnorderedList(se));
-        e.add(d);
+        ec.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(showLink, dateString, dateString)));
+        ec.addElement(com.bolsinga.web.Util.createUnorderedList(se));
+        e.add(ec);
       }
     }
     
@@ -941,11 +941,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
           se.add(com.bolsinga.web.Util.createInternalA(showLink, com.bolsinga.web.Util.getResourceString("showsummary"), com.bolsinga.web.Util.getResourceString("showsummarytitle")));
         }
         
-        Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.VENUE_SHOW);
+        ElementContainer ec = new ElementContainer(); // Venue Show
         String dateString = Util.toString(show.getDate());
-        d.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(showLink, dateString, dateString)));
-        d.addElement(com.bolsinga.web.Util.createUnorderedList(se));
-        e.add(d);                        
+        ec.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(showLink, dateString, dateString)));
+        ec.addElement(com.bolsinga.web.Util.createUnorderedList(se));
+        e.add(ec);                        
       }
     }
                 
@@ -988,7 +988,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     String comment = show.getComment();
     if (comment != null) {
-      e.add(com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.SHOW_COMMENT).addElement(getLinkedData(encoder, show, upOneLevel)));
+      e.add(new StringElement(getLinkedData(encoder, show, upOneLevel)));
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
@@ -1093,7 +1093,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
 
-  public static Div addTracks(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
+  public static Element addTracks(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
     List<JAXBElement<Object>> albums = Util.getAlbumsCopy(artist);
@@ -1113,10 +1113,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
       e.add(new StringElement(sb.toString()));
     }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ARTIST_TRACKS);
-    d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("albums")));
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
-    return d;
+    ElementContainer ec = new ElementContainer();
+    ec.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("albums")));
+    ec.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    return ec;
   }
   
   private static java.util.Map<String, com.bolsinga.web.IndexPair> createArtistIndex(final Collection<Artist> artists, final com.bolsinga.web.Links links) {

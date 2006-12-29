@@ -140,6 +140,10 @@ public abstract class DocumentCreator implements Backgroundable {
   protected void add() {
     getMain().addElement(getCurrentElement());
   }
+  
+  protected boolean isTwoColumn() {
+    return true;
+  }
     
   protected Div getMain() {
     if ((fDocument == null) || needNewDocument()) {
@@ -147,8 +151,10 @@ public abstract class DocumentCreator implements Backgroundable {
             
       fDocument = createDocument();
       fDocument.getBody().addElement(getHeaderDiv());
+      
+      String divType = isTwoColumn() ? CSS.DOC_2_COL_BODY : CSS.DOC_3_COL_BODY;
                         
-      fMain = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DOC_MAIN);
+      fMain = Util.createDiv(divType);
     }
     return fMain;
   }

@@ -272,7 +272,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 */
 
   private static Div createMainStatics(final String statics) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_OFFSITE);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.STATICS_OFFSITE);
     d.addElement(new H4(com.bolsinga.web.Util.getSettings().getLinksTitle()));
     if (statics != null) {
       d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(statics));
@@ -281,7 +281,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   private static Div createMainLinks(final String friends) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_OFFSITE);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.STATICS_OFFSITE);
     d.addElement(new H4(com.bolsinga.web.Util.getSettings().getFriendsTitle()));
     if (friends != null) {
       d.addElement(com.bolsinga.web.Util.convertToUnOrderedList(friends));
@@ -290,14 +290,14 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   private static Div generateColumn1(final String statics, final String friends) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL1);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.STATICS_HEADER);
     d.addElement(Web.createMainStatics(statics));
     d.addElement(Web.createMainLinks(friends));
     return d;
   }
         
   private static Element generateDiary(final com.bolsinga.web.Encode encoder, final Diary diary, final Music music, final com.bolsinga.web.Links links) {
-    Div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_DIARY);
+    Div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DOC_SUB);
 
     int mainPageEntryCount = com.bolsinga.web.Util.getSettings().getDiaryCount().intValue();
     boolean includeMusic = com.bolsinga.web.Util.getSettings().isMainPageHasMusic();
