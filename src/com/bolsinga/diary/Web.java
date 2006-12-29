@@ -496,7 +496,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   public static void generateOverviewPage(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
-    com.bolsinga.web.SingleElementDocumentCreator page = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, "overview", com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"), com.bolsinga.web.Links.ARCHIVES_DIR, new com.bolsinga.web.Navigator(links) {
+    com.bolsinga.web.SingleElementDocumentCreator page = new DiarySingleDocumentCreator(backgrounder, links, outputDir, "overview", com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"), com.bolsinga.web.Links.ARCHIVES_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getOverviewNavigator() {
         return getCurrentNavigator();
       }
@@ -504,7 +504,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       public Element getCurrentNavigator() {
         return new StringElement(com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"));
       }
-    });
+    }, startYear);
     page.add(Web.createOverviewTable(entryGroups, entryIndex, startYear));
     page.complete();
   }
@@ -558,7 +558,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   public static void generateAltPage(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
-    com.bolsinga.web.SingleElementDocumentCreator altPage = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, "index", com.bolsinga.web.Util.getResourceString("alttitle"), com.bolsinga.web.Links.ALT_DIR, new com.bolsinga.web.Navigator(links) {
+    com.bolsinga.web.SingleElementDocumentCreator altPage = new DiarySingleDocumentCreator(backgrounder, links, outputDir, "index", com.bolsinga.web.Util.getResourceString("alttitle"), com.bolsinga.web.Links.ALT_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getColophonNavigator() {
         return getCurrentNavigator();
       }
@@ -566,7 +566,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       public Element getCurrentNavigator() {
         return new StringElement(com.bolsinga.web.Util.getResourceString("alttitle"));
       }
-    });
+    }, startYear);
     altPage.add(Web.generateAltContent(diary, links, com.bolsinga.web.Util.getResourceString("program"), startYear));
     altPage.complete();
   }
