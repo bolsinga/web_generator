@@ -37,7 +37,6 @@ public class CSS {
   public static final String DOC_SUB         = "doc_sub";
                                                
   public static final String MUSIC_HEADER    = "music_header";
-  public static final String MUSIC_MENU      = "music_menu";
                                                
   public static final String SHOW_COMMENT    = "show_comment";
                                                
@@ -97,7 +96,6 @@ public class CSS {
     writeCSSDeclaration(pw, DOC_MAIN);
     writeCSSDeclaration(pw, DOC_SUB);
     writeCSSDeclaration(pw, MUSIC_HEADER);
-    writeCSSDeclaration(pw, MUSIC_MENU);
     writeCSSDeclaration(pw, SHOW_COMMENT);
     writeCSSDeclaration(pw, VENUE_SHOW);
     writeCSSDeclaration(pw, TABLE_HEADER);
