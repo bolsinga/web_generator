@@ -29,19 +29,6 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
   }
 }
 
-abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
-  protected final Lookup fLookup;
-
-  protected SingleSectionMusicDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, links, outputDir);
-    fLookup = lookup;
-  }
-
-  protected String getCopyright() {
-    return com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue());
-  }
-}
-
 class ArtistDocumentCreator extends MusicDocumentCreator {
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fArtistIndex;
 
@@ -210,7 +197,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   }
 }
 
-class StatisticsCreator extends SingleSectionMusicDocumentCreator {
+class StatisticsCreator extends com.bolsinga.web.DocumentCreator {
   private final String fFileName;
   private final String fTitle;
   private final String fDirectory;
@@ -219,8 +206,8 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
   // This changes during the life-cycle of this object
   private Table  fCurTable  = null;
 
-  public StatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir, final String filename, final String title, final String directory, final com.bolsinga.web.Navigator navigator) {
-    super(backgrounder, lookup, links, outputDir);
+  public StatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String filename, final String title, final String directory, final com.bolsinga.web.Navigator navigator) {
+    super(backgrounder, links, outputDir);
     fFileName = filename;
     fTitle = title;
     fDirectory = directory;
@@ -260,21 +247,25 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
   protected com.bolsinga.web.Navigator getNavigator() {
     return fNavigator;
   }
+
+  protected String getCopyright() {
+    return com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue());
+  }
 }
 
 class TracksStatisticsCreator extends StatisticsCreator {
   private final boolean fTracksStats;
         
-  public static TracksStatisticsCreator createTracksStats(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir, final String title, final String directory) {
-    return new TracksStatisticsCreator(backgrounder, lookup, links, outputDir, com.bolsinga.web.Links.STATS, true, title, directory);
+  public static TracksStatisticsCreator createTracksStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String title, final String directory) {
+    return new TracksStatisticsCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, true, title, directory);
   }
 
-  public static TracksStatisticsCreator createAlbumStats(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir, final String title, final String directory) {
-    return new TracksStatisticsCreator(backgrounder, lookup, links, outputDir, com.bolsinga.web.Links.ALBUM_STATS, false, title, directory);
+  public static TracksStatisticsCreator createAlbumStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String title, final String directory) {
+    return new TracksStatisticsCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.ALBUM_STATS, false, title, directory);
   }
 
-  private TracksStatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir, final String filename, final boolean isTracksStats, final String title, final String directory) {
-    super(backgrounder, lookup, links, outputDir, filename, title, directory, new com.bolsinga.web.Navigator(links) {
+  private TracksStatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String filename, final boolean isTracksStats, final String title, final String directory) {
+    super(backgrounder, links, outputDir, filename, title, directory, new com.bolsinga.web.Navigator(links) {
       public Element getTrackNavigator() {
         return getCurrentNavigator();
       }
@@ -287,16 +278,18 @@ class TracksStatisticsCreator extends StatisticsCreator {
   }
 }
 
-class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
+class TracksDocumentCreator extends com.bolsinga.web.DocumentCreator {
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fAlbumIndex;
+  protected final Lookup fLookup;
 
   // These change during the life-cycle of this object
   private Album fLastAlbum = null;
   private Album fCurAlbum  = null;
           
   public TracksDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> albumIndex, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, lookup, links, outputDir);
+    super(backgrounder, links, outputDir);
     fAlbumIndex = albumIndex;
+    fLookup = lookup;
   }
         
   public void add(final Album item) {
@@ -331,6 +324,10 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
         return com.bolsinga.web.Util.addCurrentIndexNavigator(fAlbumIndex, getCurrentLetter(), super.getTrackNavigator());
       }
     };
+  }
+
+  protected String getCopyright() {
+    return com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue());
   }
 }
 
@@ -634,7 +631,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.ARTIST_DIR, new com.bolsinga.web.Navigator(links) {
+    StatisticsCreator stats = new StatisticsCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.ARTIST_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getArtistNavigator() {
         return getCurrentNavigator();
       }
@@ -676,7 +673,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.VENUE_DIR, new com.bolsinga.web.Navigator(links) {
+    StatisticsCreator stats = new StatisticsCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.VENUE_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getVenueNavigator() {
         return getCurrentNavigator();
       }
@@ -733,7 +730,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator stats = new StatisticsCreator(backgrounder, lookup, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.SHOW_DIR, new com.bolsinga.web.Navigator(links) {
+    StatisticsCreator stats = new StatisticsCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.SHOW_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getShowNavigator() {
         return getCurrentNavigator();
       }
@@ -789,7 +786,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    StatisticsCreator creator = new StatisticsCreator(backgrounder, lookup, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.CITIES_DIR, new com.bolsinga.web.Navigator(links) {
+    StatisticsCreator creator = new StatisticsCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.CITIES_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getCityNavigator() {
         return getCurrentNavigator();
       }
@@ -835,7 +832,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Object titleArgs[] = { tracksTableTitle, albumsTableTitle };
       String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumtrackstitle"), titleArgs);
       
-      StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(backgrounder, lookup, links, outputDir, pageTitle, com.bolsinga.web.Links.TRACKS_DIR);
+      StatisticsCreator stats = TracksStatisticsCreator.createTracksStats(backgrounder, links, outputDir, pageTitle, com.bolsinga.web.Links.TRACKS_DIR);
       stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("trackstatsummary")));
       stats.complete();
     }
@@ -867,7 +864,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Object titleArgs[] = { tracksTableTitle, albumsTableTitle };
       String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumtrackstitle"), titleArgs);
 
-      StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(backgrounder, lookup, links, outputDir, pageTitle, com.bolsinga.web.Links.TRACKS_DIR);
+      StatisticsCreator stats = TracksStatisticsCreator.createAlbumStats(backgrounder, links, outputDir, pageTitle, com.bolsinga.web.Links.TRACKS_DIR);
       stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("albumstatsummary")));
       stats.complete();
     }
