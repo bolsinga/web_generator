@@ -48,14 +48,16 @@ public abstract class DocumentCreator implements Backgroundable {
   private static final boolean sUseAsynchronousIO = Boolean.getBoolean("web.asynchronousio");
 
   private final Backgrounder fBackgrounder;
+  protected final Links fLinks;
   private final String fOutputDir;
 
   // These change during the life-cycle of this object
   private Document fDocument = null;
   private Div fMain = null;
         
-  protected DocumentCreator(final Backgrounder backgrounder, final String outputDir) {
+  protected DocumentCreator(final Backgrounder backgrounder, final Links links, final String outputDir) {
     fBackgrounder = backgrounder;
+    fLinks = links;
     fOutputDir = outputDir;
     fBackgrounder.addInterest(this);
   }

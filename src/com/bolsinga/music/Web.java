@@ -18,12 +18,10 @@ import javax.xml.bind.Marshaller;
 
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   protected final Lookup fLookup;
-  protected final com.bolsinga.web.Links fLinks;
     
   protected MusicDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, outputDir);
+    super(backgrounder, links, outputDir);
     fLookup = lookup;
-    fLinks = links;
   }
 
   protected Document createDocument() {
@@ -33,12 +31,10 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
 
 abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.DocumentCreator {
   protected final Lookup fLookup;
-  protected final com.bolsinga.web.Links fLinks;
 
   protected SingleSectionMusicDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, outputDir);
+    super(backgrounder, links, outputDir);
     fLookup = lookup;
-    fLinks = links;
   }
   
   protected Document createDocument() {

@@ -18,7 +18,6 @@ import javax.xml.bind.Marshaller;
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fEntryIndex;
-  private final com.bolsinga.web.Links  fLinks;
   private final int fStartYear;
 
   // These change during the life-cycle of this object
@@ -26,10 +25,9 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private Entry  fLastEntry;
         
   public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir, final int startYear) {
-    super(backgrounder, outputDir);
+    super(backgrounder, links, outputDir);
     fEncoder = encoder;
     fEntryIndex = entryIndex;
-    fLinks = links;
     fStartYear = startYear;
   }
 
