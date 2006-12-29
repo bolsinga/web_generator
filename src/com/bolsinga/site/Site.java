@@ -30,7 +30,7 @@ public class Site implements com.bolsinga.web.Backgroundable {
       String user = args[1];
       String password = args[2];
       
-      diary = com.bolsinga.diary.Util.createDiary(user, password);
+      diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
       music = com.bolsinga.music.Util.createMusic(user, password);
     } else {
       Site.usage();

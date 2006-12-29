@@ -94,7 +94,7 @@ public class Main implements com.bolsinga.web.Backgroundable {
       diary = com.bolsinga.diary.Util.createDiary(diaryFile);
       music = com.bolsinga.music.Util.createMusic(musicFile);
     } else {
-      diary = com.bolsinga.diary.Util.createDiary(user, password);
+      diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
       music = com.bolsinga.music.Util.createMusic(user, password);
     }
 
