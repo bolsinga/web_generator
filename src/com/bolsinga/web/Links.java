@@ -1,4 +1,4 @@
-package com.bolsinga.music;
+package com.bolsinga.web;
 
 import com.bolsinga.diary.data.*;
 import com.bolsinga.music.data.*;
@@ -82,7 +82,7 @@ public class Links {
   }
         
   public String getPageFileName(final String name) {
-    String file = Compare.simplify(name).substring(0, 1).toUpperCase();
+    String file = com.bolsinga.music.Compare.simplify(name).substring(0, 1).toUpperCase();
     if (file.matches("\\W")) {
       file = OTHER;
     }

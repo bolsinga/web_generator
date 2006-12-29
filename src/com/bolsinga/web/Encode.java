@@ -540,7 +540,7 @@ class HashEncode extends Encode {
 
   public String embedLinks(final Entry entry, final boolean upOneLevel) {
     String result = embedLinks(entry, entry.getComment(), upOneLevel);
-    return Encode.encodeROOT_URL(result, com.bolsinga.diary.Links.getLinks(upOneLevel).getLevelOnly());
+    return Encode.encodeROOT_URL(result, com.bolsinga.web.Links.getLinks(upOneLevel).getLevelOnly());
   }
   
   private String embedLinks(final Object obj, final String source, final boolean upOneLevel) {

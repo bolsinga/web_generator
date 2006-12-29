@@ -66,7 +66,7 @@ public class RSS {
       StringBuilder sb = new StringBuilder();
       sb.append(outputDir);
       sb.append(File.separator);
-      sb.append(com.bolsinga.diary.Links.ALT_DIR);
+      sb.append(com.bolsinga.web.Links.ALT_DIR);
       File f = new File(sb.toString(), com.bolsinga.web.Util.getSettings().getRssFile());
       File parent = new File(f.getParent());
       if (!parent.mkdirs()) {
@@ -84,7 +84,7 @@ public class RSS {
     generate(diary, music, os);
   }
 
-  public static void add(final com.bolsinga.music.data.Show show, final com.bolsinga.music.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  public static void add(final com.bolsinga.music.data.Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
     add(getTitle(show), com.bolsinga.music.Util.toCalendarUTC(show.getDate()), links.getLinkTo(show), show.getComment(), objFactory, channel);
   }
         
@@ -111,7 +111,7 @@ public class RSS {
     return sb.toString();
   }
 
-  public static void add(final com.bolsinga.diary.data.Entry entry, final com.bolsinga.diary.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  public static void add(final com.bolsinga.diary.data.Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
     add(com.bolsinga.diary.Util.getTitle(entry), entry.getTimestamp().toGregorianCalendar(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
   }
 
@@ -159,16 +159,15 @@ public class RSS {
                         
       channelElements.add(objFactory.createTRssChannelImage(logo));
                         
-      com.bolsinga.music.Links musicLinks = com.bolsinga.music.Links.getLinks(false);
-      com.bolsinga.diary.Links diaryLinks = com.bolsinga.diary.Links.getLinks(false);
+      com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(false);
 
       int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
 
       for (Object o : com.bolsinga.web.Util.getRecentItems(entryCount, music, diary)) {
         if (o instanceof com.bolsinga.music.data.Show) {
-          RSS.add((Show)o, musicLinks, objFactory, channel);
+          RSS.add((Show)o, links, objFactory, channel);
         } else if (o instanceof com.bolsinga.diary.data.Entry) {
-          RSS.add((Entry)o, diaryLinks, objFactory, channel);
+          RSS.add((Entry)o, links, objFactory, channel);
         } else {
           System.err.println("Unknown recent item." + o.toString());
           Thread.dumpStack();

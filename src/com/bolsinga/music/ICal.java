@@ -79,7 +79,7 @@ public class ICal {
       StringBuilder sb = new StringBuilder();
       sb.append(outputDir);
       sb.append(File.separator);
-      sb.append(Links.ALT_DIR);
+      sb.append(com.bolsinga.web.Links.ALT_DIR);
       File f = new File(sb.toString(), name + ".ics");
       File parent = new File(f.getParent());
       if (!parent.mkdirs()) {

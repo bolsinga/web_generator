@@ -11,34 +11,34 @@ package com.bolsinga.web;
 import org.apache.ecs.*;
 
 public class Navigator {
-  private final com.bolsinga.music.Links fMusicLinks;
+  private final Links fLinks;
   
-  public Navigator(final com.bolsinga.music.Links musicLinks) {
-    fMusicLinks = musicLinks;
+  public Navigator(final Links links) {
+    fLinks = links;
   }
   
   public Element getHomeNavigator() {
-    return fMusicLinks.getLinkToHome();
+    return fLinks.getLinkToHome();
   }
   
   public Element getArtistNavigator() {
-    return fMusicLinks.getArtistLink();
+    return fLinks.getArtistLink();
   }
   
   public Element getTrackNavigator() {
-    return fMusicLinks.getTracksLink();
+    return fLinks.getTracksLink();
   }
   
   public Element getShowNavigator() {
-    return fMusicLinks.getShowLink();
+    return fLinks.getShowLink();
   }
   
   public Element getVenueNavigator() {
-    return fMusicLinks.getVenueLink();
+    return fLinks.getVenueLink();
   }
   
   public Element getCityNavigator() {
-    return fMusicLinks.getCityLink();
+    return fLinks.getCityLink();
   }
   
   public Element getCurrentNavigator() {
