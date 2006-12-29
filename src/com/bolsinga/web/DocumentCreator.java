@@ -65,7 +65,36 @@ public abstract class DocumentCreator implements Backgroundable {
   protected abstract String getTitle();
 
   protected abstract boolean needNewDocument();
-  protected abstract Document createDocument();
+  
+  protected abstract String getCopyright();
+  
+  private Document createDocument() {
+    Document d = new Document(ECSDefaults.getDefaultCodeset());
+                
+    d.getHtml().setPrettyPrint(Util.getPrettyOutput());
+                
+    d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
+    d.appendTitle(getTitle());
+                
+    Head h = d.getHead();
+    h.setPrettyPrint(Util.getPrettyOutput());
+    h.addElement(Util.getIconLink());
+    h.addElement(fLinks.getLinkToRSS());
+    h.addElement(fLinks.getLinkToStyleSheet());
+                
+    h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
+    h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
+    if (!Util.getDebugOutput()) {
+      h.addElement(new Meta().setContent(Util.nowUTC().getTime().toString()).setName("Date"));
+    }
+    h.addElement(new Meta().setContent(Util.getGenerator()).setName("Generator"));
+    h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
+
+    d.getBody().setPrettyPrint(Util.getPrettyOutput());
+                                                
+    return d;
+  }
+
   protected abstract Navigator getNavigator();
   
   private Div getHeaderDiv() {

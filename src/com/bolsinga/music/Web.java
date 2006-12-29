@@ -24,8 +24,8 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
     fLookup = lookup;
   }
 
-  protected Document createDocument() {
-    return Web.createHTMLDocument(fLinks, getTitle());
+  protected String getCopyright() {
+    return com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue());
   }
 }
 
@@ -36,9 +36,9 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
     super(backgrounder, links, outputDir);
     fLookup = lookup;
   }
-  
-  protected Document createDocument() {
-    return Web.createHTMLDocument(fLinks, getTitle());
+
+  protected String getCopyright() {
+    return com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue());
   }
 }
 
@@ -1266,31 +1266,5 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     }
     return Collections.unmodifiableMap(m);
-  }
-        
-  static Document createHTMLDocument(final com.bolsinga.web.Links links, final String title) {
-    Document d = new Document(ECSDefaults.getDefaultCodeset());
-
-    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-                
-    d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
-    d.appendTitle(title);
-                
-    Head h = d.getHead();
-    h.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-    h.addElement(com.bolsinga.web.Util.getIconLink());
-    h.addElement(links.getLinkToStyleSheet());
-
-    h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
-    h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
-    if (!com.bolsinga.web.Util.getDebugOutput()) {
-      h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
-    }
-    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
-    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue())).setName("Copyright"));
-
-    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-
-    return d;
   }
 }

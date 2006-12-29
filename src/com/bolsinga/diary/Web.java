@@ -45,8 +45,8 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     return ((fLastEntry == null) || !fLinks.getPageFileName(fLastEntry).equals(getCurrentLetter()));
   }
 
-  protected Document createDocument() {
-    return Web.createDocument(getTitle(), fStartYear, fLinks);
+  protected String getCopyright() {
+    return com.bolsinga.web.Util.getCopyright(fStartYear);
   }
 
   protected com.bolsinga.web.Navigator getNavigator() {
@@ -188,11 +188,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
     final int startYear = Util.getStartYear(diary);
     final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
 
+/*
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         Web.generateMainPage(encoder, music, diary, startYear, outputDir);
       }
     });
+*/
 
     final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex = Web.createEntryIndex(com.bolsinga.diary.Util.getEntriesUnmodifiable(diary), links);
     final Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
@@ -210,15 +212,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
         Web.generateOverviewPage(diary, entryGroups, entryIndex, links, startYear, outputDir);
       }
     });
-*/    
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         Web.generateAltPage(diary, music, links, startYear, outputDir);
       }
     });
+*/    
   }
-  
+
+/*  
   private static void createHTMLFile(final Document doc, final String filename, final String outputDir) {
     try {
       StringBuffer sb = new StringBuffer();
@@ -240,7 +243,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
       System.exit(1);
     }
   }
+*/
 
+/*
   public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
     com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(false);
 
@@ -264,6 +269,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     
     Web.createHTMLFile(doc, "index", outputDir);
   }
+*/
 
   private static Div createMainStatics(final String statics) {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_OFFSITE);
@@ -287,33 +293,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL1);
     d.addElement(Web.createMainStatics(statics));
     d.addElement(Web.createMainLinks(friends));
-    return d;
-  }
-        
-  public static Document createDocument(final String title, final int startYear, final com.bolsinga.web.Links links) {
-    Document d = new Document(ECSDefaults.getDefaultCodeset());
-                
-    d.getHtml().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-                
-    d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
-    d.appendTitle(title);
-                
-    Head h = d.getHead();
-    h.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-    h.addElement(com.bolsinga.web.Util.getIconLink());
-    h.addElement(links.getLinkToRSS());
-    h.addElement(links.getLinkToStyleSheet());
-                
-    h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
-    h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
-    if (!com.bolsinga.web.Util.getDebugOutput()) {
-      h.addElement(new Meta().setContent(com.bolsinga.web.Util.nowUTC().getTime().toString()).setName("Date"));
-    }
-    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getGenerator()).setName("Generator"));
-    h.addElement(new Meta().setContent(com.bolsinga.web.Util.getCopyright(startYear)).setName("Copyright"));
-
-    d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-                                                
     return d;
   }
         
@@ -555,6 +534,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
   }
 
+/*
   public static void generateOverviewPage(final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, String> entryIndex, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
     final String docTitle = com.bolsinga.web.Util.getResourceString("archivesoverviewtitle");
 
@@ -575,6 +555,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     
     Web.createHTMLFile(doc, "overview", sb.toString());
   }
+*/
 
   private static Element generateAltContent(final Diary diary, final String program, final int startYear) {
     com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
@@ -625,7 +606,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(com.bolsinga.web.Util.appendToUnorderedList(list, e));
     return d;
   }
-  
+
+/*  
   public static void generateAltPage(final Diary diary, final Music music, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
     final String docTitle = com.bolsinga.web.Util.getResourceString("alttitle");
 
@@ -647,6 +629,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     
     Web.createHTMLFile(doc, "index", sb.toString());
   }
+*/
 
   public static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final com.bolsinga.web.Links links, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
