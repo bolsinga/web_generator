@@ -19,19 +19,17 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fEntryIndex;
   private final com.bolsinga.web.Links  fLinks;
-  private final String fProgram;
   private final int fStartYear;
 
   // These change during the life-cycle of this object
   private Entry  fCurEntry;
   private Entry  fLastEntry;
         
-  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir, final String program, final int startYear) {
+  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir, final int startYear) {
     super(backgrounder, outputDir);
     fEncoder = encoder;
     fEntryIndex = entryIndex;
     fLinks = links;
-    fProgram = program;
     fStartYear = startYear;
   }
 
@@ -459,7 +457,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
   
   public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
-    DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
+    DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, startYear);
     for (Entry item : items) {
       creator.add(item);
     }
