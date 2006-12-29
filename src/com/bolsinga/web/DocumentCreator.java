@@ -64,7 +64,31 @@ public abstract class DocumentCreator implements Backgroundable {
 
   protected abstract boolean needNewDocument();
   protected abstract Document createDocument();
-  protected abstract Div getHeaderDiv();
+  protected abstract Navigator getNavigator();
+  
+  private Div getHeaderDiv() {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.NAV_HEADER);
+    d.addElement(new H1().addElement(getTitle()));
+    d.addElement(com.bolsinga.web.Util.getLogo());
+
+    Navigator navigator = getNavigator();
+    Vector<Element> e = new Vector<Element>();
+    e.add(navigator.getHomeNavigator());
+    e.add(navigator.getColophonNavigator());
+    e.add(navigator.getOverviewNavigator());
+    e.add(navigator.getArtistNavigator());
+    e.add(navigator.getShowNavigator());
+    e.add(navigator.getVenueNavigator());
+    e.add(navigator.getCityNavigator());
+    e.add(navigator.getTrackNavigator());
+    
+    Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
+    indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e, navigator.getCurrentNavigator()));
+    
+    d.addElement(indexNavigator);
+    
+    return d;
+  }
     
   protected abstract String getLastPath();
   protected abstract String getCurrentLetter();
@@ -110,29 +134,6 @@ public abstract class DocumentCreator implements Backgroundable {
         
   protected String getTitle(final String type) {
     return Util.createPageTitle(getCurrentLetter(), type);
-  }
-  
-  public static Div getHeaderDiv(final String title, final com.bolsinga.web.Navigator navigator) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.NAV_HEADER);
-    d.addElement(new H1().addElement(title));
-    d.addElement(com.bolsinga.web.Util.getLogo());
-
-    Vector<Element> e = new Vector<Element>();
-    e.add(navigator.getHomeNavigator());
-    e.add(navigator.getColophonNavigator());
-    e.add(navigator.getOverviewNavigator());
-    e.add(navigator.getArtistNavigator());
-    e.add(navigator.getShowNavigator());
-    e.add(navigator.getVenueNavigator());
-    e.add(navigator.getCityNavigator());
-    e.add(navigator.getTrackNavigator());
-    
-    Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e, navigator.getCurrentNavigator()));
-    
-    d.addElement(indexNavigator);
-    
-    return d;
   }
         
   protected void finalize() throws Throwable {

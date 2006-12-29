@@ -60,10 +60,6 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
       }
     };
   }
-  
-  protected Div getHeaderDiv() {
-    return com.bolsinga.web.DocumentCreator.getHeaderDiv(getTitle(), getNavigator());
-  }
 
   protected boolean needNewSubsection() {
     return ((fLastEntry == null) || (fLastEntry.getTimestamp().getMonth() != fCurEntry.getTimestamp().getMonth()));
