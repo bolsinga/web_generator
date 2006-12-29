@@ -315,27 +315,18 @@ public class Util {
                 
     return cp.toString();
   }
-
-  public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary) {
-    return Util.getRecentItems(count, music, diary, true);
-  }
  
-  public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final boolean includeMusic) {
-    List<Show> shows = null;
-    if (includeMusic) {
-      shows = com.bolsinga.music.Util.getShowsCopy(music);
-      Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
-      Collections.reverse(shows);
-    }
+  public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary) {
+    List<Show> shows = com.bolsinga.music.Util.getShowsCopy(music);
+    Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
+    Collections.reverse(shows);
 
     List<Entry> entries = com.bolsinga.diary.Util.getEntriesCopy(diary);
     Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
     Collections.reverse(entries);
     
     List<Object> items = new Vector<Object>(count * 2);
-    if (shows != null) {
-      items.addAll(shows.subList(0, count));
-    }
+    items.addAll(shows.subList(0, count));
     items.addAll(entries.subList(0, count));
     
     Collections.sort(items, CHANNEL_ITEM_COMPARATOR);

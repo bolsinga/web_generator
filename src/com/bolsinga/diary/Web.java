@@ -270,11 +270,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Div diaryDiv = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DOC_SUB);
 
     int mainPageEntryCount = com.bolsinga.web.Util.getSettings().getDiaryCount().intValue();
-    boolean includeMusic = com.bolsinga.web.Util.getSettings().isMainPageHasMusic();
     
     com.bolsinga.music.Lookup lookup = com.bolsinga.music.Lookup.getLookup(music);
 
-    List<Object> items = com.bolsinga.web.Util.getRecentItems(mainPageEntryCount, music, diary, includeMusic);
+    List<Object> items = com.bolsinga.web.Util.getRecentItems(mainPageEntryCount, music, diary);
     for (Object o : items) {
       if (o instanceof com.bolsinga.diary.data.Entry) {
         diaryDiv.addElement(Web.addItem(encoder, (com.bolsinga.diary.data.Entry)o, links, false));
