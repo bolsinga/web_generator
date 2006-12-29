@@ -354,4 +354,15 @@ public class Links {
     String h = com.bolsinga.web.Util.getResourceString("home");
     return com.bolsinga.web.Util.createInternalA(url.toString(), h, h);
   }
+  
+  public A getLinkToColophon() {
+    StringBuilder url = new StringBuilder();
+    url.append(getLevel());
+    url.append(Links.ALT_DIR);
+    url.append(File.separator);
+    url.append("index");
+    url.append(Links.HTML_EXT);
+    String h = com.bolsinga.web.Util.getResourceString("alttitle");
+    return com.bolsinga.web.Util.createInternalA(url.toString(), h, h);
+  }
 }
