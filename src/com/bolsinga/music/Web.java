@@ -941,10 +941,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Element generatePreview(final Music music) {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
     d.addElement(com.bolsinga.web.Util.getLogo());
-    if (!com.bolsinga.web.Util.getDebugOutput()) {
-      Object[] genArgs = { music.getTimestamp().toGregorianCalendar().getTime() };
-      d.addElement(new H3(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), genArgs)));
-    }
                 
     Links links = Links.getLinks(false);
 

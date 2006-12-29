@@ -391,18 +391,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_HEADER);
     d.addElement(new H1().addElement(title));
     d.addElement(com.bolsinga.web.Util.getLogo());
-
-    Object[] args2 = { com.bolsinga.web.Util.getSettings().getContact(), program };
-    if (com.bolsinga.web.Util.getDebugOutput()) {
-      args2[1] = null;
-    }
-    if (!com.bolsinga.web.Util.getDebugOutput()) {
-      Object[] args = { Calendar.getInstance().getTime() }; // LocalTime OK
-      d.addElement(new H4(MessageFormat.format(com.bolsinga.web.Util.getResourceString("updated"), args)));
-    }
-    d.addElement(new A(
-      MessageFormat.format( com.bolsinga.web.Util.getResourceString("mailto"), args2), 
-                            com.bolsinga.web.Util.getResourceString("contact"))); // mailto: URL
     
     d.addElement(links.getLinkToHome());
     return d;
