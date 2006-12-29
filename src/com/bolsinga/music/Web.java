@@ -19,8 +19,8 @@ import javax.xml.bind.Marshaller;
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   protected final Lookup fLookup;
     
-  protected MusicDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, links, outputDir);
+  protected MusicDocumentCreator(final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+    super(links, outputDir);
     fLookup = lookup;
   }
 
@@ -36,8 +36,8 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
   private Artist fLastArtist = null;
   private Artist fCurArtist  = null;
           
-  public ArtistDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> artistIndex, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, lookup, links, outputDir);
+  public ArtistDocumentCreator(final java.util.Map<String, com.bolsinga.web.IndexPair> artistIndex, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+    super(lookup, links, outputDir);
     fArtistIndex = artistIndex;
   }
 
@@ -91,8 +91,8 @@ class VenueDocumentCreator extends MusicDocumentCreator {
   private Venue fLastVenue = null;
   private Venue fCurVenue  = null;
     
-  public VenueDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> venueIndex, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, lookup, links, outputDir);
+  public VenueDocumentCreator(final java.util.Map<String, com.bolsinga.web.IndexPair> venueIndex, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+    super(lookup, links, outputDir);
     fVenueIndex = venueIndex;
   }
 
@@ -147,8 +147,8 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   private Show fLastShow = null;
   private Show fCurShow  = null;
 
-  public ShowDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> showIndex, final Lookup lookup, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, lookup, links, outputDir);
+  public ShowDocumentCreator(final java.util.Map<String, com.bolsinga.web.IndexPair> showIndex, final Lookup lookup, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir) {
+    super(lookup, links, outputDir);
     fEncoder = encoder;
     fShowIndex = showIndex;
   }
@@ -205,8 +205,8 @@ class TracksDocumentCreator extends com.bolsinga.web.DocumentCreator {
   private Album fLastAlbum = null;
   private Album fCurAlbum  = null;
           
-  public TracksDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> albumIndex, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    super(backgrounder, links, outputDir);
+  public TracksDocumentCreator(final java.util.Map<String, com.bolsinga.web.IndexPair> albumIndex, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+    super(links, outputDir);
     fAlbumIndex = albumIndex;
     fLookup = lookup;
   }
@@ -360,13 +360,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
     for (final Collection<Artist> artistGroup : artistGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          Web.generateArtistPages(backgrounder, artistGroup, artistIndex, lookup, links, outputDir);
+          Web.generateArtistPages(artistGroup, artistIndex, lookup, links, outputDir);
         }
       });
     }
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateArtistStats(backgrounder, music, lookup, links, outputDir);
+        Web.generateArtistStats(music, lookup, links, outputDir);
       }
     });
     
@@ -375,13 +375,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
     for (final Collection<Venue> venueGroup : venueGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          Web.generateVenuePages(backgrounder, venueGroup, venueIndex, lookup, links, outputDir);
+          Web.generateVenuePages(venueGroup, venueIndex, lookup, links, outputDir);
         }
       });
     }
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateVenueStats(backgrounder, music, lookup, links, outputDir);
+        Web.generateVenueStats(music, lookup, links, outputDir);
       }
     });
 
@@ -390,19 +390,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
     for (final Collection<Show> showGroup : showGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          Web.generateDatePages(backgrounder, showGroup, showIndex, encoder, lookup, links, outputDir);
+          Web.generateDatePages(showGroup, showIndex, encoder, lookup, links, outputDir);
         }
       });
     }
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateDateStats(backgrounder, music, showIndex, encoder, lookup, links, outputDir);
+        Web.generateDateStats(music, showIndex, encoder, lookup, links, outputDir);
       }
     });
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateCityPages(backgrounder, music, lookup, links, outputDir);
+        Web.generateCityPages(music, lookup, links, outputDir);
       }
     });
 
@@ -411,18 +411,18 @@ public class Web implements com.bolsinga.web.Backgroundable {
     for (final Collection<Album> albumGroup : albumGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          Web.generateTracksPages(backgrounder, albumGroup, albumIndex, lookup, links, outputDir);
+          Web.generateTracksPages(albumGroup, albumIndex, lookup, links, outputDir);
         }
       });
     }
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateTracksStats(backgrounder, music, lookup, links, outputDir);
+        Web.generateTracksStats(music, lookup, links, outputDir);
       }
     });
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateAlbumsStats(backgrounder, music, lookup, links, outputDir);
+        Web.generateAlbumsStats(music, lookup, links, outputDir);
       }
     });
   }
@@ -521,15 +521,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
     
-  private static void generateArtistPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Artist> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    ArtistDocumentCreator creator = new ArtistDocumentCreator(backgrounder, index, lookup, links, outputDir);
+  private static void generateArtistPages(final Collection<Artist> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+    ArtistDocumentCreator creator = new ArtistDocumentCreator(index, lookup, links, outputDir);
     for (Artist item : items) {
       creator.add(item);
     }
     creator.complete();
   }
   
-  private static void generateArtistStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  private static void generateArtistStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Artist> items = Util.getArtistsCopy(music);
     Collections.sort(items, com.bolsinga.music.Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
 
@@ -550,7 +550,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.ARTIST_DIR, new com.bolsinga.web.Navigator(links) {
+    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.ARTIST_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getArtistNavigator() {
         return getCurrentNavigator();
       }
@@ -563,15 +563,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     stats.complete();
   }
 
-  public static void generateVenuePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Venue> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    VenueDocumentCreator creator = new VenueDocumentCreator(backgrounder, index, lookup, links, outputDir);
+  public static void generateVenuePages(final Collection<Venue> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+    VenueDocumentCreator creator = new VenueDocumentCreator(index, lookup, links, outputDir);
     for (Venue item : items) {
       creator.add(item);
     }
     creator.complete();
   }
   
-  private static void generateVenueStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  private static void generateVenueStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Venue> items = Util.getVenuesCopy(music);
     Collections.sort(items, com.bolsinga.music.Compare.getCompare(music).VENUE_STATS_COMPARATOR);
 
@@ -592,7 +592,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.VENUE_DIR, new com.bolsinga.web.Navigator(links) {
+    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.VENUE_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getVenueNavigator() {
         return getCurrentNavigator();
       }
@@ -605,15 +605,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     stats.complete();
   }
 
-  public static void generateDatePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Show> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    ShowDocumentCreator creator = new ShowDocumentCreator(backgrounder, index, lookup, encoder, links, outputDir);
+  public static void generateDatePages(final Collection<Show> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+    ShowDocumentCreator creator = new ShowDocumentCreator(index, lookup, encoder, links, outputDir);
     for (Show item : items) {
       creator.add(item);
     }
     creator.complete();
   }
   
-  public static void generateDateStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  public static void generateDateStats(final Music music, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Show> items = Util.getShowsCopy(music);
     Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
@@ -649,7 +649,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.SHOW_DIR, new com.bolsinga.web.Navigator(links) {
+    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.SHOW_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getShowNavigator() {
         return getCurrentNavigator();
       }
@@ -662,7 +662,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     stats.complete();
   }
         
-  public static void generateCityPages(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  public static void generateCityPages(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     Collection<String> items = lookup.getCities();
     HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
@@ -705,7 +705,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
     String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
 
-    com.bolsinga.web.SingleElementDocumentCreator creator = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.CITIES_DIR, new com.bolsinga.web.Navigator(links) {
+    com.bolsinga.web.SingleElementDocumentCreator creator = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.CITIES_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getCityNavigator() {
         return getCurrentNavigator();
       }
@@ -718,15 +718,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
     creator.complete();
   }
 
-  public static void generateTracksPages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Album> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    TracksDocumentCreator creator = new TracksDocumentCreator(backgrounder, index, lookup, links, outputDir);
+  public static void generateTracksPages(final Collection<Album> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+    TracksDocumentCreator creator = new TracksDocumentCreator(index, lookup, links, outputDir);
     for (Album item : items) {                
       creator.add(item);
     }
     creator.complete();
   }
   
-  private static void generateTracksStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  private static void generateTracksStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Artist> artists = Util.getArtistsCopy(music);
     Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_TRACKS_COMPARATOR);
 
@@ -748,7 +748,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
       
-      com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
+      com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
         public Element getTrackNavigator() {
           return getCurrentNavigator();
         }
@@ -762,7 +762,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
   }
 
-  private static void generateAlbumsStats(final com.bolsinga.web.Backgrounder backgrounder, final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  private static void generateAlbumsStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Artist> artists = Util.getArtistsCopy(music);
     Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_ALBUMS_COMPARATOR);
 
@@ -785,7 +785,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
 
-      com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.ALBUM_STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
+      com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.ALBUM_STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
         public Element getAlbumNavigator() {
           return getCurrentNavigator();
         }

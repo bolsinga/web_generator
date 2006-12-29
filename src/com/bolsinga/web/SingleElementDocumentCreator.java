@@ -20,8 +20,8 @@ public class SingleElementDocumentCreator extends DocumentCreator {
   // This changes during the life-cycle of this object
   private Element  fCurElement  = null;
 
-  public SingleElementDocumentCreator(final Backgrounder backgrounder, final Links links, final String outputDir, final String filename, final String title, final String directory, final Navigator navigator) {
-    super(backgrounder, links, outputDir);
+  public SingleElementDocumentCreator(final Links links, final String outputDir, final String filename, final String title, final String directory, final Navigator navigator) {
+    super(links, outputDir);
     fFileName = filename;
     fTitle = title;
     fDirectory = directory;

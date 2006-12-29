@@ -8,46 +8,8 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
-class DocWriter implements Runnable {
-  private final Document fDoc;
-  private final String fOutputDir;
-  private final String fLastPath;
-  
-  public DocWriter(final Document doc, final String outputDir, final String lastPath) {
-    fDoc = doc;
-    fOutputDir = outputDir;
-    fLastPath = lastPath;
-  }
-  
-  public void run() {
-    DocWriter.writeFile(fDoc, fOutputDir, fLastPath);
-  }
-  
-  public static void writeFile(final Document doc, final String outputDir, final String lastPath) {
-    try {
-      File f = new File(outputDir, lastPath);
-      File parent = new File(f.getParent());
-      if (!parent.mkdirs()) {
-        if (!parent.exists()) {
-          System.out.println("DocumentCreator cannot mkdirs: " + parent.getAbsolutePath());
-        }
-      }
-      OutputStream os = new FileOutputStream(f);
-      doc.output(os);
-      os.close();
-    } catch (IOException ioe) {
-      System.err.println("Exception: " + ioe);
-      ioe.printStackTrace();
-      System.exit(1);
-    }
-  }
-}
-
 public abstract class DocumentCreator implements Backgroundable {
 
-  private static final boolean sUseAsynchronousIO = Boolean.getBoolean("web.asynchronousio");
-
-  private final Backgrounder fBackgrounder;
   protected final Links fLinks;
   private final String fOutputDir;
 
@@ -55,11 +17,9 @@ public abstract class DocumentCreator implements Backgroundable {
   private Document fDocument = null;
   private Div fMain = null;
         
-  protected DocumentCreator(final Backgrounder backgrounder, final Links links, final String outputDir) {
-    fBackgrounder = backgrounder;
+  protected DocumentCreator(final Links links, final String outputDir) {
     fLinks = links;
     fOutputDir = outputDir;
-    fBackgrounder.addInterest(this);
   }
         
   protected abstract String getTitle();
@@ -128,7 +88,6 @@ public abstract class DocumentCreator implements Backgroundable {
   
   public void complete() {
     close();
-    fBackgrounder.removeInterest(this);
   }
   
   void close() {
@@ -163,10 +122,21 @@ public abstract class DocumentCreator implements Backgroundable {
   protected void writeDocument() {
     fDocument.getBody().addElement(fMain);
 
-    if (DocumentCreator.sUseAsynchronousIO) {
-      fBackgrounder.execute(this, new DocWriter(fDocument, fOutputDir, getLastPath()));
-    } else {
-      DocWriter.writeFile(fDocument, fOutputDir, getLastPath());
+    try {
+      File f = new File(fOutputDir, getLastPath());
+      File parent = new File(f.getParent());
+      if (!parent.mkdirs()) {
+        if (!parent.exists()) {
+          System.out.println("DocumentCreator cannot mkdirs: " + parent.getAbsolutePath());
+        }
+      }
+      OutputStream os = new FileOutputStream(f);
+      fDocument.output(os);
+      os.close();
+    } catch (IOException ioe) {
+      System.err.println("Exception: " + ioe);
+      ioe.printStackTrace();
+      System.exit(1);
     }
   }
         

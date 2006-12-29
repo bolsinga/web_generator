@@ -24,8 +24,8 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private Entry  fCurEntry;
   private Entry  fLastEntry;
         
-  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir, final int startYear) {
-    super(backgrounder, links, outputDir);
+  public DiaryDocumentCreator(final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir, final int startYear) {
+    super(links, outputDir);
     fEncoder = encoder;
     fEntryIndex = entryIndex;
     fStartYear = startYear;
@@ -82,8 +82,8 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
 class DiarySingleDocumentCreator extends com.bolsinga.web.SingleElementDocumentCreator {
   private final int fStartYear;
 
-  public DiarySingleDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String filename, final String title, final String directory, final com.bolsinga.web.Navigator navigator, final int startYear) {
-    super(backgrounder, links, outputDir, filename, title, directory, navigator);
+  public DiarySingleDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final String filename, final String title, final String directory, final com.bolsinga.web.Navigator navigator, final int startYear) {
+    super(links, outputDir, filename, title, directory, navigator);
     fStartYear = startYear;
   }
   
@@ -203,7 +203,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateMainPage(backgrounder, encoder, music, diary, startYear, outputDir);
+        Web.generateMainPage(encoder, music, diary, startYear, outputDir);
       }
     });
 
@@ -212,20 +212,20 @@ public class Web implements com.bolsinga.web.Backgroundable {
     for (final Collection<Entry> entryGroup : entryGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          Web.generateArchivePages(backgrounder, entryGroup, entryIndex, encoder, links, startYear, outputDir);
+          Web.generateArchivePages(entryGroup, entryIndex, encoder, links, startYear, outputDir);
         }
       });
     }
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateOverviewPage(backgrounder, diary, entryGroups, entryIndex, links, startYear, outputDir);
+        Web.generateOverviewPage(diary, entryGroups, entryIndex, links, startYear, outputDir);
       }
     });
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateAltPage(backgrounder, diary, links, startYear, outputDir);
+        Web.generateAltPage(diary, links, startYear, outputDir);
       }
     });
   }
@@ -238,10 +238,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return ec;
   }
   
-  public static void generateMainPage(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
+  public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
     com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(false);
 
-    com.bolsinga.web.SingleElementDocumentCreator page = new DiarySingleDocumentCreator(backgrounder, links, outputDir, "index", diary.getTitle(), null, com.bolsinga.music.Web.getMainPagePreviewNavigator(music, links), startYear) {
+    com.bolsinga.web.SingleElementDocumentCreator page = new DiarySingleDocumentCreator(links, outputDir, "index", diary.getTitle(), null, com.bolsinga.music.Web.getMainPagePreviewNavigator(music, links), startYear) {
       protected boolean isTwoColumn() {
         return false;
       }
@@ -359,8 +359,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return com.bolsinga.web.Util.createInternalA(url.toString(), value, t);
   }
   
-  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
-    DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, startYear);
+  public static void generateArchivePages(final Collection<Entry> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
+    DiaryDocumentCreator creator = new DiaryDocumentCreator(index, encoder, links, outputDir, startYear);
     for (Entry item : items) {
       creator.add(item);
     }
@@ -461,8 +461,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
   }
 
-  public static void generateOverviewPage(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
-    com.bolsinga.web.SingleElementDocumentCreator page = new DiarySingleDocumentCreator(backgrounder, links, outputDir, "overview", com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"), com.bolsinga.web.Links.ARCHIVES_DIR, new com.bolsinga.web.Navigator(links) {
+  public static void generateOverviewPage(final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
+    com.bolsinga.web.SingleElementDocumentCreator page = new DiarySingleDocumentCreator(links, outputDir, "overview", com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"), com.bolsinga.web.Links.ARCHIVES_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getOverviewNavigator() {
         return getCurrentNavigator();
       }
@@ -523,8 +523,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
 
-  public static void generateAltPage(final com.bolsinga.web.Backgrounder backgrounder, final Diary diary, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
-    com.bolsinga.web.SingleElementDocumentCreator altPage = new DiarySingleDocumentCreator(backgrounder, links, outputDir, "index", com.bolsinga.web.Util.getResourceString("alttitle"), com.bolsinga.web.Links.ALT_DIR, new com.bolsinga.web.Navigator(links) {
+  public static void generateAltPage(final Diary diary, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
+    com.bolsinga.web.SingleElementDocumentCreator altPage = new DiarySingleDocumentCreator(links, outputDir, "index", com.bolsinga.web.Util.getResourceString("alttitle"), com.bolsinga.web.Links.ALT_DIR, new com.bolsinga.web.Navigator(links) {
       public Element getColophonNavigator() {
         return getCurrentNavigator();
       }
