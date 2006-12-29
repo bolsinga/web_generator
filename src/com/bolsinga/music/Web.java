@@ -197,31 +197,6 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   }
 }
 
-class TracksStatisticsCreator extends com.bolsinga.web.SingleElementDocumentCreator {
-  private final boolean fTracksStats;
-        
-  public static TracksStatisticsCreator createTracksStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String title, final String directory) {
-    return new TracksStatisticsCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, true, title, directory);
-  }
-
-  public static TracksStatisticsCreator createAlbumStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String title, final String directory) {
-    return new TracksStatisticsCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.ALBUM_STATS, false, title, directory);
-  }
-
-  private TracksStatisticsCreator(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Links links, final String outputDir, final String filename, final boolean isTracksStats, final String title, final String directory) {
-    super(backgrounder, links, outputDir, filename, title, directory, new com.bolsinga.web.Navigator(links) {
-      public Element getTrackNavigator() {
-        return getCurrentNavigator();
-      }
-      
-      public Element getCurrentNavigator() {
-        return new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
-      }
-    });
-    fTracksStats = isTracksStats;
-  }
-}
-
 class TracksDocumentCreator extends com.bolsinga.web.DocumentCreator {
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fAlbumIndex;
   protected final Lookup fLookup;
@@ -776,7 +751,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Object titleArgs[] = { tracksTableTitle, albumsTableTitle };
       String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumtrackstitle"), titleArgs);
       
-      com.bolsinga.web.SingleElementDocumentCreator stats = TracksStatisticsCreator.createTracksStats(backgrounder, links, outputDir, pageTitle, com.bolsinga.web.Links.TRACKS_DIR);
+      com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
+        public Element getTrackNavigator() {
+          return getCurrentNavigator();
+        }
+        
+        public Element getCurrentNavigator() {
+          return new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
+        }
+      });
       stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("trackstatsummary")));
       stats.complete();
     }
@@ -808,7 +791,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Object titleArgs[] = { tracksTableTitle, albumsTableTitle };
       String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumtrackstitle"), titleArgs);
 
-      com.bolsinga.web.SingleElementDocumentCreator stats = TracksStatisticsCreator.createAlbumStats(backgrounder, links, outputDir, pageTitle, com.bolsinga.web.Links.TRACKS_DIR);
+      com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.ALBUM_STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
+        public Element getTrackNavigator() {
+          return getCurrentNavigator();
+        }
+        
+        public Element getCurrentNavigator() {
+          return new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
+        }
+      });
       stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("albumstatsummary")));
       stats.complete();
     }
