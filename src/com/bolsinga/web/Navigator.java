@@ -36,6 +36,10 @@ public class Navigator {
   public Element getTrackNavigator() {
     return fLinks.getTracksLink();
   }
+
+  public Element getAlbumNavigator() {
+    return fLinks.getAlbumsLink();
+  }
   
   public Element getShowNavigator() {
     return fLinks.getShowLink();

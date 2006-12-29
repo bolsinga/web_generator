@@ -744,12 +744,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     {
       String typeString = com.bolsinga.web.Util.getResourceString("artist");
-      String tracksTableTitle = com.bolsinga.web.Util.getResourceString("tracksby");
-      String albumsTableTitle = links.getAlbumsLink(com.bolsinga.web.Util.getResourceString("albumsby")).toString();
+      String tableTitle = com.bolsinga.web.Util.getResourceString("tracksby");
       Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
-      Object titleArgs[] = { tracksTableTitle, albumsTableTitle };
-      String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumtrackstitle"), titleArgs);
       
       com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
         public Element getTrackNavigator() {
@@ -784,20 +781,17 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     {
       String typeString = com.bolsinga.web.Util.getResourceString("artist");
-      String tracksTableTitle = links.getTracksLink(com.bolsinga.web.Util.getResourceString("tracksby")).toString();
-      String albumsTableTitle = com.bolsinga.web.Util.getResourceString("albumsby");
+      String tableTitle = com.bolsinga.web.Util.getResourceString("albumsby");
       Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
       String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
-      Object titleArgs[] = { tracksTableTitle, albumsTableTitle };
-      String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("albumtrackstitle"), titleArgs);
 
       com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(backgrounder, links, outputDir, com.bolsinga.web.Links.ALBUM_STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
-        public Element getTrackNavigator() {
+        public Element getAlbumNavigator() {
           return getCurrentNavigator();
         }
         
         public Element getCurrentNavigator() {
-          return new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
+          return new StringElement(com.bolsinga.web.Util.getResourceString("albums"));
         }
       });
       stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("albumstatsummary")));
@@ -806,41 +800,50 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   private static String createPreviewLine(final int count, final String name) {
-      Object[] args = { Integer.valueOf(count), name };
-      return MessageFormat.format(com.bolsinga.web.Util.getResourceString("previewformat"), args);
+    Object[] args = { Integer.valueOf(count), name };
+    return MessageFormat.format(com.bolsinga.web.Util.getResourceString("previewformat"), args);
   }
-        
-  public static Element generatePreview(final Music music) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.NAV_HEADER);
-    d.addElement(com.bolsinga.web.Util.getLogo());
-                
-    com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(false);
 
-    Vector<Element> e = new Vector<Element>();
-    e.add(links.getArtistLink(Web.createPreviewLine(  Util.getArtistsUnmodifiable(music).size(),
-                                                      com.bolsinga.web.Util.getResourceString("bands"))));
+  public static com.bolsinga.web.Navigator getMainPagePreviewNavigator(final Music music, final com.bolsinga.web.Links links) {
+    return new com.bolsinga.web.Navigator(links) {
+      public Element getHomeNavigator() {
+        return getCurrentNavigator();
+      }
 
-    e.add(links.getShowLink(Web.createPreviewLine(  Util.getShowsUnmodifiable(music).size(),
-                                                    com.bolsinga.web.Util.getResourceString("dates"))));
+      public Element getArtistNavigator() {
+        return links.getArtistLink(Web.createPreviewLine( Util.getArtistsUnmodifiable(music).size(),
+                                                          com.bolsinga.web.Util.getResourceString("bands")));
+      }
 
-    e.add(links.getVenueLink(Web.createPreviewLine( Util.getVenuesUnmodifiable(music).size(),
-                                                    com.bolsinga.web.Util.getResourceString("venues"))));
+      public Element getTrackNavigator() {
+        return links.getTracksLink(Web.createPreviewLine( Util.getSongsUnmodifiable(music).size(),
+                                                          com.bolsinga.web.Util.getResourceString("tracks")));
+      }
 
-    e.add(links.getCityLink(Web.createPreviewLine(  Lookup.getLookup(music).getCities().size(),
-                                                    com.bolsinga.web.Util.getResourceString("cities"))));
-
-    e.add(links.getTracksLink(Web.createPreviewLine(  Util.getSongsUnmodifiable(music).size(),
-                                                      com.bolsinga.web.Util.getResourceString("tracks"))));
-
-    e.add(links.getAlbumsLink(Web.createPreviewLine(  Util.getAlbumsUnmodifiable(music).size(),
-                                                      com.bolsinga.web.Util.getResourceString("albums"))));
-                
-    Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e));
-
-    d.addElement(indexNavigator);
-    
-    return d;
+      public Element getAlbumNavigator() {
+        return links.getAlbumsLink(Web.createPreviewLine( Util.getAlbumsUnmodifiable(music).size(),
+                                                          com.bolsinga.web.Util.getResourceString("albums")));
+      }
+      
+      public Element getShowNavigator() {
+        return links.getShowLink(Web.createPreviewLine( Util.getShowsUnmodifiable(music).size(),
+                                                        com.bolsinga.web.Util.getResourceString("dates")));
+      }
+      
+      public Element getVenueNavigator() {
+        return links.getVenueLink(Web.createPreviewLine(Util.getVenuesUnmodifiable(music).size(),
+                                                        com.bolsinga.web.Util.getResourceString("venues")));
+      }
+      
+      public Element getCityNavigator() {
+        return links.getCityLink(Web.createPreviewLine( Lookup.getLookup(music).getCities().size(),
+                                                        com.bolsinga.web.Util.getResourceString("cities")));
+      }
+      
+      public Element getCurrentNavigator() {
+        return new StringElement(com.bolsinga.web.Util.getResourceString("home"));
+      }
+    };
   }
         
   public static String getLinkedData(final com.bolsinga.web.Encode encoder, final Show show, final boolean upOneLevel) {

@@ -112,6 +112,7 @@ public abstract class DocumentCreator implements Backgroundable {
     e.add(navigator.getVenueNavigator());
     e.add(navigator.getCityNavigator());
     e.add(navigator.getTrackNavigator());
+    e.add(navigator.getAlbumNavigator());
     
     Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
     indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e, navigator.getCurrentNavigator()));
