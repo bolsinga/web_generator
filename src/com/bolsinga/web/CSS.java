@@ -20,7 +20,7 @@ public class CSS {
   public static final String ARTIST_SHOW     = "artist_show";
   public static final String ARTIST_TRACKS   = "artist_tracks";
                                                
-  public static final String DIARY_HEADER    = "diary_header";
+  public static final String NAV_HEADER     = "nav_header";
                                                
   public static final String INTERNAL        = "int";
   public static final String PERMANENT       = "perm";
@@ -35,8 +35,6 @@ public class CSS {
                                                
   public static final String DOC_MAIN        = "doc_main";
   public static final String DOC_SUB         = "doc_sub";
-                                               
-  public static final String MUSIC_HEADER    = "music_header";
                                                
   public static final String SHOW_COMMENT    = "show_comment";
                                                
@@ -83,7 +81,7 @@ public class CSS {
     writeCSSDeclaration(pw, COLOPHON);
     writeCSSDeclaration(pw, ARTIST_SHOW);
     writeCSSDeclaration(pw, ARTIST_TRACKS);
-    writeCSSDeclaration(pw, DIARY_HEADER);
+    writeCSSDeclaration(pw, NAV_HEADER);
     writeCSSDeclaration(pw, INTERNAL);
     writeCSSDeclaration(pw, PERMANENT);
     writeCSSDeclaration(pw, ACTIVE);
@@ -95,7 +93,6 @@ public class CSS {
     writeCSSDeclaration(pw, MAIN_OFFSITE);
     writeCSSDeclaration(pw, DOC_MAIN);
     writeCSSDeclaration(pw, DOC_SUB);
-    writeCSSDeclaration(pw, MUSIC_HEADER);
     writeCSSDeclaration(pw, SHOW_COMMENT);
     writeCSSDeclaration(pw, VENUE_SHOW);
     writeCSSDeclaration(pw, TABLE_HEADER);

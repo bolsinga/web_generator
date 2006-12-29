@@ -51,7 +51,7 @@ abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreato
   protected abstract com.bolsinga.web.Navigator getNavigator();
   
   protected Div getHeaderDiv() {
-    return Web.getHeaderDiv(getTitle(), fLinks, getNavigator());
+    return com.bolsinga.web.DocumentCreator.getHeaderDiv(getTitle(), getNavigator());
   }
 }
 
@@ -67,6 +67,12 @@ abstract class SingleSectionMusicDocumentCreator extends com.bolsinga.web.Docume
   
   protected Document createDocument() {
     return Web.createHTMLDocument(fLinks, getTitle());
+  }
+
+  protected abstract com.bolsinga.web.Navigator getNavigator();
+  
+  protected Div getHeaderDiv() {
+    return com.bolsinga.web.DocumentCreator.getHeaderDiv(getTitle(), getNavigator());
   }
 }
 
@@ -285,8 +291,8 @@ class StatisticsCreator extends SingleSectionMusicDocumentCreator {
     return fCurTable;
   }
 
-  protected Div getHeaderDiv() {
-    return Web.getHeaderDiv(getTitle(), fLinks, fNavigator);
+  protected com.bolsinga.web.Navigator getNavigator() {
+    return fNavigator;
   }
 }
 
@@ -353,12 +359,12 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
     return Web.addItem(fLookup, fLinks, fCurAlbum);
   }
 
-  protected Div getHeaderDiv() {
-    return Web.getHeaderDiv(getTitle(), fLinks, new com.bolsinga.web.Navigator(fLinks) {
+  protected com.bolsinga.web.Navigator getNavigator() {
+    return new com.bolsinga.web.Navigator(fLinks) {
       public Element getTrackNavigator() {
         return Web.addCurrentIndexNavigator(fAlbumIndex, getCurrentLetter(), super.getTrackNavigator());
       }
-    });
+    };
   }
 }
 
@@ -907,7 +913,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
         
   public static Element generatePreview(final Music music) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.NAV_HEADER);
     d.addElement(com.bolsinga.web.Util.getLogo());
                 
     Links links = Links.getLinks(false);
@@ -1344,27 +1350,5 @@ public class Web implements com.bolsinga.web.Backgroundable {
       ec.addElement(d);
     }
     return ec;
-  }
-  
-  static Div getHeaderDiv(final String title, final Links links, final com.bolsinga.web.Navigator navigator) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MUSIC_HEADER);
-    d.addElement(new H1().addElement(title));
-    d.addElement(com.bolsinga.web.Util.getLogo());
-
-    Vector<Element> e = new Vector<Element>();
-    e.add(links.getLinkToHome());
-    
-    e.add(navigator.getArtistNavigator());
-    e.add(navigator.getShowNavigator());
-    e.add(navigator.getVenueNavigator());
-    e.add(navigator.getCityNavigator());
-    e.add(navigator.getTrackNavigator());
-    
-    Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
-    indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e, navigator.getCurrentNavigator()));
-    
-    d.addElement(indexNavigator);
-    
-    return d;
   }
 }

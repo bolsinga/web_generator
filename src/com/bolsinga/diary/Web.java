@@ -388,7 +388,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
   
   static Div getHeaderDiv(final String title, final String program, final Links links) {
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.DIARY_HEADER);
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.NAV_HEADER);
     d.addElement(new H1().addElement(title));
     d.addElement(com.bolsinga.web.Util.getLogo());
     

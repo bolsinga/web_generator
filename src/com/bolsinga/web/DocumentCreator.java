@@ -2,6 +2,7 @@ package com.bolsinga.web;
 
 import java.io.*;
 import java.text.*;
+import java.util.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
@@ -109,6 +110,27 @@ public abstract class DocumentCreator implements Backgroundable {
         
   protected String getTitle(final String type) {
     return Util.createPageTitle(getCurrentLetter(), type);
+  }
+  
+  public static Div getHeaderDiv(final String title, final com.bolsinga.web.Navigator navigator) {
+    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.NAV_HEADER);
+    d.addElement(new H1().addElement(title));
+    d.addElement(com.bolsinga.web.Util.getLogo());
+
+    Vector<Element> e = new Vector<Element>();
+    e.add(navigator.getHomeNavigator());
+    e.add(navigator.getArtistNavigator());
+    e.add(navigator.getShowNavigator());
+    e.add(navigator.getVenueNavigator());
+    e.add(navigator.getCityNavigator());
+    e.add(navigator.getTrackNavigator());
+    
+    Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
+    indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e, navigator.getCurrentNavigator()));
+    
+    d.addElement(indexNavigator);
+    
+    return d;
   }
         
   protected void finalize() throws Throwable {

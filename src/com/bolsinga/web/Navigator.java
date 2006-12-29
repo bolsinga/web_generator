@@ -17,6 +17,10 @@ public class Navigator {
     fMusicLinks = musicLinks;
   }
   
+  public Element getHomeNavigator() {
+    return fMusicLinks.getLinkToHome();
+  }
+  
   public Element getArtistNavigator() {
     return fMusicLinks.getArtistLink();
   }
