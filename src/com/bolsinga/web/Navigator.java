@@ -21,6 +21,14 @@ public class Navigator {
     return fLinks.getLinkToHome();
   }
   
+  public Element getColophonNavigator() {
+    return fLinks.getLinkToColophon();
+  }
+  
+  public Element getOverviewNavigator() {
+    return fLinks.getOverviewLink();
+  }
+  
   public Element getArtistNavigator() {
     return fLinks.getArtistLink();
   }

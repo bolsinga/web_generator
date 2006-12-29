@@ -119,6 +119,8 @@ public abstract class DocumentCreator implements Backgroundable {
 
     Vector<Element> e = new Vector<Element>();
     e.add(navigator.getHomeNavigator());
+    e.add(navigator.getColophonNavigator());
+    e.add(navigator.getOverviewNavigator());
     e.add(navigator.getArtistNavigator());
     e.add(navigator.getShowNavigator());
     e.add(navigator.getVenueNavigator());
