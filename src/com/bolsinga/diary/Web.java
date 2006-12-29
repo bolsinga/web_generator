@@ -107,7 +107,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       String password = args[2];
 
       diary = MySQLCreator.createDiary(user, password);
-      music = com.bolsinga.music.Util.createMusic(user, password);
+      music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
     } else {
       Web.usage();
     }

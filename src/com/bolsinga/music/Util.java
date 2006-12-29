@@ -1,7 +1,6 @@
 package com.bolsinga.music;
 
 import java.math.*;
-import java.sql.*;
 import java.text.*;
 import java.util.*;
 
@@ -163,37 +162,6 @@ public class Util {
       System.err.println("Exception: " + ume);
       ume.printStackTrace();
       System.exit(1);
-    }
-    return music;
-  }
-
-  public static Music createMusic(final String user, final String password) {
-    Music music = null;
-    Connection conn = null;
-
-    ObjectFactory objFactory = new ObjectFactory();
-    try {
-      Class.forName("org.gjt.mm.mysql.Driver");
-
-      conn = DriverManager.getConnection("jdbc:mysql:///music?useUnicode=true&characterEncoding=utf-8", user, password);
-
-      MySQLCreator c = new MySQLCreator(objFactory, conn);
-      music = c.createMusic();
-      c.close();
-    } catch (Exception e) {
-      System.err.println("Exception: " + e);
-      e.printStackTrace();
-      System.exit(1);
-    } finally {
-      try {
-        if (conn != null) {
-          conn.close();
-        }
-      } catch (Exception e) {
-        System.err.println("Exception: " + e);
-        e.printStackTrace();
-        System.exit(1);
-      }
     }
     return music;
   }

@@ -36,7 +36,7 @@ public class RSS {
       String user = args[1];
       String password = args[2];
 
-      music = com.bolsinga.music.Util.createMusic(user, password);
+      music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
       diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
     } else {
       RSS.usage();

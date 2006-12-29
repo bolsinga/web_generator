@@ -8,7 +8,7 @@ import javax.xml.bind.*;
 
 import com.bolsinga.music.data.*;
 
-class MySQLCreator {
+public class MySQLCreator {
   private final ObjectFactory objFactory;
   private final Music music;
   private final Connection conn;
@@ -559,5 +559,36 @@ class MySQLCreator {
       e.printStackTrace();
       System.exit(1);
     }
+  }
+
+  public static Music createMusic(final String user, final String password) {
+    Music music = null;
+    Connection conn = null;
+
+    ObjectFactory objFactory = new ObjectFactory();
+    try {
+      Class.forName("org.gjt.mm.mysql.Driver");
+
+      conn = DriverManager.getConnection("jdbc:mysql:///music?useUnicode=true&characterEncoding=utf-8", user, password);
+
+      MySQLCreator c = new MySQLCreator(objFactory, conn);
+      music = c.createMusic();
+      c.close();
+    } catch (Exception e) {
+      System.err.println("Exception: " + e);
+      e.printStackTrace();
+      System.exit(1);
+    } finally {
+      try {
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (Exception e) {
+        System.err.println("Exception: " + e);
+        e.printStackTrace();
+        System.exit(1);
+      }
+    }
+    return music;
   }
 }

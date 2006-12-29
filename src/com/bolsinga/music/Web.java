@@ -406,7 +406,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       settings = args[3];
       output = args[4];
 
-      music = com.bolsinga.music.Util.createMusic(user, password);
+      music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
     } else {
       Web.usage();
     }
