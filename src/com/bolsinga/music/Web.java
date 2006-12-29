@@ -107,7 +107,7 @@ class ArtistDocumentCreator extends MusicDocumentCreator {
   protected com.bolsinga.web.Navigator getNavigator() {
     return new com.bolsinga.web.Navigator(fLinks) {
       public Element getArtistNavigator() {
-        return Web.addCurrentIndexNavigator(fArtistIndex, getCurrentLetter(), super.getArtistNavigator());
+        return com.bolsinga.web.Util.addCurrentIndexNavigator(fArtistIndex, getCurrentLetter(), super.getArtistNavigator());
       }
     };
   }
@@ -162,7 +162,7 @@ class VenueDocumentCreator extends MusicDocumentCreator {
   protected com.bolsinga.web.Navigator getNavigator() {
     return new com.bolsinga.web.Navigator(fLinks) {
       public Element getVenueNavigator() {
-        return Web.addCurrentIndexNavigator(fVenueIndex, getCurrentLetter(), super.getVenueNavigator());
+        return com.bolsinga.web.Util.addCurrentIndexNavigator(fVenueIndex, getCurrentLetter(), super.getVenueNavigator());
       }
     };
   }
@@ -220,7 +220,7 @@ class ShowDocumentCreator extends MusicDocumentCreator {
   protected com.bolsinga.web.Navigator getNavigator() {
     return new com.bolsinga.web.Navigator(fLinks) {
       public Element getShowNavigator() {
-        return Web.addCurrentIndexNavigator(fShowIndex, getCurrentLetter(), super.getShowNavigator());
+        return com.bolsinga.web.Util.addCurrentIndexNavigator(fShowIndex, getCurrentLetter(), super.getShowNavigator());
       }
     };
   }
@@ -344,7 +344,7 @@ class TracksDocumentCreator extends SingleSectionMusicDocumentCreator {
   protected com.bolsinga.web.Navigator getNavigator() {
     return new com.bolsinga.web.Navigator(fLinks) {
       public Element getTrackNavigator() {
-        return Web.addCurrentIndexNavigator(fAlbumIndex, getCurrentLetter(), super.getTrackNavigator());
+        return com.bolsinga.web.Util.addCurrentIndexNavigator(fAlbumIndex, getCurrentLetter(), super.getTrackNavigator());
       }
     };
   }
@@ -1308,29 +1308,5 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.getBody().setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
 
     return d;
-  }
-  
-  static Element addCurrentIndexNavigator(final java.util.Map<String, com.bolsinga.web.IndexPair> m, final String curLetter, final Element parentElement) {
-    ElementContainer ec = new ElementContainer();
-    ec.addElement(parentElement);
-    if (m != null) {
-      Vector<Element> e = new Vector<Element>();
-      org.apache.ecs.Element curElement = null;
-      for (String s : m.keySet()) {
-        if (s.equals(curLetter)) {
-          curElement = new StringElement(s);
-          e.add(curElement);
-        } else {
-          com.bolsinga.web.IndexPair p = m.get(s);
-          e.add(com.bolsinga.web.Util.createInternalA(p.getLink(), s, p.getTitle()));
-        }
-      }
-
-      Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX_SUB);
-      d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
-
-      ec.addElement(d);
-    }
-    return ec;
   }
 }

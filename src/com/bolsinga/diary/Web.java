@@ -17,7 +17,7 @@ import javax.xml.bind.Marshaller;
 
 class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
-  private final java.util.Map<String, String> fEntryIndex;
+  private final java.util.Map<String, com.bolsinga.web.IndexPair> fEntryIndex;
   private final com.bolsinga.web.Links  fLinks;
   private final String fProgram;
   private final int fStartYear;
@@ -26,7 +26,7 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   private Entry  fCurEntry;
   private Entry  fLastEntry;
         
-  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, String> entryIndex, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir, final String program, final int startYear) {
+  public DiaryDocumentCreator(final com.bolsinga.web.Backgrounder backgrounder, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final String outputDir, final String program, final int startYear) {
     super(backgrounder, outputDir);
     fEncoder = encoder;
     fEntryIndex = entryIndex;
@@ -53,8 +53,16 @@ class DiaryDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
     return Web.createDocument(getTitle(), fStartYear, fLinks);
   }
 
+  protected com.bolsinga.web.Navigator getNavigator() {
+    return new com.bolsinga.web.Navigator(fLinks) {
+      public Element getOverviewNavigator() {
+        return com.bolsinga.web.Util.addCurrentIndexNavigator(fEntryIndex, getCurrentLetter(), super.getOverviewNavigator());
+      }
+    };
+  }
+  
   protected Div getHeaderDiv() {
-    return Web.getHeaderDivWithNavigator(getTitle(), fProgram, fLinks, fEntryIndex, getCurrentLetter());
+    return com.bolsinga.web.DocumentCreator.getHeaderDiv(getTitle(), getNavigator());
   }
 
   protected boolean needNewSubsection() {
@@ -194,7 +202,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     });
 
-    final java.util.Map<String, String> entryIndex = Web.createEntryIndex(com.bolsinga.diary.Util.getEntriesUnmodifiable(diary), links);
+    final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex = Web.createEntryIndex(com.bolsinga.diary.Util.getEntriesUnmodifiable(diary), links);
     final Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
     for (final Collection<Entry> entryGroup : entryGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
@@ -203,13 +211,15 @@ public class Web implements com.bolsinga.web.Backgroundable {
         }
       });
     }
-    
+
+/*    
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         Web.generateOverviewPage(diary, entryGroups, entryIndex, links, startYear, outputDir);
       }
     });
-    
+*/    
+
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         Web.generateAltPage(diary, music, links, startYear, outputDir);
@@ -342,12 +352,14 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return diaryDiv;
   }
 
-  private static java.util.Map<String, String> createEntryIndex(final Collection<Entry> entries, final com.bolsinga.web.Links links) {
-    java.util.Map<String, String> m = new TreeMap<String, String>();
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> createEntryIndex(final Collection<Entry> entries, final com.bolsinga.web.Links links) {
+    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
     for (Entry e : entries) {
       String letter = links.getPageFileName(e);
       if (!m.containsKey(letter)) {
-        m.put(letter, links.getLinkToPage(e));
+        Object[] args = { letter };
+        String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
+        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(e), t));
       }
     }
     return Collections.unmodifiableMap(m);
@@ -450,7 +462,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
   
-  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final java.util.Map<String, String> index, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
+  public static void generateArchivePages(final com.bolsinga.web.Backgrounder backgrounder, final Collection<Entry> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
     DiaryDocumentCreator creator = new DiaryDocumentCreator(backgrounder, index, encoder, links, outputDir, com.bolsinga.web.Util.getResourceString("program"), startYear);
     for (Entry item : items) {
       creator.add(item);
@@ -550,7 +562,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     });
   }
-  
+
   public static void generateOverviewPage(final Diary diary, final Collection<Collection<Entry>> entryGroups, final java.util.Map<String, String> entryIndex, final com.bolsinga.web.Links links, final int startYear, final String outputDir) {
     final String docTitle = com.bolsinga.web.Util.getResourceString("archivesoverviewtitle");
 

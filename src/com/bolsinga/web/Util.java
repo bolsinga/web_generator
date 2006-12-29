@@ -232,6 +232,30 @@ public class Util {
                 
     return t;
   }
+  
+  public static org.apache.ecs.Element addCurrentIndexNavigator(final java.util.Map<String, IndexPair> m, final String curLetter, final org.apache.ecs.Element parentElement) {
+    ElementContainer ec = new ElementContainer();
+    ec.addElement(parentElement);
+    if (m != null) {
+      Vector<org.apache.ecs.Element> e = new Vector<org.apache.ecs.Element>();
+      org.apache.ecs.Element curElement = null;
+      for (String s : m.keySet()) {
+        if (s.equals(curLetter)) {
+          curElement = new StringElement(s);
+          e.add(curElement);
+        } else {
+          IndexPair p = m.get(s);
+          e.add(Util.createInternalA(p.getLink(), s, p.getTitle()));
+        }
+      }
+
+      Div d = Util.createDiv(CSS.ENTRY_INDEX_SUB);
+      d.addElement(Util.createUnorderedList(e, curElement));
+
+      ec.addElement(d);
+    }
+    return ec;
+  }
 
   public static String getGenerator() {
     StringBuilder sb = new StringBuilder();
