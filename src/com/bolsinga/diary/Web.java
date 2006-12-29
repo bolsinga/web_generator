@@ -201,13 +201,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
     final int startYear = Util.getStartYear(diary);
     final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
 
-/*
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        Web.generateMainPage(encoder, music, diary, startYear, outputDir);
+        Web.generateMainPage(backgrounder, encoder, music, diary, startYear, outputDir);
       }
     });
-*/
 
     final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex = Web.createEntryIndex(com.bolsinga.diary.Util.getEntriesUnmodifiable(diary), links);
     final Collection<Collection<Entry>> entryGroups = Web.getEntryGroups(diary, links);
@@ -232,55 +230,25 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
   }
 
-/*  
-  private static void createHTMLFile(final Document doc, final String filename, final String outputDir) {
-    try {
-      StringBuffer sb = new StringBuffer();
-      sb.append(filename);
-      sb.append(com.bolsinga.web.Links.HTML_EXT);
-      File f = new File(outputDir, sb.toString());
-      File parent = new File(f.getParent());
-      if (!parent.mkdirs()) {
-        if (!parent.exists()) {
-          System.out.println("Web cannot mkdirs: " + parent.getAbsolutePath());
-        }
-      }
-      OutputStream os = new FileOutputStream(f);
-      doc.output(os);
-      os.close();
-    } catch (IOException ioe) {
-      System.err.println("Exception: " + ioe);
-      ioe.printStackTrace();
-      System.exit(1);
-    }
+  private static Element generateMainContent(final Diary diary, final Music music, final com.bolsinga.web.Links links, final com.bolsinga.web.Encode encoder) {
+    ElementContainer ec = new ElementContainer();
+    ec.addElement(Web.generateColumn1(diary.getStatic(), diary.getFriends()));
+    ec.addElement(com.bolsinga.web.Util.convertToUnOrderedList(diary.getHeader()));
+    ec.addElement(Web.generateDiary(encoder, diary, music, links));
+    return ec;
   }
-*/
-
-/*
-  public static void generateMainPage(final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
+  
+  public static void generateMainPage(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Encode encoder, final Music music, final Diary diary, final int startYear, final String outputDir) {
     com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(false);
 
-    Document doc = createDocument(diary.getTitle(), startYear, links);
-
-    doc.getBody().addElement(generateColumn1(diary.getStatic(), diary.getFriends()));
-                
-    Div main = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_MAIN);
-    Div header = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_HEADER);
-    String headerText = diary.getHeader();
-    if (headerText != null) {
-      header.addElement(com.bolsinga.web.Util.convertToUnOrderedList(headerText));
-    }
-    main.addElement(header);
-    main.addElement(generateDiary(encoder, diary, music, links));
-    doc.getBody().addElement(main);
-                
-    Div mainCol2 = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.MAIN_COL2);
-    mainCol2.addElement(com.bolsinga.music.Web.generatePreview(music));
-    doc.getBody().addElement(mainCol2);
-    
-    Web.createHTMLFile(doc, "index", outputDir);
+    com.bolsinga.web.SingleElementDocumentCreator page = new DiarySingleDocumentCreator(backgrounder, links, outputDir, "index", diary.getTitle(), null, com.bolsinga.music.Web.getMainPagePreviewNavigator(music, links), startYear) {
+      protected boolean isTwoColumn() {
+        return false;
+      }
+    };
+    page.add(Web.generateMainContent(diary, music, links, encoder));
+    page.complete();
   }
-*/
 
   private static Div createMainStatics(final String statics) {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.STATICS_OFFSITE);
@@ -328,8 +296,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
         System.exit(1);
       }
     }
-    
-    diaryDiv.addElement(new H2().addElement(links.getOverviewLink()));
                 
     return diaryDiv;
   }
