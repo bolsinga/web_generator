@@ -1,0 +1,177 @@
+body {
+font-family: 'Lucida', sans-serif;
+font-size: small;
+background-color: #EEEEEE;
+}
+
+a:link {
+color:#555555;
+}
+
+a:visited {
+color:#333333;
+}
+
+a.perm {
+font-size:150%;
+color:green;
+text-decoration:none;
+}
+
+.nav_header {
+position: absolute;
+top: 50px;
+left: 10px;
+width: 200px;
+}
+
+.statics_header {
+position: absolute;
+top: 50px;
+right: 10px;
+width: 200px;
+}
+
+.doc_3_col_body {
+margin-left: 200px;
+margin-right: 200px;
+}
+
+.doc_2_col_body {
+margin-left: 200px;
+}
+
+.entry_item P {
+text-indent: 1em;
+}
+
+.entry_index ul {
+margin: 0;
+padding: 0;
+list-style-type: none;
+}
+
+.entry_index li {
+margin: 0 0 3px 0;
+}
+
+.entry_index a, .entry_index a:visited {
+display: block;
+padding: 2px 2px 2px 2px;
+border: 1px solid black;
+width: 80px;
+background-color: #BBBBBB;
+text-decoration: none;
+}
+
+.entry_index a:hover {
+border: 1px solid black;
+background-color: #DDDDDD;
+color: black;
+}
+
+.entry_index li.active {
+display: block;
+padding: 2px 2px 2px 2px;
+width: 80px;
+text-decoration: none;
+}
+
+.entry_index_sub ul {
+margin: 0;
+padding: 3px 0 0 0;
+list-style-type: none;
+}
+
+.entry_index_sub li {
+margin: 0 0 3px 0;
+}
+
+.entry_index_sub a, .entry_index_sub a:visited {
+display: block;
+padding: 2px 2px 2px 2px;
+border: 1px solid black;
+width: 80px;
+background-color: #CCCCCC;
+text-decoration: none;
+text-align: right;
+}
+
+.entry_index_sub a:hover {
+border: 1px solid black;
+background-color: #DDDDDD;
+color: black;
+}
+
+.entry_index_sub li.active {
+display: block;
+padding: 2px 2px 2px 2px;
+width: 80px;
+text-decoration: none;
+text-align: right;
+}
+
+.statics_offsite ul {
+margin: 0;
+padding: 0;
+list-style-type: none;
+}
+
+.statics_offsite li {
+margin: 0 0 3px 0;
+display: block;
+padding: 2px 2px 2px 2px;
+border: 1px solid white;
+width: 200px;
+background-color: #DDDDDD;
+text-align: right;
+}
+
+.colophon ul {
+margin: 0;
+padding: 10px 0 5px 0;
+list-style-type: none;
+background-color: #DDDDDD;
+}
+
+.colophon li {
+margin: 0 0 10px 0;
+text-align: center;
+}
+
+table {
+margin:1.5em 0;
+}
+
+th, td {
+vertical-align:middle;
+padding:5px 13px 5px 8px;
+}
+
+th {
+text-align:left;
+}
+
+td {
+text-align:right;
+}
+
+.table_header th {
+vertical-align:top;
+text-align:center;
+background-color:#CCCCCC;
+}
+
+.table_row {
+}
+
+.table_row_alt {
+background-color:#DDDDDD;
+}
+
+.table_footer th {
+border-bottom-width:0;
+vertical-align:top;
+text-align:center;
+background-color:#CCCCCC;
+}
