@@ -330,6 +330,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
   
   static Element getLinkToEntryMonthYear(final String year, final int month, final String value, final java.util.Map<String, com.bolsinga.web.IndexPair> entryIndex) {
     Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.DAY_OF_MONTH, 1);
     cal.set(Calendar.MONTH, month);
     String monthStr = Util.getMonth(cal);
     
@@ -419,6 +420,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
         TR trow = new TR().addElement(new TH());
         Calendar cal = Calendar.getInstance();
         for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {
+          cal.set(Calendar.DAY_OF_MONTH, 1);
           cal.set(Calendar.MONTH, i);
           trow.addElement(new TH(Util.getShortMonthName(cal)));
         }
