@@ -18,6 +18,10 @@ color:green;
 text-decoration:none;
 }
 
+.strike {
+text-decoration: line-through;
+}
+
 .nav_header {
 position: absolute;
 top: 50px;
