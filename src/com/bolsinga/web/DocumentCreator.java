@@ -65,7 +65,6 @@ public abstract class DocumentCreator implements Backgroundable {
     Navigator navigator = getNavigator();
     Vector<Element> e = new Vector<Element>();
     e.add(navigator.getHomeNavigator());
-    e.add(navigator.getColophonNavigator());
     e.add(navigator.getOverviewNavigator());
     e.add(navigator.getArtistNavigator());
     e.add(navigator.getShowNavigator());
@@ -73,6 +72,7 @@ public abstract class DocumentCreator implements Backgroundable {
     e.add(navigator.getCityNavigator());
     e.add(navigator.getTrackNavigator());
     e.add(navigator.getAlbumNavigator());
+    e.add(navigator.getColophonNavigator());
     
     Div indexNavigator = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_INDEX);
     indexNavigator.addElement(com.bolsinga.web.Util.createUnorderedList(e, navigator.getCurrentNavigator()));
