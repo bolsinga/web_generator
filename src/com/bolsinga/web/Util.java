@@ -218,7 +218,9 @@ public class Util {
       trow = handler.getRow(i);
       
       trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-      trow.setClass((((i + 1) % 2) != 0) ? com.bolsinga.web.CSS.TABLE_ROW : com.bolsinga.web.CSS.TABLE_ROW_ALT);
+      if (((i + 1) % 2) == 0) {
+        trow.setClass(com.bolsinga.web.CSS.TABLE_ROW_ALT);
+      }
 
       t.addElement(trow);
 

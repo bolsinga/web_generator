@@ -22,7 +22,6 @@ public class CSS {
   private static final String LONG_DOC_SUB          = "doc_sub";
   private static final String LONG_COLOPHON         = "colophon";
   private static final String LONG_TABLE_HEADER     = "table_header";
-  private static final String LONG_TABLE_ROW        = "table_row";
   private static final String LONG_TABLE_ROW_ALT    = "table_row_alt";
   private static final String LONG_TABLE_FOOTER     = "table_footer";
 
@@ -41,9 +40,8 @@ public class CSS {
   private static final String SHORT_DOC_SUB         = "_m";
   private static final String SHORT_COLOPHON        = "_n";
   private static final String SHORT_TABLE_HEADER    = "_o";
-  private static final String SHORT_TABLE_ROW       = "_p";
-  private static final String SHORT_TABLE_ROW_ALT   = "_q";
-  private static final String SHORT_TABLE_FOOTER    = "_r";
+  private static final String SHORT_TABLE_ROW_ALT   = "_p";
+  private static final String SHORT_TABLE_FOOTER    = "_q";
 
   public static String ENTRY_INDEX;
   public static String ENTRY_INDEX_SUB;
@@ -60,7 +58,6 @@ public class CSS {
   public static String DOC_SUB;
   public static String COLOPHON;
   public static String TABLE_HEADER;
-  public static String TABLE_ROW;
   public static String TABLE_ROW_ALT;
   public static String TABLE_FOOTER;
   
@@ -90,7 +87,6 @@ public class CSS {
     sCSSMapping.put(LONG_DOC_SUB,         debug ? LONG_DOC_SUB         : SHORT_DOC_SUB);
     sCSSMapping.put(LONG_COLOPHON,        debug ? LONG_COLOPHON        : SHORT_COLOPHON);
     sCSSMapping.put(LONG_TABLE_HEADER,    debug ? LONG_TABLE_HEADER    : SHORT_TABLE_HEADER);
-    sCSSMapping.put(LONG_TABLE_ROW,       debug ? LONG_TABLE_ROW       : SHORT_TABLE_ROW);
     sCSSMapping.put(LONG_TABLE_ROW_ALT,   debug ? LONG_TABLE_ROW_ALT   : SHORT_TABLE_ROW_ALT);
     sCSSMapping.put(LONG_TABLE_FOOTER,    debug ? LONG_TABLE_FOOTER    : SHORT_TABLE_FOOTER);
 
@@ -109,7 +105,6 @@ public class CSS {
     DOC_SUB         = sCSSMapping.get(LONG_DOC_SUB);
     COLOPHON        = sCSSMapping.get(LONG_COLOPHON);
     TABLE_HEADER    = sCSSMapping.get(LONG_TABLE_HEADER);
-    TABLE_ROW       = sCSSMapping.get(LONG_TABLE_ROW);
     TABLE_ROW_ALT   = sCSSMapping.get(LONG_TABLE_ROW_ALT);
     TABLE_FOOTER    = sCSSMapping.get(LONG_TABLE_FOOTER);
   }
