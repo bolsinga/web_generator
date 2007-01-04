@@ -1023,7 +1023,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       sb.append(")");
     }
 
-    e.add(new H2().addElement(sb.toString()));
+    e.add(new H3().addElement(sb.toString()));
 
     Vector<Element> ae = new Vector<Element>();
     List<JAXBElement<Object>> songs = Util.getSongsUnmodifiable(album);
@@ -1071,7 +1071,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_RELATION);
-    d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
+    d.addElement(new H4().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
@@ -1091,7 +1091,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_RELATION);
-    d.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
+    d.addElement(new H4().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
     return d;
   }
@@ -1117,7 +1117,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
 
     ElementContainer ec = new ElementContainer();
-    ec.addElement(new H3().addElement(com.bolsinga.web.Util.getResourceString("albums")));
+    ec.addElement(new H4().addElement(com.bolsinga.web.Util.getResourceString("albums")));
     ec.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return ec;
   }
