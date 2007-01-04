@@ -172,6 +172,7 @@ public class CSS {
         } else {
           sb.append(s);
         }
+        Util.appendPretty(sb);
       }
     } finally {
       if (in != null) {

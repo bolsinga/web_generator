@@ -37,11 +37,16 @@ public class Util {
     }
 
     StringBuilder sb = new StringBuilder();
+    Util.appendPretty(sb);
+    sb.append(new P());
+    sNewLineReplacement = sb.toString();
+  }
+  
+  public static StringBuilder appendPretty(StringBuilder sb) {
     if (Util.getPrettyOutput()) {
       sb.append(sLineSeparator);
     }
-    sb.append(new P());
-    sNewLineReplacement = sb.toString();
+    return sb;
   }
 
   public static String toHTMLSafe(final String s) {
