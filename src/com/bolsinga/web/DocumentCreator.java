@@ -120,6 +120,9 @@ public abstract class DocumentCreator implements Backgroundable {
   }
         
   protected void writeDocument() {
+    if (Encode.requiresTransitional(fMain.toString())) {
+      fDocument.setDoctype(new org.apache.ecs.Doctype.Html401Transitional());
+    }
     fDocument.getBody().addElement(fMain);
 
     try {
