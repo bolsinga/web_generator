@@ -489,10 +489,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
     e.addElement(new StringElement(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generatedby"), args)));
     }
     
-    {
-    // Add date generated
-    Object[] args = { new Code(com.bolsinga.web.Util.nowUTC().getTime().toString()).toString() };
-    e.addElement(new StringElement(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generatedon"), args)));
+    if (!com.bolsinga.web.Util.getDebugOutput()) {
+      // Add date generated
+      Object[] args = { new Code(com.bolsinga.web.Util.nowUTC().getTime().toString()).toString() };
+      e.addElement(new StringElement(MessageFormat.format(com.bolsinga.web.Util.getResourceString("generatedon"), args)));
     }
     
     // Add the copyright
