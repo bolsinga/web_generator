@@ -74,7 +74,7 @@ background-color: #DDDDDD;
 color: black;
 }
 
-.@@entry_index@@ li.active {
+.@@entry_index@@ li.@@active@@ {
 display: block;
 padding: 2px 2px 2px 2px;
 width: 80px;
@@ -107,7 +107,7 @@ background-color: #DDDDDD;
 color: black;
 }
 
-.@@entry_index_sub@@ li.active {
+.@@entry_index_sub@@ li.@@active@@ {
 display: block;
 padding: 2px 2px 2px 2px;
 width: 80px;
