@@ -351,10 +351,13 @@
 </target>
 
 <target name="generateCSSTemplate" depends="web, jar, prepare_output">
-        <java classname="com.bolsinga.web.CSS" fork="true">
-                <arg value="${output.dir}/styles/" />
-                <classpath refid="music_classpath" />
-        </java>
+  <java classname="com.bolsinga.web.CSS" fork="true">
+    <arg value="${data.dir}settings.xml" />
+    <arg value="${data.dir}layout.css" />
+    <arg value="${output.dir}" />
+    <classpath refid="generate_web_classpath" />
+    <sysproperty key="web.debug_output" value="false" />
+  </java>
 </target>
 
 <target name="encoding" depends="music, diary, jar">

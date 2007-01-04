@@ -5,19 +5,19 @@ public class Main implements com.bolsinga.web.Backgroundable {
   private final com.bolsinga.web.Backgrounder fBackgrounder;
   
   public static void main(String[] args) {
-    if (args.length != 14) {
+    if (args.length != 15) {
       Main.usage(args, "Wrong number of arguments");
     }
 
     // General arguments
-    String command = args[13];
+    String command = args[14];
     String diaryFile = args[7];
     String musicFile = args[8];
 
-    String user = args[10];
-    String password = args[11];
+    String user = args[11];
+    String password = args[12];
 
-    String output = args[12];
+    String output = args[13];
 
     // XML conversion arguments
     String itunes = args[0];
@@ -30,11 +30,13 @@ public class Main implements com.bolsinga.web.Backgroundable {
     
     // Site generation arguments
     String settingsFile = args[9];
+    
+    String cssFile = args[10];
 
     com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
    
     Main main = new Main(backgrounder);
-    boolean success = main.generate(command, diaryFile, musicFile, user, password, output, itunes, shows, venue, sort, relations, comments, statics, settingsFile);
+    boolean success = main.generate(command, diaryFile, musicFile, user, password, output, itunes, shows, venue, sort, relations, comments, statics, settingsFile, cssFile);
     if (!success) {
       Main.usage(args, "Invalid action");
     }
@@ -50,7 +52,7 @@ public class Main implements com.bolsinga.web.Backgroundable {
     fBackgrounder.removeInterest(this);
   }
   
-  boolean generate(String command, String diaryFile, String musicFile, String user, String password, String output, String itunes, String shows, String venue, String sort, String relations, String comments, String statics, String settingsFile) {
+  boolean generate(String command, String diaryFile, String musicFile, String user, String password, String output, String itunes, String shows, String venue, String sort, String relations, String comments, String statics, String settingsFile, String cssFile) {
     boolean musicXML = command.equals("musicxml") || command.equals("xml");
     boolean diaryXML = command.equals("diaryxml") || command.equals("xml");
     boolean musicImport = command.equals("musicimport") || command.equals("import");
@@ -97,6 +99,9 @@ public class Main implements com.bolsinga.web.Backgroundable {
       diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
       music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
     }
+    
+    // Everything needs the CSS file.
+    com.bolsinga.web.CSS.install(cssFile, output);
 
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
 
@@ -114,7 +119,7 @@ public class Main implements com.bolsinga.web.Backgroundable {
   }
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [user] [password] [output.dir] <xml|musicxml|diaryxml|import|musicimport|diaryimport|site|musicsite|diarysite|site-ddb|musicsite-db|diarysite-db>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [layout.css] [user] [password] [output.dir] <xml|musicxml|diaryxml|import|musicimport|diaryimport|site|musicsite|diarysite|site-ddb|musicsite-db|diarysite-db>");
     System.out.println(reason);
     System.out.println("Arguments:");
     for (int i = 0; i < badargs.length; i++) {

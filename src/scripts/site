@@ -70,7 +70,8 @@ for i in \
     "${DATA_HOME}/statics.txt" \
     "${DATA_HOME}/diary.xml" \
     "${DATA_HOME}/music.xml" \
-    "${DATA_HOME}/settings.xml" ; do
+    "${DATA_HOME}/settings.xml" \
+    "${DATA_HOME}/layout.css" ; do
   if [ ! -f "$i" ] ; then
       usage "Can't find $i"
   fi
