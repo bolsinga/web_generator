@@ -72,6 +72,7 @@ text-decoration: none;
 border: 1px solid black;
 background-color: #DDDDDD;
 color: black;
+text-decoration: underline;
 }
 
 .@@entry_index@@ li.@@active@@ {
@@ -105,6 +106,7 @@ text-align: right;
 border: 1px solid black;
 background-color: #DDDDDD;
 color: black;
+text-decoration: underline;
 }
 
 .@@entry_index_sub@@ li.@@active@@ {
