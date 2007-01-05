@@ -48,7 +48,7 @@ public class ICal {
       settings = args[3];
       output = args[4];
       
-      music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
+      music = MySQLCreator.createMusic(user, password);
     } else {
       ICal.usage();
     }
@@ -99,7 +99,7 @@ public class ICal {
         
   public static void generate(final Music music, final String name, final Writer w) {                
     List<Show> items = Util.getShowsCopy(music);
-    Collections.sort(items, com.bolsinga.music.Compare.SHOW_COMPARATOR);
+    Collections.sort(items, Compare.SHOW_COMPARATOR);
                     
     VCalendar cal = new VCalendar(name);
 

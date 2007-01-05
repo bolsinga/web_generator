@@ -50,7 +50,7 @@ public class MySQLImporter {
   }
 
   public static void importData(final String sourceFile, final String user, final String password, final boolean clearDB) {
-    Music music = com.bolsinga.music.Util.createMusic(sourceFile);
+    Music music = Util.createMusic(sourceFile);
     importData(music, user, password, clearDB);
   }
 
@@ -420,7 +420,7 @@ public class MySQLImporter {
   private static String toSQLString(final com.bolsinga.music.data.Date date) {
     boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
     if (!unknown) {
-      return sSQLFormat.get().format(com.bolsinga.music.Util.toCalendarUTC(date).getTime());
+      return sSQLFormat.get().format(Util.toCalendarUTC(date).getTime());
     } else {
       Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
                           ((date.getDay() != null) ? date.getDay() : BigInteger.ZERO),

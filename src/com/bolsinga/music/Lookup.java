@@ -39,19 +39,19 @@ public class Lookup {
     String id = null;
     Collection<Show> showCollection = null;
     
-    for (Artist performer : com.bolsinga.music.Util.getArtistsUnmodifiable(music)) {
+    for (Artist performer : Util.getArtistsUnmodifiable(music)) {
       fArtistHTMLMap.put(performer.getId(), com.bolsinga.web.Util.toHTMLSafe(performer.getName()));
     }
 
-    for (Album album : com.bolsinga.music.Util.getAlbumsUnmodifiable(music)) {
+    for (Album album : Util.getAlbumsUnmodifiable(music)) {
       fAlbumHTMLMap.put(album.getId(), com.bolsinga.web.Util.toHTMLSafe(album.getTitle()));
     }
 
-    for (Venue venue : com.bolsinga.music.Util.getVenuesUnmodifiable(music)) {
+    for (Venue venue : Util.getVenuesUnmodifiable(music)) {
       fVenueHTMLMap.put(venue.getId(), com.bolsinga.web.Util.toHTMLSafe(venue.getName()));
     }
 
-    List<Show> shows = com.bolsinga.music.Util.getShowsUnmodifiable(music);
+    List<Show> shows = Util.getShowsUnmodifiable(music);
     for (Show show : shows) {
       id = ((Venue)show.getVenue()).getId();
       if (fVenueMap.containsKey(id)) {

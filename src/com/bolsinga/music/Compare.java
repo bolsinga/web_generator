@@ -21,7 +21,7 @@ public class Compare {
         
   private final Music fMusic;
         
-  public synchronized static Compare getCompare(final com.bolsinga.music.data.Music music) {
+  public synchronized static Compare getCompare(final Music music) {
     if (sCompare == null) {
       sCompare = new Compare(music);
     }
