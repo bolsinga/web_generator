@@ -75,7 +75,7 @@ public class Util {
   
   public static String createPageTitle(final String specialty, final String type) {
     Object[] args = { specialty, type };
-    return MessageFormat.format(com.bolsinga.web.Util.getResourceString("htmltitle"), args);
+    return MessageFormat.format(Util.getResourceString("htmltitle"), args);
   }
 
   public static Link getIconLink() {
@@ -141,7 +141,7 @@ public class Util {
   }
   
   public static A createPermaLink(final String url) {
-    return internalA(url, com.bolsinga.web.Util.getResourceString("link"), com.bolsinga.web.Util.getResourceString("linktitle"), CSS.PERMANENT);
+    return internalA(url, Util.getResourceString("link"), Util.getResourceString("linktitle"), CSS.PERMANENT);
   }
   
   private static A internalA(final String url, final String value, final String title, final String cssClass) {
@@ -206,15 +206,15 @@ public class Util {
   public static Table makeTable(final String caption, final String summary, final TableHandler handler) {
     Table t = new Table();
     t.setSummary(summary);
-    t.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
+    t.setPrettyPrint(Util.getPrettyOutput());
     Caption capt = new Caption();
-    capt.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
+    capt.setPrettyPrint(Util.getPrettyOutput());
     capt.addElement(caption);
     t.addElement(capt);
     
     TR trow = handler.getHeaderRow();
-    trow.setClass(com.bolsinga.web.CSS.TABLE_HEADER);
-    trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
+    trow.setClass(CSS.TABLE_HEADER);
+    trow.setPrettyPrint(Util.getPrettyOutput());
     t.addElement(trow);
 
     int i = 0;
@@ -222,9 +222,9 @@ public class Util {
     while (i < count) {
       trow = handler.getRow(i);
       
-      trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
+      trow.setPrettyPrint(Util.getPrettyOutput());
       if (((i + 1) % 2) == 0) {
-        trow.setClass(com.bolsinga.web.CSS.TABLE_ROW_ALT);
+        trow.setClass(CSS.TABLE_ROW_ALT);
       }
 
       t.addElement(trow);
@@ -233,8 +233,8 @@ public class Util {
     }
     
     trow = handler.getFooterRow();
-    trow.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-    trow.setClass(com.bolsinga.web.CSS.TABLE_FOOTER);
+    trow.setPrettyPrint(Util.getPrettyOutput());
+    trow.setClass(CSS.TABLE_FOOTER);
     t.addElement(trow);
                 
     return t;
@@ -270,10 +270,10 @@ public class Util {
     if (Util.getDebugOutput()) {
       sb.append("generator information");
     } else {
-      sb.append(com.bolsinga.web.Util.getResourceString("program"));
+      sb.append(Util.getResourceString("program"));
                   
       sb.append(" (built: ");
-      sb.append(com.bolsinga.web.Util.getResourceString("builddate"));
+      sb.append(Util.getResourceString("builddate"));
       sb.append(" running ");
       sb.append(System.getProperty("java.runtime.name"));
       sb.append(" (");
@@ -292,7 +292,7 @@ public class Util {
       sb.append(System.getProperty("os.arch"));
                   
       sb.append(" [");
-      sb.append(com.bolsinga.web.Util.getResourceString("copyright"));
+      sb.append(Util.getResourceString("copyright"));
       sb.append("]");
                   
       sb.append(")");

@@ -24,11 +24,11 @@ public abstract class MultiDocumentCreator extends DocumentCreator {
       Div mainDiv = getMain();
             
       UL list = new UL();
-      list.setClass(com.bolsinga.web.CSS.DOC_SUB);
-      list.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
+      list.setClass(CSS.DOC_SUB);
+      list.setPrettyPrint(Util.getPrettyOutput());
             
       fSubsection = new LI();
-      fSubsection.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
+      fSubsection.setPrettyPrint(Util.getPrettyOutput());
       list.addElement(fSubsection);
             
       Element e = getSubsectionTitle();

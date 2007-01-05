@@ -115,7 +115,7 @@ public class CSS {
       System.exit(0);
     }
 
-    com.bolsinga.web.Util.createSettings(args[0]);
+    Util.createSettings(args[0]);
     
     CSS.install(args[1], args[2]);
   }

@@ -242,7 +242,7 @@ public class Links {
   }
 
   public A getArtistLink() {
-    return getArtistLink(com.bolsinga.web.Util.getResourceString("bands"));
+    return getArtistLink(Util.getResourceString("bands"));
   }
   
   public A getArtistLink(final String t) {
@@ -252,11 +252,11 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("artiststats"));
+    return Util.createInternalA(sb.toString(), t, Util.getResourceString("artiststats"));
   }
                 
   public A getShowLink() {
-    return getShowLink(com.bolsinga.web.Util.getResourceString("dates"));
+    return getShowLink(Util.getResourceString("dates"));
   }
 
   public A getShowLink(final String t) {
@@ -266,11 +266,11 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("datestats"));
+    return Util.createInternalA(sb.toString(), t, Util.getResourceString("datestats"));
   }
 
   public A getTracksLink() {
-    return getTracksLink(com.bolsinga.web.Util.getResourceString("tracks"));
+    return getTracksLink(Util.getResourceString("tracks"));
   }
   
   public A getTracksLink(final String t) {
@@ -280,11 +280,11 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("trackstats"));
+    return Util.createInternalA(sb.toString(), t, Util.getResourceString("trackstats"));
   }
 
   public A getAlbumsLink() {
-    return getAlbumsLink(com.bolsinga.web.Util.getResourceString("albums"));
+    return getAlbumsLink(Util.getResourceString("albums"));
   }
   
   public A getAlbumsLink(final String t) {
@@ -294,11 +294,11 @@ public class Links {
     sb.append(File.separator);
     sb.append(ALBUM_STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("albumstats"));
+    return Util.createInternalA(sb.toString(), t, Util.getResourceString("albumstats"));
   }
 
   public A getVenueLink() {
-    return getVenueLink(com.bolsinga.web.Util.getResourceString("venues"));
+    return getVenueLink(Util.getResourceString("venues"));
   }
 
   public A getVenueLink(final String t) {
@@ -308,11 +308,11 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("venuestats"));
+    return Util.createInternalA(sb.toString(), t, Util.getResourceString("venuestats"));
   }
         
   public A getCityLink() {
-    return getCityLink(com.bolsinga.web.Util.getResourceString("cities"));
+    return getCityLink(Util.getResourceString("cities"));
   }
 
   public A getCityLink(final String t) {
@@ -322,11 +322,11 @@ public class Links {
     sb.append(File.separator);
     sb.append(STATS);
     sb.append(HTML_EXT);
-    return com.bolsinga.web.Util.createInternalA(sb.toString(), t, com.bolsinga.web.Util.getResourceString("citystats"));
+    return Util.createInternalA(sb.toString(), t, Util.getResourceString("citystats"));
   }
 
   public String getICalAlt() {
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getIcalImage();
+    com.bolsinga.settings.data.Image image = Util.getSettings().getIcalImage();
     return image.getAlt();
   }
 
@@ -336,9 +336,9 @@ public class Links {
     sb.append(getLevel());
     sb.append(ALT_DIR);
     sb.append(File.separator);
-    sb.append(com.bolsinga.web.Util.getSettings().getIcalName() + ".ics");
+    sb.append(Util.getSettings().getIcalName() + ".ics");
 
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getIcalImage();
+    com.bolsinga.settings.data.Image image = Util.getSettings().getIcalImage();
 
     IMG i = new IMG(image.getLocation());
     i.setHeight(image.getHeight().intValue());
@@ -354,7 +354,7 @@ public class Links {
     url.append(getLevel());
     url.append(STYLES_DIR);
     url.append(File.separator);
-    url.append(com.bolsinga.web.Util.getSettings().getCssFile());
+    url.append(Util.getSettings().getCssFile());
     return url.toString();
   }
 
@@ -371,8 +371,8 @@ public class Links {
     url.append(getLevel());
     url.append("index");
     url.append(Links.HTML_EXT);
-    String h = com.bolsinga.web.Util.getResourceString("home");
-    return com.bolsinga.web.Util.createInternalA(url.toString(), h, h);
+    String h = Util.getResourceString("home");
+    return Util.createInternalA(url.toString(), h, h);
   }
   
   public A getLinkToColophon() {
@@ -382,8 +382,8 @@ public class Links {
     url.append(File.separator);
     url.append("index");
     url.append(Links.HTML_EXT);
-    String h = com.bolsinga.web.Util.getResourceString("alttitle");
-    return com.bolsinga.web.Util.createInternalA(url.toString(), h, h);
+    String h = Util.getResourceString("alttitle");
+    return Util.createInternalA(url.toString(), h, h);
   }
 
   public String getPageFileName(final Entry entry) {
@@ -428,12 +428,12 @@ public class Links {
   //  page, which will provide this link as well as the iCal link. Then ATOM can go onto this
   //  page in the future as well.
   public String getRSSAlt() {
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getRssImage();
+    com.bolsinga.settings.data.Image image = Util.getSettings().getRssImage();
     return image.getAlt();
   }
   
   public A getRSSLink() {
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getRssImage();
+    com.bolsinga.settings.data.Image image = Util.getSettings().getRssImage();
 
     IMG i = new IMG(image.getLocation());
     i.setHeight(image.getHeight().intValue());
@@ -445,9 +445,9 @@ public class Links {
   }
   
   public A getOverviewLink() {
-    return com.bolsinga.web.Util.createInternalA( getOverviewURL(),
-                                                  com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"),
-                                                  com.bolsinga.web.Util.getResourceString("archivesoverview"));
+    return Util.createInternalA(getOverviewURL(),
+                                Util.getResourceString("archivesoverviewtitle"),
+                                Util.getResourceString("archivesoverview"));
   }
 
   public String getRSSURL() {
@@ -455,7 +455,7 @@ public class Links {
     url.append(getLevel());
     url.append(ALT_DIR);
     url.append(File.separator);
-    url.append(com.bolsinga.web.Util.getSettings().getRssFile());
+    url.append(Util.getSettings().getRssFile());
     return url.toString();
   }
   

@@ -23,7 +23,7 @@ class EncodeTest {
     Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
     
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+    Encode encoder = Encode.getEncode(music, diary);
 
     long start, current;
 
@@ -143,7 +143,7 @@ public abstract class Encode {
       System.exit(0);
     }
 
-    com.bolsinga.web.Util.createSettings(args[2]);
+    Util.createSettings(args[2]);
 
     EncodeTest test = new EncodeTest();
     test.generate(args[0], args[1], args[3]);
@@ -157,7 +157,7 @@ public abstract class Encode {
   }
   
   public static String encodeROOT_URL(final String s) {
-    return Encode.encodeROOT_URL(s, com.bolsinga.web.Util.getSettings().getRoot());
+    return Encode.encodeROOT_URL(s, Util.getSettings().getRoot());
   }
   
   public static String encodeROOT_URL(final String s, final String replacement) {
@@ -232,8 +232,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfoartist", fName);
     
-    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString();
-    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString();
+    fStandardLink = Util.createInternalA(standardLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString();
+    fUpLink = Util.createInternalA(upLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString();
   }
   
   EncoderData(final Venue venue, final Links standardLinks, final Links upLinks) {
@@ -242,8 +242,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfovenue", fName);
     
-    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString();
-    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString();
+    fStandardLink = Util.createInternalA(standardLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString();
+    fUpLink = Util.createInternalA(upLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString();
   }
   
   EncoderData(final Album album, final Links standardLinks, final Links upLinks) {
@@ -252,8 +252,8 @@ class EncoderData {
     
     String t = com.bolsinga.music.Util.createTitle("moreinfoalbum", fName);
     
-    fStandardLink = com.bolsinga.web.Util.createInternalA(standardLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
-    fUpLink = com.bolsinga.web.Util.createInternalA(upLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
+    fStandardLink = Util.createInternalA(standardLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
+    fUpLink = Util.createInternalA(upLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
   }
 
   public static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
@@ -268,7 +268,7 @@ class EncoderData {
 
     // This looks at the modified source for each EncoderData. This means it continually searches
     // the modified source for HTML tags for each EncoderData.
-    if (com.bolsinga.web.Util.getSettings().isEmbedLinks()) {
+    if (Util.getSettings().isEmbedLinks()) {
       for (EncoderData data : encodings) {
         result = EncoderData.addLinks(data.getPattern(), result, data.getLink(upOneLevel));
       }
@@ -548,7 +548,7 @@ class HashEncode extends Encode {
 
   public String embedLinks(final Entry entry, final boolean upOneLevel) {
     String result = embedLinks(entry, entry.getComment(), upOneLevel);
-    return Encode.encodeROOT_URL(result, com.bolsinga.web.Links.getLinks(upOneLevel).getLevelOnly());
+    return Encode.encodeROOT_URL(result, Links.getLinks(upOneLevel).getLevelOnly());
   }
   
   private String embedLinks(final Object obj, final String source, final boolean upOneLevel) {
@@ -558,6 +558,6 @@ class HashEncode extends Encode {
     } else {
       result = source;
     }
-    return com.bolsinga.web.Util.toHTMLSafe(result);
+    return Util.toHTMLSafe(result);
   }
 }
