@@ -5,7 +5,6 @@ import java.text.*;
 import java.util.*;
 import java.util.regex.*;
 
-import com.bolsinga.diary.*;
 import com.bolsinga.diary.data.*;
 
 public class MySQLImporter {
@@ -108,7 +107,7 @@ public class MySQLImporter {
   }
 
   private static void importEntries(final Statement stmt, final Diary diary) throws SQLException {
-    List<Entry> items = com.bolsinga.diary.Util.getEntriesCopy(diary);
+    List<Entry> items = Util.getEntriesCopy(diary);
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
 

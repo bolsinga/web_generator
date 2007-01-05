@@ -106,7 +106,7 @@ public class MySQLCreator {
     }
   }
 
-  public static com.bolsinga.diary.data.Diary createDiary(final String user, final String password) {
+  public static Diary createDiary(final String user, final String password) {
     Diary diary = null;
     Connection conn = null;
     Statement stmt = null;
