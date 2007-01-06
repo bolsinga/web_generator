@@ -253,7 +253,7 @@
           <compilerarg value="${javac.lint}" compiler="javac1.5" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/rss/*.java" />
-          <classpath refid="jaxb_binder_classpath" />
+          <classpath refid="web_classpath" />
         </javac>
 </target>
 

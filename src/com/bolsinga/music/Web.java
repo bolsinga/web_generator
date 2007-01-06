@@ -846,7 +846,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     };
   }
         
-  public static String getLinkedData(final com.bolsinga.web.Encode encoder, final Show show, final boolean upOneLevel) {
+  public static Element getLinkedData(final com.bolsinga.web.Encode encoder, final Show show, final boolean upOneLevel) {
     return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel));
   }
         
@@ -991,7 +991,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     String comment = show.getComment();
     if (comment != null) {
-      e.add(new StringElement(getLinkedData(encoder, show, upOneLevel)));
+      e.add(getLinkedData(encoder, show, upOneLevel));
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
