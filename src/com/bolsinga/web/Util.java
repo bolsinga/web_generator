@@ -112,17 +112,17 @@ public class Util {
     return list;
   }
         
-  public static String convertToParagraphs(final String data) {
+  public static org.apache.ecs.Element convertToParagraphs(final String data) {
     // Convert each line to <p> tags except when within a tag...
-    StringBuilder tagged = new StringBuilder();
+    ElementContainer ec = new ElementContainer();
     if (data != null) {
-      tagged.append(new P().addElement(Encode.encodeUntagged(data, new UntaggedEncoder() {
+      ec.addElement(new P().addElement(Encode.encodeUntagged(data, new UntaggedEncoder() {
         public String encodeUntagged(final String s) {
           return sNewLinePattern.matcher(s).replaceAll(sNewLineReplacement);
         }
       })));
     }
-    return tagged.toString();
+    return ec;
   }
         
   public static Div createDiv(final String className) {
