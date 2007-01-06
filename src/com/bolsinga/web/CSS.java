@@ -27,7 +27,7 @@ public class CSS {
 
   private static final String SHORT_ENTRY_INDEX     = "a";
   private static final String SHORT_ENTRY_INDEX_SUB = "b";
-  private static final String SHORT_ENTRY_ITEM      = "d";
+  private static final String SHORT_ENTRY_ITEM      = "c";
   private static final String SHORT_ENTRY_RELATION  = "d";
   private static final String SHORT_INTERNAL        = "e";
   private static final String SHORT_PERMANENT       = "f";
