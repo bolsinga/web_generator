@@ -849,7 +849,43 @@ public class Web implements com.bolsinga.web.Backgroundable {
   public static Element getLinkedData(final com.bolsinga.web.Encode encoder, final Show show, final boolean upOneLevel) {
     return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel));
   }
-        
+  
+  private static Vector<Element> getArtistShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist, final Show show) {
+    Vector<Element> e = new Vector<Element>();
+    
+    StringBuilder sb = new StringBuilder();
+    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
+    while (bi.hasNext()) {
+      Artist performer = (Artist)bi.next().getValue();
+      
+      String htmlName = lookup.getHTMLName(performer);
+      if (artist.equals(performer)) {
+        sb.append(htmlName);
+      } else {
+        String t = Util.createTitle("moreinfoartist", performer.getName());
+        sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), htmlName, t));
+      }
+                                
+      if (bi.hasNext()) {
+        sb.append(", ");
+      }
+    }
+    e.add(new StringElement(sb.toString()));
+                        
+    Venue venue = (Venue)show.getVenue();
+    String t = Util.createTitle("moreinfovenue", venue.getName());
+    A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue), t);
+    Location l = (Location)venue.getLocation();
+    e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
+                        
+    String comment = show.getComment();
+    if (comment != null) {
+      e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(show), com.bolsinga.web.Util.getResourceString("showsummary"), com.bolsinga.web.Util.getResourceString("showsummarytitle")));
+    }
+    
+    return e;
+  }
+  
   public static Element addItem(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
@@ -864,42 +900,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Collection<Show> shows = lookup.getShows(artist);
     if (shows != null) {
       for (Show show : shows) {
-        Vector<Element> se = new Vector<Element>();
-        StringBuilder sb = new StringBuilder();
-        Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
-        while (bi.hasNext()) {
-          Artist performer = (Artist)bi.next().getValue();
-          
-          String htmlName = lookup.getHTMLName(performer);
-          if (artist.equals(performer)) {
-            sb.append(htmlName);
-          } else {
-            String t = Util.createTitle("moreinfoartist", performer.getName());
-            sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), htmlName, t));
-          }
-                                    
-          if (bi.hasNext()) {
-            sb.append(", ");
-          }
-        }
-        se.add(new StringElement(sb.toString()));
-                            
-        Venue venue = (Venue)show.getVenue();
-        String t = Util.createTitle("moreinfovenue", venue.getName());
-        A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue), t);
-        Location l = (Location)venue.getLocation();
-        se.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
-                            
-        String showLink = links.getLinkTo(show);
-                            
-        String comment = show.getComment();
-        if (comment != null) {
-          se.add(com.bolsinga.web.Util.createInternalA(showLink, com.bolsinga.web.Util.getResourceString("showsummary"), com.bolsinga.web.Util.getResourceString("showsummarytitle")));
-        }
-        
+        Vector<Element> se = Web.getArtistShowListing(lookup, links, artist, show);
+
         ElementContainer ec = new ElementContainer(); // Artist Show
         String dateString = Util.toString(show.getDate());
-        ec.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(showLink, dateString, dateString)));
+        ec.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(show), dateString, dateString)));
         ec.addElement(com.bolsinga.web.Util.createUnorderedList(se));
         e.add(ec);
       }
@@ -909,7 +914,33 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
-        
+  
+  private static Vector<Element> getVenueShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue, final Show show) {
+    Vector<Element> e = new Vector<Element>();
+    StringBuilder sb = new StringBuilder();
+    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
+    while (bi.hasNext()) {
+      Artist performer = (Artist)bi.next().getValue();
+      String t = Util.createTitle("moreinfoartist", performer.getName());
+      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer), t));
+      
+      if (bi.hasNext()) {
+        sb.append(", ");
+      }
+    }
+    e.add(new StringElement(sb.toString()));
+    
+    Location l = (Location)venue.getLocation();
+    e.add(new StringElement(lookup.getHTMLName(venue) + ", " + l.getCity() + ", " + l.getState()));
+    
+    String comment = show.getComment();
+    if (comment != null) {
+      e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(show), com.bolsinga.web.Util.getResourceString("showsummary"), com.bolsinga.web.Util.getResourceString("showsummarytitle")));
+    }
+    
+    return e;
+  }
+  
   public static Element addItem(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue) {
     Vector<Element> e = new Vector<Element>();
                 
@@ -920,33 +951,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Collection<Show> shows = lookup.getShows(venue);
     if (shows != null) {
       for (Show show : shows) {
-        String showLink = links.getLinkTo(show);
-        
-        Vector<Element> se = new Vector<Element>();
-        StringBuilder sb = new StringBuilder();
-        Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
-        while (bi.hasNext()) {
-          Artist performer = (Artist)bi.next().getValue();
-          String t = Util.createTitle("moreinfoartist", performer.getName());
-          sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer), t));
-          
-          if (bi.hasNext()) {
-            sb.append(", ");
-          }
-        }
-        se.add(new StringElement(sb.toString()));
-        
-        Location l = (Location)venue.getLocation();
-        se.add(new StringElement(lookup.getHTMLName(venue) + ", " + l.getCity() + ", " + l.getState()));
-        
-        String comment = show.getComment();
-        if (comment != null) {
-          se.add(com.bolsinga.web.Util.createInternalA(showLink, com.bolsinga.web.Util.getResourceString("showsummary"), com.bolsinga.web.Util.getResourceString("showsummarytitle")));
-        }
+        Vector<Element> se = Web.getVenueShowListing(lookup, links, venue, show);
         
         ElementContainer ec = new ElementContainer(); // Venue Show
         String dateString = Util.toString(show.getDate());
-        ec.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(showLink, dateString, dateString)));
+        ec.addElement(new H3().addElement(com.bolsinga.web.Util.createInternalA(links.getLinkTo(show), dateString, dateString)));
         ec.addElement(com.bolsinga.web.Util.createUnorderedList(se));
         e.add(ec);                        
       }
@@ -957,7 +966,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
         
-  private static UL getShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Show show) {
+  private static Vector<Element> getShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
@@ -979,7 +988,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Location l = (Location)venue.getLocation();
     e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
                 
-    return com.bolsinga.web.Util.createUnorderedList(e);
+    return e;
   }
 
   public static Element addItem(final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final Show show, final boolean upOneLevel) {
@@ -987,7 +996,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
 
-    e.add(Web.getShowListing(lookup, links, show));
+    e.add(com.bolsinga.web.Util.createUnorderedList(Web.getShowListing(lookup, links, show)));
 
     String comment = show.getComment();
     if (comment != null) {
@@ -998,40 +1007,19 @@ public class Web implements com.bolsinga.web.Backgroundable {
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
-
-  public static Element addItem(final Lookup lookup, final com.bolsinga.web.Links links, final Album album) {
+  
+  private static Vector<Element> getAlbumListing(final Lookup lookup, final com.bolsinga.web.Links links, final Album album) {
     Vector<Element> e = new Vector<Element>();
-                
-    StringBuilder sb;
-    Artist artist = null;
-    Song song;
-                
+    StringBuilder sb = null;
     boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
-                
-    sb = new StringBuilder();
-    sb.append(com.bolsinga.web.Util.createNamedTarget(album.getId(), lookup.getHTMLName(album)));
-    if (!isCompilation) {
-      artist = (Artist)album.getPerformer();
-      sb.append(" - ");
-      String t = Util.createTitle("moreinfoartist", artist.getName());
-      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist), t));
-    }
     com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
-    if (albumRelease != null) {
-      sb.append(" (");
-      sb.append(albumRelease.getYear());
-      sb.append(")");
-    }
 
-    e.add(new H3().addElement(sb.toString()));
-
-    Vector<Element> ae = new Vector<Element>();
     List<JAXBElement<Object>> songs = Util.getSongsUnmodifiable(album);
     for (JAXBElement<Object> jsong : songs) {
-      song = (Song)jsong.getValue();
+      Song song = (Song)jsong.getValue();
       sb = new StringBuilder();
       if (isCompilation) {
-        artist = (Artist)song.getPerformer();
+        Artist artist = (Artist)song.getPerformer();
         String t = Util.createTitle("moreinfoartist", artist.getName());
         sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist), t));
         sb.append(" - ");
@@ -1047,17 +1035,53 @@ public class Web implements com.bolsinga.web.Backgroundable {
           sb.append(")");
         }
       }
-      ae.add(new StringElement(sb.toString()));
+      e.add(new StringElement(sb.toString()));
     }
+    
+    return e;
+  }
+  
+  private static Element getAlbumTitle(final Lookup lookup, final com.bolsinga.web.Links links, final Album album) {
+    boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
+                
+    StringBuilder sb = new StringBuilder();
+    sb.append(com.bolsinga.web.Util.createNamedTarget(album.getId(), lookup.getHTMLName(album)));
+    if (!isCompilation) {
+      Artist artist = (Artist)album.getPerformer();
+      sb.append(" - ");
+      String t = Util.createTitle("moreinfoartist", artist.getName());
+      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist), t));
+    }
+    com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
+    if (albumRelease != null) {
+      sb.append(" (");
+      sb.append(albumRelease.getYear());
+      sb.append(")");
+    }
+    
+    return new StringElement(sb.toString());
+  }
+
+  public static Element addItem(final Lookup lookup, final com.bolsinga.web.Links links, final Album album) {
+    Vector<Element> e = new Vector<Element>();
+
+    e.add(new H3(Web.getAlbumTitle(lookup, links, album)));
+
+    Vector<Element> ae = Web.getAlbumListing(lookup, links, album);
     e.add(com.bolsinga.web.Util.createOrderedList(ae));
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
   }
-        
-  public static Div addRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
+  
+  interface RelationHandler {
+    public Object handle(final Vector<Element> e, final Element curElement);
+  };
+  
+  private static Object getRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist, final RelationHandler handler) {
     Vector<Element> e = new Vector<Element>();
+    
     org.apache.ecs.Element curElement = null;
     for (Artist art : lookup.getRelations(artist)) {
       String htmlName = lookup.getHTMLName(art);
@@ -1069,15 +1093,27 @@ public class Web implements com.bolsinga.web.Backgroundable {
         e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(art), htmlName, t));
       }
     }
-
+    
+    return handler.handle(e, curElement);
+  }
+  
+  public static Div addRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
+    UL list = (UL)Web.getRelations(lookup, links, artist, new RelationHandler() {
+      public Object handle(final Vector<Element> e, final Element curElement) {
+        return com.bolsinga.web.Util.createUnorderedList(e, curElement);
+      }
+    });
+    
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_RELATION);
     d.addElement(new H4().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
+    d.addElement(list);
+    
     return d;
   }
-        
-  public static Div addRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue) {
+  
+  private static Object getRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue, final RelationHandler handler) {
     Vector<Element> e = new Vector<Element>();
+    
     org.apache.ecs.Element curElement = null;
     for (Venue v : lookup.getRelations(venue)) {
       String htmlName = lookup.getHTMLName(v);
@@ -1089,14 +1125,25 @@ public class Web implements com.bolsinga.web.Backgroundable {
         e.add(com.bolsinga.web.Util.createInternalA(links.getLinkTo(v), htmlName, t));
       }
     }
-
+    
+    return handler.handle(e, curElement);
+  }
+  
+  public static Div addRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue) {
+    UL list = (UL)Web.getRelations(lookup, links, venue, new RelationHandler() {
+      public Object handle(final Vector<Element> e, final Element curElement) {
+        return com.bolsinga.web.Util.createUnorderedList(e, curElement);
+      }
+    });
+    
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_RELATION);
     d.addElement(new H4().addElement(com.bolsinga.web.Util.getResourceString("seealso")));
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e, curElement));
+    d.addElement(list);
+    
     return d;
   }
 
-  public static Element addTracks(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
+  private static Vector<Element> getTracks(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
     List<JAXBElement<Object>> albums = Util.getAlbumsCopy(artist);
@@ -1115,10 +1162,17 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
       e.add(new StringElement(sb.toString()));
     }
-
+    
+    return e;
+  }
+  
+  public static Element addTracks(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
+    Vector<Element> e = Web.getTracks(lookup, links, artist);
+    
     ElementContainer ec = new ElementContainer();
     ec.addElement(new H4().addElement(com.bolsinga.web.Util.getResourceString("albums")));
     ec.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    
     return ec;
   }
   
