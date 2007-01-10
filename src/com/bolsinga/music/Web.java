@@ -15,6 +15,10 @@ import org.apache.ecs.filter.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
+  
+interface RelationHandler {
+  public Object handle(final Vector<Element> e, final Element curElement);
+};
 
 abstract class MusicDocumentCreator extends com.bolsinga.web.MultiDocumentCreator {
   protected final Lookup fLookup;
@@ -356,8 +360,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
 
     final java.util.Map<String, com.bolsinga.web.IndexPair> artistIndex = Web.createArtistIndex(Util.getArtistsUnmodifiable(music), links);
-    Collection<Collection<Artist>> artistGroups = Web.getArtistGroups(music, links);
-    for (final Collection<Artist> artistGroup : artistGroups) {
+    Collection<Vector<Artist>> artistGroups = Web.getArtistGroups(music, links);
+    for (final Vector<Artist> artistGroup : artistGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           Web.generateArtistPages(artistGroup, artistIndex, lookup, links, outputDir);
@@ -371,8 +375,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
     
     final java.util.Map<String, com.bolsinga.web.IndexPair> venueIndex = Web.createVenueIndex(Util.getVenuesUnmodifiable(music), links);
-    Collection<Collection<Venue>> venueGroups = Web.getVenueGroups(music, links);
-    for (final Collection<Venue> venueGroup : venueGroups) {
+    Collection<Vector<Venue>> venueGroups = Web.getVenueGroups(music, links);
+    for (final Vector<Venue> venueGroup : venueGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           Web.generateVenuePages(venueGroup, venueIndex, lookup, links, outputDir);
@@ -386,8 +390,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
 
     final java.util.Map<String, com.bolsinga.web.IndexPair> showIndex = Web.createShowIndex(Util.getShowsUnmodifiable(music), links);
-    Collection<Collection<Show>> showGroups = Web.getShowGroups(music, links);
-    for (final Collection<Show> showGroup : showGroups) {
+    Collection<Vector<Show>> showGroups = Web.getShowGroups(music, links);
+    for (final Vector<Show> showGroup : showGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           Web.generateDatePages(showGroup, showIndex, encoder, lookup, links, outputDir);
@@ -407,8 +411,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
 
     final java.util.Map<String, com.bolsinga.web.IndexPair> albumIndex = Web.createAlbumIndex(Util.getAlbumsUnmodifiable(music), links);
-    Collection<Collection<Album>> albumGroups = Web.getAlbumGroups(music, links);
-    for (final Collection<Album> albumGroup : albumGroups) {
+    Collection<Vector<Album>> albumGroups = Web.getAlbumGroups(music, links);
+    for (final Vector<Album> albumGroup : albumGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           Web.generateTracksPages(albumGroup, albumIndex, lookup, links, outputDir);
@@ -427,16 +431,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
   }
 
-  private static Collection<Collection<Artist>> getArtistGroups(final Music music, final com.bolsinga.web.Links links) {
+  private static Collection<Vector<Artist>> getArtistGroups(final Music music, final com.bolsinga.web.Links links) {
     List<Artist> artists = Util.getArtistsCopy(music);
     // Each group is per page, so they are grouped by Artist who have the same starting sort letter.
-    HashMap<String, Collection<Artist>> result = new HashMap<String, Collection<Artist>>(artists.size());
+    HashMap<String, Vector<Artist>> result = new HashMap<String, Vector<Artist>>(artists.size());
     
     Collections.sort(artists, Compare.ARTIST_COMPARATOR);
     
     for (Artist artist : artists) {
       String key = links.getPageFileName(artist);
-      Collection<Artist> artistList;
+      Vector<Artist> artistList;
       if (result.containsKey(key)) {
         artistList = result.get(key);
         artistList.add(artist);
@@ -450,16 +454,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return Collections.unmodifiableCollection(result.values());
   }
 
-  private static Collection<Collection<Venue>> getVenueGroups(final Music music, final com.bolsinga.web.Links links) {
+  private static Collection<Vector<Venue>> getVenueGroups(final Music music, final com.bolsinga.web.Links links) {
     List<Venue> venues = Util.getVenuesCopy(music);
     // Each group is per page, so they are grouped by Venue who have the same starting sort letter.
-    HashMap<String, Collection<Venue>> result = new HashMap<String, Collection<Venue>>(venues.size());
+    HashMap<String, Vector<Venue>> result = new HashMap<String, Vector<Venue>>(venues.size());
     
     Collections.sort(venues, Compare.VENUE_COMPARATOR);
     
     for (Venue venue : venues) {
       String key = links.getPageFileName(venue);
-      Collection<Venue> venueList;
+      Vector<Venue> venueList;
       if (result.containsKey(key)) {
         venueList = result.get(key);
         venueList.add(venue);
@@ -473,16 +477,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return Collections.unmodifiableCollection(result.values());
   }
 
-  private static Collection<Collection<Show>> getShowGroups(final Music music, final com.bolsinga.web.Links links) {
+  private static Collection<Vector<Show>> getShowGroups(final Music music, final com.bolsinga.web.Links links) {
     List<Show> shows = Util.getShowsCopy(music);
     // Each group is per page, so they are grouped by Show who have the same starting sort letter.
-    HashMap<String, Collection<Show>> result = new HashMap<String, Collection<Show>>(shows.size());
+    HashMap<String, Vector<Show>> result = new HashMap<String, Vector<Show>>(shows.size());
     
     Collections.sort(shows, Compare.SHOW_COMPARATOR);
     
     for (Show show : shows) {
       String key = links.getPageFileName(show);
-      Collection<Show> showList;
+      Vector<Show> showList;
       if (result.containsKey(key)) {
         showList = result.get(key);
         showList.add(show);
@@ -496,16 +500,16 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return Collections.unmodifiableCollection(result.values());
   }
 
-  private static Collection<Collection<Album>> getAlbumGroups(final Music music, final com.bolsinga.web.Links links) {
+  private static Collection<Vector<Album>> getAlbumGroups(final Music music, final com.bolsinga.web.Links links) {
     List<Album> albums = Util.getAlbumsCopy(music);
     // Each group is per page, so they are grouped by Show who have the same starting sort letter.
-    HashMap<String, Collection<Album>> result = new HashMap<String, Collection<Album>>(albums.size());
+    HashMap<String, Vector<Album>> result = new HashMap<String, Vector<Album>>(albums.size());
     
     Collections.sort(albums, Compare.ALBUM_COMPARATOR);
     
     for (Album album : albums) {
       String key = links.getPageFileName(album);
-      Collection<Album> albumList;
+      Vector<Album> albumList;
       if (result.containsKey(key)) {
         albumList = result.get(key);
         albumList.add(album);
@@ -521,7 +525,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
     
-  private static void generateArtistPages(final Collection<Artist> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  private static void generateArtistPages(final Vector<Artist> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     ArtistDocumentCreator creator = new ArtistDocumentCreator(index, lookup, links, outputDir);
     for (Artist item : items) {
       creator.add(item);
@@ -563,7 +567,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     stats.complete();
   }
 
-  public static void generateVenuePages(final Collection<Venue> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  public static void generateVenuePages(final Vector<Venue> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     VenueDocumentCreator creator = new VenueDocumentCreator(index, lookup, links, outputDir);
     for (Venue item : items) {
       creator.add(item);
@@ -605,7 +609,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     stats.complete();
   }
 
-  public static void generateDatePages(final Collection<Show> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  public static void generateDatePages(final Vector<Show> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     ShowDocumentCreator creator = new ShowDocumentCreator(index, lookup, encoder, links, outputDir);
     for (Show item : items) {
       creator.add(item);
@@ -718,7 +722,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     creator.complete();
   }
 
-  public static void generateTracksPages(final Collection<Album> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  public static void generateTracksPages(final Vector<Album> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     TracksDocumentCreator creator = new TracksDocumentCreator(index, lookup, links, outputDir);
     for (Album item : items) {                
       creator.add(item);
@@ -850,7 +854,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel));
   }
   
-  private static Vector<Element> getArtistShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist, final Show show) {
+  static Vector<Element> getArtistShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist, final Show show) {
     Vector<Element> e = new Vector<Element>();
     
     StringBuilder sb = new StringBuilder();
@@ -915,7 +919,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
   
-  private static Vector<Element> getVenueShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue, final Show show) {
+  static Vector<Element> getVenueShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
@@ -966,7 +970,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
         
-  private static Vector<Element> getShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Show show) {
+  static Vector<Element> getShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
@@ -1008,7 +1012,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
   
-  private static Vector<Element> getAlbumListing(final Lookup lookup, final com.bolsinga.web.Links links, final Album album) {
+  static Vector<Element> getAlbumListing(final Lookup lookup, final com.bolsinga.web.Links links, final Album album) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = null;
     boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
@@ -1041,7 +1045,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return e;
   }
   
-  private static Element getAlbumTitle(final Lookup lookup, final com.bolsinga.web.Links links, final Album album) {
+  static Element getAlbumTitle(final Lookup lookup, final com.bolsinga.web.Links links, final Album album) {
     boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
                 
     StringBuilder sb = new StringBuilder();
@@ -1075,11 +1079,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
   
-  interface RelationHandler {
-    public Object handle(final Vector<Element> e, final Element curElement);
-  };
-  
-  private static Object getRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist, final RelationHandler handler) {
+  static Object getRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist, final RelationHandler handler) {
     Vector<Element> e = new Vector<Element>();
     
     org.apache.ecs.Element curElement = null;
@@ -1111,7 +1111,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
   
-  private static Object getRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue, final RelationHandler handler) {
+  static Object getRelations(final Lookup lookup, final com.bolsinga.web.Links links, final Venue venue, final RelationHandler handler) {
     Vector<Element> e = new Vector<Element>();
     
     org.apache.ecs.Element curElement = null;
@@ -1143,7 +1143,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     return d;
   }
 
-  private static Vector<Element> getTracks(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
+  static Vector<Element> getTracks(final Lookup lookup, final com.bolsinga.web.Links links, final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
     List<JAXBElement<Object>> albums = Util.getAlbumsCopy(artist);
