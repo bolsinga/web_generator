@@ -53,6 +53,10 @@ margin-left: 200px;
 text-indent: 1em;
 }
 
+.@@record_item_list@@ P {
+text-indent: 1em;
+}
+
 .@@entry_index@@ ul {
 margin: 0;
 padding: 0;
