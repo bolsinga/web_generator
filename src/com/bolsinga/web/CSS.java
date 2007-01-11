@@ -24,24 +24,28 @@ public class CSS {
   private static final String LONG_TABLE_HEADER     = "table_header";
   private static final String LONG_TABLE_ROW_ALT    = "table_row_alt";
   private static final String LONG_TABLE_FOOTER     = "table_footer";
+  private static final String LONG_RECORD_SECTION   = "record_section";
+  private static final String LONG_RECORD_ITEM_LIST = "record_item_list";
 
-  private static final String SHORT_ENTRY_INDEX     = "a";
-  private static final String SHORT_ENTRY_INDEX_SUB = "b";
-  private static final String SHORT_ENTRY_ITEM      = "c";
-  private static final String SHORT_ENTRY_RELATION  = "d";
-  private static final String SHORT_INTERNAL        = "e";
-  private static final String SHORT_PERMANENT       = "f";
-  private static final String SHORT_ACTIVE          = "g";
-  private static final String SHORT_DOC_2_COL_BODY  = "h";
-  private static final String SHORT_DOC_3_COL_BODY  = "i";
-  private static final String SHORT_NAV_HEADER      = "j";
-  private static final String SHORT_STATICS_HEADER  = "k";
-  private static final String SHORT_STATICS_OFFSITE = "l";
-  private static final String SHORT_DOC_SUB         = "m";
-  private static final String SHORT_COLOPHON        = "n";
-  private static final String SHORT_TABLE_HEADER    = "o";
-  private static final String SHORT_TABLE_ROW_ALT   = "p";
-  private static final String SHORT_TABLE_FOOTER    = "q";
+  private static final String SHORT_ENTRY_INDEX      = "a";
+  private static final String SHORT_ENTRY_INDEX_SUB  = "b";
+  private static final String SHORT_ENTRY_ITEM       = "c";
+  private static final String SHORT_ENTRY_RELATION   = "d";
+  private static final String SHORT_INTERNAL         = "e";
+  private static final String SHORT_PERMANENT        = "f";
+  private static final String SHORT_ACTIVE           = "g";
+  private static final String SHORT_DOC_2_COL_BODY   = "h";
+  private static final String SHORT_DOC_3_COL_BODY   = "i";
+  private static final String SHORT_NAV_HEADER       = "j";
+  private static final String SHORT_STATICS_HEADER   = "k";
+  private static final String SHORT_STATICS_OFFSITE  = "l";
+  private static final String SHORT_DOC_SUB          = "m";
+  private static final String SHORT_COLOPHON         = "n";
+  private static final String SHORT_TABLE_HEADER     = "o";
+  private static final String SHORT_TABLE_ROW_ALT    = "p";
+  private static final String SHORT_TABLE_FOOTER     = "q";
+  private static final String SHORT_RECORD_SECTION   = "r";
+  private static final String SHORT_RECORD_ITEM_LIST = "s";
 
   public static String ENTRY_INDEX;
   public static String ENTRY_INDEX_SUB;
@@ -60,6 +64,8 @@ public class CSS {
   public static String TABLE_HEADER;
   public static String TABLE_ROW_ALT;
   public static String TABLE_FOOTER;
+  public static String RECORD_SECTION;
+  public static String RECORD_ITEM_LIST;
   
   private static final HashMap<String, String> sCSSMapping = new HashMap<String, String>();
 
@@ -72,41 +78,45 @@ public class CSS {
     //  to 'optimize' the file to be smaller, and each HTML file will be smaller as
     //  well, thus decreasing download times and bandwidth.
 
-    sCSSMapping.put(LONG_ENTRY_INDEX,     debug ? LONG_ENTRY_INDEX     : SHORT_ENTRY_INDEX);
-    sCSSMapping.put(LONG_ENTRY_INDEX_SUB, debug ? LONG_ENTRY_INDEX_SUB : SHORT_ENTRY_INDEX_SUB);
-    sCSSMapping.put(LONG_ENTRY_ITEM,      debug ? LONG_ENTRY_ITEM      : SHORT_ENTRY_ITEM);
-    sCSSMapping.put(LONG_ENTRY_RELATION,  debug ? LONG_ENTRY_RELATION  : SHORT_ENTRY_RELATION);
-    sCSSMapping.put(LONG_INTERNAL,        debug ? LONG_INTERNAL        : SHORT_INTERNAL);
-    sCSSMapping.put(LONG_PERMANENT,       debug ? LONG_PERMANENT       : SHORT_PERMANENT);
-    sCSSMapping.put(LONG_ACTIVE,          debug ? LONG_ACTIVE          : SHORT_ACTIVE);
-    sCSSMapping.put(LONG_DOC_2_COL_BODY,  debug ? LONG_DOC_2_COL_BODY  : SHORT_DOC_2_COL_BODY);
-    sCSSMapping.put(LONG_DOC_3_COL_BODY,  debug ? LONG_DOC_3_COL_BODY  : SHORT_DOC_3_COL_BODY);
-    sCSSMapping.put(LONG_NAV_HEADER,      debug ? LONG_NAV_HEADER      : SHORT_NAV_HEADER);
-    sCSSMapping.put(LONG_STATICS_HEADER,  debug ? LONG_STATICS_HEADER  : SHORT_STATICS_HEADER);
-    sCSSMapping.put(LONG_STATICS_OFFSITE, debug ? LONG_STATICS_OFFSITE : SHORT_STATICS_OFFSITE);
-    sCSSMapping.put(LONG_DOC_SUB,         debug ? LONG_DOC_SUB         : SHORT_DOC_SUB);
-    sCSSMapping.put(LONG_COLOPHON,        debug ? LONG_COLOPHON        : SHORT_COLOPHON);
-    sCSSMapping.put(LONG_TABLE_HEADER,    debug ? LONG_TABLE_HEADER    : SHORT_TABLE_HEADER);
-    sCSSMapping.put(LONG_TABLE_ROW_ALT,   debug ? LONG_TABLE_ROW_ALT   : SHORT_TABLE_ROW_ALT);
-    sCSSMapping.put(LONG_TABLE_FOOTER,    debug ? LONG_TABLE_FOOTER    : SHORT_TABLE_FOOTER);
+    sCSSMapping.put(LONG_ENTRY_INDEX,      debug ? LONG_ENTRY_INDEX      : SHORT_ENTRY_INDEX);
+    sCSSMapping.put(LONG_ENTRY_INDEX_SUB,  debug ? LONG_ENTRY_INDEX_SUB  : SHORT_ENTRY_INDEX_SUB);
+    sCSSMapping.put(LONG_ENTRY_ITEM,       debug ? LONG_ENTRY_ITEM       : SHORT_ENTRY_ITEM);
+    sCSSMapping.put(LONG_ENTRY_RELATION,   debug ? LONG_ENTRY_RELATION   : SHORT_ENTRY_RELATION);
+    sCSSMapping.put(LONG_INTERNAL,         debug ? LONG_INTERNAL         : SHORT_INTERNAL);
+    sCSSMapping.put(LONG_PERMANENT,        debug ? LONG_PERMANENT        : SHORT_PERMANENT);
+    sCSSMapping.put(LONG_ACTIVE,           debug ? LONG_ACTIVE           : SHORT_ACTIVE);
+    sCSSMapping.put(LONG_DOC_2_COL_BODY,   debug ? LONG_DOC_2_COL_BODY   : SHORT_DOC_2_COL_BODY);
+    sCSSMapping.put(LONG_DOC_3_COL_BODY,   debug ? LONG_DOC_3_COL_BODY   : SHORT_DOC_3_COL_BODY);
+    sCSSMapping.put(LONG_NAV_HEADER,       debug ? LONG_NAV_HEADER       : SHORT_NAV_HEADER);
+    sCSSMapping.put(LONG_STATICS_HEADER,   debug ? LONG_STATICS_HEADER   : SHORT_STATICS_HEADER);
+    sCSSMapping.put(LONG_STATICS_OFFSITE,  debug ? LONG_STATICS_OFFSITE  : SHORT_STATICS_OFFSITE);
+    sCSSMapping.put(LONG_DOC_SUB,          debug ? LONG_DOC_SUB          : SHORT_DOC_SUB);
+    sCSSMapping.put(LONG_COLOPHON,         debug ? LONG_COLOPHON         : SHORT_COLOPHON);
+    sCSSMapping.put(LONG_TABLE_HEADER,     debug ? LONG_TABLE_HEADER     : SHORT_TABLE_HEADER);
+    sCSSMapping.put(LONG_TABLE_ROW_ALT,    debug ? LONG_TABLE_ROW_ALT    : SHORT_TABLE_ROW_ALT);
+    sCSSMapping.put(LONG_TABLE_FOOTER,     debug ? LONG_TABLE_FOOTER     : SHORT_TABLE_FOOTER);
+    sCSSMapping.put(LONG_RECORD_SECTION,   debug ? LONG_RECORD_SECTION   : SHORT_RECORD_SECTION);
+    sCSSMapping.put(LONG_RECORD_ITEM_LIST, debug ? LONG_RECORD_ITEM_LIST : SHORT_RECORD_ITEM_LIST);
 
-    ENTRY_INDEX     = sCSSMapping.get(LONG_ENTRY_INDEX);
-    ENTRY_INDEX_SUB = sCSSMapping.get(LONG_ENTRY_INDEX_SUB);
-    ENTRY_ITEM      = sCSSMapping.get(LONG_ENTRY_ITEM);
-    ENTRY_RELATION  = sCSSMapping.get(LONG_ENTRY_RELATION);
-    INTERNAL        = sCSSMapping.get(LONG_INTERNAL);
-    PERMANENT       = sCSSMapping.get(LONG_PERMANENT);
-    ACTIVE          = sCSSMapping.get(LONG_ACTIVE);
-    DOC_2_COL_BODY  = sCSSMapping.get(LONG_DOC_2_COL_BODY);
-    DOC_3_COL_BODY  = sCSSMapping.get(LONG_DOC_3_COL_BODY);
-    NAV_HEADER      = sCSSMapping.get(LONG_NAV_HEADER);
-    STATICS_HEADER  = sCSSMapping.get(LONG_STATICS_HEADER);
-    STATICS_OFFSITE = sCSSMapping.get(LONG_STATICS_OFFSITE);
-    DOC_SUB         = sCSSMapping.get(LONG_DOC_SUB);
-    COLOPHON        = sCSSMapping.get(LONG_COLOPHON);
-    TABLE_HEADER    = sCSSMapping.get(LONG_TABLE_HEADER);
-    TABLE_ROW_ALT   = sCSSMapping.get(LONG_TABLE_ROW_ALT);
-    TABLE_FOOTER    = sCSSMapping.get(LONG_TABLE_FOOTER);
+    ENTRY_INDEX      = sCSSMapping.get(LONG_ENTRY_INDEX);
+    ENTRY_INDEX_SUB  = sCSSMapping.get(LONG_ENTRY_INDEX_SUB);
+    ENTRY_ITEM       = sCSSMapping.get(LONG_ENTRY_ITEM);
+    ENTRY_RELATION   = sCSSMapping.get(LONG_ENTRY_RELATION);
+    INTERNAL         = sCSSMapping.get(LONG_INTERNAL);
+    PERMANENT        = sCSSMapping.get(LONG_PERMANENT);
+    ACTIVE           = sCSSMapping.get(LONG_ACTIVE);
+    DOC_2_COL_BODY   = sCSSMapping.get(LONG_DOC_2_COL_BODY);
+    DOC_3_COL_BODY   = sCSSMapping.get(LONG_DOC_3_COL_BODY);
+    NAV_HEADER       = sCSSMapping.get(LONG_NAV_HEADER);
+    STATICS_HEADER   = sCSSMapping.get(LONG_STATICS_HEADER);
+    STATICS_OFFSITE  = sCSSMapping.get(LONG_STATICS_OFFSITE);
+    DOC_SUB          = sCSSMapping.get(LONG_DOC_SUB);
+    COLOPHON         = sCSSMapping.get(LONG_COLOPHON);
+    TABLE_HEADER     = sCSSMapping.get(LONG_TABLE_HEADER);
+    TABLE_ROW_ALT    = sCSSMapping.get(LONG_TABLE_ROW_ALT);
+    TABLE_FOOTER     = sCSSMapping.get(LONG_TABLE_FOOTER);
+    RECORD_SECTION   = sCSSMapping.get(LONG_RECORD_SECTION);
+    RECORD_ITEM_LIST = sCSSMapping.get(LONG_RECORD_ITEM_LIST);
   }
                                                        
   public static void main(String[] args) {
