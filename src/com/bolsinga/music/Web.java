@@ -16,26 +16,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
-abstract class MusicRecordDocumentCreator extends com.bolsinga.web.RecordDocumentCreator {
-
-  protected final Music fMusic;
-  protected final Lookup fLookup;
-  
-  public MusicRecordDocumentCreator(final Music music, final String outputDir) {
-    super(com.bolsinga.web.Links.getLinks(true), outputDir);
-    fMusic = music;
-    fLookup = Lookup.getLookup(fMusic);
-  }
-  
-  protected String getCopyright() {
-    return com.bolsinga.web.Util.getCopyright(com.bolsinga.web.Util.getSettings().getCopyrightStartYear().intValue());
-  }
-  
-  protected String getMainDivClass() {
-    return com.bolsinga.web.CSS.DOC_2_COL_BODY;
-  }
-}
-
 abstract class StatsRecordFactory implements com.bolsinga.web.RecordFactory {
 
   public Vector<com.bolsinga.web.Record> getRecords() {
