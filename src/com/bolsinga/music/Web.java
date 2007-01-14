@@ -344,10 +344,11 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Collection<Vector<Show>> getMonthlies() {
-    HashMap<String, Vector<Show>> result = new HashMap<String, Vector<Show>>(fItems.size());
+    TreeMap<com.bolsinga.music.data.Date, Vector<Show>> result =
+      new TreeMap<com.bolsinga.music.data.Date, Vector<Show>>(Compare.DATE_MONTH_COMPARATOR);
 
     for (Show item : fItems) {
-      String key = Util.toMonth(item.getDate());
+      com.bolsinga.music.data.Date key = item.getDate();
       Vector<Show> showList;
       if (result.containsKey(key)) {
         showList = result.get(key);

@@ -38,6 +38,10 @@ public class Compare {
       ((d.getMonth() != null) ? d.getMonth().intValue() * 100 : 0) +
       ((d.getDay() != null) ? d.getDay().intValue() : 0);
   }
+  
+  private static int convertMonth(final com.bolsinga.music.data.Date d) {
+    return ((d.getMonth() != null) ? d.getMonth().intValue() * 100 : 0);
+  }
                 
   public static String simplify(final String s) {
     String lower = s.toLowerCase();
@@ -165,6 +169,12 @@ public class Compare {
         return convert(r1) - convert(r2);
       }
     };
+    
+  public static final Comparator<com.bolsinga.music.data.Date> DATE_MONTH_COMPARATOR = new Comparator<com.bolsinga.music.data.Date>() {
+    public int compare(final com.bolsinga.music.data.Date r1, final com.bolsinga.music.data.Date r2) {
+      return convertMonth(r1) - convertMonth(r2);
+    }
+  };
         
   public static final Comparator<Venue> VENUE_COMPARATOR = new Comparator<Venue>() {
       public int compare(final Venue r1, final Venue r2) {
