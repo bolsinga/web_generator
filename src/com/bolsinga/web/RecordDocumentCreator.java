@@ -11,9 +11,6 @@ public abstract class RecordDocumentCreator implements Backgroundable {
 
   protected final Links fLinks;
   private final String fOutputDir;
-
-  private Document fDocument = null;
-  private Div fMain = null;
         
   protected RecordDocumentCreator(final Links links, final String outputDir) {
     fLinks = links;
@@ -21,25 +18,26 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   }
   
   protected void create() {
-    populate();
-    close();
+    Document d = populate();
+    writeDocument(d);
   }
   
-  private void close() {
-    if (fDocument != null) {
-      writeDocument();
-      fMain = null;
-      fDocument = null;
-    }
-  }
-  
-  private void populate() {
-    createDocument();
+  private Document populate() {
+    Document d = createDocument();
+    
+    Div main = Util.createDiv(getMainDivClass());
         
     Vector<? extends Record> records = getRecords();
     for (Record record : records) {
-      fMain.addElement(record.getElement());
+      main.addElement(record.getElement());
     }
+    
+    if (Encode.requiresTransitional(main.toString())) {
+      d.setDoctype(new org.apache.ecs.Doctype.Html401Transitional());
+    }
+    d.getBody().addElement(main);
+    
+    return d;
   }
   
   protected abstract String getTitle();
@@ -49,7 +47,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   protected abstract String getFilePath();
   protected abstract Vector<? extends Record> getRecords();
   
-  private void createDocument() {
+  private Document createDocument() {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
                 
     d.getHtml().setPrettyPrint(Util.getPrettyOutput());
@@ -75,9 +73,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
 
     d.getBody().addElement(getHeaderDiv());
     
-    fDocument = d;
-    
-    fMain = Util.createDiv(getMainDivClass());
+    return d;
   }
   
   private Div getHeaderDiv() {
@@ -105,12 +101,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
         
-  private void writeDocument() {
-    if (Encode.requiresTransitional(fMain.toString())) {
-      fDocument.setDoctype(new org.apache.ecs.Doctype.Html401Transitional());
-    }
-    fDocument.getBody().addElement(fMain);
-
+  private void writeDocument(Document d) {
     try {
       File f = new File(fOutputDir, getFilePath());
       File parent = new File(f.getParent());
@@ -120,17 +111,12 @@ public abstract class RecordDocumentCreator implements Backgroundable {
         }
       }
       OutputStream os = new FileOutputStream(f);
-      fDocument.output(os);
+      d.output(os);
       os.close();
     } catch (IOException ioe) {
       System.err.println("Exception: " + ioe);
       ioe.printStackTrace();
       System.exit(1);
     }
-  }
-        
-  protected void finalize() throws Throwable {
-    close();
-    super.finalize();
   }
 }
