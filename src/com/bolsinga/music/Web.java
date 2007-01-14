@@ -38,11 +38,67 @@ abstract class MusicRecordDocumentCreator extends com.bolsinga.web.RecordDocumen
 
 class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> sArtistIndex;
+  
   private final Vector<Artist> fItems;
   private final String fCurLetter;
+
+  private static void createArtistIndex(final Collection<Artist> artists, final com.bolsinga.web.Links links) {
+    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
+    for (Artist art : artists) {
+      String letter = links.getPageFileName(art);
+      if (!m.containsKey(letter)) {
+        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(art), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("artists"))));
+      }
+    }
+    sArtistIndex = Collections.unmodifiableMap(m);
+  }
+
+  private static Collection<Vector<Artist>> getArtistGroups(final Music music, final com.bolsinga.web.Links links) {
+    List<Artist> artists = Util.getArtistsCopy(music);
+    // Each group is per page, so they are grouped by Artist who have the same starting sort letter.
+    HashMap<String, Vector<Artist>> result = new HashMap<String, Vector<Artist>>(artists.size());
+    
+    Collections.sort(artists, Compare.ARTIST_COMPARATOR);
+    
+    for (Artist artist : artists) {
+      String key = links.getPageFileName(artist);
+      Vector<Artist> artistList;
+      if (result.containsKey(key)) {
+        artistList = result.get(key);
+        artistList.add(artist);
+      } else {
+        artistList = new Vector<Artist>();
+        artistList.add(artist);
+        result.put(key, artistList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
+  }
   
-  public ArtistRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final Vector<Artist> items) {
-    super(links, outputDir, index, lookup);
+  public static void createArtistDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
+                                            
+    ArtistRecordDocumentCreator.createArtistIndex(Util.getArtistsUnmodifiable(music), links);
+    
+    Collection<Vector<Artist>> artistGroups = ArtistRecordDocumentCreator.getArtistGroups(music, links);
+    for (final Vector<Artist> artistGroup : artistGroups) {
+      backgrounder.execute(backgroundable, new Runnable() {
+        public void run() {
+          ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(links, outputDir, lookup, artistGroup);
+          creator.create();
+        }
+      });
+    }
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateArtistStats(music, lookup, links, outputDir);
+      }
+    });
+  }
+  
+  private ArtistRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final Lookup lookup, final Vector<Artist> items) {
+    super(links, outputDir, sArtistIndex, lookup);
     fItems = items;
     fCurLetter = fLinks.getPageFileName(fItems.firstElement());
   }
@@ -591,21 +647,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     final Lookup lookup = Lookup.getLookup(music);
     final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
 
-    final java.util.Map<String, com.bolsinga.web.IndexPair> artistIndex = Web.createArtistIndex(Util.getArtistsUnmodifiable(music), links);
-    Collection<Vector<Artist>> artistGroups = Web.getArtistGroups(music, links);
-    for (final Vector<Artist> artistGroup : artistGroups) {
-      backgrounder.execute(backgroundable, new Runnable() {
-        public void run() {
-          ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(links, outputDir, artistIndex, lookup, artistGroup);
-          creator.create();
-        }
-      });
-    }
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateArtistStats(music, lookup, links, outputDir);
-      }
-    });
+    ArtistRecordDocumentCreator.createArtistDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
     
     final java.util.Map<String, com.bolsinga.web.IndexPair> venueIndex = Web.createVenueIndex(Util.getVenuesUnmodifiable(music), links);
     Collection<Vector<Venue>> venueGroups = Web.getVenueGroups(music, links);
@@ -665,29 +707,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
         Web.generateAlbumsStats(music, lookup, links, outputDir);
       }
     });
-  }
-
-  private static Collection<Vector<Artist>> getArtistGroups(final Music music, final com.bolsinga.web.Links links) {
-    List<Artist> artists = Util.getArtistsCopy(music);
-    // Each group is per page, so they are grouped by Artist who have the same starting sort letter.
-    HashMap<String, Vector<Artist>> result = new HashMap<String, Vector<Artist>>(artists.size());
-    
-    Collections.sort(artists, Compare.ARTIST_COMPARATOR);
-    
-    for (Artist artist : artists) {
-      String key = links.getPageFileName(artist);
-      Vector<Artist> artistList;
-      if (result.containsKey(key)) {
-        artistList = result.get(key);
-        artistList.add(artist);
-      } else {
-        artistList = new Vector<Artist>();
-        artistList.add(artist);
-        result.put(key, artistList);
-      }
-    }
-    
-    return Collections.unmodifiableCollection(result.values());
   }
 
   private static Collection<Vector<Venue>> getVenueGroups(final Music music, final com.bolsinga.web.Links links) {
@@ -761,7 +780,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
   
-  private static void generateArtistStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  static void generateArtistStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Artist> items = Util.getArtistsCopy(music);
     Collections.sort(items, Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
 
@@ -1099,17 +1118,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
-  }
-  
-  private static java.util.Map<String, com.bolsinga.web.IndexPair> createArtistIndex(final Collection<Artist> artists, final com.bolsinga.web.Links links) {
-    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
-    for (Artist art : artists) {
-      String letter = links.getPageFileName(art);
-      if (!m.containsKey(letter)) {
-        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(art), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("artists"))));
-      }
-    }
-    return Collections.unmodifiableMap(m);
   }
   
   private static java.util.Map<String, com.bolsinga.web.IndexPair> createVenueIndex(final Collection<Venue> venues, final com.bolsinga.web.Links links) {
