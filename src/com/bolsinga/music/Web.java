@@ -249,11 +249,67 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 
 class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
 
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> sVenueIndex;
+  
   private final Vector<Venue> fItems;
   private final String fCurLetter;
   
-  public VenueRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final Vector<Venue> items) {
-    super(links, outputDir, index, lookup);
+  private static void createIndex(final Collection<Venue> venues, final com.bolsinga.web.Links links) {
+    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
+    for (Venue v : venues) {
+      String letter = links.getPageFileName(v);
+      if (!m.containsKey(letter)) {
+        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(v), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("venues"))));
+      }
+    }
+    sVenueIndex = Collections.unmodifiableMap(m);
+  }
+
+  private static Collection<Vector<Venue>> getGroups(final Music music, final com.bolsinga.web.Links links) {
+    List<Venue> venues = Util.getVenuesCopy(music);
+    // Each group is per page, so they are grouped by Venue who have the same starting sort letter.
+    HashMap<String, Vector<Venue>> result = new HashMap<String, Vector<Venue>>(venues.size());
+    
+    Collections.sort(venues, Compare.VENUE_COMPARATOR);
+    
+    for (Venue venue : venues) {
+      String key = links.getPageFileName(venue);
+      Vector<Venue> venueList;
+      if (result.containsKey(key)) {
+        venueList = result.get(key);
+        venueList.add(venue);
+      } else {
+        venueList = new Vector<Venue>();
+        venueList.add(venue);
+        result.put(key, venueList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
+  }
+
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
+
+    VenueRecordDocumentCreator.createIndex(Util.getVenuesUnmodifiable(music), links);
+    
+    Collection<Vector<Venue>> venueGroups = VenueRecordDocumentCreator.getGroups(music, links);
+    for (final Vector<Venue> venueGroup : venueGroups) {
+      backgrounder.execute(backgroundable, new Runnable() {
+        public void run() {
+          VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(links, outputDir, lookup, venueGroup);
+          creator.create();
+        }
+      });
+    }
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateVenueStats(music, lookup, links, outputDir);
+      }
+    });
+  }
+  
+  private VenueRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final Lookup lookup, final Vector<Venue> items) {
+    super(links, outputDir, sVenueIndex, lookup);
     fItems = items;
     fCurLetter = fLinks.getPageFileName(fItems.firstElement());
   }
@@ -649,21 +705,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     ArtistRecordDocumentCreator.createArtistDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
     
-    final java.util.Map<String, com.bolsinga.web.IndexPair> venueIndex = Web.createVenueIndex(Util.getVenuesUnmodifiable(music), links);
-    Collection<Vector<Venue>> venueGroups = Web.getVenueGroups(music, links);
-    for (final Vector<Venue> venueGroup : venueGroups) {
-      backgrounder.execute(backgroundable, new Runnable() {
-        public void run() {
-          VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(links, outputDir, venueIndex, lookup, venueGroup);
-          creator.create();
-        }
-      });
-    }
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateVenueStats(music, lookup, links, outputDir);
-      }
-    });
+    VenueRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
 
     final java.util.Map<String, com.bolsinga.web.IndexPair> showIndex = Web.createShowIndex(Util.getShowsUnmodifiable(music), links);
     Collection<Vector<Show>> showGroups = Web.getShowGroups(music, links);
@@ -707,29 +749,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
         Web.generateAlbumsStats(music, lookup, links, outputDir);
       }
     });
-  }
-
-  private static Collection<Vector<Venue>> getVenueGroups(final Music music, final com.bolsinga.web.Links links) {
-    List<Venue> venues = Util.getVenuesCopy(music);
-    // Each group is per page, so they are grouped by Venue who have the same starting sort letter.
-    HashMap<String, Vector<Venue>> result = new HashMap<String, Vector<Venue>>(venues.size());
-    
-    Collections.sort(venues, Compare.VENUE_COMPARATOR);
-    
-    for (Venue venue : venues) {
-      String key = links.getPageFileName(venue);
-      Vector<Venue> venueList;
-      if (result.containsKey(key)) {
-        venueList = result.get(key);
-        venueList.add(venue);
-      } else {
-        venueList = new Vector<Venue>();
-        venueList.add(venue);
-        result.put(key, venueList);
-      }
-    }
-    
-    return Collections.unmodifiableCollection(result.values());
   }
 
   private static Collection<Vector<Show>> getShowGroups(final Music music, final com.bolsinga.web.Links links) {
@@ -814,7 +833,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     stats.complete();
   }
   
-  private static void generateVenueStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  static void generateVenueStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Venue> items = Util.getVenuesCopy(music);
     Collections.sort(items, Compare.getCompare(music).VENUE_STATS_COMPARATOR);
 
@@ -1118,17 +1137,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
-  }
-  
-  private static java.util.Map<String, com.bolsinga.web.IndexPair> createVenueIndex(final Collection<Venue> venues, final com.bolsinga.web.Links links) {
-    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
-    for (Venue v : venues) {
-      String letter = links.getPageFileName(v);
-      if (!m.containsKey(letter)) {
-        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(v), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("venues"))));
-      }
-    }
-    return Collections.unmodifiableMap(m);
   }
 
   private static java.util.Map<String, com.bolsinga.web.IndexPair> createAlbumIndex(final Collection<Album> items, final com.bolsinga.web.Links links) {
