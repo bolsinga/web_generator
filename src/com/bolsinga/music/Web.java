@@ -18,13 +18,15 @@ import javax.xml.bind.Marshaller;
 
 abstract class MusicRecordDocumentCreator extends com.bolsinga.web.RecordDocumentCreator {
 
+  protected final Music fMusic;
   protected final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
   protected final Lookup fLookup;
   
-  public MusicRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup) {
-    super(links, outputDir);
+  public MusicRecordDocumentCreator(final Music music, final String outputDir, final java.util.Map<String, com.bolsinga.web.IndexPair> index) {
+    super(com.bolsinga.web.Links.getLinks(true), outputDir);
+    fMusic = music;
     fIndex = index;
-    fLookup = lookup;
+    fLookup = Lookup.getLookup(music);
   }
   
   protected String getCopyright() {
@@ -85,7 +87,7 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     for (final Vector<Artist> artistGroup : artistGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(links, outputDir, lookup, artistGroup);
+          ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(music, links, outputDir, artistGroup);
           creator.create();
         }
       });
@@ -97,8 +99,8 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
   
-  private ArtistRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final Lookup lookup, final Vector<Artist> items) {
-    super(links, outputDir, sArtistIndex, lookup);
+  private ArtistRecordDocumentCreator(final Music music, final com.bolsinga.web.Links links, final String outputDir, final Vector<Artist> items) {
+    super(music, outputDir, sArtistIndex);
     fItems = items;
     fCurLetter = fLinks.getPageFileName(fItems.firstElement());
   }
@@ -296,7 +298,7 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     for (final Vector<Venue> venueGroup : venueGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(links, outputDir, lookup, venueGroup);
+          VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(music, links, outputDir, venueGroup);
           creator.create();
         }
       });
@@ -308,8 +310,8 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
   
-  private VenueRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final Lookup lookup, final Vector<Venue> items) {
-    super(links, outputDir, sVenueIndex, lookup);
+  private VenueRecordDocumentCreator(final Music music, final com.bolsinga.web.Links links, final String outputDir, final Vector<Venue> items) {
+    super(music, outputDir, sVenueIndex);
     fItems = items;
     fCurLetter = fLinks.getPageFileName(fItems.firstElement());
   }
@@ -464,7 +466,7 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     for (final Vector<Show> showGroup : showGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(links, outputDir, lookup, showGroup, encoder, true);
+          ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, links, outputDir, showGroup, encoder, true);
           creator.create();
         }
       });
@@ -476,8 +478,8 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
     
-  private ShowRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final Lookup lookup, final Vector<Show> items, final com.bolsinga.web.Encode encoder, final boolean upOneLevel) {
-    super(links, outputDir, sShowIndex, lookup);
+  private ShowRecordDocumentCreator(final Music music, final com.bolsinga.web.Links links, final String outputDir, final Vector<Show> items, final com.bolsinga.web.Encode encoder, final boolean upOneLevel) {
+    super(music, outputDir, sShowIndex);
     fItems = items;
     fCurLetter = fLinks.getPageFileName(fItems.firstElement());
     fEncoder = encoder;
@@ -603,7 +605,7 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     for (final Vector<Album> albumGroup : albumGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(links, outputDir, lookup, albumGroup);
+          TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(music, links, outputDir, albumGroup);
           creator.create();
         }
       });
@@ -620,8 +622,8 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
   
-  private TracksRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final Lookup lookup, final Vector<Album> items) {
-    super(links, outputDir, sAlbumIndex, lookup);
+  private TracksRecordDocumentCreator(final Music music, final com.bolsinga.web.Links links, final String outputDir, final Vector<Album> items) {
+    super(music, outputDir, sAlbumIndex);
     fItems = items;
     fCurLetter = fLinks.getPageFileName(fItems.firstElement());
   }
