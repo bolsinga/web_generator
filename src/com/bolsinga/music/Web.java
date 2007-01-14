@@ -416,13 +416,68 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
 
 class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> sShowIndex;
+  
   private final Vector<Show> fItems;
   private final String fCurLetter;
   private final com.bolsinga.web.Encode fEncoder;
   private final boolean fUpOneLevel;
-  
-  public ShowRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final Vector<Show> items, final com.bolsinga.web.Encode encoder, final boolean upOneLevel) {
-    super(links, outputDir, index, lookup);
+
+  private static void createIndex(final Collection<Show> shows, final com.bolsinga.web.Links links) {
+    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
+    for (Show s : shows) {
+      String letter = links.getPageFileName(s);
+      if (!m.containsKey(letter)) {
+        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(s), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("dates"))));
+      }
+    }
+    sShowIndex = Collections.unmodifiableMap(m);
+  }
+
+  private static Collection<Vector<Show>> getGroups(final Music music, final com.bolsinga.web.Links links) {
+    List<Show> shows = Util.getShowsCopy(music);
+    // Each group is per page, so they are grouped by Show who have the same starting sort letter.
+    HashMap<String, Vector<Show>> result = new HashMap<String, Vector<Show>>(shows.size());
+    
+    Collections.sort(shows, Compare.SHOW_COMPARATOR);
+    
+    for (Show show : shows) {
+      String key = links.getPageFileName(show);
+      Vector<Show> showList;
+      if (result.containsKey(key)) {
+        showList = result.get(key);
+        showList.add(show);
+      } else {
+        showList = new Vector<Show>();
+        showList.add(show);
+        result.put(key, showList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
+  }
+
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final com.bolsinga.web.Encode encoder, final String outputDir) {
+    ShowRecordDocumentCreator.createIndex(Util.getShowsUnmodifiable(music), links);
+    
+    Collection<Vector<Show>> showGroups = ShowRecordDocumentCreator.getGroups(music, links);
+    for (final Vector<Show> showGroup : showGroups) {
+      backgrounder.execute(backgroundable, new Runnable() {
+        public void run() {
+          ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(links, outputDir, lookup, showGroup, encoder, true);
+          creator.create();
+        }
+      });
+    }
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateDateStats(music, sShowIndex, encoder, lookup, links, outputDir);
+      }
+    });
+  }
+    
+  private ShowRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final Lookup lookup, final Vector<Show> items, final com.bolsinga.web.Encode encoder, final boolean upOneLevel) {
+    super(links, outputDir, sShowIndex, lookup);
     fItems = items;
     fCurLetter = fLinks.getPageFileName(fItems.firstElement());
     fEncoder = encoder;
@@ -502,11 +557,71 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
 class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
 
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> sAlbumIndex;
+  
   private final Vector<Album> fItems;
   private final String fCurLetter;
+
+  private static void createIndex(final Collection<Album> items, final com.bolsinga.web.Links links) {
+    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
+    for (Album alb : items) {
+      String letter = links.getPageFileName(alb);
+      if (!m.containsKey(letter)) {
+        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(alb), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("albums"))));
+      }
+    }
+    sAlbumIndex = Collections.unmodifiableMap(m);
+  }
+
+  private static Collection<Vector<Album>> getGroups(final Music music, final com.bolsinga.web.Links links) {
+    List<Album> albums = Util.getAlbumsCopy(music);
+    // Each group is per page, so they are grouped by Show who have the same starting sort letter.
+    HashMap<String, Vector<Album>> result = new HashMap<String, Vector<Album>>(albums.size());
+    
+    Collections.sort(albums, Compare.ALBUM_COMPARATOR);
+    
+    for (Album album : albums) {
+      String key = links.getPageFileName(album);
+      Vector<Album> albumList;
+      if (result.containsKey(key)) {
+        albumList = result.get(key);
+        albumList.add(album);
+      } else {
+        albumList = new Vector<Album>();
+        albumList.add(album);
+        result.put(key, albumList);
+      }
+    }
+    
+    return Collections.unmodifiableCollection(result.values());
+  }
+
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
+    TracksRecordDocumentCreator.createIndex(Util.getAlbumsUnmodifiable(music), links);
+    
+    Collection<Vector<Album>> albumGroups = TracksRecordDocumentCreator.getGroups(music, links);
+    for (final Vector<Album> albumGroup : albumGroups) {
+      backgrounder.execute(backgroundable, new Runnable() {
+        public void run() {
+          TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(links, outputDir, lookup, albumGroup);
+          creator.create();
+        }
+      });
+    }
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateTracksStats(music, lookup, links, outputDir);
+      }
+    });
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        Web.generateAlbumsStats(music, lookup, links, outputDir);
+      }
+    });
+  }
   
-  public TracksRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final Vector<Album> items) {
-    super(links, outputDir, index, lookup);
+  private TracksRecordDocumentCreator(final com.bolsinga.web.Links links, final String outputDir, final Lookup lookup, final Vector<Album> items) {
+    super(links, outputDir, sAlbumIndex, lookup);
     fItems = items;
     fCurLetter = fLinks.getPageFileName(fItems.firstElement());
   }
@@ -707,21 +822,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     
     VenueRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
 
-    final java.util.Map<String, com.bolsinga.web.IndexPair> showIndex = Web.createShowIndex(Util.getShowsUnmodifiable(music), links);
-    Collection<Vector<Show>> showGroups = Web.getShowGroups(music, links);
-    for (final Vector<Show> showGroup : showGroups) {
-      backgrounder.execute(backgroundable, new Runnable() {
-        public void run() {
-          ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(links, outputDir, showIndex, lookup, showGroup, encoder, true);
-          creator.create();
-        }
-      });
-    }
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateDateStats(music, showIndex, encoder, lookup, links, outputDir);
-      }
-    });
+    ShowRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, encoder, outputDir);
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
@@ -729,72 +830,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     });
 
-    final java.util.Map<String, com.bolsinga.web.IndexPair> albumIndex = Web.createAlbumIndex(Util.getAlbumsUnmodifiable(music), links);
-    Collection<Vector<Album>> albumGroups = Web.getAlbumGroups(music, links);
-    for (final Vector<Album> albumGroup : albumGroups) {
-      backgrounder.execute(backgroundable, new Runnable() {
-        public void run() {
-          TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(links, outputDir, albumIndex, lookup, albumGroup);
-          creator.create();
-        }
-      });
-    }
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateTracksStats(music, lookup, links, outputDir);
-      }
-    });
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateAlbumsStats(music, lookup, links, outputDir);
-      }
-    });
-  }
-
-  private static Collection<Vector<Show>> getShowGroups(final Music music, final com.bolsinga.web.Links links) {
-    List<Show> shows = Util.getShowsCopy(music);
-    // Each group is per page, so they are grouped by Show who have the same starting sort letter.
-    HashMap<String, Vector<Show>> result = new HashMap<String, Vector<Show>>(shows.size());
-    
-    Collections.sort(shows, Compare.SHOW_COMPARATOR);
-    
-    for (Show show : shows) {
-      String key = links.getPageFileName(show);
-      Vector<Show> showList;
-      if (result.containsKey(key)) {
-        showList = result.get(key);
-        showList.add(show);
-      } else {
-        showList = new Vector<Show>();
-        showList.add(show);
-        result.put(key, showList);
-      }
-    }
-    
-    return Collections.unmodifiableCollection(result.values());
-  }
-
-  private static Collection<Vector<Album>> getAlbumGroups(final Music music, final com.bolsinga.web.Links links) {
-    List<Album> albums = Util.getAlbumsCopy(music);
-    // Each group is per page, so they are grouped by Show who have the same starting sort letter.
-    HashMap<String, Vector<Album>> result = new HashMap<String, Vector<Album>>(albums.size());
-    
-    Collections.sort(albums, Compare.ALBUM_COMPARATOR);
-    
-    for (Album album : albums) {
-      String key = links.getPageFileName(album);
-      Vector<Album> albumList;
-      if (result.containsKey(key)) {
-        albumList = result.get(key);
-        albumList.add(album);
-      } else {
-        albumList = new Vector<Album>();
-        albumList.add(album);
-        result.put(key, albumList);
-      }
-    }
-    
-    return Collections.unmodifiableCollection(result.values());
+    TracksRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
   }
 
   // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
@@ -867,7 +903,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     stats.complete();
   }
   
-  public static void generateDateStats(final Music music, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  static void generateDateStats(final Music music, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Show> items = Util.getShowsCopy(music);
     Collections.sort(items, Compare.SHOW_COMPARATOR);
 
@@ -972,7 +1008,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     creator.complete();
   }
   
-  private static void generateTracksStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  static void generateTracksStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Artist> artists = Util.getArtistsCopy(music);
     Collections.sort(artists, Compare.ARTIST_TRACKS_COMPARATOR);
 
@@ -1008,7 +1044,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
   }
 
-  private static void generateAlbumsStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
+  static void generateAlbumsStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Artist> artists = Util.getArtistsCopy(music);
     Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
 
@@ -1137,28 +1173,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
-  }
-
-  private static java.util.Map<String, com.bolsinga.web.IndexPair> createAlbumIndex(final Collection<Album> items, final com.bolsinga.web.Links links) {
-    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
-    for (Album alb : items) {
-      String letter = links.getPageFileName(alb);
-      if (!m.containsKey(letter)) {
-        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(alb), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("albums"))));
-      }
-    }
-    return Collections.unmodifiableMap(m);
-  }
-        
-  private static java.util.Map<String, com.bolsinga.web.IndexPair> createShowIndex(final Collection<Show> shows, final com.bolsinga.web.Links links) {
-    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
-    for (Show s : shows) {
-      String letter = links.getPageFileName(s);
-      if (!m.containsKey(letter)) {
-        m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(s), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("dates"))));
-      }
-    }
-    return Collections.unmodifiableMap(m);
   }
     
   public static Table makeTable(final String[] names, final int[] values, final String caption, final String header, final String summary) {
