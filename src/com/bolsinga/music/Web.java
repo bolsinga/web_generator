@@ -43,7 +43,7 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final Vector<Artist> fItems;
   private final String fCurLetter;
 
-  private static void createArtistIndex(final Collection<Artist> artists, final com.bolsinga.web.Links links) {
+  private static void createIndex(final Collection<Artist> artists, final com.bolsinga.web.Links links) {
     java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
     for (Artist art : artists) {
       String letter = links.getPageFileName(art);
@@ -54,7 +54,7 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     sArtistIndex = Collections.unmodifiableMap(m);
   }
 
-  private static Collection<Vector<Artist>> getArtistGroups(final Music music, final com.bolsinga.web.Links links) {
+  private static Collection<Vector<Artist>> getGroups(final Music music, final com.bolsinga.web.Links links) {
     List<Artist> artists = Util.getArtistsCopy(music);
     // Each group is per page, so they are grouped by Artist who have the same starting sort letter.
     HashMap<String, Vector<Artist>> result = new HashMap<String, Vector<Artist>>(artists.size());
@@ -77,11 +77,11 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
   
-  public static void createArtistDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
                                             
-    ArtistRecordDocumentCreator.createArtistIndex(Util.getArtistsUnmodifiable(music), links);
+    ArtistRecordDocumentCreator.createIndex(Util.getArtistsUnmodifiable(music), links);
     
-    Collection<Vector<Artist>> artistGroups = ArtistRecordDocumentCreator.getArtistGroups(music, links);
+    Collection<Vector<Artist>> artistGroups = ArtistRecordDocumentCreator.getGroups(music, links);
     for (final Vector<Artist> artistGroup : artistGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
@@ -703,7 +703,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     final Lookup lookup = Lookup.getLookup(music);
     final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
 
-    ArtistRecordDocumentCreator.createArtistDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
+    ArtistRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
     
     VenueRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
 
