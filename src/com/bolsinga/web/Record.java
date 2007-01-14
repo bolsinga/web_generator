@@ -21,7 +21,12 @@ public class Record {
       e.add(item.getElement());
     }
     
-    return new Record(CSS.RECORD_SECTION, new H2().addElement(title), Util.createUnorderedList(e), null, null);
+    Element eTitle = null;
+    if (title != null) {
+      eTitle = new H2().addElement(title);
+    }
+    
+    return new Record(CSS.RECORD_SECTION, eTitle, Util.createUnorderedList(e), null, null);
   }
   
   public static Record createRecordList(final Element title, final Vector<Element> items) {
@@ -37,11 +42,21 @@ public class Record {
   }
   
   private static Record createRecordListWithComment(final Element title, final Vector<Element> items, final Element curElement, final String comment) {
-    return new Record(CSS.RECORD_ITEM_LIST, new H3().addElement(title), Util.createUnorderedList(items, curElement), comment, null);
+    Element eTitle = null;
+    if (title != null) {
+      eTitle = new H3().addElement(title);
+    }
+
+    return new Record(CSS.RECORD_ITEM_LIST, eTitle, Util.createUnorderedList(items, curElement), comment, null);
   }
   
   public static Record createRecordListOrdered(final Element title, final Vector<Element> items) {
-    return new Record(CSS.RECORD_ITEM_LIST, new H3().addElement(title), Util.createOrderedList(items), null, null);
+    Element eTitle = null;
+    if (title != null) {
+      eTitle = new H3().addElement(title);
+    }
+
+    return new Record(CSS.RECORD_ITEM_LIST, eTitle, Util.createOrderedList(items), null, null);
   }
   
   private Record(final String divClass, final Element title, final Element items, final String comment, final A permaLink) {
