@@ -43,7 +43,21 @@ abstract class StatsRecordFactory implements com.bolsinga.web.RecordFactory {
     items.add(com.bolsinga.web.Record.createRecordSimple(getTable()));
     return items;
   }
+
+  public String getFilePath() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(getDirectory());
+    sb.append(File.separator);
+    sb.append(getFilename());
+    sb.append(com.bolsinga.web.Links.HTML_EXT);
+    return sb.toString();
+  }
+          
+  public String getFilename() {
+    return com.bolsinga.web.Links.STATS;
+  }
   
+  protected abstract String getDirectory();
   protected abstract Table getTable();
 
   public static Table makeTable(final String[] names, final int[] values, final String caption, final String header, final String summary) {
@@ -144,18 +158,13 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
             return getStats();
           }
 
+          public String getDirectory() {
+            return com.bolsinga.web.Links.ARTIST_DIR;
+          }
+
           public String getTitle() {
             Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("artist") };
             return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-          }
-          
-          public String getFilePath() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(com.bolsinga.web.Links.ARTIST_DIR);
-            sb.append(File.separator);
-            sb.append(com.bolsinga.web.Links.STATS);
-            sb.append(com.bolsinga.web.Links.HTML_EXT);
-            return sb.toString();
           }
 
           public com.bolsinga.web.Navigator getNavigator() {
@@ -409,18 +418,13 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
             return getStats();
           }
 
+          public String getDirectory() {
+            return com.bolsinga.web.Links.VENUE_DIR;
+          }
+          
           public String getTitle() {
             Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("venue") };
             return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-          }
-          
-          public String getFilePath() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(com.bolsinga.web.Links.VENUE_DIR);
-            sb.append(File.separator);
-            sb.append(com.bolsinga.web.Links.STATS);
-            sb.append(com.bolsinga.web.Links.HTML_EXT);
-            return sb.toString();
           }
 
           public com.bolsinga.web.Navigator getNavigator() {
@@ -634,19 +638,14 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
           protected Table getTable() {
             return getStats();
           }
+          
+          public String getDirectory() {
+            return com.bolsinga.web.Links.SHOW_DIR;
+          }
 
           public String getTitle() {
             Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("year") };
             return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-          }
-          
-          public String getFilePath() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(com.bolsinga.web.Links.SHOW_DIR);
-            sb.append(File.separator);
-            sb.append(com.bolsinga.web.Links.STATS);
-            sb.append(com.bolsinga.web.Links.HTML_EXT);
-            return sb.toString();
           }
 
           public com.bolsinga.web.Navigator getNavigator() {
@@ -855,19 +854,14 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
       protected Table getTable() {
         return getTracksStats();
       }
+      
+      public String getDirectory() {
+        return com.bolsinga.web.Links.TRACKS_DIR;
+      }
 
       public String getTitle() {
         Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
         return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-      }
-      
-      public String getFilePath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(com.bolsinga.web.Links.TRACKS_DIR);
-        sb.append(File.separator);
-        sb.append(com.bolsinga.web.Links.STATS);
-        sb.append(com.bolsinga.web.Links.HTML_EXT);
-        return sb.toString();
       }
 
       public com.bolsinga.web.Navigator getNavigator() {
@@ -889,19 +883,18 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
       protected Table getTable() {
         return getAlbumsStats();
       }
+      
+      public String getDirectory() {
+        return com.bolsinga.web.Links.TRACKS_DIR;
+      }
+      
+      public String getFilename() {
+        return com.bolsinga.web.Links.ALBUM_STATS;
+      }
 
       public String getTitle() {
         Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
         return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-      }
-      
-      public String getFilePath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(com.bolsinga.web.Links.TRACKS_DIR);
-        sb.append(File.separator);
-        sb.append(com.bolsinga.web.Links.ALBUM_STATS);
-        sb.append(com.bolsinga.web.Links.HTML_EXT);
-        return sb.toString();
       }
 
       public com.bolsinga.web.Navigator getNavigator() {
