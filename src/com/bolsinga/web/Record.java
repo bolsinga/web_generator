@@ -59,6 +59,10 @@ public class Record {
     return new Record(CSS.RECORD_ITEM_LIST, eTitle, Util.createOrderedList(items), null, null);
   }
   
+  public static Record createRecordSimple(final Element element) {
+    return new Record(element);
+  }
+  
   private Record(final String divClass, final Element title, final Element items, final String comment, final A permaLink) {
     Div d = Util.createDiv(divClass);
     
@@ -79,6 +83,10 @@ public class Record {
     }
     
     fElement = d;
+  }
+  
+  private Record(final Element element) {
+    fElement = element;
   }
   
   public Element getElement() {

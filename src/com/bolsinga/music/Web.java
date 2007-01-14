@@ -36,6 +36,54 @@ abstract class MusicRecordDocumentCreator extends com.bolsinga.web.RecordDocumen
   }
 }
 
+abstract class StatsRecordFactory implements com.bolsinga.web.RecordFactory {
+
+  public Vector<com.bolsinga.web.Record> getRecords() {
+    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>(1);
+    items.add(com.bolsinga.web.Record.createRecordSimple(getTable()));
+    return items;
+  }
+  
+  protected abstract Table getTable();
+
+  public static Table makeTable(final String[] names, final int[] values, final String caption, final String header, final String summary) {
+    int runningTotal = 0;
+    int i;
+    for (i = 0; i < values.length; i++) {
+      runningTotal += values[i];
+    }
+    final int total = runningTotal;
+    
+    return com.bolsinga.web.Util.makeTable(caption, summary, new com.bolsinga.web.TableHandler() {
+      public TR getHeaderRow() {
+        return new TR().addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
+      }
+
+      public int getRowCount() {
+        return values.length;
+      }
+      
+      public TR getRow(final int row) {
+        TR trow = new TR();
+        TH thh = new TH(names[row]);
+        thh.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
+        trow.addElement(thh);
+        trow.addElement(new TD(Integer.toString(values[row])).setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput()));
+        trow.addElement(new TD(Util.toString((double)values[row] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput()));
+        return trow;
+      }
+      
+      public TR getFooterRow() {
+        TR trow = new TR();
+        trow.addElement(new TH(Integer.toString(names.length)));
+        trow.addElement(new TH(Integer.toString(total)));
+        trow.addElement(new TH());
+        return trow;
+      }
+    });
+  }
+}
+
 class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
@@ -43,13 +91,7 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
     ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
-/*
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateArtistStats(music, lookup, links, outputDir);
-      }
-    });
-*/
+    creator.createStats(backgrounder, backgroundable);
   }
   
   private ArtistRecordDocumentCreator(final Music music, final String outputDir) {
@@ -93,6 +135,44 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
       });
     }
   }
+  
+  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        create(new StatsRecordFactory() {
+          protected Table getTable() {
+            return getStats();
+          }
+
+          public String getTitle() {
+            Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("artist") };
+            return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+          }
+          
+          public String getFilePath() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(com.bolsinga.web.Links.ARTIST_DIR);
+            sb.append(File.separator);
+            sb.append(com.bolsinga.web.Links.STATS);
+            sb.append(com.bolsinga.web.Links.HTML_EXT);
+            return sb.toString();
+          }
+
+          public com.bolsinga.web.Navigator getNavigator() {
+            return new com.bolsinga.web.Navigator(fLinks) {
+              public Element getArtistNavigator() {
+                return getCurrentNavigator();
+              }
+              
+              public Element getCurrentNavigator() {
+                return new StringElement(com.bolsinga.web.Util.getResourceString("bands"));
+              }
+            };
+          }
+        });
+      }
+    });
+  }
 
   private java.util.Map<String, com.bolsinga.web.IndexPair> createIndex() {
     java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
@@ -126,6 +206,29 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
     
     return Collections.unmodifiableCollection(result.values());
+  }
+
+  private Table getStats() {
+    List<Artist> items = Util.getArtistsCopy(fMusic);
+    Collections.sort(items, Compare.getCompare(fMusic).ARTIST_STATS_COMPARATOR);
+
+    int index = 0;
+    String[] names = new String[items.size()];
+    int[] values = new int[items.size()];
+    for (Artist item : items) {
+      String t = Util.createTitle("moreinfoartist", item.getName());
+      names[index] = com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString();
+      Collection<Show> shows = fLookup.getShows(item);
+      values[index] = (shows != null) ? shows.size() : 0;
+                        
+      index++;
+    }
+                
+    String typeString = com.bolsinga.web.Util.getResourceString("artist");
+    Object typeArgs[] = { typeString };
+    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
+    
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("artiststatsummary"));
   }
   
   private com.bolsinga.web.Record getArtistShowRecord(final Artist artist, final Show show) {
@@ -253,14 +356,7 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
     VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
-
-/*
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateVenueStats(music, lookup, links, outputDir);
-      }
-    });
-*/
+    creator.createStats(backgrounder, backgroundable);
   }
   
   private VenueRecordDocumentCreator(final Music music, final String outputDir) {
@@ -304,6 +400,44 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       });
     }
   }
+
+  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        create(new StatsRecordFactory() {
+          protected Table getTable() {
+            return getStats();
+          }
+
+          public String getTitle() {
+            Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("venue") };
+            return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+          }
+          
+          public String getFilePath() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(com.bolsinga.web.Links.VENUE_DIR);
+            sb.append(File.separator);
+            sb.append(com.bolsinga.web.Links.STATS);
+            sb.append(com.bolsinga.web.Links.HTML_EXT);
+            return sb.toString();
+          }
+
+          public com.bolsinga.web.Navigator getNavigator() {
+            return new com.bolsinga.web.Navigator(fLinks) {
+              public Element getVenueNavigator() {
+                return getCurrentNavigator();
+              }
+              
+              public Element getCurrentNavigator() {
+                return new StringElement(com.bolsinga.web.Util.getResourceString("venues"));
+              }
+            };
+          }
+        });
+      }
+    });
+  }
   
   private java.util.Map<String, com.bolsinga.web.IndexPair> createIndex() {
     java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
@@ -337,6 +471,29 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
     
     return Collections.unmodifiableCollection(result.values());
+  }
+  
+  private Table getStats() {
+    List<Venue> items = Util.getVenuesCopy(fMusic);
+    Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
+
+    int index = 0;
+    String[] names = new String[items.size()];
+    int[] values = new int[items.size()];
+    for (Venue item : items) {
+      String t = Util.createTitle("moreinfovenue", item.getName());
+      names[index] = com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString();
+      Collection<Show> shows = fLookup.getShows(item);
+      values[index] = (shows != null) ? shows.size() : 0;
+                        
+      index++;
+    }
+                
+    String typeString = com.bolsinga.web.Util.getResourceString("venue");
+    Object typeArgs[] = { typeString };
+    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
+
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("venuestatsummary"));
   }
   
   private Vector<Element> getVenueShowListing(final Venue venue, final Show show) {
@@ -423,14 +580,7 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir, encoder, true);
     creator.create(backgrounder, backgroundable);
-
-/*
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateDateStats(music, sShowIndex, encoder, lookup, links, outputDir);
-      }
-    });
-*/
+    creator.createStats(backgrounder, backgroundable);
   }
     
   private ShowRecordDocumentCreator(final Music music, final String outputDir, final com.bolsinga.web.Encode encoder, final boolean upOneLevel) {
@@ -475,6 +625,44 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
         }
       });
     }
+  }
+
+  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        create(new StatsRecordFactory() {
+          protected Table getTable() {
+            return getStats();
+          }
+
+          public String getTitle() {
+            Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("year") };
+            return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+          }
+          
+          public String getFilePath() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(com.bolsinga.web.Links.SHOW_DIR);
+            sb.append(File.separator);
+            sb.append(com.bolsinga.web.Links.STATS);
+            sb.append(com.bolsinga.web.Links.HTML_EXT);
+            return sb.toString();
+          }
+
+          public com.bolsinga.web.Navigator getNavigator() {
+            return new com.bolsinga.web.Navigator(fLinks) {
+              public Element getShowNavigator() {
+                return getCurrentNavigator();
+              }
+              
+              public Element getCurrentNavigator() {
+                return new StringElement(com.bolsinga.web.Util.getResourceString("dates"));
+              }
+            };
+          }
+        });
+      }
+    });
   }
   
   private Collection<Vector<Show>> getMonthlies(final Vector<Show> items) {
@@ -531,6 +719,44 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
   
+  private Table getStats() {
+    List<Show> items = Util.getShowsCopy(fMusic);
+    Collections.sort(items, Compare.SHOW_COMPARATOR);
+
+    Collection<Show> showCollection = null;
+    TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(Compare.SHOW_STATS_COMPARATOR);
+                
+    for (Show item : items) {
+      if (dates.containsKey(item)) {
+        showCollection = dates.get(item);
+        showCollection.add(item);
+      } else {
+        showCollection = new Vector<Show>();
+        showCollection.add(item);
+        dates.put(item, showCollection);
+      }
+    }
+
+    int i = 0;
+    String[] names = new String[dates.size()];
+    int[] values = new int[dates.size()];
+
+    for (Show item : dates.keySet()) {
+      String letter = fLinks.getPageFileName(item);
+      com.bolsinga.web.IndexPair p = fIndex.get(letter);
+      names[i] = com.bolsinga.web.Util.createInternalA(p.getLink(), letter, p.getTitle()).toString();
+      values[i] = dates.get(item).size();
+                        
+      i++;
+    }
+                
+    String typeString = com.bolsinga.web.Util.getResourceString("year");
+    Object typeArgs[] = { typeString };
+    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
+
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("datestatssummary"));
+  }
+  
   private com.bolsinga.web.Record getShowRecord(final Show show) {
     String comment = show.getComment();
     if (comment != null) {
@@ -565,19 +791,7 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
     TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
-
-/*
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateTracksStats(music, lookup, links, outputDir);
-      }
-    });
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateAlbumsStats(music, lookup, links, outputDir);
-      }
-    });
-*/
+    creator.createStats(backgrounder, backgroundable);
   }
   
   private TracksRecordDocumentCreator(final Music music, final String outputDir) {
@@ -622,6 +836,88 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
   }
 
+  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        createTracksStats();
+      }
+    });
+
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        createAlbumsStats();
+      }
+    });
+  }
+  
+  private void createTracksStats() {
+    create(new StatsRecordFactory() {
+      protected Table getTable() {
+        return getTracksStats();
+      }
+
+      public String getTitle() {
+        Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
+        return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+      }
+      
+      public String getFilePath() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(com.bolsinga.web.Links.TRACKS_DIR);
+        sb.append(File.separator);
+        sb.append(com.bolsinga.web.Links.STATS);
+        sb.append(com.bolsinga.web.Links.HTML_EXT);
+        return sb.toString();
+      }
+
+      public com.bolsinga.web.Navigator getNavigator() {
+        return new com.bolsinga.web.Navigator(fLinks) {
+          public Element getTrackNavigator() {
+            return getCurrentNavigator();
+          }
+          
+          public Element getCurrentNavigator() {
+            return new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
+          }
+        };
+      }
+    });
+  }
+  
+  private void createAlbumsStats() {
+    create(new StatsRecordFactory() {
+      protected Table getTable() {
+        return getAlbumsStats();
+      }
+
+      public String getTitle() {
+        Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
+        return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+      }
+      
+      public String getFilePath() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(com.bolsinga.web.Links.TRACKS_DIR);
+        sb.append(File.separator);
+        sb.append(com.bolsinga.web.Links.ALBUM_STATS);
+        sb.append(com.bolsinga.web.Links.HTML_EXT);
+        return sb.toString();
+      }
+
+      public com.bolsinga.web.Navigator getNavigator() {
+        return new com.bolsinga.web.Navigator(fLinks) {
+          public Element getAlbumNavigator() {
+            return getCurrentNavigator();
+          }
+          
+          public Element getCurrentNavigator() {
+            return new StringElement(com.bolsinga.web.Util.getResourceString("albums"));
+          }
+        };
+      }
+    });
+  }
+
   private java.util.Map<String, com.bolsinga.web.IndexPair> createIndex() {
     java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
     for (Album alb : Util.getAlbumsUnmodifiable(fMusic)) {
@@ -654,6 +950,51 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
     
     return Collections.unmodifiableCollection(result.values());
+  }
+  
+  private Table getTracksStats() {
+    List<Artist> artists = Util.getArtistsCopy(fMusic);
+    Collections.sort(artists, Compare.ARTIST_TRACKS_COMPARATOR);
+
+    int index = 0;
+    String[] names = new String[artists.size()];
+    int[] values = new int[artists.size()];
+    
+    for (Artist artist : artists) {
+      String t = Util.createTitle("moreinfoartist", artist.getName());
+      names[index] = com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
+      values[index] = Util.trackCount(artist);
+                        
+      index++;
+    }
+
+    String typeString = com.bolsinga.web.Util.getResourceString("artist");
+    String tableTitle = com.bolsinga.web.Util.getResourceString("tracksby");
+
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("trackstatsummary"));
+  }
+  
+  private Table getAlbumsStats() {
+    List<Artist> artists = Util.getArtistsCopy(fMusic);
+    Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
+
+    String[] names = new String[artists.size()];
+    int[] values = new int[artists.size()];
+    int index = 0;
+    
+    for (Artist artist : artists) {
+      String t = Util.createTitle("moreinfoartist", artist.getName());
+      names[index] = com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
+      List<JAXBElement<Object>> albums = Util.getAlbumsUnmodifiable(artist);
+      values[index] = (albums != null) ? albums.size() : 0;
+                        
+      index++;
+    }
+
+    String typeString = com.bolsinga.web.Util.getResourceString("artist");
+    String tableTitle = com.bolsinga.web.Util.getResourceString("albumsby");
+
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("albumstatsummary"));
   }
   
   private Vector<Element> getAlbumListing(final Album album) {
@@ -819,15 +1160,14 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   public static void generate(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
-    final Lookup lookup = Lookup.getLookup(music);
-    final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
-
     ArtistRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
     
     VenueRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
 
     ShowRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, encoder, outputDir);
 
+    final Lookup lookup = Lookup.getLookup(music);
+    final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         Web.generateCityPages(music, lookup, links, outputDir);
@@ -835,123 +1175,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
 
     TracksRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
-  }
-  
-  static void generateArtistStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    List<Artist> items = Util.getArtistsCopy(music);
-    Collections.sort(items, Compare.getCompare(music).ARTIST_STATS_COMPARATOR);
-
-    int index = 0;
-    String[] names = new String[items.size()];
-    int[] values = new int[items.size()];
-    for (Artist item : items) {
-      String t = Util.createTitle("moreinfoartist", item.getName());
-      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), lookup.getHTMLName(item), t).toString();
-      Collection<Show> shows = lookup.getShows(item);
-      values[index] = (shows != null) ? shows.size() : 0;
-                        
-      index++;
-    }
-                
-    String typeString = com.bolsinga.web.Util.getResourceString("artist");
-    Object typeArgs[] = { typeString };
-    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
-    String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-
-    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.ARTIST_DIR, new com.bolsinga.web.Navigator(links) {
-      public Element getArtistNavigator() {
-        return getCurrentNavigator();
-      }
-      
-      public Element getCurrentNavigator() {
-        return new StringElement(com.bolsinga.web.Util.getResourceString("bands"));
-      }
-    });
-    stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("artiststatsummary")));
-    stats.complete();
-  }
-  
-  static void generateVenueStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    List<Venue> items = Util.getVenuesCopy(music);
-    Collections.sort(items, Compare.getCompare(music).VENUE_STATS_COMPARATOR);
-
-    int index = 0;
-    String[] names = new String[items.size()];
-    int[] values = new int[items.size()];
-    for (Venue item : items) {
-      String t = Util.createTitle("moreinfovenue", item.getName());
-      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(item), lookup.getHTMLName(item), t).toString();
-      Collection<Show> shows = lookup.getShows(item);
-      values[index] = (shows != null) ? shows.size() : 0;
-                        
-      index++;
-    }
-                
-    String typeString = com.bolsinga.web.Util.getResourceString("venue");
-    Object typeArgs[] = { typeString };
-    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
-    String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-
-    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.VENUE_DIR, new com.bolsinga.web.Navigator(links) {
-      public Element getVenueNavigator() {
-        return getCurrentNavigator();
-      }
-      
-      public Element getCurrentNavigator() {
-        return new StringElement(com.bolsinga.web.Util.getResourceString("venues"));
-      }
-    });
-    stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("venuestatsummary")));
-    stats.complete();
-  }
-  
-  static void generateDateStats(final Music music, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    List<Show> items = Util.getShowsCopy(music);
-    Collections.sort(items, Compare.SHOW_COMPARATOR);
-
-    Collection<Show> showCollection = null;
-    TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(Compare.SHOW_STATS_COMPARATOR);
-                
-    for (Show item : items) {
-      if (dates.containsKey(item)) {
-        showCollection = dates.get(item);
-        showCollection.add(item);
-      } else {
-        showCollection = new Vector<Show>();
-        showCollection.add(item);
-        dates.put(item, showCollection);
-      }
-    }
-
-    int i = 0;
-    String[] names = new String[dates.size()];
-    int[] values = new int[dates.size()];
-
-    for (Show item : dates.keySet()) {
-      String letter = links.getPageFileName(item);
-      com.bolsinga.web.IndexPair p = index.get(letter);
-      names[i] = com.bolsinga.web.Util.createInternalA(p.getLink(), letter, p.getTitle()).toString();
-      values[i] = dates.get(item).size();
-                        
-      i++;
-    }
-                
-    String typeString = com.bolsinga.web.Util.getResourceString("year");
-    Object typeArgs[] = { typeString };
-    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
-    String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-
-    com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.SHOW_DIR, new com.bolsinga.web.Navigator(links) {
-      public Element getShowNavigator() {
-        return getCurrentNavigator();
-      }
-      
-      public Element getCurrentNavigator() {
-        return new StringElement(com.bolsinga.web.Util.getResourceString("dates"));
-      }
-    });
-    stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("datestatssummary")));
-    stats.complete();
   }
         
   public static void generateCityPages(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
@@ -1008,79 +1231,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     });
     creator.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("citystatsummary")));
     creator.complete();
-  }
-  
-  static void generateTracksStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    List<Artist> artists = Util.getArtistsCopy(music);
-    Collections.sort(artists, Compare.ARTIST_TRACKS_COMPARATOR);
-
-    int index = 0;
-    String[] names = new String[artists.size()];
-    int[] values = new int[artists.size()];
-    
-    for (Artist artist : artists) {
-      String t = Util.createTitle("moreinfoartist", artist.getName());
-      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist), t).toString();
-      values[index] = Util.trackCount(artist);
-                        
-      index++;
-    }
-
-    {
-      String typeString = com.bolsinga.web.Util.getResourceString("artist");
-      String tableTitle = com.bolsinga.web.Util.getResourceString("tracksby");
-      Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
-      String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
-      
-      com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
-        public Element getTrackNavigator() {
-          return getCurrentNavigator();
-        }
-        
-        public Element getCurrentNavigator() {
-          return new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
-        }
-      });
-      stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("trackstatsummary")));
-      stats.complete();
-    }
-  }
-
-  static void generateAlbumsStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    List<Artist> artists = Util.getArtistsCopy(music);
-    Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
-
-    String[] names = new String[artists.size()];
-    int[] values = new int[artists.size()];
-    int index = 0;
-    
-    for (Artist artist : artists) {
-      String t = Util.createTitle("moreinfoartist", artist.getName());
-      names[index] = com.bolsinga.web.Util.createInternalA(links.getLinkTo(artist), lookup.getHTMLName(artist), t).toString();
-      List<JAXBElement<Object>> albums = Util.getAlbumsUnmodifiable(artist);
-      values[index] = (albums != null) ? albums.size() : 0;
-                        
-      index++;
-    }
-
-    {
-      String typeString = com.bolsinga.web.Util.getResourceString("artist");
-      String tableTitle = com.bolsinga.web.Util.getResourceString("albumsby");
-      Object statsArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
-      String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), statsArgs);
-
-      com.bolsinga.web.SingleElementDocumentCreator stats = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.ALBUM_STATS, pageTitle, com.bolsinga.web.Links.TRACKS_DIR, new com.bolsinga.web.Navigator(links) {
-        public Element getAlbumNavigator() {
-          return getCurrentNavigator();
-        }
-        
-        public Element getCurrentNavigator() {
-          return new StringElement(com.bolsinga.web.Util.getResourceString("albums"));
-        }
-      });
-      stats.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("albumstatsummary")));
-      stats.complete();
-    }
   }
 
   private static String createPreviewLine(final int count, final String name) {
