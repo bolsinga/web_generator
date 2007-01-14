@@ -28,6 +28,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   private void close() {
     if (fDocument != null) {
       writeDocument();
+      fMain = null;
       fDocument = null;
     }
   }
