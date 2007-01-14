@@ -34,15 +34,11 @@ abstract class MusicRecordDocumentCreator extends com.bolsinga.web.RecordDocumen
   protected String getMainDivClass() {
     return com.bolsinga.web.CSS.DOC_2_COL_BODY;
   }
-  
-  protected abstract String getCurrentName();
 }
 
 class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
-  
-  private Vector<Artist> fItems;
   
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
     ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(music, outputDir);
@@ -61,42 +57,38 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     fIndex = createIndex();
   }
   
-  protected String getTitle() {
-    return com.bolsinga.web.Util.createPageTitle(getCurrentName(), com.bolsinga.web.Util.getResourceString("artists"));
-  }
-  
-  protected com.bolsinga.web.Navigator getNavigator() {
-    return new com.bolsinga.web.Navigator(fLinks) {
-      public Element getArtistNavigator() {
-        return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, getCurrentName(), super.getArtistNavigator());
-      }
-    };
-  }
-  
-  protected String getFilePath() {
-    return fLinks.getPagePath(fItems.firstElement());
-  }
-  
-  protected Vector<com.bolsinga.web.Record> getRecords() {
-    Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
-    
-    for (Artist item : fItems) {
-      records.add(getArtistRecordSection(item));
-    }
-    
-    return records;
-  }
-
-  protected String getCurrentName() {
-    return fLinks.getPageFileName(fItems.firstElement());
-  }
-  
   protected void create(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
     for (final Vector<Artist> group : getGroups()) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          fItems = group;
-          create();
+          final Artist first = group.firstElement();
+          final String curName = fLinks.getPageFileName(first);
+          create(new com.bolsinga.web.RecordFactory() {
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
+              
+              for (Artist item : group) {
+                records.add(getArtistRecordSection(item));
+              }
+              
+              return records;
+            }
+            public String getTitle() {
+              return com.bolsinga.web.Util.createPageTitle(curName, com.bolsinga.web.Util.getResourceString("artists"));
+            }
+            
+            public String getFilePath() {
+              return fLinks.getPagePath(first);
+            }
+
+            public com.bolsinga.web.Navigator getNavigator() {
+              return new com.bolsinga.web.Navigator(fLinks) {
+                public Element getArtistNavigator() {
+                  return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, curName, super.getArtistNavigator());
+                }
+              };
+            }
+          });
         }
       });
     }
@@ -257,8 +249,6 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
-  
-  private Vector<Venue> fItems;
 
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
     VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(music, outputDir);
@@ -278,42 +268,38 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     fIndex = createIndex();
   }
   
-  protected String getTitle() {
-    return com.bolsinga.web.Util.createPageTitle(getCurrentName(), com.bolsinga.web.Util.getResourceString("venues"));
-  }
-  
-  protected com.bolsinga.web.Navigator getNavigator() {
-    return new com.bolsinga.web.Navigator(fLinks) {
-      public Element getVenueNavigator() {
-        return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, getCurrentName(), super.getVenueNavigator());
-      }
-    };
-  }
-  
-  protected String getFilePath() {
-    return fLinks.getPagePath(fItems.firstElement());
-  }
-  
-  protected Vector<com.bolsinga.web.Record> getRecords() {
-    Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
-    
-    for (Venue item : fItems) {
-      records.add(getVenueRecordSection(item));
-    }
-    
-    return records;
-  }
-
-  protected String getCurrentName() {
-    return fLinks.getPageFileName(fItems.firstElement());
-  }
-  
   protected void create(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
     for (final Vector<Venue> group : getGroups()) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          fItems = group;
-          create();
+          final Venue first = group.firstElement();
+          final String curName = fLinks.getPageFileName(first);
+          create(new com.bolsinga.web.RecordFactory() {
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
+              
+              for (Venue item : group) {
+                records.add(getVenueRecordSection(item));
+              }
+              
+              return records;
+            }
+            public String getTitle() {
+              return com.bolsinga.web.Util.createPageTitle(curName, com.bolsinga.web.Util.getResourceString("venues"));
+            }
+            
+            public String getFilePath() {
+              return fLinks.getPagePath(first);
+            }
+
+            public com.bolsinga.web.Navigator getNavigator() {
+              return new com.bolsinga.web.Navigator(fLinks) {
+                public Element getVenueNavigator() {
+                  return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, curName, super.getVenueNavigator());
+                }
+              };
+            }
+          });
         }
       });
     }
@@ -433,8 +419,6 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final com.bolsinga.web.Encode fEncoder;
   private final boolean fUpOneLevel;
-  
-  private Vector<Show> fItems;
 
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final com.bolsinga.web.Encode encoder, final String outputDir) {
     ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir, encoder, true);
@@ -456,52 +440,48 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     fIndex = createIndex();
   }
   
-  protected String getTitle() {
-    return com.bolsinga.web.Util.createPageTitle(getCurrentName(), com.bolsinga.web.Util.getResourceString("dates"));
-  }
-  
-  protected com.bolsinga.web.Navigator getNavigator() {
-    return new com.bolsinga.web.Navigator(fLinks) {
-      public Element getShowNavigator() {
-        return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, getCurrentName(), super.getShowNavigator());
-      }
-    };
-  }
-  
-  protected String getFilePath() {
-    return fLinks.getPagePath(fItems.firstElement());
-  }
-  
-  protected Vector<com.bolsinga.web.Record> getRecords() {
-    Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
-    
-    for (Vector<Show> item : getMonthlies()) {
-      records.add(getShowMonthRecordSection(item));
-    }
-    
-    return records;
-  }
-
-  protected String getCurrentName() {
-    return fLinks.getPageFileName(fItems.firstElement());
-  }
-  
   protected void create(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
     for (final Vector<Show> group : getGroups()) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          fItems = group;
-          create();
+          final Show first = group.firstElement();
+          final String curName = fLinks.getPageFileName(first);
+          create(new com.bolsinga.web.RecordFactory() {
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
+              
+              for (Vector<Show> item : getMonthlies(group)) {
+                records.add(getShowMonthRecordSection(item));
+              }
+              
+              return records;
+            }
+            public String getTitle() {
+              return com.bolsinga.web.Util.createPageTitle(curName, com.bolsinga.web.Util.getResourceString("dates"));
+            }
+            
+            public String getFilePath() {
+              return fLinks.getPagePath(first);
+            }
+
+            public com.bolsinga.web.Navigator getNavigator() {
+              return new com.bolsinga.web.Navigator(fLinks) {
+                public Element getShowNavigator() {
+                  return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, curName, super.getShowNavigator());
+                }
+              };
+            }
+          });
         }
       });
     }
   }
   
-  private Collection<Vector<Show>> getMonthlies() {
+  private Collection<Vector<Show>> getMonthlies(final Vector<Show> items) {
     TreeMap<com.bolsinga.music.data.Date, Vector<Show>> result =
       new TreeMap<com.bolsinga.music.data.Date, Vector<Show>>(Compare.DATE_MONTH_COMPARATOR);
 
-    for (Show item : fItems) {
+    for (Show item : items) {
       com.bolsinga.music.data.Date key = item.getDate();
       Vector<Show> showList;
       if (result.containsKey(key)) {
@@ -605,42 +585,38 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     fIndex = createIndex();
   }
   
-  protected String getTitle() {
-    return com.bolsinga.web.Util.createPageTitle(getCurrentName(), com.bolsinga.web.Util.getResourceString("tracks"));
-  }
-  
-  protected com.bolsinga.web.Navigator getNavigator() {
-    return new com.bolsinga.web.Navigator(fLinks) {
-      public Element getTrackNavigator() {
-        return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, getCurrentName(), super.getTrackNavigator());
-      }
-    };
-  }
-  
-  protected String getFilePath() {
-    return fLinks.getPagePath(fItems.firstElement());
-  }
-  
-  protected Vector<com.bolsinga.web.Record> getRecords() {
-    Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
-    
-    for (Album item : fItems) {
-      records.add(getAlbumRecordSection(item));
-    }
-    
-    return records;
-  }
-
-  protected String getCurrentName() {
-    return fLinks.getPageFileName(fItems.firstElement());
-  }
-  
   protected void create(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
     for (final Vector<Album> group : getGroups()) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
-          fItems = group;
-          create();
+          final Album first = group.firstElement();
+          final String curName = fLinks.getPageFileName(first);
+          create(new com.bolsinga.web.RecordFactory() {
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
+              
+              for (Album item : group) {
+                records.add(getAlbumRecordSection(item));
+              }
+              
+              return records;
+            }
+            public String getTitle() {
+              return com.bolsinga.web.Util.createPageTitle(curName, com.bolsinga.web.Util.getResourceString("tracks"));
+            }
+            
+            public String getFilePath() {
+              return fLinks.getPagePath(first);
+            }
+
+            public com.bolsinga.web.Navigator getNavigator() {
+              return new com.bolsinga.web.Navigator(fLinks) {
+                public Element getTrackNavigator() {
+                  return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, curName, super.getTrackNavigator());
+                }
+              };
+            }
+          });
         }
       });
     }

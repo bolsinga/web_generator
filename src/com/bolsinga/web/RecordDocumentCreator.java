@@ -17,17 +17,17 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     fOutputDir = outputDir;
   }
   
-  protected void create() {
-    Document d = populate();
-    writeDocument(d);
+  protected void create(final RecordFactory factory) {
+    Document d = populate(factory);
+    writeDocument(factory, d);
   }
   
-  private Document populate() {
-    Document d = createDocument();
+  private Document populate(final RecordFactory factory) {
+    Document d = createDocument(factory);
     
     Div main = Util.createDiv(getMainDivClass());
         
-    Vector<Record> records = getRecords();
+    Vector<Record> records = factory.getRecords();
     for (Record record : records) {
       main.addElement(record.getElement());
     }
@@ -40,20 +40,16 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
   
-  protected abstract String getTitle();
   protected abstract String getCopyright();
-  protected abstract Navigator getNavigator();
   protected abstract String getMainDivClass();
-  protected abstract String getFilePath();
-  protected abstract Vector<Record> getRecords();
   
-  private Document createDocument() {
+  private Document createDocument(final RecordFactory factory) {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
                 
     d.getHtml().setPrettyPrint(Util.getPrettyOutput());
                 
     d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
-    d.appendTitle(getTitle());
+    d.appendTitle(factory.getTitle());
                 
     Head h = d.getHead();
     h.setPrettyPrint(Util.getPrettyOutput());
@@ -71,17 +67,17 @@ public abstract class RecordDocumentCreator implements Backgroundable {
 
     d.getBody().setPrettyPrint(Util.getPrettyOutput());
 
-    d.getBody().addElement(getHeaderDiv());
+    d.getBody().addElement(getHeaderDiv(factory));
     
     return d;
   }
   
-  private Div getHeaderDiv() {
+  private Div getHeaderDiv(final RecordFactory factory) {
     Div d = Util.createDiv(CSS.NAV_HEADER);
-    d.addElement(new H1().addElement(getTitle()));
+    d.addElement(new H1().addElement(factory.getTitle()));
     d.addElement(Util.getLogo());
 
-    Navigator navigator = getNavigator();
+    Navigator navigator = factory.getNavigator();
     Vector<Element> e = new Vector<Element>();
     e.add(navigator.getHomeNavigator());
     e.add(navigator.getOverviewNavigator());
@@ -101,9 +97,9 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
         
-  private void writeDocument(Document d) {
+  private void writeDocument(final RecordFactory factory, final Document d) {
     try {
-      File f = new File(fOutputDir, getFilePath());
+      File f = new File(fOutputDir, factory.getFilePath());
       File parent = new File(f.getParent());
       if (!parent.mkdirs()) {
         if (!parent.exists()) {
