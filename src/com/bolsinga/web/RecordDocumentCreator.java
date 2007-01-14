@@ -27,7 +27,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     
     Div main = Util.createDiv(getMainDivClass());
         
-    Vector<? extends Record> records = getRecords();
+    Vector<Record> records = getRecords();
     for (Record record : records) {
       main.addElement(record.getElement());
     }
@@ -45,7 +45,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   protected abstract Navigator getNavigator();
   protected abstract String getMainDivClass();
   protected abstract String getFilePath();
-  protected abstract Vector<? extends Record> getRecords();
+  protected abstract Vector<Record> getRecords();
   
   private Document createDocument() {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
