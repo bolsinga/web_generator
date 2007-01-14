@@ -1051,6 +1051,96 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 }
 
+class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
+
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
+    CityRecordDocumentCreator creator = new CityRecordDocumentCreator(music, outputDir);
+    creator.createStats(backgrounder, backgroundable);
+  }
+  
+  private CityRecordDocumentCreator(final Music music, final String outputDir) {
+    super(music, outputDir);
+  }
+
+  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        create(new StatsRecordFactory() {
+          protected Table getTable() {
+            return getStats();
+          }
+          
+          public String getDirectory() {
+            return com.bolsinga.web.Links.CITIES_DIR;
+          }
+
+          public String getTitle() {
+            Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("city") };
+            return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+          }
+
+          public com.bolsinga.web.Navigator getNavigator() {
+            return new com.bolsinga.web.Navigator(fLinks) {
+              public Element getCityNavigator() {
+                return getCurrentNavigator();
+              }
+              
+              public Element getCurrentNavigator() {
+                return new StringElement(com.bolsinga.web.Util.getResourceString("cities"));
+              }
+            };
+          }
+        });
+      }
+    });
+  }
+  
+  private Table getStats() {
+    Collection<String> items = fLookup.getCities();
+    HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
+    String city = null;
+    int val;
+    Collection<String> stringCollection = null;
+
+    for (String item : items) {
+      val = fLookup.getShows(item).size();
+      if (cityCount.containsKey(val)) {
+        stringCollection = cityCount.get(val);
+        stringCollection.add(item);
+      } else {
+        stringCollection = new HashSet<String>();
+        stringCollection.add(item);
+        cityCount.put(val, stringCollection);
+      }
+    }
+                
+    List<Integer> keys = new Vector<Integer>(cityCount.keySet());
+    Collections.sort(keys);
+    Collections.reverse(keys);
+
+    String[] names = new String[items.size()];
+    int[] values = new int[items.size()];
+    int index = 0;
+
+    for (int value : keys) {
+      List<String> k = new Vector<String>(cityCount.get(value));
+      Collections.sort(k);
+
+      for (String j : k) {
+        names[index] = j;
+        values[index] = value;
+        index++;
+      }
+    }
+                
+    String typeString = com.bolsinga.web.Util.getResourceString("city");
+    Object typeArgs[] = { typeString };
+    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
+
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("citystatsummary"));
+  }
+}
+
 public class Web implements com.bolsinga.web.Backgroundable {
 
   private static final boolean GENERATE_XML = false;
@@ -1159,71 +1249,9 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     ShowRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, encoder, outputDir);
 
-    final Lookup lookup = Lookup.getLookup(music);
-    final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        Web.generateCityPages(music, lookup, links, outputDir);
-      }
-    });
+    CityRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
 
     TracksRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
-  }
-        
-  public static void generateCityPages(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
-    Collection<String> items = lookup.getCities();
-    HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
-    String city = null;
-    int val;
-    Collection<String> stringCollection = null;
-
-    for (String item : items) {
-      val = lookup.getShows(item).size();
-      if (cityCount.containsKey(val)) {
-        stringCollection = cityCount.get(val);
-        stringCollection.add(item);
-      } else {
-        stringCollection = new HashSet<String>();
-        stringCollection.add(item);
-        cityCount.put(val, stringCollection);
-      }
-    }
-                
-    List<Integer> keys = new Vector<Integer>(cityCount.keySet());
-    Collections.sort(keys);
-    Collections.reverse(keys);
-
-    String[] names = new String[items.size()];
-    int[] values = new int[items.size()];
-    int index = 0;
-
-    for (int value : keys) {
-      List<String> k = new Vector<String>(cityCount.get(value));
-      Collections.sort(k);
-
-      for (String j : k) {
-        names[index] = j;
-        values[index] = value;
-        index++;
-      }
-    }
-                
-    String typeString = com.bolsinga.web.Util.getResourceString("city");
-    Object typeArgs[] = { typeString };
-    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
-    String pageTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
-
-    com.bolsinga.web.SingleElementDocumentCreator creator = new com.bolsinga.web.SingleElementDocumentCreator(links, outputDir, com.bolsinga.web.Links.STATS, pageTitle, com.bolsinga.web.Links.CITIES_DIR, new com.bolsinga.web.Navigator(links) {
-      public Element getCityNavigator() {
-        return getCurrentNavigator();
-      }
-      
-      public Element getCurrentNavigator() {
-        return new StringElement(com.bolsinga.web.Util.getResourceString("cities"));
-      }
-    });
-    creator.add(makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("citystatsummary")));
-    creator.complete();
   }
 
   private static String createPreviewLine(final int count, final String name) {
@@ -1273,7 +1301,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     };
   }
         
-  public static Element getLinkedData(final com.bolsinga.web.Encode encoder, final Show show, final boolean upOneLevel) {
+  static Element getLinkedData(final com.bolsinga.web.Encode encoder, final Show show, final boolean upOneLevel) {
     return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel));
   }
         
@@ -1318,42 +1346,5 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
-  }
-    
-  public static Table makeTable(final String[] names, final int[] values, final String caption, final String header, final String summary) {
-    int runningTotal = 0;
-    int i;
-    for (i = 0; i < values.length; i++) {
-      runningTotal += values[i];
-    }
-    final int total = runningTotal;
-    
-    return com.bolsinga.web.Util.makeTable(caption, summary, new com.bolsinga.web.TableHandler() {
-      public TR getHeaderRow() {
-        return new TR().addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
-      }
-
-      public int getRowCount() {
-        return values.length;
-      }
-      
-      public TR getRow(final int row) {
-        TR trow = new TR();
-        TH thh = new TH(names[row]);
-        thh.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
-        trow.addElement(thh);
-        trow.addElement(new TD(Integer.toString(values[row])).setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput()));
-        trow.addElement(new TD(Util.toString((double)values[row] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput()));
-        return trow;
-      }
-      
-      public TR getFooterRow() {
-        TR trow = new TR();
-        trow.addElement(new TH(Integer.toString(names.length)));
-        trow.addElement(new TH(Integer.toString(total)));
-        trow.addElement(new TH());
-        return trow;
-      }
-    });
   }
 }
