@@ -40,7 +40,7 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
   
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
     ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
 /*
@@ -250,7 +250,7 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
 
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
     VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
 
@@ -420,7 +420,7 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final com.bolsinga.web.Encode fEncoder;
   private final boolean fUpOneLevel;
 
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir, encoder, true);
     creator.create(backgrounder, backgroundable);
 
@@ -562,7 +562,7 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
   
   private Vector<Album> fItems;
 
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
+  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
     TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
 
@@ -822,11 +822,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
     final Lookup lookup = Lookup.getLookup(music);
     final com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(true);
 
-    ArtistRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
+    ArtistRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
     
-    VenueRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
+    VenueRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
 
-    ShowRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, encoder, outputDir);
+    ShowRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, encoder, outputDir);
 
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
@@ -834,10 +834,8 @@ public class Web implements com.bolsinga.web.Backgroundable {
       }
     });
 
-    TracksRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, links, lookup, outputDir);
+    TracksRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
   }
-
-  // NOTE: Instead of a List of ID's, JAXB returns a List of real items.
   
   static void generateArtistStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     List<Artist> items = Util.getArtistsCopy(music);
