@@ -46,7 +46,7 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final String fCurLetter;
   
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
-    ArtistRecordDocumentCreator.createIndex(Util.getArtistsUnmodifiable(music), links);
+    sArtistIndex = ArtistRecordDocumentCreator.createIndex(Util.getArtistsUnmodifiable(music), links);
     
     Collection<Vector<Artist>> artistGroups = ArtistRecordDocumentCreator.getGroups(music, links);
     for (final Vector<Artist> artistGroup : artistGroups) {
@@ -96,7 +96,7 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     return records;
   }
 
-  private static void createIndex(final Collection<Artist> artists, final com.bolsinga.web.Links links) {
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> createIndex(final Collection<Artist> artists, final com.bolsinga.web.Links links) {
     java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
     for (Artist art : artists) {
       String letter = links.getPageFileName(art);
@@ -104,7 +104,7 @@ class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
         m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(art), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("artists"))));
       }
     }
-    sArtistIndex = Collections.unmodifiableMap(m);
+    return Collections.unmodifiableMap(m);
   }
 
   private static Collection<Vector<Artist>> getGroups(final Music music, final com.bolsinga.web.Links links) {
@@ -256,7 +256,7 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final String fCurLetter;
 
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
-    VenueRecordDocumentCreator.createIndex(Util.getVenuesUnmodifiable(music), links);
+    sVenueIndex = VenueRecordDocumentCreator.createIndex(Util.getVenuesUnmodifiable(music), links);
     
     Collection<Vector<Venue>> venueGroups = VenueRecordDocumentCreator.getGroups(music, links);
     for (final Vector<Venue> venueGroup : venueGroups) {
@@ -306,7 +306,7 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     return records;
   }
   
-  private static void createIndex(final Collection<Venue> venues, final com.bolsinga.web.Links links) {
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> createIndex(final Collection<Venue> venues, final com.bolsinga.web.Links links) {
     java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
     for (Venue v : venues) {
       String letter = links.getPageFileName(v);
@@ -314,7 +314,7 @@ class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
         m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(v), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("venues"))));
       }
     }
-    sVenueIndex = Collections.unmodifiableMap(m);
+    return Collections.unmodifiableMap(m);
   }
 
   private static Collection<Vector<Venue>> getGroups(final Music music, final com.bolsinga.web.Links links) {
@@ -424,7 +424,7 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final boolean fUpOneLevel;
 
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final com.bolsinga.web.Encode encoder, final String outputDir) {
-    ShowRecordDocumentCreator.createIndex(Util.getShowsUnmodifiable(music), links);
+    sShowIndex = ShowRecordDocumentCreator.createIndex(Util.getShowsUnmodifiable(music), links);
     
     Collection<Vector<Show>> showGroups = ShowRecordDocumentCreator.getGroups(music, links);
     for (final Vector<Show> showGroup : showGroups) {
@@ -496,7 +496,7 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
 
-  private static void createIndex(final Collection<Show> shows, final com.bolsinga.web.Links links) {
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> createIndex(final Collection<Show> shows, final com.bolsinga.web.Links links) {
     java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
     for (Show s : shows) {
       String letter = links.getPageFileName(s);
@@ -504,7 +504,7 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
         m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(s), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("dates"))));
       }
     }
-    sShowIndex = Collections.unmodifiableMap(m);
+    return Collections.unmodifiableMap(m);
   }
 
   private static Collection<Vector<Show>> getGroups(final Music music, final com.bolsinga.web.Links links) {
@@ -563,7 +563,7 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final String fCurLetter;
 
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Links links, final Lookup lookup, final String outputDir) {
-    TracksRecordDocumentCreator.createIndex(Util.getAlbumsUnmodifiable(music), links);
+    sAlbumIndex = TracksRecordDocumentCreator.createIndex(Util.getAlbumsUnmodifiable(music), links);
     
     Collection<Vector<Album>> albumGroups = TracksRecordDocumentCreator.getGroups(music, links);
     for (final Vector<Album> albumGroup : albumGroups) {
@@ -618,7 +618,7 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     return records;
   }
 
-  private static void createIndex(final Collection<Album> items, final com.bolsinga.web.Links links) {
+  private static java.util.Map<String, com.bolsinga.web.IndexPair> createIndex(final Collection<Album> items, final com.bolsinga.web.Links links) {
     java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
     for (Album alb : items) {
       String letter = links.getPageFileName(alb);
@@ -626,7 +626,7 @@ class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
         m.put(letter, new com.bolsinga.web.IndexPair(links.getLinkToPage(alb), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("albums"))));
       }
     }
-    sAlbumIndex = Collections.unmodifiableMap(m);
+    return Collections.unmodifiableMap(m);
   }
 
   private static Collection<Vector<Album>> getGroups(final Music music, final com.bolsinga.web.Links links) {
