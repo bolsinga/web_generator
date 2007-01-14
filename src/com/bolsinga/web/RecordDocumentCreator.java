@@ -20,7 +20,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     fOutputDir = outputDir;
   }
   
-  public void create() {
+  protected void create() {
     populate();
     close();
   }
