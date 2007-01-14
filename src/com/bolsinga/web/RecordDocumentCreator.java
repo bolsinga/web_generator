@@ -20,14 +20,19 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     fOutputDir = outputDir;
   }
   
-  public void close() {
+  public void create() {
+    populate();
+    close();
+  }
+  
+  private void close() {
     if (fDocument != null) {
       writeDocument();
       fDocument = null;
     }
   }
   
-  public void populate() {
+  private void populate() {
     createDocument();
         
     Vector<? extends Record> records = getRecords();

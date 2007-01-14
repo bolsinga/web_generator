@@ -759,8 +759,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     
   private static void generateArtistPages(final Vector<Artist> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(links, outputDir, index, lookup, items);
-    creator.populate();
-    creator.close();
+    creator.create();
   }
   
   private static void generateArtistStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
@@ -799,8 +798,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   public static void generateVenuePages(final Vector<Venue> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(links, outputDir, index, lookup, items);
-    creator.populate();
-    creator.close();
+    creator.create();
   }
   
   private static void generateVenueStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
@@ -839,8 +837,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   public static void generateDatePages(final Vector<Show> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(links, outputDir, index, lookup, items, encoder, true);
-    creator.populate();
-    creator.close();
+    creator.create();
   }
   
   public static void generateDateStats(final Music music, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
@@ -950,8 +947,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   public static void generateTracksPages(final Vector<Album> items, final java.util.Map<String, com.bolsinga.web.IndexPair> index, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
     TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(links, outputDir, index, lookup, items);
-    creator.populate();
-    creator.close();
+    creator.create();
   }
   
   private static void generateTracksStats(final Music music, final Lookup lookup, final com.bolsinga.web.Links links, final String outputDir) {
