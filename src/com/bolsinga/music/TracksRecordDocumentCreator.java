@@ -10,7 +10,7 @@ import org.apache.ecs.html.*;
 
 import javax.xml.bind.JAXBElement;
 
-class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
+public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
   
