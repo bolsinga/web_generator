@@ -15,26 +15,6 @@ import org.apache.ecs.filter.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-abstract class DiaryRecordDocumentCreator extends com.bolsinga.web.RecordDocumentCreator {
-
-  protected final Diary fDiary;
-  protected final int fStartYear;
-  
-  public DiaryRecordDocumentCreator(final Diary diary, final String outputDir, final boolean upOneLevel) {
-    super(com.bolsinga.web.Links.getLinks(upOneLevel), outputDir);
-    fDiary = diary;
-    fStartYear = Util.getStartYear(fDiary);
-  }
-  
-  protected String getCopyright() {
-    return com.bolsinga.web.Util.getCopyright(fStartYear);
-  }
-  
-  protected String getMainDivClass() {
-    return com.bolsinga.web.CSS.DOC_2_COL_BODY;
-  }
-}
-
 abstract class DiaryEncoderRecordDocumentCreator extends DiaryRecordDocumentCreator {
 
   protected final com.bolsinga.web.Encode fEncoder;
