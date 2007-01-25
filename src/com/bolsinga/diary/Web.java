@@ -4,6 +4,8 @@ import com.bolsinga.diary.data.*;
 import com.bolsinga.music.data.*;
 import com.bolsinga.settings.data.*;
 
+import com.bolsinga.web.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -13,11 +15,11 @@ import org.apache.ecs.html.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-public class Web implements com.bolsinga.web.Backgroundable {
+public class Web implements Backgroundable {
 
   private static final boolean GENERATE_XML = false;
 
-  private final com.bolsinga.web.Backgrounder fBackgrounder;
+  private final Backgrounder fBackgrounder;
   
   public static void main(String[] args) {
     if (args.length != 5) {
@@ -46,21 +48,21 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Web.usage();
     }
 
-    com.bolsinga.web.Util.createSettings(settings);
+    Util.createSettings(settings);
     
     if (Web.GENERATE_XML) {
       Web.export(diary);
       System.exit(0);
     }
 
-    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
+    Backgrounder backgrounder = Backgrounder.getBackgrounder();
+    Encode encoder = Encode.getEncode(music, diary);                
     Web web = new Web(backgrounder);
     web.generate(diary, music, encoder, output);
     web.complete();
   }
   
-  private Web(final com.bolsinga.web.Backgrounder backgrounder) {
+  private Web(final Backgrounder backgrounder) {
     fBackgrounder = backgrounder;
     backgrounder.addInterest(this);
   }
@@ -107,18 +109,18 @@ public class Web implements com.bolsinga.web.Backgroundable {
         
   private static void generate(final Diary diary, final String musicFile, final String outputDir) {
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
-    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
+    Backgrounder backgrounder = Backgrounder.getBackgrounder();
+    Encode encoder = Encode.getEncode(music, diary);                
     Web web = new Web(backgrounder);
     web.generate(diary, music, encoder, outputDir);
     web.complete();
   }
         
-  private void generate(final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  private void generate(final Diary diary, final Music music, final Encode encoder, final String outputDir) {
     Web.generate(fBackgrounder, this, diary, music, encoder, outputDir);
   }
 
-  public static void generate(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  public static void generate(final Backgrounder backgrounder, final Backgroundable backgroundable, final Diary diary, final Music music, final Encode encoder, final String outputDir) {
     MainDocumentCreator.createDocuments(backgrounder, backgroundable, diary, outputDir, encoder, music);
 
     EntryRecordDocumentCreator.createDocuments(backgrounder, backgroundable, diary, outputDir, encoder);
@@ -126,14 +128,14 @@ public class Web implements com.bolsinga.web.Backgroundable {
     AltDocumentCreator.createDocuments(backgrounder, backgroundable, diary, outputDir);
   }
         
-  static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final com.bolsinga.web.Links links, final boolean upOneLevel) {
+  static Element addItem(final Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
-    e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
-    e.add(com.bolsinga.web.Util.createPermaLink(links.getLinkTo(entry)));
-    e.add(new StringElement(com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(entry, upOneLevel))));
+    e.add(new H3().addElement(Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
+    e.add(Util.createPermaLink(links.getLinkTo(entry)));
+    e.add(new StringElement(Util.convertToParagraphs(encoder.embedLinks(entry, upOneLevel))));
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    Div d = Util.createDiv(CSS.ENTRY_ITEM);
+    d.addElement(Util.createUnorderedList(e));
     return d;
   }
 }

@@ -20,7 +20,7 @@ class EncodeTest {
   }
   
   void generate(final String diaryFile, final String musicFile, final String outputDir) {
-    Diary diary = com.bolsinga.diary.Util.createDiary(diaryFile);
+    Diary diary = Util.createDiary(diaryFile);
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
     
     Encode encoder = Encode.getEncode(music, diary);
@@ -47,12 +47,12 @@ class EncodeTest {
   }
 
   static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
-    List<Entry> items = com.bolsinga.diary.Util.getEntriesCopy(diary);
+    List<Entry> items = Util.getEntriesCopy(diary);
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;
 
-    Collections.sort(items, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
+    Collections.sort(items, Util.ENTRY_COMPARATOR);
 
     for (Entry item : items) {
       start = System.currentTimeMillis();
@@ -357,7 +357,7 @@ class HashEncode extends Encode {
     if (music != null) {
       List<Show> shows = com.bolsinga.music.Util.getShowsUnmodifiable(music);
       int numShows = (shows != null) ? shows.size() : 0;
-      List<Entry> entries = (diary != null) ? com.bolsinga.diary.Util.getEntriesUnmodifiable(diary) : null;
+      List<Entry> entries = (diary != null) ? Util.getEntriesUnmodifiable(diary) : null;
       int numDiary = (entries != null) ? entries.size() : 0;
       int numEncoded = numShows + numDiary;
       HashMap<String, HashSet<Object>> encodedMap = new HashMap<String, HashSet<Object>>(numEncoded * WORDS_PER_ENTRY);
@@ -470,7 +470,7 @@ class HashEncode extends Encode {
   
   private void getDiaryWords(final Diary diary, final HashMap<String, HashSet<Object>> encodedMap) {
     if (diary != null) {
-      Collection<Entry> items = com.bolsinga.diary.Util.getEntriesUnmodifiable(diary);
+      Collection<Entry> items = Util.getEntriesUnmodifiable(diary);
 
       for (Entry item : items) {
         addEncodedWords(item.getComment(), encodedMap, item, items.size());

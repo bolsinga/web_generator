@@ -1,5 +1,7 @@
 package com.bolsinga.shows.converter;
 
+import com.bolsinga.web.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -42,7 +44,7 @@ public class Diary {
 
       createComments(objFactory, diary, comments);
 
-      diary.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
+      diary.setTimestamp(Util.toXMLGregorianCalendar(Util.nowUTC()));
 
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
@@ -94,14 +96,14 @@ public class Diary {
     
     for (Comments oldComment : comments) {
       xEntry = objFactory.createEntry();
-      xEntry.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(Diary.toCalendarUTC(oldComment.getDate())));
+      xEntry.setTimestamp(Util.toXMLGregorianCalendar(Diary.toCalendarUTC(oldComment.getDate())));
       xEntry.setComment(oldComment.getData());
       xEntry.setId("e" + index--);
                         
       entries.add(xEntry);
     }
 
-    java.util.Collections.sort(entries, com.bolsinga.diary.Util.ENTRY_COMPARATOR);
+    java.util.Collections.sort(entries, Util.ENTRY_COMPARATOR);
   }
         
   private static GregorianCalendar toCalendarUTC(final String date) {
@@ -120,12 +122,12 @@ public class Diary {
     day = Integer.parseInt(dayString);
     year = Integer.parseInt(yearString);
 
-    int diaryTime = com.bolsinga.web.Util.getSettings().getDiaryEntryTime().intValue();
+    int diaryTime = Util.getSettings().getDiaryEntryTime().intValue();
     localTime.clear();
     localTime.set(year, month - 1, day, diaryTime, 0);
 
     // Convert to UTC.
-    GregorianCalendar result = com.bolsinga.web.Util.nowUTC();
+    GregorianCalendar result = Util.nowUTC();
     result.setTimeInMillis(localTime.getTimeInMillis());
     return result;
   }

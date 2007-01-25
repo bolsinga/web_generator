@@ -2,6 +2,8 @@ package com.bolsinga.diary;
 
 import com.bolsinga.diary.data.*;
 
+import com.bolsinga.web.*;
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -11,30 +13,30 @@ import org.apache.ecs.html.*;
 
 public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreator {
 
-  private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
+  private final java.util.Map<String, IndexPair> fIndex;
   private final Collection<Vector<Entry>> fGroups;
   
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Diary diary, final String outputDir, final com.bolsinga.web.Encode encoder) {
+  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Diary diary, final String outputDir, final Encode encoder) {
     EntryRecordDocumentCreator creator = new EntryRecordDocumentCreator(diary, outputDir, encoder);
     creator.create(backgrounder, backgroundable);
     creator.createStats(backgrounder, backgroundable);
   }
   
-  private EntryRecordDocumentCreator(final Diary diary, final String outputDir, final com.bolsinga.web.Encode encoder) {
+  private EntryRecordDocumentCreator(final Diary diary, final String outputDir, final Encode encoder) {
     super(diary, outputDir, true, encoder);
     fIndex = createIndex();
     fGroups = createGroups();
   }
 
-  protected void create(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void create(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     for (final Vector<Entry> group : fGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           final Entry first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
-          create(new com.bolsinga.web.RecordFactory() {
-            public Vector<com.bolsinga.web.Record> getRecords() {
-              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
+          create(new RecordFactory() {
+            public Vector<Record> getRecords() {
+              Vector<Record> records = new Vector<Record>();
               
               for (Vector<Entry> item : getMonthlies(group)) {
                 records.add(getEntryMonthRecordSection(item));
@@ -43,17 +45,17 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
               return records;
             }
             public String getTitle() {
-              return com.bolsinga.web.Util.createPageTitle(curName, com.bolsinga.web.Util.getResourceString("archives"));
+              return Util.createPageTitle(curName, Util.getResourceString("archives"));
             }
             
             public String getFilePath() {
               return fLinks.getPagePath(first);
             }
 
-            public com.bolsinga.web.Navigator getNavigator() {
-              return new com.bolsinga.web.Navigator(fLinks) {
+            public Navigator getNavigator() {
+              return new Navigator(fLinks) {
                 public Element getOverviewNavigator() {
-                  return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, curName, super.getOverviewNavigator());
+                  return Util.addCurrentIndexNavigator(fIndex, curName, super.getOverviewNavigator());
                 }
               };
             }
@@ -82,57 +84,57 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     return Collections.unmodifiableCollection(result.values());
   }
 
-  private com.bolsinga.web.Record getEntryMonthRecordSection(final Vector<Entry> entries) {
-    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
+  private Record getEntryMonthRecordSection(final Vector<Entry> entries) {
+    Vector<Record> items = new Vector<Record>();
     
     // Note entries here is a Collection of Entrys in a single month
     String m = Util.getMonth(entries.firstElement());
-    A title = com.bolsinga.web.Util.createNamedTarget(m, m);
+    A title = Util.createNamedTarget(m, m);
     for (Entry entry : entries) {
       items.add(getEntryRecord(entry));
     }
 
-    return com.bolsinga.web.Record.createRecordSection(title, items);
+    return Record.createRecordSection(title, items);
   }
   
-  private com.bolsinga.web.Record getEntryRecord(final Entry entry) {
-    return com.bolsinga.web.Record.createRecordPermalink(
-      com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry)), 
+  private Record getEntryRecord(final Entry entry) {
+    return Record.createRecordPermalink(
+      Util.createNamedTarget(entry.getId(), Util.getTitle(entry)), 
       fEncoder.embedLinks(entry, true),
-      com.bolsinga.web.Util.createPermaLink(fLinks.getLinkTo(entry)));
+      Util.createPermaLink(fLinks.getLinkTo(entry)));
   }
 
-  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        create(new com.bolsinga.web.RecordFactory() {
-          public Vector<com.bolsinga.web.Record> getRecords() {
-            Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>(1);
-            items.add(com.bolsinga.web.Record.createRecordSimple(getStats()));
+        create(new RecordFactory() {
+          public Vector<Record> getRecords() {
+            Vector<Record> items = new Vector<Record>(1);
+            items.add(Record.createRecordSimple(getStats()));
             return items;
           }
 
           public String getTitle() {
-            return com.bolsinga.web.Util.getResourceString("archivesoverviewtitle");
+            return Util.getResourceString("archivesoverviewtitle");
           }
           
           public String getFilePath() {
             StringBuilder sb = new StringBuilder();
-            sb.append(com.bolsinga.web.Links.ARCHIVES_DIR);
+            sb.append(Links.ARCHIVES_DIR);
             sb.append(File.separator);
             sb.append("overview");
-            sb.append(com.bolsinga.web.Links.HTML_EXT);
+            sb.append(Links.HTML_EXT);
             return sb.toString();
           }
 
-          public com.bolsinga.web.Navigator getNavigator() {
-            return new com.bolsinga.web.Navigator(fLinks) {
+          public Navigator getNavigator() {
+            return new Navigator(fLinks) {
               public Element getOverviewNavigator() {
                 return getCurrentNavigator();
               }
               
               public Element getCurrentNavigator() {
-                return new StringElement(com.bolsinga.web.Util.getResourceString("archivesoverviewtitle"));
+                return new StringElement(Util.getResourceString("archivesoverviewtitle"));
               }
             };
           }
@@ -141,14 +143,14 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     });
   }
 
-  private java.util.Map<String, com.bolsinga.web.IndexPair> createIndex() {
-    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
+  private java.util.Map<String, IndexPair> createIndex() {
+    java.util.Map<String, IndexPair> m = new TreeMap<String, IndexPair>();
     for (Entry e : Util.getEntriesUnmodifiable(fDiary)) {
       String letter = fLinks.getPageFileName(e);
       if (!m.containsKey(letter)) {
         Object[] args = { letter };
-        String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
-        m.put(letter, new com.bolsinga.web.IndexPair(fLinks.getLinkToPage(e), t));
+        String t = MessageFormat.format(Util.getResourceString("moreinfoentry"), args);
+        m.put(letter, new IndexPair(fLinks.getLinkToPage(e), t));
       }
     }
     return Collections.unmodifiableMap(m);
@@ -180,7 +182,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   }
   
   private Table getStats() {
-    final String totalStr = com.bolsinga.web.Util.getResourceString("archivestotal");
+    final String totalStr = Util.getResourceString("archivestotal");
 
     // fGroups has as many items as the number of years. Add one for the final footer total row.
     // There are 12 months in a year, Add two, one for the year, and one for the total column.
@@ -194,8 +196,8 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
       
       String year = Integer.toString(fStartYear + row);
       
-      com.bolsinga.web.IndexPair p = fIndex.get(year);
-      curRow[0] = new TD(com.bolsinga.web.Util.createInternalA(p.getLink(), year, p.getTitle())).toString();
+      IndexPair p = fIndex.get(year);
+      curRow[0] = new TD(Util.createInternalA(p.getLink(), year, p.getTitle())).toString();
       
       int[] groupMonthTotals = new int[12];
       for (Entry entry : entryGroup) {
@@ -234,9 +236,9 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     
     final String[][] table = runningTable;
     
-    return com.bolsinga.web.Util.makeTable( com.bolsinga.web.Util.getResourceString("archivesoverview"),
-                                            com.bolsinga.web.Util.getResourceString("archivesoverviewsummary"), 
-                                            new com.bolsinga.web.TableHandler() {
+    return Util.makeTable( Util.getResourceString("archivesoverview"),
+                                            Util.getResourceString("archivesoverviewsummary"), 
+                                            new TableHandler() {
       public TR getHeaderRow() {
         TR trow = new TR().addElement(new TH());
         Calendar cal = Calendar.getInstance();
@@ -282,7 +284,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     
     StringBuilder url = new StringBuilder();
     url.append(fIndex.get(year).getLink());
-    url.append(com.bolsinga.web.Links.HASH);
+    url.append(Links.HASH);
     url.append(monthStr);
     
     StringBuilder tip = new StringBuilder();
@@ -291,8 +293,8 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     tip.append(year);
     
     Object[] args = { tip.toString() };
-    String t = MessageFormat.format(com.bolsinga.web.Util.getResourceString("moreinfoentry"), args);
+    String t = MessageFormat.format(Util.getResourceString("moreinfoentry"), args);
     
-    return com.bolsinga.web.Util.createInternalA(url.toString(), value, t);
+    return Util.createInternalA(url.toString(), value, t);
   }
 }

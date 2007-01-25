@@ -7,6 +7,8 @@ import java.util.regex.*;
 
 import com.bolsinga.diary.data.*;
 
+import com.bolsinga.web.*;
+
 public class MySQLImporter {
 
   private static final Pattern sFriends = Pattern.compile("\"(.*)\">(.*)<");
@@ -65,7 +67,7 @@ public class MySQLImporter {
       String[] title = { diary.getTitle() };
       com.bolsinga.sql.Util.insert(stmt, "title", title);
 
-      diary.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
+      diary.setTimestamp(Util.toXMLGregorianCalendar(Util.nowUTC()));
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();
