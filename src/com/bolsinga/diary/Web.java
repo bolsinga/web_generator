@@ -60,12 +60,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
     web.complete();
   }
   
-  Web(final com.bolsinga.web.Backgrounder backgrounder) {
+  private Web(final com.bolsinga.web.Backgrounder backgrounder) {
     fBackgrounder = backgrounder;
     backgrounder.addInterest(this);
   }
   
-  void complete() {
+  private void complete() {
     fBackgrounder.removeInterest(this);
   }
 
@@ -99,13 +99,13 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
   }
 
-  public static void generate(final String sourceFile, final String musicFile, final String outputDir) {
+  private static void generate(final String sourceFile, final String musicFile, final String outputDir) {
     Diary diary = Util.createDiary(sourceFile);
 
     generate(diary, musicFile, outputDir);
   }
         
-  public static void generate(final Diary diary, final String musicFile, final String outputDir) {
+  private static void generate(final Diary diary, final String musicFile, final String outputDir) {
     Music music = com.bolsinga.music.Util.createMusic(musicFile);
     com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);                
@@ -114,7 +114,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     web.complete();
   }
         
-  public void generate(final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  private void generate(final Diary diary, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     Web.generate(fBackgrounder, this, diary, music, encoder, outputDir);
   }
 
@@ -126,7 +126,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     AltDocumentCreator.createDocuments(backgrounder, backgroundable, diary, outputDir);
   }
         
-  public static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final com.bolsinga.web.Links links, final boolean upOneLevel) {
+  static Element addItem(final com.bolsinga.web.Encode encoder, final Entry entry, final com.bolsinga.web.Links links, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
     e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
     e.add(com.bolsinga.web.Util.createPermaLink(links.getLinkTo(entry)));

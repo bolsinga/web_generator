@@ -71,12 +71,12 @@ public class Web implements com.bolsinga.web.Backgroundable {
     web.complete();
   }
   
-  Web(final com.bolsinga.web.Backgrounder backgrounder) {
+  private Web(final com.bolsinga.web.Backgrounder backgrounder) {
     fBackgrounder = backgrounder;
     fBackgrounder.addInterest(this);
   }
   
-  void complete() {
+  private void complete() {
     fBackgrounder.removeInterest(this);
   }
   
@@ -111,7 +111,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
   }
 
-  public void generate(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  private void generate(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
     Web.generate(fBackgrounder, this, music, encoder, outputDir);
   }
 
