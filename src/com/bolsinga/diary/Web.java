@@ -325,14 +325,14 @@ class EntryRecordDocumentCreator extends DiaryRecordDocumentCreator {
   }
 }
 
-class SingleRecordDocumentCreator extends DiaryRecordDocumentCreator {
+class AltDocumentCreator extends DiaryRecordDocumentCreator {
 
   public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Diary diary, final String outputDir) {
-    SingleRecordDocumentCreator creator = new SingleRecordDocumentCreator(diary, outputDir);
+    AltDocumentCreator creator = new AltDocumentCreator(diary, outputDir);
     creator.createAlt(backgrounder, backgroundable);
   }
   
-  private SingleRecordDocumentCreator(final Diary diary, final String outputDir) {
+  private AltDocumentCreator(final Diary diary, final String outputDir) {
     super(diary, outputDir, true);
   }
 
@@ -554,7 +554,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     EntryRecordDocumentCreator.createDocuments(backgrounder, backgroundable, diary, outputDir, encoder);
 
-    SingleRecordDocumentCreator.createDocuments(backgrounder, backgroundable, diary, outputDir);
+    AltDocumentCreator.createDocuments(backgrounder, backgroundable, diary, outputDir);
   }
 
   private static Element generateMainContent(final Diary diary, final Music music, final com.bolsinga.web.Links links, final com.bolsinga.web.Encode encoder) {
