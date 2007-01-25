@@ -84,7 +84,6 @@ public class Record {
     }
     
     if (comment != null) {
-      // TODO: Have this do the convertToParagraphs instead of callers.
       d.addElement(Util.convertToParagraphs(comment));
     }
     

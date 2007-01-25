@@ -201,7 +201,7 @@ class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   private com.bolsinga.web.Record getShowRecord(final Show show) {
     String comment = show.getComment();
     if (comment != null) {
-      comment = Web.getLinkedData(fEncoder, show, fUpOneLevel).toString();
+      comment = fEncoder.embedLinks(show, fUpOneLevel);
     }
     return com.bolsinga.web.Record.createRecordListWithComment(
       com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate())), 
@@ -383,10 +383,6 @@ public class Web implements com.bolsinga.web.Backgroundable {
     };
   }
         
-  static Element getLinkedData(final com.bolsinga.web.Encode encoder, final Show show, final boolean upOneLevel) {
-    return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel));
-  }
-        
   static Vector<Element> getShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
@@ -422,7 +418,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     String comment = show.getComment();
     if (comment != null) {
-      e.add(getLinkedData(encoder, show, upOneLevel));
+      e.add(new StringElement(encoder.embedLinks(show, upOneLevel)));
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);

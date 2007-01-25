@@ -126,7 +126,7 @@ class EntryRecordDocumentCreator extends DiaryRecordDocumentCreator {
   private com.bolsinga.web.Record getEntryRecord(final Entry entry) {
     return com.bolsinga.web.Record.createRecordPermalink(
       com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry)), 
-      Web.encodedComment(fEncoder, entry, true).toString(), // TODO: Get rid of this toString
+      fEncoder.embedLinks(entry, true),
       com.bolsinga.web.Util.createPermaLink(fLinks.getLinkTo(entry)));
   }
 
@@ -621,14 +621,10 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Vector<Element> e = new Vector<Element>();
     e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
     e.add(com.bolsinga.web.Util.createPermaLink(links.getLinkTo(entry)));
-    e.add(Web.encodedComment(encoder, entry, upOneLevel));
+    e.add(new StringElement(encoder.embedLinks(entry, upOneLevel)));
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
     return d;
-  }
-        
-  static Element encodedComment(com.bolsinga.web.Encode encoder, Entry entry, boolean upOneLevel) {
-    return com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(entry, upOneLevel));
   }
 }
