@@ -418,7 +418,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
     String comment = show.getComment();
     if (comment != null) {
-      e.add(new StringElement(encoder.embedLinks(show, upOneLevel)));
+      e.add(new StringElement(com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel))));
     }
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);

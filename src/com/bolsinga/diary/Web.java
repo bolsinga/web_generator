@@ -621,7 +621,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
     Vector<Element> e = new Vector<Element>();
     e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
     e.add(com.bolsinga.web.Util.createPermaLink(links.getLinkTo(entry)));
-    e.add(new StringElement(encoder.embedLinks(entry, upOneLevel)));
+    e.add(new StringElement(com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(entry, upOneLevel))));
 
     Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
     d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
