@@ -35,9 +35,18 @@ abstract class DiaryRecordDocumentCreator extends com.bolsinga.web.RecordDocumen
   }
 }
 
-class EntryRecordDocumentCreator extends DiaryRecordDocumentCreator {
+abstract class DiaryEncoderRecordDocumentCreator extends DiaryRecordDocumentCreator {
 
-  private final com.bolsinga.web.Encode fEncoder;
+  protected final com.bolsinga.web.Encode fEncoder;
+
+  public DiaryEncoderRecordDocumentCreator(final Diary diary, final String outputDir, final boolean upOneLevel, final com.bolsinga.web.Encode encoder) {
+    super(diary, outputDir, upOneLevel);
+    fEncoder = encoder;
+  }
+}
+
+class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreator {
+
   private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
   private final Collection<Vector<Entry>> fGroups;
   
@@ -48,8 +57,7 @@ class EntryRecordDocumentCreator extends DiaryRecordDocumentCreator {
   }
   
   private EntryRecordDocumentCreator(final Diary diary, final String outputDir, final com.bolsinga.web.Encode encoder) {
-    super(diary, outputDir, true);
-    fEncoder = encoder;
+    super(diary, outputDir, true, encoder);
     fIndex = createIndex();
     fGroups = createGroups();
   }
