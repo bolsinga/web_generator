@@ -8,7 +8,7 @@ import java.util.*;
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 
-class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
+public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
 
   private final Music fMusic;
 
