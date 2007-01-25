@@ -3,6 +3,7 @@ package com.bolsinga.diary;
 import com.bolsinga.diary.data.*;
 import com.bolsinga.music.data.*;
 
+import com.bolsinga.music.*;
 import com.bolsinga.web.*;
 
 import java.text.*;
@@ -14,6 +15,7 @@ import org.apache.ecs.html.*;
 public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
 
   private final Music fMusic;
+  private final Lookup fLookup;
 
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Diary diary, final String outputDir, final Encode encoder, final Music music) {
     MainDocumentCreator creator = new MainDocumentCreator(diary, outputDir, encoder, music);
@@ -23,6 +25,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   private MainDocumentCreator(final Diary diary, final String outputDir, final Encode encoder, final Music music) {
     super(diary, outputDir, false, encoder);
     fMusic = music;
+    fLookup = Lookup.getLookup(fMusic);
   }
   
   protected String getMainDivClass() {
@@ -82,7 +85,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
               }
               
               public Element getCityNavigator() {
-                return fLinks.getCityLink(createPreviewLine(com.bolsinga.music.Lookup.getLookup(fMusic).getCities().size(),
+                return fLinks.getCityLink(createPreviewLine(fLookup.getCities().size(),
                                                                 Util.getResourceString("cities")));
               }
               
@@ -130,15 +133,13 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
 
     int mainPageEntryCount = Util.getSettings().getDiaryCount().intValue();
     
-    com.bolsinga.music.Lookup lookup = com.bolsinga.music.Lookup.getLookup(fMusic);
-
     List<Object> items = Util.getRecentItems(mainPageEntryCount, fMusic, fDiary);
     for (Object o : items) {
       if (o instanceof com.bolsinga.diary.data.Entry) {
         diaryDiv.addElement(Web.addItem(fEncoder, (com.bolsinga.diary.data.Entry)o, fLinks, false));
       } else if (o instanceof com.bolsinga.music.data.Show) {
         // This appears at the top level
-        diaryDiv.addElement(com.bolsinga.music.Web.addItem(fEncoder, lookup, fLinks, (com.bolsinga.music.data.Show)o, false));
+        diaryDiv.addElement(com.bolsinga.music.Web.addItem(fEncoder, fLookup, fLinks, (com.bolsinga.music.data.Show)o, false));
       } else {
         System.err.println("Unknown recent item." + o.toString());
         Thread.dumpStack();
