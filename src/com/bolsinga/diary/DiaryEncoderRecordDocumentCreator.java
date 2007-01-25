@@ -6,7 +6,7 @@ public abstract class DiaryEncoderRecordDocumentCreator extends DiaryRecordDocum
 
   protected final com.bolsinga.web.Encode fEncoder;
 
-  public DiaryEncoderRecordDocumentCreator(final Diary diary, final String outputDir, final boolean upOneLevel, final com.bolsinga.web.Encode encoder) {
+  DiaryEncoderRecordDocumentCreator(final Diary diary, final String outputDir, final boolean upOneLevel, final com.bolsinga.web.Encode encoder) {
     super(diary, outputDir, upOneLevel);
     fEncoder = encoder;
   }

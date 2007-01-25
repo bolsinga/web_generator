@@ -7,7 +7,7 @@ public abstract class DiaryRecordDocumentCreator extends com.bolsinga.web.Record
   protected final Diary fDiary;
   protected final int fStartYear;
   
-  public DiaryRecordDocumentCreator(final Diary diary, final String outputDir, final boolean upOneLevel) {
+  DiaryRecordDocumentCreator(final Diary diary, final String outputDir, final boolean upOneLevel) {
     super(com.bolsinga.web.Links.getLinks(upOneLevel), outputDir);
     fDiary = diary;
     fStartYear = Util.getStartYear(fDiary);

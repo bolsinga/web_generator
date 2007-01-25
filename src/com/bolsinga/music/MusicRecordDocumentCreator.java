@@ -8,7 +8,7 @@ public abstract class MusicRecordDocumentCreator extends com.bolsinga.web.Record
   protected final Music fMusic;
   protected final Lookup fLookup;
   
-  public MusicRecordDocumentCreator(final Music music, final String outputDir) {
+  MusicRecordDocumentCreator(final Music music, final String outputDir) {
     super(com.bolsinga.web.Links.getLinks(true), outputDir);
     fMusic = music;
     fLookup = Lookup.getLookup(fMusic);
