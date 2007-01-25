@@ -3,8 +3,6 @@ package com.bolsinga.web;
 import com.bolsinga.music.data.*;
 import com.bolsinga.diary.data.*;
 
-import com.bolsinga.music.*;
-
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -21,7 +19,7 @@ class EncodeTest {
   
   void generate(final String diaryFile, final String musicFile, final String outputDir) {
     Diary diary = Util.createDiary(diaryFile);
-    Music music = com.bolsinga.music.Util.createMusic(musicFile);
+    Music music = Util.createMusic(musicFile);
     
     Encode encoder = Encode.getEncode(music, diary);
 
@@ -76,7 +74,7 @@ class EncodeTest {
   }
 
   static void generateMusic(final Music music, final Encode encoder, final String outputDir) {
-    List<Show> items = com.bolsinga.music.Util.getShowsUnmodifiable(music);
+    List<Show> items = Util.getShowsUnmodifiable(music);
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;
@@ -230,7 +228,7 @@ class EncoderData {
     fName = artist.getName();
     fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
-    String t = com.bolsinga.music.Util.createTitle("moreinfoartist", fName);
+    String t = Util.createTitle("moreinfoartist", fName);
     
     fStandardLink = Util.createInternalA(standardLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString();
     fUpLink = Util.createInternalA(upLinks.getLinkTo(artist), EncoderData.sLinkGroup, t).toString();
@@ -240,7 +238,7 @@ class EncoderData {
     fName = venue.getName();
     fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
-    String t = com.bolsinga.music.Util.createTitle("moreinfovenue", fName);
+    String t = Util.createTitle("moreinfovenue", fName);
     
     fStandardLink = Util.createInternalA(standardLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString();
     fUpLink = Util.createInternalA(upLinks.getLinkTo(venue), EncoderData.sLinkGroup, t).toString();
@@ -250,7 +248,7 @@ class EncoderData {
     fName = album.getTitle();
     fPattern = Pattern.compile(EncoderData.createRegex(fName), Pattern.CASE_INSENSITIVE);
     
-    String t = com.bolsinga.music.Util.createTitle("moreinfoalbum", fName);
+    String t = Util.createTitle("moreinfoalbum", fName);
     
     fStandardLink = Util.createInternalA(standardLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
     fUpLink = Util.createInternalA(upLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
@@ -355,18 +353,18 @@ class HashEncode extends Encode {
   
   HashEncode(final Music music, final Diary diary) {
     if (music != null) {
-      List<Show> shows = com.bolsinga.music.Util.getShowsUnmodifiable(music);
+      List<Show> shows = Util.getShowsUnmodifiable(music);
       int numShows = (shows != null) ? shows.size() : 0;
       List<Entry> entries = (diary != null) ? Util.getEntriesUnmodifiable(diary) : null;
       int numDiary = (entries != null) ? entries.size() : 0;
       int numEncoded = numShows + numDiary;
       HashMap<String, HashSet<Object>> encodedMap = new HashMap<String, HashSet<Object>>(numEncoded * WORDS_PER_ENTRY);
       
-      List<Artist> artists = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
+      List<Artist> artists = Util.getArtistsUnmodifiable(music);
       int numArtist = (artists != null) ? artists.size() : 0;
-      List<Venue> venues = com.bolsinga.music.Util.getVenuesUnmodifiable(music);
+      List<Venue> venues = Util.getVenuesUnmodifiable(music);
       int numVenue = (venues != null) ? venues.size() : 0;
-      List<Album> albums= com.bolsinga.music.Util.getAlbumsUnmodifiable(music);
+      List<Album> albums= Util.getAlbumsUnmodifiable(music);
       int numAlbum = (albums != null) ? albums.size() : 0;
       int numEncoder = numArtist + numVenue + numAlbum;
 
@@ -459,7 +457,7 @@ class HashEncode extends Encode {
   }
 
   private void getMusicWords(final Music music, final HashMap<String, HashSet<Object>> encodedMap) {
-    List<Show> items = com.bolsinga.music.Util.getShowsUnmodifiable(music);
+    List<Show> items = Util.getShowsUnmodifiable(music);
     
     for (Show item : items) {
       if (item.getComment() != null) {
@@ -488,7 +486,7 @@ class HashEncode extends Encode {
   }
 
   private void getArtistWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Artist> items = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
+    List<Artist> items = Util.getArtistsUnmodifiable(music);
 
     for (final Artist item : items) {
       EncodeItem encodeItem = new EncodeItem() {
@@ -502,7 +500,7 @@ class HashEncode extends Encode {
   }
 
   private void getVenueWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Venue> items = com.bolsinga.music.Util.getVenuesUnmodifiable(music);
+    List<Venue> items = Util.getVenuesUnmodifiable(music);
 
     for (final Venue item : items) {
       if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
@@ -518,11 +516,11 @@ class HashEncode extends Encode {
   }
 
   private void getAlbumWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Album> items = com.bolsinga.music.Util.getAlbumsUnmodifiable(music);
+    List<Album> items = Util.getAlbumsUnmodifiable(music);
 
     // Create a HashSet of all Artist names. If an Album has the same name as an
     //  Artist, prefer the Artist name over the Album.
-    List<Artist> artistList = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
+    List<Artist> artistList = Util.getArtistsUnmodifiable(music);
     HashSet<String> artists = new HashSet<String>(artistList.size());
     
     for (Artist artist : artistList) {

@@ -8,6 +8,8 @@ import javax.xml.bind.*;
 
 import com.bolsinga.music.data.*;
 
+import com.bolsinga.web.*;
+
 public class Compare {
 
   private static final String THE  = "the ";

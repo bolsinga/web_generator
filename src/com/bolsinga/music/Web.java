@@ -3,6 +3,8 @@ package com.bolsinga.music;
 import com.bolsinga.music.data.*;
 import com.bolsinga.settings.data.*;
 
+import com.bolsinga.web.*;
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -14,11 +16,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 
-public class Web implements com.bolsinga.web.Backgroundable {
+public class Web implements Backgroundable {
 
   private static final boolean GENERATE_XML = false;
 
-  final com.bolsinga.web.Backgrounder fBackgrounder;
+  final Backgrounder fBackgrounder;
    
   public static void main(String[] args) {
     if ((args.length != 4) && (args.length != 5)) {
@@ -57,21 +59,21 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Web.usage();
     }
 
-    com.bolsinga.web.Util.createSettings(settings);
+    Util.createSettings(settings);
 
     if (Web.GENERATE_XML) {
       Web.export(music);
       System.exit(0);
     }
 
-    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, null);
+    Backgrounder backgrounder = Backgrounder.getBackgrounder();
+    Encode encoder = Encode.getEncode(music, null);
     Web web = new Web(backgrounder);
     web.generate(music, encoder, output);
     web.complete();
   }
   
-  private Web(final com.bolsinga.web.Backgrounder backgrounder) {
+  private Web(final Backgrounder backgrounder) {
     fBackgrounder = backgrounder;
     fBackgrounder.addInterest(this);
   }
@@ -111,11 +113,11 @@ public class Web implements com.bolsinga.web.Backgroundable {
     }
   }
 
-  private void generate(final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  private void generate(final Music music, final Encode encoder, final String outputDir) {
     Web.generate(fBackgrounder, this, music, encoder, outputDir);
   }
 
-  public static void generate(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  public static void generate(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final Encode encoder, final String outputDir) {
     ArtistRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
     
     VenueRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
@@ -129,52 +131,52 @@ public class Web implements com.bolsinga.web.Backgroundable {
 
   private static String createPreviewLine(final int count, final String name) {
     Object[] args = { Integer.valueOf(count), name };
-    return MessageFormat.format(com.bolsinga.web.Util.getResourceString("previewformat"), args);
+    return MessageFormat.format(Util.getResourceString("previewformat"), args);
   }
 
-  public static com.bolsinga.web.Navigator getMainPagePreviewNavigator(final Music music, final com.bolsinga.web.Links links) {
-    return new com.bolsinga.web.Navigator(links) {
+  public static Navigator getMainPagePreviewNavigator(final Music music, final Links links) {
+    return new Navigator(links) {
       public Element getHomeNavigator() {
         return getCurrentNavigator();
       }
 
       public Element getArtistNavigator() {
         return links.getArtistLink(Web.createPreviewLine( Util.getArtistsUnmodifiable(music).size(),
-                                                          com.bolsinga.web.Util.getResourceString("bands")));
+                                                          Util.getResourceString("bands")));
       }
 
       public Element getTrackNavigator() {
         return links.getTracksLink(Web.createPreviewLine( Util.getSongsUnmodifiable(music).size(),
-                                                          com.bolsinga.web.Util.getResourceString("tracks")));
+                                                          Util.getResourceString("tracks")));
       }
 
       public Element getAlbumNavigator() {
         return links.getAlbumsLink(Web.createPreviewLine( Util.getAlbumsUnmodifiable(music).size(),
-                                                          com.bolsinga.web.Util.getResourceString("albums")));
+                                                          Util.getResourceString("albums")));
       }
       
       public Element getShowNavigator() {
         return links.getShowLink(Web.createPreviewLine( Util.getShowsUnmodifiable(music).size(),
-                                                        com.bolsinga.web.Util.getResourceString("dates")));
+                                                        Util.getResourceString("dates")));
       }
       
       public Element getVenueNavigator() {
         return links.getVenueLink(Web.createPreviewLine(Util.getVenuesUnmodifiable(music).size(),
-                                                        com.bolsinga.web.Util.getResourceString("venues")));
+                                                        Util.getResourceString("venues")));
       }
       
       public Element getCityNavigator() {
         return links.getCityLink(Web.createPreviewLine( Lookup.getLookup(music).getCities().size(),
-                                                        com.bolsinga.web.Util.getResourceString("cities")));
+                                                        Util.getResourceString("cities")));
       }
       
       public Element getCurrentNavigator() {
-        return new StringElement(com.bolsinga.web.Util.getResourceString("home"));
+        return new StringElement(Util.getResourceString("home"));
       }
     };
   }
         
-  static Vector<Element> getShowListing(final Lookup lookup, final com.bolsinga.web.Links links, final Show show) {
+  static Vector<Element> getShowListing(final Lookup lookup, final Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
@@ -182,7 +184,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
       Artist performer = (Artist)bi.next().getValue();
                         
       String t = Util.createTitle("moreinfoartist", performer.getName());
-      sb.append(com.bolsinga.web.Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer), t));
+      sb.append(Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer), t));
                         
       if (bi.hasNext()) {
         sb.append(", ");
@@ -192,7 +194,7 @@ public class Web implements com.bolsinga.web.Backgroundable {
                 
     Venue venue = (Venue)show.getVenue();
     String t = Util.createTitle("moreinfovenue", venue.getName());
-    A venueA = com.bolsinga.web.Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue), t);
+    A venueA = Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue), t);
     Location l = (Location)venue.getLocation();
     e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
                 
@@ -200,20 +202,20 @@ public class Web implements com.bolsinga.web.Backgroundable {
   }
 
   // Used by the unified (diary & music) main page.
-  public static Element addItem(final com.bolsinga.web.Encode encoder, final Lookup lookup, final com.bolsinga.web.Links links, final Show show, final boolean upOneLevel) {
+  public static Element addItem(final Encode encoder, final Lookup lookup, final Links links, final Show show, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
 
-    e.add(new H3().addElement(com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
+    e.add(new H3().addElement(Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
 
-    e.add(com.bolsinga.web.Util.createUnorderedList(Web.getShowListing(lookup, links, show)));
+    e.add(Util.createUnorderedList(Web.getShowListing(lookup, links, show)));
 
     String comment = show.getComment();
     if (comment != null) {
-      e.add(new StringElement(com.bolsinga.web.Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel))));
+      e.add(new StringElement(Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel))));
     }
 
-    Div d = com.bolsinga.web.Util.createDiv(com.bolsinga.web.CSS.ENTRY_ITEM);
-    d.addElement(com.bolsinga.web.Util.createUnorderedList(e));
+    Div d = Util.createDiv(CSS.ENTRY_ITEM);
+    d.addElement(Util.createUnorderedList(e));
     return d;
   }
 }

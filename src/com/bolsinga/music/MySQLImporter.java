@@ -2,6 +2,8 @@ package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
 
+import com.bolsinga.web.*;
+
 import java.math.*;
 import java.sql.*;
 import java.text.*;
@@ -169,7 +171,7 @@ public class MySQLImporter {
     rowItems[3] = label.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[4] = Integer.toString(com.bolsinga.web.Util.convert(label.isActive()) ? 1 : 0);
+    //    rowItems[4] = Integer.toString(Util.convert(label.isActive()) ? 1 : 0);
     rowItems[4] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "label", rowItems);
@@ -229,11 +231,11 @@ public class MySQLImporter {
       releaseDate = album.getReleaseDate();
     }
     rowItems[index++] = (releaseDate != null) ? MySQLImporter.toSQLString(releaseDate) : null;
-    boolean unknown = (releaseDate != null) ? com.bolsinga.web.Util.convert(releaseDate.isUnknown()) : true;
+    boolean unknown = (releaseDate != null) ? Util.convert(releaseDate.isUnknown()) : true;
     rowItems[index++] = Integer.toString(unknown ? 1 : 0);
     com.bolsinga.music.data.Date purchaseDate = album.getPurchaseDate();
     rowItems[index++] = (purchaseDate != null) ? MySQLImporter.toSQLString(purchaseDate) : null;
-    unknown = (purchaseDate != null) ? com.bolsinga.web.Util.convert(purchaseDate.isUnknown()) : true;
+    unknown = (purchaseDate != null) ? Util.convert(purchaseDate.isUnknown()) : true;
     rowItems[index++] = Integer.toString(unknown ? 1 : 0);
     rowItems[index++] = song.getGenre();
     java.math.BigInteger track = song.getTrack();
@@ -246,7 +248,7 @@ public class MySQLImporter {
     rowItems[index++] = lastPlayedString;
     // Live isn't currently tracked in the raw text files.
     //  Only use it coming out of the DB.
-    //    rowItems[index++] = Integer.toString(com.bolsinga.web.Util.convert(venue.isLive()) ? 1 : 0);
+    //    rowItems[index++] = Integer.toString(Util.convert(venue.isLive()) ? 1 : 0);
     rowItems[index++] = null;
     rowItems[index++] = MySQLImporter.toSQLID(album);
     rowItems[index++] = MySQLImporter.toSQLenum(album.getFormat());
@@ -281,7 +283,7 @@ public class MySQLImporter {
     Label label = (Label)album.getLabel();
     rowItems[2] = (label != null) ? MySQLImporter.toSQLID(label) : null;
     rowItems[3] = album.getComment();
-    boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
+    boolean isCompilation = Util.convert(album.isCompilation());
     rowItems[4] = (isCompilation) ? "1" : null;
     
     com.bolsinga.sql.Util.insert(stmt, "album", rowItems);
@@ -327,7 +329,7 @@ public class MySQLImporter {
     rowItems[4] = artist.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[5] = Integer.toString(com.bolsinga.web.Util.convert(artist.isActive()) ? 1 : 0);
+    //    rowItems[5] = Integer.toString(Util.convert(artist.isActive()) ? 1 : 0);
     rowItems[5] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "artist", rowItems);
@@ -370,7 +372,7 @@ public class MySQLImporter {
     rowItems[3] = venue.getComment();
     // The active state isn't tracked in the text files. Only
     //  use it coming out of the DB.
-    //    rowItems[4] = Integer.toString(com.bolsinga.web.Util.convert(venue.isActive()) ? 1 : 0);
+    //    rowItems[4] = Integer.toString(Util.convert(venue.isActive()) ? 1 : 0);
     rowItems[4] = null;
     
     com.bolsinga.sql.Util.insert(stmt, "venue", rowItems);
@@ -418,7 +420,7 @@ public class MySQLImporter {
   }
 
   private static String toSQLString(final com.bolsinga.music.data.Date date) {
-    boolean unknown = com.bolsinga.web.Util.convert(date.isUnknown());
+    boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
       return sSQLFormat.get().format(Util.toCalendarUTC(date).getTime());
     } else {
@@ -438,7 +440,7 @@ public class MySQLImporter {
     rowItems[index++] = MySQLImporter.toSQLID(show);
     com.bolsinga.music.data.Date showDate = show.getDate();
     rowItems[index++] = (showDate != null) ? MySQLImporter.toSQLString(showDate) : null;
-    boolean unknown = (showDate != null) ? com.bolsinga.web.Util.convert(showDate.isUnknown()) : true;
+    boolean unknown = (showDate != null) ? Util.convert(showDate.isUnknown()) : true;
     rowItems[index++] = Integer.toString(unknown ? 1 : 0);
     rowItems[index++] = MySQLImporter.toSQLID((Venue)show.getVenue());
     rowItems[index++] = show.getComment();

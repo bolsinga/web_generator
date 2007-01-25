@@ -31,7 +31,7 @@ public class RSS {
       String musicFile = args[2];
 
       diary = com.bolsinga.web.Util.createDiary(diaryFile);
-      music = com.bolsinga.music.Util.createMusic(musicFile);
+      music = com.bolsinga.web.Util.createMusic(musicFile);
     } else if (type.equals("db")) {
       String user = args[1];
       String password = args[2];
@@ -55,7 +55,7 @@ public class RSS {
 
   public static void generate(final String diaryFile, final String musicFile, final String outputDir) {
     Diary diary = com.bolsinga.web.Util.createDiary(diaryFile);
-    Music music = com.bolsinga.music.Util.createMusic(musicFile);
+    Music music = com.bolsinga.web.Util.createMusic(musicFile);
                 
     generate(diary, music, outputDir);
   }
@@ -85,13 +85,13 @@ public class RSS {
   }
 
   public static void add(final com.bolsinga.music.data.Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
-    add(getTitle(show), com.bolsinga.music.Util.toCalendarUTC(show.getDate()), links.getLinkTo(show), show.getComment(), objFactory, channel);
+    add(getTitle(show), com.bolsinga.web.Util.toCalendarUTC(show.getDate()), links.getLinkTo(show), show.getComment(), objFactory, channel);
   }
         
   private static String getTitle(final Show show) {
     StringBuilder sb = new StringBuilder();
     
-    sb.append(com.bolsinga.music.Util.toString(show.getDate()));
+    sb.append(com.bolsinga.web.Util.toString(show.getDate()));
     sb.append(" - ");
 
     Iterator<JAXBElement<Object>> i = show.getArtist().iterator();

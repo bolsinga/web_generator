@@ -1,5 +1,7 @@
 package com.bolsinga.music;
 
+import com.bolsinga.web.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -37,7 +39,7 @@ public abstract class StatsRecordFactory implements com.bolsinga.web.RecordFacto
     }
     final int total = runningTotal;
     
-    return com.bolsinga.web.Util.makeTable(caption, summary, new com.bolsinga.web.TableHandler() {
+    return Util.makeTable(caption, summary, new TableHandler() {
       public TR getHeaderRow() {
         return new TR().addElement(new TH(header)).addElement(new TH("#")).addElement(new TH("%"));
       }
@@ -49,10 +51,10 @@ public abstract class StatsRecordFactory implements com.bolsinga.web.RecordFacto
       public TR getRow(final int row) {
         TR trow = new TR();
         TH thh = new TH(names[row]);
-        thh.setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput());
+        thh.setPrettyPrint(Util.getPrettyOutput());
         trow.addElement(thh);
-        trow.addElement(new TD(Integer.toString(values[row])).setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput()));
-        trow.addElement(new TD(Util.toString((double)values[row] / total * 100.0)).setPrettyPrint(com.bolsinga.web.Util.getPrettyOutput()));
+        trow.addElement(new TD(Integer.toString(values[row])).setPrettyPrint(Util.getPrettyOutput()));
+        trow.addElement(new TD(Util.toString((double)values[row] / total * 100.0)).setPrettyPrint(Util.getPrettyOutput()));
         return trow;
       }
       

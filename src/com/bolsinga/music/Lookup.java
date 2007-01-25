@@ -2,6 +2,8 @@ package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
 
+import com.bolsinga.web.*;
+
 import java.util.*;
 import javax.xml.bind.*;
 
@@ -40,15 +42,15 @@ public class Lookup {
     Collection<Show> showCollection = null;
     
     for (Artist performer : Util.getArtistsUnmodifiable(music)) {
-      fArtistHTMLMap.put(performer.getId(), com.bolsinga.web.Util.toHTMLSafe(performer.getName()));
+      fArtistHTMLMap.put(performer.getId(), Util.toHTMLSafe(performer.getName()));
     }
 
     for (Album album : Util.getAlbumsUnmodifiable(music)) {
-      fAlbumHTMLMap.put(album.getId(), com.bolsinga.web.Util.toHTMLSafe(album.getTitle()));
+      fAlbumHTMLMap.put(album.getId(), Util.toHTMLSafe(album.getTitle()));
     }
 
     for (Venue venue : Util.getVenuesUnmodifiable(music)) {
-      fVenueHTMLMap.put(venue.getId(), com.bolsinga.web.Util.toHTMLSafe(venue.getName()));
+      fVenueHTMLMap.put(venue.getId(), Util.toHTMLSafe(venue.getName()));
     }
 
     List<Show> shows = Util.getShowsUnmodifiable(music);

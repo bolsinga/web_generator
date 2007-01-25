@@ -2,6 +2,8 @@ package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
 
+import com.bolsinga.web.*;
+
 import java.text.*;
 import java.util.*;
 
@@ -12,9 +14,9 @@ import javax.xml.bind.JAXBElement;
 
 public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
 
-  private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
+  private final java.util.Map<String, IndexPair> fIndex;
 
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
+  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
     creator.createStats(backgrounder, backgroundable);
@@ -25,15 +27,15 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     fIndex = createIndex();
   }
   
-  protected void create(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void create(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     for (final Vector<Venue> group : getGroups()) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           final Venue first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
-          create(new com.bolsinga.web.RecordFactory() {
-            public Vector<com.bolsinga.web.Record> getRecords() {
-              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
+          create(new RecordFactory() {
+            public Vector<Record> getRecords() {
+              Vector<Record> records = new Vector<Record>();
               
               for (Venue item : group) {
                 records.add(getVenueRecordSection(item));
@@ -42,17 +44,17 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
               return records;
             }
             public String getTitle() {
-              return com.bolsinga.web.Util.createPageTitle(curName, com.bolsinga.web.Util.getResourceString("venues"));
+              return Util.createPageTitle(curName, Util.getResourceString("venues"));
             }
             
             public String getFilePath() {
               return fLinks.getPagePath(first);
             }
 
-            public com.bolsinga.web.Navigator getNavigator() {
-              return new com.bolsinga.web.Navigator(fLinks) {
+            public Navigator getNavigator() {
+              return new Navigator(fLinks) {
                 public Element getVenueNavigator() {
-                  return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, curName, super.getVenueNavigator());
+                  return Util.addCurrentIndexNavigator(fIndex, curName, super.getVenueNavigator());
                 }
               };
             }
@@ -62,7 +64,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
   }
 
-  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new StatsRecordFactory() {
@@ -71,22 +73,22 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
 
           public String getDirectory() {
-            return com.bolsinga.web.Links.VENUE_DIR;
+            return Links.VENUE_DIR;
           }
           
           public String getTitle() {
-            Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("venue") };
-            return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+            Object typeArgs[] = { Util.getResourceString("venue") };
+            return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
           }
 
-          public com.bolsinga.web.Navigator getNavigator() {
-            return new com.bolsinga.web.Navigator(fLinks) {
+          public Navigator getNavigator() {
+            return new Navigator(fLinks) {
               public Element getVenueNavigator() {
                 return getCurrentNavigator();
               }
               
               public Element getCurrentNavigator() {
-                return new StringElement(com.bolsinga.web.Util.getResourceString("venues"));
+                return new StringElement(Util.getResourceString("venues"));
               }
             };
           }
@@ -95,12 +97,12 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
   
-  private java.util.Map<String, com.bolsinga.web.IndexPair> createIndex() {
-    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
+  private java.util.Map<String, IndexPair> createIndex() {
+    java.util.Map<String, IndexPair> m = new TreeMap<String, IndexPair>();
     for (Venue v : Util.getVenuesUnmodifiable(fMusic)) {
       String letter = fLinks.getPageFileName(v);
       if (!m.containsKey(letter)) {
-        m.put(letter, new com.bolsinga.web.IndexPair(fLinks.getLinkToPage(v), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("venues"))));
+        m.put(letter, new IndexPair(fLinks.getLinkToPage(v), Util.createPageTitle(letter, Util.getResourceString("venues"))));
       }
     }
     return Collections.unmodifiableMap(m);
@@ -138,18 +140,18 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     int[] values = new int[items.size()];
     for (Venue item : items) {
       String t = Util.createTitle("moreinfovenue", item.getName());
-      names[index] = com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString();
+      names[index] = Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString();
       Collection<Show> shows = fLookup.getShows(item);
       values[index] = (shows != null) ? shows.size() : 0;
                         
       index++;
     }
                 
-    String typeString = com.bolsinga.web.Util.getResourceString("venue");
+    String typeString = Util.getResourceString("venue");
     Object typeArgs[] = { typeString };
-    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
+    String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
 
-    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("venuestatsummary"));
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("venuestatsummary"));
   }
   
   private Vector<Element> getVenueShowListing(final Venue venue, final Show show) {
@@ -159,7 +161,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     while (bi.hasNext()) {
       Artist performer = (Artist)bi.next().getValue();
       String t = Util.createTitle("moreinfoartist", performer.getName());
-      sb.append(com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(performer), fLookup.getHTMLName(performer), t));
+      sb.append(Util.createInternalA(fLinks.getLinkTo(performer), fLookup.getHTMLName(performer), t));
       
       if (bi.hasNext()) {
         sb.append(", ");
@@ -172,21 +174,21 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     
     String comment = show.getComment();
     if (comment != null) {
-      e.add(com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(show), com.bolsinga.web.Util.getResourceString("showsummary"), com.bolsinga.web.Util.getResourceString("showsummarytitle")));
+      e.add(Util.createInternalA(fLinks.getLinkTo(show), Util.getResourceString("showsummary"), Util.getResourceString("showsummarytitle")));
     }
     
     return e;
   }
   
-  private com.bolsinga.web.Record getVenueShowRecord(final Venue venue, final Show show) {
+  private Record getVenueShowRecord(final Venue venue, final Show show) {
     String dateString = Util.toString(show.getDate());
-    return com.bolsinga.web.Record.createRecordList(
-      com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(show), dateString, dateString), 
+    return Record.createRecordList(
+      Util.createInternalA(fLinks.getLinkTo(show), dateString, dateString), 
       getVenueShowListing(venue, show));
   }
   
-  private com.bolsinga.web.Record getVenueRecordSection(final Venue venue) {
-    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
+  private Record getVenueRecordSection(final Venue venue) {
+    Vector<Record> items = new Vector<Record>();
     
     if (fLookup.getRelations(venue) != null) {
       items.add(getVenueRelations(venue));
@@ -199,12 +201,12 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
     }
 
-    A title = com.bolsinga.web.Util.createNamedTarget(venue.getId(), fLookup.getHTMLName(venue));
+    A title = Util.createNamedTarget(venue.getId(), fLookup.getHTMLName(venue));
     
-    return com.bolsinga.web.Record.createRecordSection(title, items);
+    return Record.createRecordSection(title, items);
   }
 
-  private com.bolsinga.web.Record getVenueRelations(final Venue venue) {
+  private Record getVenueRelations(final Venue venue) {
     Vector<Element> e = new Vector<Element>();
     
     org.apache.ecs.Element curElement = null;
@@ -215,12 +217,12 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
         e.add(curElement);
       } else {
         String t = Util.createTitle("moreinfovenue", v.getName());
-        e.add(com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(v), htmlName, t));
+        e.add(Util.createInternalA(fLinks.getLinkTo(v), htmlName, t));
       }
     }
 
-    return com.bolsinga.web.Record.createRecordList(
-      new StringElement(com.bolsinga.web.Util.getResourceString("seealso")),
+    return Record.createRecordList(
+      new StringElement(Util.getResourceString("seealso")),
       e, 
       curElement);
   }

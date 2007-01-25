@@ -2,6 +2,8 @@ package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
 
+import com.bolsinga.web.*;
+
 import java.text.*;
 import java.util.*;
 
@@ -12,11 +14,11 @@ import javax.xml.bind.JAXBElement;
 
 public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
 
-  private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
+  private final java.util.Map<String, IndexPair> fIndex;
   
   private Vector<Album> fItems;
 
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
+  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
     creator.createStats(backgrounder, backgroundable);
@@ -27,15 +29,15 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     fIndex = createIndex();
   }
   
-  protected void create(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void create(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     for (final Vector<Album> group : getGroups()) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           final Album first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
-          create(new com.bolsinga.web.RecordFactory() {
-            public Vector<com.bolsinga.web.Record> getRecords() {
-              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
+          create(new RecordFactory() {
+            public Vector<Record> getRecords() {
+              Vector<Record> records = new Vector<Record>();
               
               for (Album item : group) {
                 records.add(getAlbumRecordSection(item));
@@ -44,17 +46,17 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
               return records;
             }
             public String getTitle() {
-              return com.bolsinga.web.Util.createPageTitle(curName, com.bolsinga.web.Util.getResourceString("tracks"));
+              return Util.createPageTitle(curName, Util.getResourceString("tracks"));
             }
             
             public String getFilePath() {
               return fLinks.getPagePath(first);
             }
 
-            public com.bolsinga.web.Navigator getNavigator() {
-              return new com.bolsinga.web.Navigator(fLinks) {
+            public Navigator getNavigator() {
+              return new Navigator(fLinks) {
                 public Element getTrackNavigator() {
-                  return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, curName, super.getTrackNavigator());
+                  return Util.addCurrentIndexNavigator(fIndex, curName, super.getTrackNavigator());
                 }
               };
             }
@@ -64,7 +66,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
   }
 
-  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         createTracksStats();
@@ -85,22 +87,22 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
       
       public String getDirectory() {
-        return com.bolsinga.web.Links.TRACKS_DIR;
+        return Links.TRACKS_DIR;
       }
 
       public String getTitle() {
-        Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("track") };
-        return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+        Object typeArgs[] = { Util.getResourceString("track") };
+        return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
       }
 
-      public com.bolsinga.web.Navigator getNavigator() {
-        return new com.bolsinga.web.Navigator(fLinks) {
+      public Navigator getNavigator() {
+        return new Navigator(fLinks) {
           public Element getTrackNavigator() {
             return getCurrentNavigator();
           }
           
           public Element getCurrentNavigator() {
-            return new StringElement(com.bolsinga.web.Util.getResourceString("tracks"));
+            return new StringElement(Util.getResourceString("tracks"));
           }
         };
       }
@@ -114,38 +116,38 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
       
       public String getDirectory() {
-        return com.bolsinga.web.Links.TRACKS_DIR;
+        return Links.TRACKS_DIR;
       }
       
       public String getFilename() {
-        return com.bolsinga.web.Links.ALBUM_STATS;
+        return Links.ALBUM_STATS;
       }
 
       public String getTitle() {
-        Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("album") };
-        return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+        Object typeArgs[] = { Util.getResourceString("album") };
+        return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
       }
 
-      public com.bolsinga.web.Navigator getNavigator() {
-        return new com.bolsinga.web.Navigator(fLinks) {
+      public Navigator getNavigator() {
+        return new Navigator(fLinks) {
           public Element getAlbumNavigator() {
             return getCurrentNavigator();
           }
           
           public Element getCurrentNavigator() {
-            return new StringElement(com.bolsinga.web.Util.getResourceString("albums"));
+            return new StringElement(Util.getResourceString("albums"));
           }
         };
       }
     });
   }
 
-  private java.util.Map<String, com.bolsinga.web.IndexPair> createIndex() {
-    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
+  private java.util.Map<String, IndexPair> createIndex() {
+    java.util.Map<String, IndexPair> m = new TreeMap<String, IndexPair>();
     for (Album alb : Util.getAlbumsUnmodifiable(fMusic)) {
       String letter = fLinks.getPageFileName(alb);
       if (!m.containsKey(letter)) {
-        m.put(letter, new com.bolsinga.web.IndexPair(fLinks.getLinkToPage(alb), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("albums"))));
+        m.put(letter, new IndexPair(fLinks.getLinkToPage(alb), Util.createPageTitle(letter, Util.getResourceString("albums"))));
       }
     }
     return Collections.unmodifiableMap(m);
@@ -184,16 +186,16 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     
     for (Artist artist : artists) {
       String t = Util.createTitle("moreinfoartist", artist.getName());
-      names[index] = com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
+      names[index] = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
       values[index] = Util.trackCount(artist);
                         
       index++;
     }
 
-    String typeString = com.bolsinga.web.Util.getResourceString("artist");
-    String tableTitle = com.bolsinga.web.Util.getResourceString("tracksby");
+    String typeString = Util.getResourceString("artist");
+    String tableTitle = Util.getResourceString("tracksby");
 
-    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("trackstatsummary"));
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("trackstatsummary"));
   }
   
   private Table getAlbumsStats() {
@@ -206,23 +208,23 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     
     for (Artist artist : artists) {
       String t = Util.createTitle("moreinfoartist", artist.getName());
-      names[index] = com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
+      names[index] = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
       List<JAXBElement<Object>> albums = Util.getAlbumsUnmodifiable(artist);
       values[index] = (albums != null) ? albums.size() : 0;
                         
       index++;
     }
 
-    String typeString = com.bolsinga.web.Util.getResourceString("artist");
-    String tableTitle = com.bolsinga.web.Util.getResourceString("albumsby");
+    String typeString = Util.getResourceString("artist");
+    String tableTitle = Util.getResourceString("albumsby");
 
-    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("albumstatsummary"));
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("albumstatsummary"));
   }
   
   private Vector<Element> getAlbumListing(final Album album) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = null;
-    boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
+    boolean isCompilation = Util.convert(album.isCompilation());
     com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
 
     List<JAXBElement<Object>> songs = Util.getSongsUnmodifiable(album);
@@ -232,11 +234,11 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
       if (isCompilation) {
         Artist artist = (Artist)song.getPerformer();
         String t = Util.createTitle("moreinfoartist", artist.getName());
-        sb.append(com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t));
+        sb.append(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t));
         sb.append(" - ");
       }
                         
-      sb.append(com.bolsinga.web.Util.toHTMLSafe(song.getTitle()));
+      sb.append(Util.toHTMLSafe(song.getTitle()));
                         
       if (albumRelease == null) {
         com.bolsinga.music.data.Date songRelease = song.getReleaseDate();
@@ -253,15 +255,15 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Element getAlbumTitle(final Album album) {
-    boolean isCompilation = com.bolsinga.web.Util.convert(album.isCompilation());
+    boolean isCompilation = Util.convert(album.isCompilation());
                 
     StringBuilder sb = new StringBuilder();
-    sb.append(com.bolsinga.web.Util.createNamedTarget(album.getId(), fLookup.getHTMLName(album)));
+    sb.append(Util.createNamedTarget(album.getId(), fLookup.getHTMLName(album)));
     if (!isCompilation) {
       Artist artist = (Artist)album.getPerformer();
       sb.append(" - ");
       String t = Util.createTitle("moreinfoartist", artist.getName());
-      sb.append(com.bolsinga.web.Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t));
+      sb.append(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t));
     }
     com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
     if (albumRelease != null) {
@@ -273,9 +275,9 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     return new StringElement(sb.toString());
   }
   
-  private com.bolsinga.web.Record getAlbumRecordSection(final Album album) {
-    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>(1);
-    items.add(com.bolsinga.web.Record.createRecordListOrdered(null, getAlbumListing(album)));
-    return com.bolsinga.web.Record.createRecordSection(getAlbumTitle(album), items);
+  private Record getAlbumRecordSection(final Album album) {
+    Vector<Record> items = new Vector<Record>(1);
+    items.add(Record.createRecordListOrdered(null, getAlbumListing(album)));
+    return Record.createRecordSection(getAlbumTitle(album), items);
   }
 }

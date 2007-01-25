@@ -9,6 +9,8 @@ import javax.xml.bind.Marshaller;
 
 import com.bolsinga.music.data.*;
 
+import com.bolsinga.web.*;
+
 public class Music {
 
   private static final int UNKNOWN_YEAR = 1900;
@@ -71,7 +73,7 @@ public class Music {
     String s;
     HashSet<String> bands = new HashSet<String>();
     
-    List<Artist> artists = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
+    List<Artist> artists = Util.getArtistsUnmodifiable(music);
     for (Artist artist : artists) {
       s = artist.getName().toLowerCase();
       if (bands.contains(s)) {

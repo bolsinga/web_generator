@@ -397,7 +397,7 @@ public class ITunes {
   }
         
   private static void sortAlbumOrder(final com.bolsinga.music.data.Music music) {
-    List<Artist> artists = com.bolsinga.music.Util.getArtistsUnmodifiable(music);
+    List<Artist> artists = com.bolsinga.web.Util.getArtistsUnmodifiable(music);
     for (Artist a : artists) {
       List<JAXBElement<Object>> albums = a.getAlbum(); // Modification required.
       Collections.sort(albums, com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
@@ -405,7 +405,7 @@ public class ITunes {
   }
 
   private static void sortAlbumsSongOrder(final com.bolsinga.music.data.Music music) {
-    List<Album> albums = com.bolsinga.music.Util.getAlbumsUnmodifiable(music);
+    List<Album> albums = com.bolsinga.web.Util.getAlbumsUnmodifiable(music);
     for (Album a : albums) {
       List<JAXBElement<Object>> songs = a.getSong(); // Modification required.
       Collections.sort(songs, com.bolsinga.music.Compare.JAXB_SONG_ORDER_COMPARATOR);
@@ -413,7 +413,7 @@ public class ITunes {
   }
         
   private static void setAlbumYears(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music) throws JAXBException {
-    List<Album> albums = com.bolsinga.music.Util.getAlbumsUnmodifiable(music);
+    List<Album> albums = com.bolsinga.web.Util.getAlbumsUnmodifiable(music);
     int albumYear, songYear;
     com.bolsinga.music.data.Date date;
     for (Album a : albums) {
@@ -423,7 +423,7 @@ public class ITunes {
       }
                         
       albumYear = -1;
-      List<JAXBElement<Object>> songs = com.bolsinga.music.Util.getSongsUnmodifiable(a);
+      List<JAXBElement<Object>> songs = com.bolsinga.web.Util.getSongsUnmodifiable(a);
       for (JAXBElement<Object> song : songs) {
         date = ((Song)song.getValue()).getReleaseDate();
         if (date != null) {

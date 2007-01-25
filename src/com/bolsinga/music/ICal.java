@@ -4,6 +4,8 @@ import com.bolsinga.ical.*;
 import com.bolsinga.music.data.*;
 import com.bolsinga.settings.data.*;
 
+import com.bolsinga.web.*;
+
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -53,7 +55,7 @@ public class ICal {
       ICal.usage();
     }
 
-    com.bolsinga.web.Util.createSettings(settings);
+    Util.createSettings(settings);
         
     ICal.generate(music, output);
   }
@@ -73,13 +75,13 @@ public class ICal {
   public static void generate(final Music music, final String outputDir) {
     OutputStreamWriter w = null;
 
-    String name = com.bolsinga.web.Util.getSettings().getIcalName();
+    String name = Util.getSettings().getIcalName();
                 
     try {
       StringBuilder sb = new StringBuilder();
       sb.append(outputDir);
       sb.append(File.separator);
-      sb.append(com.bolsinga.web.Links.ALT_DIR);
+      sb.append(Links.ALT_DIR);
       File f = new File(sb.toString(), name + ".ics");
       File parent = new File(f.getParent());
       if (!parent.mkdirs()) {
@@ -104,7 +106,7 @@ public class ICal {
     VCalendar cal = new VCalendar(name);
 
     for (Show item : items) {
-      boolean unknown = com.bolsinga.web.Util.convert(item.getDate().isUnknown());
+      boolean unknown = Util.convert(item.getDate().isUnknown());
       if (!unknown) {
         addItem(item, cal);
       }

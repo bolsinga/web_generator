@@ -2,6 +2,8 @@ package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
 
+import com.bolsinga.web.*;
+
 import java.text.*;
 import java.util.*;
 
@@ -10,33 +12,33 @@ import org.apache.ecs.html.*;
 
 public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
-  private final java.util.Map<String, com.bolsinga.web.IndexPair> fIndex;
+  private final java.util.Map<String, IndexPair> fIndex;
 
-  private final com.bolsinga.web.Encode fEncoder;
+  private final Encode fEncoder;
   private final boolean fUpOneLevel;
 
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final com.bolsinga.web.Encode encoder, final String outputDir) {
+  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final Encode encoder, final String outputDir) {
     ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir, encoder, true);
     creator.create(backgrounder, backgroundable);
     creator.createStats(backgrounder, backgroundable);
   }
     
-  private ShowRecordDocumentCreator(final Music music, final String outputDir, final com.bolsinga.web.Encode encoder, final boolean upOneLevel) {
+  private ShowRecordDocumentCreator(final Music music, final String outputDir, final Encode encoder, final boolean upOneLevel) {
     super(music, outputDir);
     fEncoder = encoder;
     fUpOneLevel = upOneLevel;
     fIndex = createIndex();
   }
   
-  protected void create(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void create(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     for (final Vector<Show> group : getGroups()) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           final Show first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
-          create(new com.bolsinga.web.RecordFactory() {
-            public Vector<com.bolsinga.web.Record> getRecords() {
-              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
+          create(new RecordFactory() {
+            public Vector<Record> getRecords() {
+              Vector<Record> records = new Vector<Record>();
               
               for (Vector<Show> item : getMonthlies(group)) {
                 records.add(getShowMonthRecordSection(item));
@@ -45,17 +47,17 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
               return records;
             }
             public String getTitle() {
-              return com.bolsinga.web.Util.createPageTitle(curName, com.bolsinga.web.Util.getResourceString("dates"));
+              return Util.createPageTitle(curName, Util.getResourceString("dates"));
             }
             
             public String getFilePath() {
               return fLinks.getPagePath(first);
             }
 
-            public com.bolsinga.web.Navigator getNavigator() {
-              return new com.bolsinga.web.Navigator(fLinks) {
+            public Navigator getNavigator() {
+              return new Navigator(fLinks) {
                 public Element getShowNavigator() {
-                  return com.bolsinga.web.Util.addCurrentIndexNavigator(fIndex, curName, super.getShowNavigator());
+                  return Util.addCurrentIndexNavigator(fIndex, curName, super.getShowNavigator());
                 }
               };
             }
@@ -65,7 +67,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
   }
 
-  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new StatsRecordFactory() {
@@ -74,22 +76,22 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
           
           public String getDirectory() {
-            return com.bolsinga.web.Links.SHOW_DIR;
+            return Links.SHOW_DIR;
           }
 
           public String getTitle() {
-            Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("year") };
-            return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+            Object typeArgs[] = { Util.getResourceString("year") };
+            return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
           }
 
-          public com.bolsinga.web.Navigator getNavigator() {
-            return new com.bolsinga.web.Navigator(fLinks) {
+          public Navigator getNavigator() {
+            return new Navigator(fLinks) {
               public Element getShowNavigator() {
                 return getCurrentNavigator();
               }
               
               public Element getCurrentNavigator() {
-                return new StringElement(com.bolsinga.web.Util.getResourceString("dates"));
+                return new StringElement(Util.getResourceString("dates"));
               }
             };
           }
@@ -118,12 +120,12 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
 
-  private java.util.Map<String, com.bolsinga.web.IndexPair> createIndex() {
-    java.util.Map<String, com.bolsinga.web.IndexPair> m = new TreeMap<String, com.bolsinga.web.IndexPair>();
+  private java.util.Map<String, IndexPair> createIndex() {
+    java.util.Map<String, IndexPair> m = new TreeMap<String, IndexPair>();
     for (Show s : Util.getShowsUnmodifiable(fMusic)) {
       String letter = fLinks.getPageFileName(s);
       if (!m.containsKey(letter)) {
-        m.put(letter, new com.bolsinga.web.IndexPair(fLinks.getLinkToPage(s), com.bolsinga.web.Util.createPageTitle(letter, com.bolsinga.web.Util.getResourceString("dates"))));
+        m.put(letter, new IndexPair(fLinks.getLinkToPage(s), Util.createPageTitle(letter, Util.getResourceString("dates"))));
       }
     }
     return Collections.unmodifiableMap(m);
@@ -176,41 +178,41 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
     for (Show item : dates.keySet()) {
       String letter = fLinks.getPageFileName(item);
-      com.bolsinga.web.IndexPair p = fIndex.get(letter);
-      names[i] = com.bolsinga.web.Util.createInternalA(p.getLink(), letter, p.getTitle()).toString();
+      IndexPair p = fIndex.get(letter);
+      names[i] = Util.createInternalA(p.getLink(), letter, p.getTitle()).toString();
       values[i] = dates.get(item).size();
                         
       i++;
     }
                 
-    String typeString = com.bolsinga.web.Util.getResourceString("year");
+    String typeString = Util.getResourceString("year");
     Object typeArgs[] = { typeString };
-    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
+    String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
 
-    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("datestatssummary"));
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("datestatssummary"));
   }
   
-  private com.bolsinga.web.Record getShowRecord(final Show show) {
+  private Record getShowRecord(final Show show) {
     String comment = show.getComment();
     if (comment != null) {
       comment = fEncoder.embedLinks(show, fUpOneLevel);
     }
-    return com.bolsinga.web.Record.createRecordListWithComment(
-      com.bolsinga.web.Util.createNamedTarget(show.getId(), Util.toString(show.getDate())), 
+    return Record.createRecordListWithComment(
+      Util.createNamedTarget(show.getId(), Util.toString(show.getDate())), 
       Web.getShowListing(fLookup, fLinks, show),
       comment);
   }
 
-  private com.bolsinga.web.Record getShowMonthRecordSection(final Vector<Show> shows) {
-    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
+  private Record getShowMonthRecordSection(final Vector<Show> shows) {
+    Vector<Record> items = new Vector<Record>();
 
     // Note shows here is a Collection of Shows in a single month
     String m = Util.toMonth(shows.firstElement().getDate());
-    A title = com.bolsinga.web.Util.createNamedTarget(m, m);
+    A title = Util.createNamedTarget(m, m);
     for (Show show : shows) {
       items.add(getShowRecord(show));
     }
 
-    return com.bolsinga.web.Record.createRecordSection(title, items);
+    return Record.createRecordSection(title, items);
   }
 }

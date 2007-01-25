@@ -25,7 +25,7 @@ public class Site implements com.bolsinga.web.Backgroundable {
       String musicFile = args[2];
 
       diary = com.bolsinga.web.Util.createDiary(diaryFile);
-      music = com.bolsinga.music.Util.createMusic(musicFile);
+      music = com.bolsinga.web.Util.createMusic(musicFile);
     } else if (type.equals("db")) {
       String user = args[1];
       String password = args[2];

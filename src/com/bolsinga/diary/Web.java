@@ -37,7 +37,7 @@ public class Web implements Backgroundable {
       String musicFile = args[2];
       
       diary = Util.createDiary(diaryFile);
-      music = com.bolsinga.music.Util.createMusic(musicFile);
+      music = Util.createMusic(musicFile);
     } else if (args[0].equals("db")) {
       String user = args[1];
       String password = args[2];
@@ -108,7 +108,7 @@ public class Web implements Backgroundable {
   }
         
   private static void generate(final Diary diary, final String musicFile, final String outputDir) {
-    Music music = com.bolsinga.music.Util.createMusic(musicFile);
+    Music music = Util.createMusic(musicFile);
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     Encode encoder = Encode.getEncode(music, diary);                
     Web web = new Web(backgrounder);

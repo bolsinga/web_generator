@@ -1,5 +1,6 @@
 package com.bolsinga.web;
 
+import java.math.*;
 import java.text.*;
 import java.util.*;
 import java.util.regex.*;
@@ -42,6 +43,11 @@ public class Util {
   private static final ThreadLocal<DateFormat> sShortMonthFormat = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
       return new SimpleDateFormat("MMM");
+    }
+  };
+  private static final ThreadLocal<DecimalFormat> sPercentFormat = new ThreadLocal<DecimalFormat>() {
+    public DecimalFormat initialValue() {
+      return new DecimalFormat("##.##");
     }
   };
 
@@ -357,7 +363,7 @@ public class Util {
   }
  
   public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary) {
-    List<Show> shows = com.bolsinga.music.Util.getShowsCopy(music);
+    List<Show> shows = Util.getShowsCopy(music);
     Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(shows);
 
@@ -381,7 +387,7 @@ public class Util {
         Calendar c2 = null;
                         
         if (o1 instanceof com.bolsinga.music.data.Show) {
-          c1 = com.bolsinga.music.Util.toCalendarUTC(((com.bolsinga.music.data.Show)o1).getDate());
+          c1 = Util.toCalendarUTC(((com.bolsinga.music.data.Show)o1).getDate());
         } else if (o1 instanceof com.bolsinga.diary.data.Entry) {
           c1 = ((com.bolsinga.diary.data.Entry)o1).getTimestamp().toGregorianCalendar();
         } else {
@@ -390,7 +396,7 @@ public class Util {
         }
 
         if (o2 instanceof com.bolsinga.music.data.Show) {
-          c2 = com.bolsinga.music.Util.toCalendarUTC(((com.bolsinga.music.data.Show)o2).getDate());
+          c2 = Util.toCalendarUTC(((com.bolsinga.music.data.Show)o2).getDate());
         } else if (o2 instanceof com.bolsinga.diary.data.Entry) {
           c2 = ((com.bolsinga.diary.data.Entry)o2).getTimestamp().toGregorianCalendar();
         } else {
@@ -478,5 +484,164 @@ public class Util {
       System.exit(1);
     }
     return diary;
+  }
+  
+  public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.Date date) {
+    Calendar localTime = Calendar.getInstance(); // LocalTime OK
+    boolean unknown = Util.convert(date.isUnknown());
+    if (!unknown) {
+      int showTime = Util.getSettings().getShowTime().intValue();
+      localTime.clear();
+      localTime.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue(), showTime, 0);
+    } else {
+      System.err.println("Can't convert Unknown com.bolsinga.music.data.Date");
+      System.exit(1);
+    }
+    // Convert to UTC
+    GregorianCalendar result = Util.nowUTC();
+    result.setTimeInMillis(localTime.getTimeInMillis());
+    return result;
+  }
+
+  public static String toString(final com.bolsinga.music.data.Date date) {
+    boolean unknown = Util.convert(date.isUnknown());
+    if (!unknown) {
+      return sWebFormat.get().format(Util.toCalendarUTC(date).getTime());
+    } else {
+      Object[] args = {   ((date.getMonth() != null) ? date.getMonth() : BigInteger.ZERO),
+                          ((date.getDay() != null) ? date.getDay() : BigInteger.ZERO),
+                          ((date.getYear() != null) ? date.getYear() : BigInteger.ZERO) };
+      return MessageFormat.format(Util.getResourceString("unknowndate"), args);
+    }
+  }
+        
+  public static String toMonth(final com.bolsinga.music.data.Date date) {
+    boolean unknown = Util.convert(date.isUnknown());
+    if (!unknown) {
+      return sMonthFormat.get().format(Util.toCalendarUTC(date).getTime());
+    } else {
+      Calendar d = Calendar.getInstance(); // UTC isn't relevant here.
+      if (date.getMonth() != null) {
+        d.set(Calendar.MONTH, date.getMonth().intValue() - 1);
+        return sMonthFormat.get().format(d.getTime());
+      } else {
+        return Util.getResourceString("unknownmonth");
+      }
+    }
+  }
+        
+  public static String toString(final double value) {
+    return sPercentFormat.get().format(value);
+  }
+  
+  public static String createTitle(final String resource, final String name) {
+    Object[] args = { Util.toHTMLSafe(name) };
+    return MessageFormat.format(Util.getResourceString(resource), args);
+  }
+
+  public static List<Venue> getVenuesUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getVenue());
+  }
+
+  public static List<Venue> getVenuesCopy(final Music music) {
+    return new ArrayList<Venue>(music.getVenue());
+  }
+
+  public static List<Artist> getArtistsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getArtist());
+  }
+
+  public static List<Artist> getArtistsCopy(final Music music) {
+    return new ArrayList<Artist>(music.getArtist());
+  }
+
+  public static List<com.bolsinga.music.data.Label> getLabelsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getLabel());
+  }
+
+  public static List<com.bolsinga.music.data.Label> getLabelsCopy(final Music music) {
+    return new ArrayList<com.bolsinga.music.data.Label>(music.getLabel());
+  }
+
+  public static List<Relation> getRelationsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getRelation());
+  }
+
+  public static List<Relation> getRelationsCopy(final Music music) {
+    return new ArrayList<Relation>(music.getRelation());
+  }
+
+  public static List<Song> getSongsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getSong());
+  }
+
+  public static List<Song> getSongsCopy(final Music music) {
+    return new ArrayList<Song>(music.getSong());
+  }
+
+  public static List<Album> getAlbumsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getAlbum());
+  }
+
+  public static List<Album> getAlbumsCopy(final Music music) {
+    return new ArrayList<Album>(music.getAlbum());
+  }
+
+  public static List<Show> getShowsUnmodifiable(final Music music) {
+    return Collections.unmodifiableList(music.getShow());
+  }
+
+  public static List<Show> getShowsCopy(final Music music) {
+    return new ArrayList<Show>(music.getShow());
+  }
+  
+  public static List<JAXBElement<Object>> getAlbumsUnmodifiable(final Artist artist) {
+    return Collections.unmodifiableList(artist.getAlbum());
+  }
+  
+  public static List<JAXBElement<Object>> getAlbumsCopy(final Artist artist) {
+    return new ArrayList<JAXBElement<Object>>(artist.getAlbum());
+  }
+
+  public static List<JAXBElement<Object>> getSongsUnmodifiable(final Album album) {
+    return Collections.unmodifiableList(album.getSong());
+  }
+  
+  public static List<JAXBElement<Object>> getSongsCopy(final Album album) {
+    return new ArrayList<JAXBElement<Object>>(album.getSong());
+  }
+
+  public static Music createMusic(final String sourceFile) {
+    Music music = null;
+    try {
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
+      Unmarshaller u = jc.createUnmarshaller();
+                        
+      music = (Music)u.unmarshal(new java.io.FileInputStream(sourceFile));
+    } catch (Exception ume) {
+      System.err.println("Exception: " + ume);
+      ume.printStackTrace();
+      System.exit(1);
+    }
+    return music;
+  }
+        
+  public static int trackCount(final Artist artist) {
+    int tracks = 0;
+    List<JAXBElement<Object>> albums = Util.getAlbumsUnmodifiable(artist);
+    if (albums != null) {
+      for (JAXBElement<Object> jalbum : albums) {
+        Album album = (Album)jalbum.getValue();
+        List<JAXBElement<Object>> songs = Util.getSongsUnmodifiable(album);
+        for (JAXBElement<Object> jsong : songs) {
+          Song song = (Song)jsong.getValue();
+          if (song.getPerformer().equals(artist)) {
+            tracks++;
+          }
+        }
+      }
+    }
+                
+    return tracks;
   }
 }
