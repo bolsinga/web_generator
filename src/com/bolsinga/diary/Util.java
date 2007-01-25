@@ -9,7 +9,7 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 public class Util {
-  private static int sStartYear = 0;
+  private static int sDiaryStartYear = 0;
   
   private static final ThreadLocal<DateFormat> sWebFormat   = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
@@ -60,7 +60,7 @@ public class Util {
 
   public static int getStartYear(final Diary diary) {
     synchronized (Util.class) {
-      if (sStartYear == 0) {
+      if (sDiaryStartYear == 0) {
         List<Entry> items = Util.getEntriesCopy(diary);
         Entry item = null;
 
@@ -68,10 +68,10 @@ public class Util {
 
         item = items.get(0);
 
-        sStartYear = item.getTimestamp().getYear();
+        sDiaryStartYear = item.getTimestamp().getYear();
       }
     }
-    return sStartYear;
+    return sDiaryStartYear;
   }
   
   public static List<Entry> getEntriesUnmodifiable(final Diary diary) {
