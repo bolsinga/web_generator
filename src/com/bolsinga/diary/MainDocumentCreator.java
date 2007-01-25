@@ -5,6 +5,7 @@ import com.bolsinga.music.data.*;
 
 import com.bolsinga.web.*;
 
+import java.text.*;
 import java.util.*;
 
 import org.apache.ecs.*;
@@ -50,11 +51,54 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
           }
           
           public Navigator getNavigator() {
-            return com.bolsinga.music.Web.getMainPagePreviewNavigator(fMusic, fLinks);
+            return new Navigator(fLinks) {
+              public Element getHomeNavigator() {
+                return getCurrentNavigator();
+              }
+
+              public Element getArtistNavigator() {
+                return fLinks.getArtistLink(createPreviewLine(Util.getArtistsUnmodifiable(fMusic).size(),
+                                                                  Util.getResourceString("bands")));
+              }
+
+              public Element getTrackNavigator() {
+                return fLinks.getTracksLink(createPreviewLine(Util.getSongsUnmodifiable(fMusic).size(),
+                                                                  Util.getResourceString("tracks")));
+              }
+
+              public Element getAlbumNavigator() {
+                return fLinks.getAlbumsLink(createPreviewLine(Util.getAlbumsUnmodifiable(fMusic).size(),
+                                                                  Util.getResourceString("albums")));
+              }
+              
+              public Element getShowNavigator() {
+                return fLinks.getShowLink(createPreviewLine(Util.getShowsUnmodifiable(fMusic).size(),
+                                                                Util.getResourceString("dates")));
+              }
+              
+              public Element getVenueNavigator() {
+                return fLinks.getVenueLink(createPreviewLine(Util.getVenuesUnmodifiable(fMusic).size(),
+                                                                Util.getResourceString("venues")));
+              }
+              
+              public Element getCityNavigator() {
+                return fLinks.getCityLink(createPreviewLine(com.bolsinga.music.Lookup.getLookup(fMusic).getCities().size(),
+                                                                Util.getResourceString("cities")));
+              }
+              
+              public Element getCurrentNavigator() {
+                return new StringElement(Util.getResourceString("home"));
+              }
+            };
           }
         });
       }
     });
+  }
+
+  private String createPreviewLine(final int count, final String name) {
+    Object[] args = { Integer.valueOf(count), name };
+    return MessageFormat.format(Util.getResourceString("previewformat"), args);
   }
   
   private Element getMain() {

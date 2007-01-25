@@ -128,53 +128,6 @@ public class Web implements Backgroundable {
 
     TracksRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
   }
-
-  private static String createPreviewLine(final int count, final String name) {
-    Object[] args = { Integer.valueOf(count), name };
-    return MessageFormat.format(Util.getResourceString("previewformat"), args);
-  }
-
-  public static Navigator getMainPagePreviewNavigator(final Music music, final Links links) {
-    return new Navigator(links) {
-      public Element getHomeNavigator() {
-        return getCurrentNavigator();
-      }
-
-      public Element getArtistNavigator() {
-        return links.getArtistLink(Web.createPreviewLine( Util.getArtistsUnmodifiable(music).size(),
-                                                          Util.getResourceString("bands")));
-      }
-
-      public Element getTrackNavigator() {
-        return links.getTracksLink(Web.createPreviewLine( Util.getSongsUnmodifiable(music).size(),
-                                                          Util.getResourceString("tracks")));
-      }
-
-      public Element getAlbumNavigator() {
-        return links.getAlbumsLink(Web.createPreviewLine( Util.getAlbumsUnmodifiable(music).size(),
-                                                          Util.getResourceString("albums")));
-      }
-      
-      public Element getShowNavigator() {
-        return links.getShowLink(Web.createPreviewLine( Util.getShowsUnmodifiable(music).size(),
-                                                        Util.getResourceString("dates")));
-      }
-      
-      public Element getVenueNavigator() {
-        return links.getVenueLink(Web.createPreviewLine(Util.getVenuesUnmodifiable(music).size(),
-                                                        Util.getResourceString("venues")));
-      }
-      
-      public Element getCityNavigator() {
-        return links.getCityLink(Web.createPreviewLine( Lookup.getLookup(music).getCities().size(),
-                                                        Util.getResourceString("cities")));
-      }
-      
-      public Element getCurrentNavigator() {
-        return new StringElement(Util.getResourceString("home"));
-      }
-    };
-  }
         
   static Vector<Element> getShowListing(final Lookup lookup, final Links links, final Show show) {
     Vector<Element> e = new Vector<Element>();
