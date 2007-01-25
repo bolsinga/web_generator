@@ -33,6 +33,14 @@ public class Util {
         return (comparison == DatatypeConstants.LESSER) ? -1 : 1;
       }
     };
+  
+  public static final Comparator<Calendar> MONTH_COMPARATOR = new Comparator<Calendar>() {
+    public int compare(final Calendar c1, final Calendar c2) {
+      int m1 = c1.get(Calendar.MONTH);
+      int m2 = c2.get(Calendar.MONTH);
+      return (m1 - m2);
+    }
+  };
 
   public static String getTitle(final Entry entry) {
     return sWebFormat.get().format(entry.getTimestamp().toGregorianCalendar().getTime());

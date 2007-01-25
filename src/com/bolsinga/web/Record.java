@@ -63,6 +63,15 @@ public class Record {
     return new Record(element);
   }
   
+  public static Record createRecordPermalink(final Element title, final String comment, final A permalink) {
+    Element eTitle = null;
+    if (title != null) {
+      eTitle = new H3().addElement(title);
+    }
+
+    return new Record(CSS.RECORD_ITEM_LIST, eTitle, null, comment, permalink);
+  }
+  
   private Record(final String divClass, final Element title, final Element items, final String comment, final A permaLink) {
     Div d = Util.createDiv(divClass);
     
@@ -75,6 +84,7 @@ public class Record {
     }
     
     if (comment != null) {
+      // TODO: Have this do the convertToParagraphs instead of callers.
       d.addElement(Util.convertToParagraphs(comment));
     }
     
