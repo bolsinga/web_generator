@@ -15,16 +15,6 @@ import org.apache.ecs.filter.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-abstract class DiaryEncoderRecordDocumentCreator extends DiaryRecordDocumentCreator {
-
-  protected final com.bolsinga.web.Encode fEncoder;
-
-  public DiaryEncoderRecordDocumentCreator(final Diary diary, final String outputDir, final boolean upOneLevel, final com.bolsinga.web.Encode encoder) {
-    super(diary, outputDir, upOneLevel);
-    fEncoder = encoder;
-  }
-}
-
 class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
 
   private final Music fMusic;
