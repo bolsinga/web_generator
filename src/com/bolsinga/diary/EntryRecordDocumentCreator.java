@@ -98,10 +98,15 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   }
   
   private Record getEntryRecord(final Entry entry) {
+    return EntryRecordDocumentCreator.createEntryRecord(entry, fLinks, fEncoder, true);
+  }
+  
+  // This is used for the main page.
+  public static Record createEntryRecord(final Entry entry, final Links links, final Encode encoder, final boolean upOneLevel) {
     return Record.createRecordPermalink(
       Util.createNamedTarget(entry.getId(), Util.getTitle(entry)), 
-      fEncoder.embedLinks(entry, true),
-      Util.createPermaLink(fLinks.getLinkTo(entry)));
+      encoder.embedLinks(entry, upOneLevel),
+      Util.createPermaLink(links.getLinkTo(entry)));
   }
 
   protected void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {

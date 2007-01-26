@@ -127,15 +127,4 @@ public class Web implements Backgroundable {
 
     AltDocumentCreator.createDocuments(backgrounder, backgroundable, diary, outputDir);
   }
-        
-  static Element addItem(final Encode encoder, final Entry entry, final Links links, final boolean upOneLevel) {
-    Vector<Element> e = new Vector<Element>();
-    e.add(new H3().addElement(Util.createNamedTarget(entry.getId(), Util.getTitle(entry))));
-    e.add(Util.createPermaLink(links.getLinkTo(entry)));
-    e.add(new StringElement(Util.convertToParagraphs(encoder.embedLinks(entry, upOneLevel))));
-
-    Div d = Util.createDiv(CSS.ENTRY_ITEM);
-    d.addElement(Util.createUnorderedList(e));
-    return d;
-  }
 }
