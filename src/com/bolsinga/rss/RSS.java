@@ -53,7 +53,7 @@ public class RSS {
     System.exit(0);
   }
 
-  public static void generate(final String diaryFile, final String musicFile, final String outputDir) {
+  private static void generate(final String diaryFile, final String musicFile, final String outputDir) {
     Diary diary = com.bolsinga.web.Util.createDiary(diaryFile);
     Music music = com.bolsinga.web.Util.createMusic(musicFile);
                 
@@ -84,7 +84,7 @@ public class RSS {
     generate(diary, music, os);
   }
 
-  public static void add(final Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  private static void add(final Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
     add(getTitle(show), com.bolsinga.web.Util.toCalendarUTC(show.getDate()), links.getLinkTo(show), show.getComment(), objFactory, channel);
   }
         
@@ -111,11 +111,11 @@ public class RSS {
     return sb.toString();
   }
 
-  public static void add(final Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  private static void add(final Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
     add(com.bolsinga.web.Util.getTitle(entry), entry.getTimestamp().toGregorianCalendar(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
   }
 
-  public static void add(final String title, final GregorianCalendar cal, final String link, final String description, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  private static void add(final String title, final GregorianCalendar cal, final String link, final String description, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
     TRssItem item = objFactory.createTRssItem();
     List<Object> itemElements = item.getTitleOrDescriptionOrLink();
 
@@ -134,7 +134,7 @@ public class RSS {
     channel.getItem().add(item);
   }
 
-  public static void generate(final Diary diary, final Music music, final OutputStream os) {
+  private static void generate(final Diary diary, final Music music, final OutputStream os) {
     com.bolsinga.rss.data.ObjectFactory objFactory = new com.bolsinga.rss.data.ObjectFactory();
 
     try {           
