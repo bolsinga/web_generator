@@ -19,7 +19,13 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   
   protected void create(final RecordFactory factory) {
     Document d = populate(factory);
-    writeDocument(factory, d);
+    try {
+      writeDocument(factory, d);
+    } catch (WebException e) {
+      // TODO: What to do with these exceptions while running in Backgrounder!!!
+      System.err.println(e);
+      e.printStackTrace();
+    }
   }
   
   private Document populate(final RecordFactory factory) {
@@ -97,22 +103,33 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
         
-  private void writeDocument(final RecordFactory factory, final Document d) {
-    try {
-      File f = new File(fOutputDir, factory.getFilePath());
-      File parent = new File(f.getParent());
-      if (!parent.mkdirs()) {
-        if (!parent.exists()) {
-          System.out.println("RecordDocumentCreator cannot mkdirs: " + parent.getAbsolutePath());
-        }
+  private void writeDocument(final RecordFactory factory, final Document d) throws WebException {
+    File f = new File(fOutputDir, factory.getFilePath());
+    File parent = new File(f.getParent());
+    if (!parent.mkdirs()) {
+      if (!parent.exists()) {
+        System.err.println("RecordDocumentCreator cannot mkdirs: " + parent.getAbsolutePath());
       }
-      OutputStream os = new FileOutputStream(f);
-      d.output(os);
+    }
+
+    OutputStream os = null;
+    try {
+      os = new FileOutputStream(f);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(f.toString());
+      throw new WebException(sb.toString(), e);
+    }
+    
+    d.output(os);
+    try {
       os.close();
-    } catch (IOException ioe) {
-      System.err.println("Exception: " + ioe);
-      ioe.printStackTrace();
-      System.exit(1);
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't close file: ");
+      sb.append(os.toString());
+      throw new WebException(sb.toString(), e);
     }
   }
 }
