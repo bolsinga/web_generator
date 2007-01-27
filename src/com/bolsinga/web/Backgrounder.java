@@ -118,8 +118,7 @@ public class Backgrounder {
   //  Executor.
   public void execute(Backgroundable backgroundable, Runnable task) {
     if (!hasInterest()) {
-      Thread.dumpStack();
-      System.exit(1);
+      throw new Error("Excecuting a Backgrounder that has no interest!");
     }
     if (!fExec.isShutdown()) {
       fExec.execute(task);
