@@ -1,7 +1,7 @@
 package com.bolsinga.site;
 
 import com.bolsinga.music.data.*;
-import com.bolsinga.diary.data.*;
+import com.bolsinga.diary.data.xml.*;
 
 public class Site implements com.bolsinga.web.Backgroundable {
 

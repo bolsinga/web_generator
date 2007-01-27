@@ -13,7 +13,7 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 import com.bolsinga.music.data.*;
-import com.bolsinga.diary.data.*;
+import com.bolsinga.diary.data.xml.*;
 
 public class Util {
 
@@ -362,7 +362,7 @@ public class Util {
     return cp.toString();
   }
  
-  public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary) {
+  public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final Diary diary) {
     List<Show> shows = Util.getShowsCopy(music);
     Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(shows);
@@ -388,8 +388,8 @@ public class Util {
                         
         if (o1 instanceof com.bolsinga.music.data.Show) {
           c1 = Util.toCalendarUTC(((com.bolsinga.music.data.Show)o1).getDate());
-        } else if (o1 instanceof com.bolsinga.diary.data.Entry) {
-          c1 = ((com.bolsinga.diary.data.Entry)o1).getTimestamp().toGregorianCalendar();
+        } else if (o1 instanceof Entry) {
+          c1 = ((Entry)o1).getTimestamp().toGregorianCalendar();
         } else {
           System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
           System.exit(1);
@@ -397,8 +397,8 @@ public class Util {
 
         if (o2 instanceof com.bolsinga.music.data.Show) {
           c2 = Util.toCalendarUTC(((com.bolsinga.music.data.Show)o2).getDate());
-        } else if (o2 instanceof com.bolsinga.diary.data.Entry) {
-          c2 = ((com.bolsinga.diary.data.Entry)o2).getTimestamp().toGregorianCalendar();
+        } else if (o2 instanceof Entry) {
+          c2 = ((Entry)o2).getTimestamp().toGregorianCalendar();
         } else {
           System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
           System.exit(1);
@@ -474,7 +474,7 @@ public class Util {
   public static Diary createDiary(final String sourceFile) {
     Diary diary = null;
     try {
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
       Unmarshaller u = jc.createUnmarshaller();
                         
       diary = (Diary)u.unmarshal(new java.io.FileInputStream(sourceFile));

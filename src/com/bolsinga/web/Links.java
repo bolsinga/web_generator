@@ -1,6 +1,6 @@
 package com.bolsinga.web;
 
-import com.bolsinga.diary.data.*;
+import com.bolsinga.diary.data.xml.*;
 import com.bolsinga.music.data.*;
 
 import java.io.*;

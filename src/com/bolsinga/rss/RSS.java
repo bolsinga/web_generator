@@ -1,6 +1,6 @@
 package com.bolsinga.rss;
 
-import com.bolsinga.diary.data.*;
+import com.bolsinga.diary.data.xml.*;
 import com.bolsinga.music.data.*;
 import com.bolsinga.rss.data.*;
 import com.bolsinga.settings.data.*;
@@ -111,7 +111,7 @@ public class RSS {
     return sb.toString();
   }
 
-  public static void add(final com.bolsinga.diary.data.Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  public static void add(final Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
     add(com.bolsinga.web.Util.getTitle(entry), entry.getTimestamp().toGregorianCalendar(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
   }
 
@@ -166,7 +166,7 @@ public class RSS {
       for (Object o : com.bolsinga.web.Util.getRecentItems(entryCount, music, diary)) {
         if (o instanceof com.bolsinga.music.data.Show) {
           RSS.add((Show)o, links, objFactory, channel);
-        } else if (o instanceof com.bolsinga.diary.data.Entry) {
+        } else if (o instanceof Entry) {
           RSS.add((Entry)o, links, objFactory, channel);
         } else {
           System.err.println("Unknown recent item." + o.toString());

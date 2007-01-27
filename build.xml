@@ -79,7 +79,7 @@
 </target>
 
 <target name="diary_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data" removeOldOutput="yes">
+        <xjc schema="${basedir}/xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data.xml" removeOldOutput="yes">
                 <depends dir="${basedir}/xml" includes="diary.xsd" />
                 <produces dir="${build.gensrc}/com/bolsinga/diary/data" />
         </xjc>

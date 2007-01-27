@@ -1,6 +1,6 @@
 package com.bolsinga.diary;
 
-import com.bolsinga.diary.data.*;
+import com.bolsinga.diary.data.xml.*;
 import com.bolsinga.music.data.*;
 
 import com.bolsinga.music.*;
@@ -135,9 +135,9 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     
     List<Object> items = Util.getRecentItems(mainPageEntryCount, fMusic, fDiary);
     for (Object o : items) {
-      if (o instanceof com.bolsinga.diary.data.Entry) {
+      if (o instanceof Entry) {
         // TODO: This shouldn't call getElement().
-        diaryDiv.addElement(EntryRecordDocumentCreator.createEntryRecord((com.bolsinga.diary.data.Entry)o, fLinks, fEncoder, false).getElement());
+        diaryDiv.addElement(EntryRecordDocumentCreator.createEntryRecord((Entry)o, fLinks, fEncoder, false).getElement());
       } else if (o instanceof com.bolsinga.music.data.Show) {
         // This appears at the top level
         diaryDiv.addElement(com.bolsinga.music.Web.addItem(fEncoder, fLookup, fLinks, (com.bolsinga.music.data.Show)o, false));

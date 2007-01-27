@@ -9,7 +9,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import com.bolsinga.diary.data.*;
+import com.bolsinga.diary.data.xml.*;
 
 public class Diary {
 
@@ -38,7 +38,7 @@ public class Diary {
     ObjectFactory objFactory = new ObjectFactory();
                 
     try {
-      com.bolsinga.diary.data.Diary diary = objFactory.createDiary();
+      com.bolsinga.diary.data.xml.Diary diary = objFactory.createDiary();
 
       createStatics(objFactory, diary, statics);
 
@@ -47,7 +47,7 @@ public class Diary {
       diary.setTimestamp(Util.toXMLGregorianCalendar(Util.nowUTC()));
 
       // Write out to the output file.
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data");
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                         
@@ -68,7 +68,7 @@ public class Diary {
     }
   }
         
-  private static void createStatics(final ObjectFactory objFactory, final com.bolsinga.diary.data.Diary diary, final List<Statics> statics) throws JAXBException {
+  private static void createStatics(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Statics> statics) throws JAXBException {
     for (Statics oldStatic : statics) {
       String location = oldStatic.getLocation();
                         
@@ -88,11 +88,11 @@ public class Diary {
     }
   }
 
-  private static void createComments(final ObjectFactory objFactory, final com.bolsinga.diary.data.Diary diary, final List<Comments> comments) throws JAXBException {
-    com.bolsinga.diary.data.Entry xEntry = null;
+  private static void createComments(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Comments> comments) throws JAXBException {
+    com.bolsinga.diary.data.xml.Entry xEntry = null;
     int index = comments.size() - 1;
 
-    List<com.bolsinga.diary.data.Entry> entries = diary.getEntry(); // Modification required.
+    List<com.bolsinga.diary.data.xml.Entry> entries = diary.getEntry(); // Modification required.
     
     for (Comments oldComment : comments) {
       xEntry = objFactory.createEntry();
