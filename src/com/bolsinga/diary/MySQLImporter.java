@@ -23,7 +23,13 @@ public class MySQLImporter {
       clearDB = args[3].equals("clear");
     }
 
-    MySQLImporter.importData(args[0], args[1], args[2], clearDB);
+    try {
+      MySQLImporter.importData(args[0], args[1], args[2], clearDB);
+    } catch (WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
+    }
   }
 
   private static void usage() {
@@ -31,7 +37,7 @@ public class MySQLImporter {
     System.exit(0);
   }
 
-  public static void importData(final String sourceFile, final String user, final String password, final boolean clearDB) {
+  public static void importData(final String sourceFile, final String user, final String password, final boolean clearDB) throws WebException {
     Diary diary = Util.createDiary(sourceFile);
     importData(diary, user, password, clearDB);
   }

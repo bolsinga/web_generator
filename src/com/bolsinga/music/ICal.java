@@ -30,32 +30,38 @@ public class ICal {
 
     Music music = null;
 
-    if (type.equals("xml")) {
-      if (args.length != 4) {
+    try {
+      if (type.equals("xml")) {
+        if (args.length != 4) {
+          ICal.usage();
+        }
+        
+        String musicFile = args[1];
+        settings = args[2];
+        output = args[3];
+
+        music = Util.createMusic(musicFile);
+      } else if (type.equals("db")) {
+        if (args.length != 5) {
+          ICal.usage();
+        }
+
+        String user = args[1];
+        String password = args[2];
+        settings = args[3];
+        output = args[4];
+        
+        music = MySQLCreator.createMusic(user, password);
+      } else {
         ICal.usage();
       }
-      
-      String musicFile = args[1];
-      settings = args[2];
-      output = args[3];
 
-      music = Util.createMusic(musicFile);
-    } else if (type.equals("db")) {
-      if (args.length != 5) {
-        ICal.usage();
-      }
-
-      String user = args[1];
-      String password = args[2];
-      settings = args[3];
-      output = args[4];
-      
-      music = MySQLCreator.createMusic(user, password);
-    } else {
-      ICal.usage();
+      Util.createSettings(settings);
+    } catch (WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
     }
-
-    Util.createSettings(settings);
         
     ICal.generate(music, output);
   }
@@ -66,7 +72,7 @@ public class ICal {
     System.exit(0);
   }
 
-  private static void generate(final String sourceFile, final String outputDir) {
+  private static void generate(final String sourceFile, final String outputDir) throws WebException {
     Music music = Util.createMusic(sourceFile);
                 
     generate(music, outputDir);

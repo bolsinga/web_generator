@@ -20,23 +20,30 @@ public class Site implements com.bolsinga.web.Backgroundable {
     Music music = null;
     Diary diary = null;
 
-    if (type.equals("xml")) {
-      String diaryFile = args[1];
-      String musicFile = args[2];
+    try {
+      if (type.equals("xml")) {
+        String diaryFile = args[1];
+        String musicFile = args[2];
 
-      diary = com.bolsinga.web.Util.createDiary(diaryFile);
-      music = com.bolsinga.web.Util.createMusic(musicFile);
-    } else if (type.equals("db")) {
-      String user = args[1];
-      String password = args[2];
-      
-      diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
-      music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
-    } else {
-      Site.usage();
+        diary = com.bolsinga.web.Util.createDiary(diaryFile);
+        music = com.bolsinga.web.Util.createMusic(musicFile);
+      } else if (type.equals("db")) {
+        String user = args[1];
+        String password = args[2];
+        
+        diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
+        music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
+      } else {
+        Site.usage();
+      }
+
+      com.bolsinga.web.Util.createSettings(settingsFile);
+    } catch (com.bolsinga.web.WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
     }
 
-    com.bolsinga.web.Util.createSettings(settingsFile);
     com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
     
     Site site = new Site(backgrounder);

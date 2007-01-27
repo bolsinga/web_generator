@@ -1,5 +1,6 @@
 package com.bolsinga.web;
 
+import java.io.*;
 import java.math.*;
 import java.text.*;
 import java.util.*;
@@ -392,7 +393,6 @@ public class Util {
           c1 = ((Entry)o1).getTimestamp().toGregorianCalendar();
         } else {
           System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
-          System.exit(1);
         }
 
         if (o2 instanceof Show) {
@@ -400,25 +400,31 @@ public class Util {
         } else if (o2 instanceof Entry) {
           c2 = ((Entry)o2).getTimestamp().toGregorianCalendar();
         } else {
-          System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
-          System.exit(1);
+          System.err.println("Unknown " + getClass().getName() + ": " + o2.getClass().getName());
         }
         
         return c1.getTime().compareTo(c2.getTime());
       }
     };
         
-  public synchronized static void createSettings(final String sourceFile) {
+  public synchronized static void createSettings(final String sourceFile) throws WebException {
     if (sSettings == null) {
+      
+      InputStream is = null;
+      try {
+        is = new FileInputStream(sourceFile);
+      } catch (FileNotFoundException e) {
+        throw new WebException("Can't find file", e);
+      }
+      
       try {
         JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
         Unmarshaller u = jc.createUnmarshaller();
                 
-        sSettings = (com.bolsinga.settings.data.Settings)u.unmarshal(new java.io.FileInputStream(sourceFile));
-      } catch (Exception ume) {
-        System.err.println("Exception: " + ume);
-        ume.printStackTrace();
-        System.exit(1);
+        sSettings = (com.bolsinga.settings.data.Settings)u.unmarshal(is);
+
+      } catch (JAXBException e) {
+        throw new WebException("Can't create settings", e);
       }
     }
   }
@@ -471,17 +477,22 @@ public class Util {
     return new ArrayList<Entry>(diary.getEntry());
   }
     
-  public static Diary createDiary(final String sourceFile) {
+  public static Diary createDiary(final String sourceFile) throws WebException {
     Diary diary = null;
+    InputStream is = null;
+    try {
+      is = new FileInputStream(sourceFile);
+    } catch (FileNotFoundException e) {
+      throw new WebException("Can't find file", e);
+    }
+    
     try {
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
       Unmarshaller u = jc.createUnmarshaller();
                         
-      diary = (Diary)u.unmarshal(new java.io.FileInputStream(sourceFile));
-    } catch (Exception ume) {
-      System.err.println("Exception: " + ume);
-      ume.printStackTrace();
-      System.exit(1);
+      diary = (Diary)u.unmarshal(is);
+    } catch (JAXBException e) {
+        throw new WebException("Can't create diary", e);
     }
     return diary;
   }
@@ -494,8 +505,12 @@ public class Util {
       localTime.clear();
       localTime.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue(), showTime, 0);
     } else {
-      System.err.println("Can't convert Unknown com.bolsinga.music.data.xml.Date");
-      System.exit(1);
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't convert unknown date to UTC: ");
+      sb.append(date.toString());
+      // TODO: Should this throw a WebException?
+      // throw new WebException(sb.toString());
+      System.err.println(sb.toString());
     }
     // Convert to UTC
     GregorianCalendar result = Util.nowUTC();
@@ -611,17 +626,22 @@ public class Util {
     return new ArrayList<JAXBElement<Object>>(album.getSong());
   }
 
-  public static Music createMusic(final String sourceFile) {
+  public static Music createMusic(final String sourceFile) throws WebException {
     Music music = null;
+    InputStream is = null;
+    try {
+      is = new FileInputStream(sourceFile);
+    } catch (FileNotFoundException e) {
+      throw new WebException("Can't find file", e);
+    }
+    
     try {
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
       Unmarshaller u = jc.createUnmarshaller();
                         
-      music = (Music)u.unmarshal(new java.io.FileInputStream(sourceFile));
-    } catch (Exception ume) {
-      System.err.println("Exception: " + ume);
-      ume.printStackTrace();
-      System.exit(1);
+      music = (Music)u.unmarshal(is);
+    } catch (Exception e) {
+      throw new WebException("Can't create music", e);
     }
     return music;
   }

@@ -65,54 +65,60 @@ public class Main implements com.bolsinga.web.Backgroundable {
       return false;
     }
 
-    com.bolsinga.web.Util.createSettings(settingsFile);
+    try {
+      com.bolsinga.web.Util.createSettings(settingsFile);
 
-    if (musicXML || diaryXML) {
-      if (musicXML) {
-        com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, musicFile);
+      if (musicXML || diaryXML) {
+        if (musicXML) {
+          com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, musicFile);
+        }
+        if (diaryXML) {
+          com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
+        }
+        return true;
       }
-      if (diaryXML) {
-        com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
+
+      if (musicImport || diaryImport) {
+        if (musicImport) {
+          com.bolsinga.music.MySQLImporter.importData(musicFile, user, password, true);
+        }
+        if (diaryImport) {
+          com.bolsinga.diary.MySQLImporter.importData(diaryFile, user, password, true);
+        }
+        return true;
       }
-      return true;
-    }
 
-    if (musicImport || diaryImport) {
-      if (musicImport) {
-        com.bolsinga.music.MySQLImporter.importData(musicFile, user, password, true);
+      boolean useDB = command.matches(".*-db$");
+
+      com.bolsinga.music.data.xml.Music music = null;
+      com.bolsinga.diary.data.xml.Diary diary = null;
+
+      if (!useDB) {
+        diary = com.bolsinga.web.Util.createDiary(diaryFile);
+        music = com.bolsinga.web.Util.createMusic(musicFile);
+      } else {
+        diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
+        music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
       }
-      if (diaryImport) {
-        com.bolsinga.diary.MySQLImporter.importData(diaryFile, user, password, true);
-      }
-      return true;
-    }
-
-    boolean useDB = command.matches(".*-db$");
-
-    com.bolsinga.music.data.xml.Music music = null;
-    com.bolsinga.diary.data.xml.Diary diary = null;
-
-    if (!useDB) {
-      diary = com.bolsinga.web.Util.createDiary(diaryFile);
-      music = com.bolsinga.web.Util.createMusic(musicFile);
-    } else {
-      diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
-      music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
-    }
     
-    // Everything needs the CSS file.
-    com.bolsinga.web.CSS.install(cssFile, output);
+      // Everything needs the CSS file.
+      com.bolsinga.web.CSS.install(cssFile, output);
 
-    com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+      com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
 
-    if (site) {
-      com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "all");
-    }
-    if (musicsite) {
-      com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "music");
-    }
-    if (diarysite) {
-      com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "diary");
+      if (site) {
+        com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "all");
+      }
+      if (musicsite) {
+        com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "music");
+      }
+      if (diarysite) {
+        com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "diary");
+      }
+    } catch (com.bolsinga.web.WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
     }
 
     return true;

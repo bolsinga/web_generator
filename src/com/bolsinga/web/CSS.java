@@ -125,7 +125,13 @@ public class CSS {
       System.exit(0);
     }
 
-    Util.createSettings(args[0]);
+    try {
+      Util.createSettings(args[0]);
+    } catch (WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
+    }
     
     CSS.install(args[1], args[2]);
   }

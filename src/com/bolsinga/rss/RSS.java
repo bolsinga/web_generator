@@ -26,23 +26,29 @@ public class RSS {
     Diary diary = null;
     Music music = null;
 
-    if (type.equals("xml")) {
-      String diaryFile = args[1];
-      String musicFile = args[2];
+    try {
+      if (type.equals("xml")) {
+        String diaryFile = args[1];
+        String musicFile = args[2];
 
-      diary = com.bolsinga.web.Util.createDiary(diaryFile);
-      music = com.bolsinga.web.Util.createMusic(musicFile);
-    } else if (type.equals("db")) {
-      String user = args[1];
-      String password = args[2];
+        diary = com.bolsinga.web.Util.createDiary(diaryFile);
+        music = com.bolsinga.web.Util.createMusic(musicFile);
+      } else if (type.equals("db")) {
+        String user = args[1];
+        String password = args[2];
 
-      music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
-      diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
-    } else {
-      RSS.usage();
+        music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
+        diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
+      } else {
+        RSS.usage();
+      }
+
+      com.bolsinga.web.Util.createSettings(settings);
+    } catch (com.bolsinga.web.WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
     }
-
-    com.bolsinga.web.Util.createSettings(settings);
     
     try {
       RSS.generate(diary, music, output);
@@ -60,8 +66,18 @@ public class RSS {
   }
 
   private static void generate(final String diaryFile, final String musicFile, final String outputDir) throws RSSException {
-    Diary diary = com.bolsinga.web.Util.createDiary(diaryFile);
-    Music music = com.bolsinga.web.Util.createMusic(musicFile);
+    Diary diary = null;
+    try {
+      diary = com.bolsinga.web.Util.createDiary(diaryFile);
+    } catch (com.bolsinga.web.WebException e) {
+      throw new RSSException("Can't create Diary", e);
+    }
+    Music music = null;
+    try {
+      music = com.bolsinga.web.Util.createMusic(musicFile);
+    } catch (com.bolsinga.web.WebException e) {
+      throw new RSSException("Can't create Music", e);
+    }
                 
     generate(diary, music, outputDir);
   }

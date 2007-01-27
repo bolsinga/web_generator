@@ -32,23 +32,29 @@ public class Web implements Backgroundable {
     Diary diary = null;
     Music music = null;
 
-    if (args[0].equals("xml")) {
-      String diaryFile = args[1];
-      String musicFile = args[2];
-      
-      diary = Util.createDiary(diaryFile);
-      music = Util.createMusic(musicFile);
-    } else if (args[0].equals("db")) {
-      String user = args[1];
-      String password = args[2];
+    try {
+      if (args[0].equals("xml")) {
+        String diaryFile = args[1];
+        String musicFile = args[2];
+        
+        diary = Util.createDiary(diaryFile);
+        music = Util.createMusic(musicFile);
+      } else if (args[0].equals("db")) {
+        String user = args[1];
+        String password = args[2];
 
-      diary = MySQLCreator.createDiary(user, password);
-      music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
-    } else {
-      Web.usage();
+        diary = MySQLCreator.createDiary(user, password);
+        music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
+      } else {
+        Web.usage();
+      }
+
+      Util.createSettings(settings);
+    } catch (WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
     }
-
-    Util.createSettings(settings);
     
     if (Web.GENERATE_XML) {
       Web.export(diary);
@@ -101,13 +107,13 @@ public class Web implements Backgroundable {
     }
   }
 
-  private static void generate(final String sourceFile, final String musicFile, final String outputDir) {
+  private static void generate(final String sourceFile, final String musicFile, final String outputDir) throws WebException {
     Diary diary = Util.createDiary(sourceFile);
 
     generate(diary, musicFile, outputDir);
   }
         
-  private static void generate(final Diary diary, final String musicFile, final String outputDir) {
+  private static void generate(final Diary diary, final String musicFile, final String outputDir) throws WebException {
     Music music = Util.createMusic(musicFile);
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     Encode encoder = Encode.getEncode(music, diary);                

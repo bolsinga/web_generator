@@ -17,7 +17,7 @@ class EncodeTest {
   EncodeTest() {
   }
   
-  void generate(final String diaryFile, final String musicFile, final String outputDir) {
+  void generate(final String diaryFile, final String musicFile, final String outputDir) throws WebException {
     Diary diary = Util.createDiary(diaryFile);
     Music music = Util.createMusic(musicFile);
     
@@ -141,10 +141,16 @@ public abstract class Encode {
       System.exit(0);
     }
 
-    Util.createSettings(args[2]);
+    try {
+      Util.createSettings(args[2]);
 
-    EncodeTest test = new EncodeTest();
-    test.generate(args[0], args[1], args[3]);
+      EncodeTest test = new EncodeTest();
+      test.generate(args[0], args[1], args[3]);
+    } catch (WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
+    }
   }
 
   public synchronized static Encode getEncode(final Music music, final Diary diary) {

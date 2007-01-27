@@ -34,32 +34,38 @@ public class Web implements Backgroundable {
 
     Music music = null;
 
-    if (type.equals("xml")) {
-      if (args.length != 4) {
+    try {
+      if (type.equals("xml")) {
+        if (args.length != 4) {
+          Web.usage();
+        }
+        
+        String musicFile = args[1];
+        settings = args[2];
+        output = args[3];
+
+        music = Util.createMusic(musicFile);
+      } else if (type.equals("db")) {
+        if (args.length != 5) {
+          Web.usage();
+        }
+
+        String user = args[1];
+        String password = args[2];
+        settings = args[3];
+        output = args[4];
+
+        music = MySQLCreator.createMusic(user, password);
+      } else {
         Web.usage();
       }
-      
-      String musicFile = args[1];
-      settings = args[2];
-      output = args[3];
-
-      music = Util.createMusic(musicFile);
-    } else if (type.equals("db")) {
-      if (args.length != 5) {
-        Web.usage();
-      }
-
-      String user = args[1];
-      String password = args[2];
-      settings = args[3];
-      output = args[4];
-
-      music = MySQLCreator.createMusic(user, password);
-    } else {
-      Web.usage();
+  
+      Util.createSettings(settings);
+    } catch (WebException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
     }
-
-    Util.createSettings(settings);
 
     if (Web.GENERATE_XML) {
       Web.export(music);
