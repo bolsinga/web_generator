@@ -20,7 +20,7 @@ public class Util {
     return sRSSDateFormat.get().format(c.getTime());
   }
         
-  public static com.bolsinga.rss.data.TImage createLogo(final com.bolsinga.rss.data.ObjectFactory objFactory) throws javax.xml.bind.JAXBException {
+  public static com.bolsinga.rss.data.TImage createLogo(final com.bolsinga.rss.data.ObjectFactory objFactory) {
     com.bolsinga.rss.data.TImage logo = objFactory.createTImage();
 
     com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getLogoImage();

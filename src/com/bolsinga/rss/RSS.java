@@ -43,8 +43,14 @@ public class RSS {
     }
 
     com.bolsinga.web.Util.createSettings(settings);
-                        
-    RSS.generate(diary, music, output);
+    
+    try {
+      RSS.generate(diary, music, output);
+    } catch (RSSException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
+    }
   }
 
   private static void usage() {
@@ -53,38 +59,40 @@ public class RSS {
     System.exit(0);
   }
 
-  private static void generate(final String diaryFile, final String musicFile, final String outputDir) {
+  private static void generate(final String diaryFile, final String musicFile, final String outputDir) throws RSSException {
     Diary diary = com.bolsinga.web.Util.createDiary(diaryFile);
     Music music = com.bolsinga.web.Util.createMusic(musicFile);
                 
     generate(diary, music, outputDir);
   }
         
-  public static void generate(final Diary diary, final Music music, final String outputDir) {
+  public static void generate(final Diary diary, final Music music, final String outputDir) throws RSSException {
     OutputStream os = null;
-    try {
-      StringBuilder sb = new StringBuilder();
-      sb.append(outputDir);
-      sb.append(File.separator);
-      sb.append(com.bolsinga.web.Links.ALT_DIR);
-      File f = new File(sb.toString(), com.bolsinga.web.Util.getSettings().getRssFile());
-      File parent = new File(f.getParent());
-      if (!parent.mkdirs()) {
-        if (!parent.exists()) {
-          System.out.println("RSS cannot mkdirs: " + parent.getAbsolutePath());
-        }
+    StringBuilder sb = new StringBuilder();
+    sb.append(outputDir);
+    sb.append(File.separator);
+    sb.append(com.bolsinga.web.Links.ALT_DIR);
+    File f = new File(sb.toString(), com.bolsinga.web.Util.getSettings().getRssFile());
+    File parent = new File(f.getParent());
+    if (!parent.mkdirs()) {
+      if (!parent.exists()) {
+        System.out.println("RSS cannot mkdirs: " + parent.getAbsolutePath());
       }
-      os = new FileOutputStream(f);
-    } catch (IOException ioe) {
-      System.err.println(ioe);
-      ioe.printStackTrace();
-      System.exit(1);
     }
-        
+    
+    try {
+      os = new FileOutputStream(f);
+    } catch (IOException e) {
+      sb = new StringBuilder();
+      sb.append("Can't create: ");
+      sb.append(f.toString());
+      throw new RSSException(sb.toString(), e);
+    }
+
     generate(diary, music, os);
   }
 
-  private static void add(final Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  private static void add(final Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {
     add(getTitle(show), com.bolsinga.web.Util.toCalendarUTC(show.getDate()), links.getLinkTo(show), show.getComment(), objFactory, channel);
   }
         
@@ -111,11 +119,11 @@ public class RSS {
     return sb.toString();
   }
 
-  private static void add(final Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  private static void add(final Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {
     add(com.bolsinga.web.Util.getTitle(entry), entry.getTimestamp().toGregorianCalendar(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
   }
 
-  private static void add(final String title, final GregorianCalendar cal, final String link, final String description, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  private static void add(final String title, final GregorianCalendar cal, final String link, final String description, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {
     TRssItem item = objFactory.createTRssItem();
     List<Object> itemElements = item.getTitleOrDescriptionOrLink();
 
@@ -134,63 +142,65 @@ public class RSS {
     channel.getItem().add(item);
   }
 
-  private static void generate(final Diary diary, final Music music, final OutputStream os) {
+  private static void generate(final Diary diary, final Music music, final OutputStream os) throws RSSException {
     com.bolsinga.rss.data.ObjectFactory objFactory = new com.bolsinga.rss.data.ObjectFactory();
 
+    TRssChannel channel = objFactory.createTRssChannel();
+
+    List<Object> channelElements = channel.getTitleOrLinkOrDescription();
+
+    String diaryTitle = diary.getTitle();
+    
+    channelElements.add(objFactory.createTRssChannelTitle(diaryTitle));
+    channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRoot()));
+    channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.Util.getSettings().getRssDescription()));
+    channelElements.add(objFactory.createTRssChannelGenerator(com.bolsinga.web.Util.getGenerator()));
+    if (!com.bolsinga.web.Util.getDebugOutput()) {
+      channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.web.Util.nowUTC())));
+    }
+    channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.Util.getSettings().getContact()));
+
+    TImage logo = com.bolsinga.rss.Util.createLogo(objFactory);
+    logo.setLink(com.bolsinga.web.Util.getSettings().getRoot());
+    logo.setDescription(diaryTitle);
+                      
+    channelElements.add(objFactory.createTRssChannelImage(logo));
+                      
+    com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(false);
+
+    int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
+
+    for (Object o : com.bolsinga.web.Util.getRecentItems(entryCount, music, diary)) {
+      if (o instanceof Show) {
+        RSS.add((Show)o, links, objFactory, channel);
+      } else if (o instanceof Entry) {
+        RSS.add((Entry)o, links, objFactory, channel);
+      } else {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Unknown recent item: ");
+        sb.append(o.toString());
+        throw new RSSException(sb.toString());
+      }
+    }
+
+    TRss rss = objFactory.createTRss();
+    rss.setVersion(new java.math.BigDecimal(2.0));
+    rss.setChannel(channel);
+
+    JAXBElement<TRss> jrss = objFactory.createRss(rss);                                                
+
     try {           
-      TRssChannel channel = objFactory.createTRssChannel();
-
-      List<Object> channelElements = channel.getTitleOrLinkOrDescription();
-
-      String diaryTitle = diary.getTitle();
-      
-      channelElements.add(objFactory.createTRssChannelTitle(diaryTitle));
-      channelElements.add(objFactory.createTRssChannelLink(com.bolsinga.web.Util.getSettings().getRoot()));
-      channelElements.add(objFactory.createTRssChannelDescription(com.bolsinga.web.Util.getSettings().getRssDescription()));
-      channelElements.add(objFactory.createTRssChannelGenerator(com.bolsinga.web.Util.getGenerator()));
-      if (!com.bolsinga.web.Util.getDebugOutput()) {
-        channelElements.add(objFactory.createTRssChannelPubDate(com.bolsinga.rss.Util.getRSSDate(com.bolsinga.web.Util.nowUTC())));
-      }
-      channelElements.add(objFactory.createTRssChannelWebMaster(com.bolsinga.web.Util.getSettings().getContact()));
-
-      TImage logo = com.bolsinga.rss.Util.createLogo(objFactory);
-      logo.setLink(com.bolsinga.web.Util.getSettings().getRoot());
-      logo.setDescription(diaryTitle);
-                        
-      channelElements.add(objFactory.createTRssChannelImage(logo));
-                        
-      com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(false);
-
-      int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
-
-      for (Object o : com.bolsinga.web.Util.getRecentItems(entryCount, music, diary)) {
-        if (o instanceof Show) {
-          RSS.add((Show)o, links, objFactory, channel);
-        } else if (o instanceof Entry) {
-          RSS.add((Entry)o, links, objFactory, channel);
-        } else {
-          System.err.println("Unknown recent item." + o.toString());
-          Thread.dumpStack();
-          System.exit(1);
-        }
-      }
-
-      TRss rss = objFactory.createTRss();
-      rss.setVersion(new java.math.BigDecimal(2.0));
-      rss.setChannel(channel);
-
-      JAXBElement<TRss> jrss = objFactory.createRss(rss);                                                
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.rss.data");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                         
       m.marshal(jrss, os);
-                        
     } catch (JAXBException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't create: ");
+      sb.append(os.toString());
+      throw new RSSException(sb.toString(), e);
     }
   }
 }

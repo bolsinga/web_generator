@@ -78,8 +78,14 @@ public class Site implements com.bolsinga.web.Backgroundable {
         com.bolsinga.music.ICal.generate(music, outputDir);
       }
     }
-    if (!webOnly) {
-      com.bolsinga.rss.RSS.generate(diary, music, outputDir);
+    try {
+      if (!webOnly) {
+        com.bolsinga.rss.RSS.generate(diary, music, outputDir);
+      }
+    } catch (Exception e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
     }
   }
 }
