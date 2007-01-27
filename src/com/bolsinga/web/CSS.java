@@ -153,7 +153,7 @@ public class CSS {
     }
   }
     
-  public static void install(final File srcFile, final File dstFile) throws IOException {
+  private static void install(final File srcFile, final File dstFile) throws IOException {
     // Make sure the path the the dstFile exists
     File dstParent = new File(dstFile.getParent());
     if (!dstParent.mkdirs()) {
