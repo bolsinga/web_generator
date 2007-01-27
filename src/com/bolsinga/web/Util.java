@@ -362,7 +362,7 @@ public class Util {
     return cp.toString();
   }
  
-  public static List<Object> getRecentItems(final int count, final com.bolsinga.music.data.Music music, final Diary diary) {
+  public static List<Object> getRecentItems(final int count, final Music music, final Diary diary) {
     List<Show> shows = Util.getShowsCopy(music);
     Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(shows);
@@ -386,8 +386,8 @@ public class Util {
         Calendar c1 = null;
         Calendar c2 = null;
                         
-        if (o1 instanceof com.bolsinga.music.data.Show) {
-          c1 = Util.toCalendarUTC(((com.bolsinga.music.data.Show)o1).getDate());
+        if (o1 instanceof Show) {
+          c1 = Util.toCalendarUTC(((Show)o1).getDate());
         } else if (o1 instanceof Entry) {
           c1 = ((Entry)o1).getTimestamp().toGregorianCalendar();
         } else {
@@ -395,8 +395,8 @@ public class Util {
           System.exit(1);
         }
 
-        if (o2 instanceof com.bolsinga.music.data.Show) {
-          c2 = Util.toCalendarUTC(((com.bolsinga.music.data.Show)o2).getDate());
+        if (o2 instanceof Show) {
+          c2 = Util.toCalendarUTC(((Show)o2).getDate());
         } else if (o2 instanceof Entry) {
           c2 = ((Entry)o2).getTimestamp().toGregorianCalendar();
         } else {

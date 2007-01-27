@@ -138,9 +138,9 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
       if (o instanceof Entry) {
         // TODO: This shouldn't call getElement().
         diaryDiv.addElement(EntryRecordDocumentCreator.createEntryRecord((Entry)o, fLinks, fEncoder, false).getElement());
-      } else if (o instanceof com.bolsinga.music.data.Show) {
+      } else if (o instanceof Show) {
         // This appears at the top level
-        diaryDiv.addElement(com.bolsinga.music.Web.addItem(fEncoder, fLookup, fLinks, (com.bolsinga.music.data.Show)o, false));
+        diaryDiv.addElement(com.bolsinga.music.Web.addItem(fEncoder, fLookup, fLinks, (Show)o, false));
       } else {
         System.err.println("Unknown recent item." + o.toString());
         Thread.dumpStack();

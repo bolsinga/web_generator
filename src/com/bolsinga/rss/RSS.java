@@ -84,7 +84,7 @@ public class RSS {
     generate(diary, music, os);
   }
 
-  public static void add(final com.bolsinga.music.data.Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
+  public static void add(final Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) throws JAXBException {
     add(getTitle(show), com.bolsinga.web.Util.toCalendarUTC(show.getDate()), links.getLinkTo(show), show.getComment(), objFactory, channel);
   }
         
@@ -164,7 +164,7 @@ public class RSS {
       int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
 
       for (Object o : com.bolsinga.web.Util.getRecentItems(entryCount, music, diary)) {
-        if (o instanceof com.bolsinga.music.data.Show) {
+        if (o instanceof Show) {
           RSS.add((Show)o, links, objFactory, channel);
         } else if (o instanceof Entry) {
           RSS.add((Entry)o, links, objFactory, channel);

@@ -18,8 +18,8 @@ public class Music {
   private static final HashMap<String, com.bolsinga.music.data.Venue> sVenues =
     new HashMap<String, com.bolsinga.music.data.Venue>();
   private static final HashMap<String, String> sBandSorts = new HashMap<String, String>();
-  private static final HashMap<String, com.bolsinga.music.data.Artist> sArtists =
-    new HashMap<String, com.bolsinga.music.data.Artist>();
+  private static final HashMap<String, Artist> sArtists =
+    new HashMap<String, Artist>();
 
   private static final boolean TIDY_XML = false;
         
@@ -230,8 +230,8 @@ public class Music {
     return result;
   }
         
-  public static com.bolsinga.music.data.Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String name) throws JAXBException {
-    com.bolsinga.music.data.Artist result = null;
+  public static Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.Music music, final String name) throws JAXBException {
+    Artist result = null;
     if (!sArtists.containsKey(name)) {
       result = objFactory.createArtist();
       result.setName(name);
@@ -256,7 +256,7 @@ public class Music {
     //  Create a Show with the above.
                 
     com.bolsinga.music.data.Show xShow = null;
-    com.bolsinga.music.data.Artist xArtist = null;
+    Artist xArtist = null;
     com.bolsinga.music.data.Date xDate = null;
 
     int index = 0;
