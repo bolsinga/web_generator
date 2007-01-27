@@ -12,7 +12,7 @@ import org.apache.ecs.filter.*;
 import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
-import com.bolsinga.music.data.*;
+import com.bolsinga.music.data.xml.*;
 import com.bolsinga.diary.data.xml.*;
 
 public class Util {
@@ -486,7 +486,7 @@ public class Util {
     return diary;
   }
   
-  public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.Date date) {
+  public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.xml.Date date) {
     Calendar localTime = Calendar.getInstance(); // LocalTime OK
     boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
@@ -494,7 +494,7 @@ public class Util {
       localTime.clear();
       localTime.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue(), showTime, 0);
     } else {
-      System.err.println("Can't convert Unknown com.bolsinga.music.data.Date");
+      System.err.println("Can't convert Unknown com.bolsinga.music.data.xml.Date");
       System.exit(1);
     }
     // Convert to UTC
@@ -503,7 +503,7 @@ public class Util {
     return result;
   }
 
-  public static String toString(final com.bolsinga.music.data.Date date) {
+  public static String toString(final com.bolsinga.music.data.xml.Date date) {
     boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
       return sWebFormat.get().format(Util.toCalendarUTC(date).getTime());
@@ -515,7 +515,7 @@ public class Util {
     }
   }
         
-  public static String toMonth(final com.bolsinga.music.data.Date date) {
+  public static String toMonth(final com.bolsinga.music.data.xml.Date date) {
     boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
       return sMonthFormat.get().format(Util.toCalendarUTC(date).getTime());
@@ -555,12 +555,12 @@ public class Util {
     return new ArrayList<Artist>(music.getArtist());
   }
 
-  public static List<com.bolsinga.music.data.Label> getLabelsUnmodifiable(final Music music) {
+  public static List<com.bolsinga.music.data.xml.Label> getLabelsUnmodifiable(final Music music) {
     return Collections.unmodifiableList(music.getLabel());
   }
 
-  public static List<com.bolsinga.music.data.Label> getLabelsCopy(final Music music) {
-    return new ArrayList<com.bolsinga.music.data.Label>(music.getLabel());
+  public static List<com.bolsinga.music.data.xml.Label> getLabelsCopy(final Music music) {
+    return new ArrayList<com.bolsinga.music.data.xml.Label>(music.getLabel());
   }
 
   public static List<Relation> getRelationsUnmodifiable(final Music music) {
@@ -614,7 +614,7 @@ public class Util {
   public static Music createMusic(final String sourceFile) {
     Music music = null;
     try {
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
       Unmarshaller u = jc.createUnmarshaller();
                         
       music = (Music)u.unmarshal(new java.io.FileInputStream(sourceFile));

@@ -60,7 +60,7 @@
 </target>
 
 <target name="music_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data" removeOldOutput="yes">
+        <xjc schema="${basedir}/xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data.xml" removeOldOutput="yes">
                 <depends dir="${basedir}/xml" includes="music.xsd" />
                 <produces dir="${build.gensrc}/com/bolsinga/music/data" />
         </xjc>

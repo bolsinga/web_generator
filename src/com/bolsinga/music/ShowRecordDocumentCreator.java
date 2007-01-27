@@ -1,6 +1,6 @@
 package com.bolsinga.music;
 
-import com.bolsinga.music.data.*;
+import com.bolsinga.music.data.xml.*;
 
 import com.bolsinga.web.*;
 
@@ -101,11 +101,11 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Collection<Vector<Show>> getMonthlies(final Vector<Show> items) {
-    TreeMap<com.bolsinga.music.data.Date, Vector<Show>> result =
-      new TreeMap<com.bolsinga.music.data.Date, Vector<Show>>(Compare.DATE_MONTH_COMPARATOR);
+    TreeMap<com.bolsinga.music.data.xml.Date, Vector<Show>> result =
+      new TreeMap<com.bolsinga.music.data.xml.Date, Vector<Show>>(Compare.DATE_MONTH_COMPARATOR);
 
     for (Show item : items) {
-      com.bolsinga.music.data.Date key = item.getDate();
+      com.bolsinga.music.data.xml.Date key = item.getDate();
       Vector<Show> showList;
       if (result.containsKey(key)) {
         showList = result.get(key);

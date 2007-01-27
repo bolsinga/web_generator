@@ -6,7 +6,7 @@ import java.util.*;
 
 import javax.xml.bind.*;
 
-import com.bolsinga.music.data.*;
+import com.bolsinga.music.data.xml.*;
 import com.bolsinga.web.*;
 
 public class MySQLCreator {
@@ -57,9 +57,9 @@ public class MySQLCreator {
     return sb.toString();
   }
 
-  private com.bolsinga.music.data.Date createDate(final String sqlDate, final boolean dateVague) throws JAXBException {
+  private com.bolsinga.music.data.xml.Date createDate(final String sqlDate, final boolean dateVague) throws JAXBException {
 
-    com.bolsinga.music.data.Date result = objFactory.createDate();
+    com.bolsinga.music.data.xml.Date result = objFactory.createDate();
     
     String monthString, dayString, yearString = null;
     int month, day, year = 0;
@@ -382,7 +382,7 @@ public class MySQLCreator {
           song.getProducer().add(objFactory.createSongProducer(getArtist(toXMLID("ar", producer_id))));
         }
         String sqlDate = rset.getString("release");
-        com.bolsinga.music.data.Date releaseDate = null;
+        com.bolsinga.music.data.xml.Date releaseDate = null;
         if (!rset.wasNull()) {
           boolean dateVague = (rset.getInt("release_vague") == 1);
           releaseDate = createDate(sqlDate, dateVague);

@@ -8,7 +8,7 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 import com.bolsinga.plist.*;
-import com.bolsinga.music.data.*;
+import com.bolsinga.music.data.xml.*;
 
 public class ITunes {
 
@@ -94,7 +94,7 @@ public class ITunes {
       music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
                                 
       // Write out to the output file.
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data");
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                         
@@ -389,8 +389,8 @@ public class ITunes {
     return result;
   }
 
-  private static com.bolsinga.music.data.Date releaseYear(final ObjectFactory objFactory, final int year) throws JAXBException {
-    com.bolsinga.music.data.Date release = objFactory.createDate();
+  private static com.bolsinga.music.data.xml.Date releaseYear(final ObjectFactory objFactory, final int year) throws JAXBException {
+    com.bolsinga.music.data.xml.Date release = objFactory.createDate();
     release.setUnknown(true);
     release.setYear(java.math.BigInteger.valueOf(year));
     return release;
@@ -415,7 +415,7 @@ public class ITunes {
   private static void setAlbumYears(final ObjectFactory objFactory, final Music music) throws JAXBException {
     List<Album> albums = com.bolsinga.web.Util.getAlbumsUnmodifiable(music);
     int albumYear, songYear;
-    com.bolsinga.music.data.Date date;
+    com.bolsinga.music.data.xml.Date date;
     for (Album a : albums) {
       if (a.getReleaseDate() != null) {
         // The album already has a date; don't change it.

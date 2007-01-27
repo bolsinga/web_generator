@@ -89,7 +89,7 @@ public class Main implements com.bolsinga.web.Backgroundable {
 
     boolean useDB = command.matches(".*-db$");
 
-    com.bolsinga.music.data.Music music = null;
+    com.bolsinga.music.data.xml.Music music = null;
     com.bolsinga.diary.data.xml.Diary diary = null;
 
     if (!useDB) {
