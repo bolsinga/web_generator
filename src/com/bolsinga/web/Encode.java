@@ -44,7 +44,7 @@ class EncodeTest {
     }
   }
 
-  static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) {
+  private static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) throws WebException {
     List<Entry> items = Util.getEntriesCopy(diary);
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
@@ -73,7 +73,7 @@ class EncodeTest {
     }
   }
 
-  static void generateMusic(final Music music, final Encode encoder, final String outputDir) {
+  private static void generateMusic(final Music music, final Encode encoder, final String outputDir) throws WebException {
     List<Show> items = Util.getShowsUnmodifiable(music);
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
@@ -104,22 +104,43 @@ class EncodeTest {
     }
   }
 
-  private static void writeDocument(final StringBuilder buffer, final String outputDir, final String fileName) {
-    try {
-      File f = new File(outputDir, fileName);
-      File parent = new File(f.getParent());
-      if (!parent.mkdirs()) {
-        if (!parent.exists()) {
-          System.out.println("EncodeTest cannot mkdirs: " + parent.getAbsolutePath());
-        }
+  private static void writeDocument(final StringBuilder buffer, final String outputDir, final String fileName) throws WebException {
+    File f = new File(outputDir, fileName);
+    File parent = new File(f.getParent());
+    if (!parent.mkdirs()) {
+      if (!parent.exists()) {
+        System.err.println("EncodeTest cannot mkdirs: " + parent.getAbsolutePath());
       }
-      OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+    }
+    
+    OutputStream os = null;
+    try {
+     os = new FileOutputStream(f);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(f.toString());
+      throw new WebException(sb.toString(), e);
+    }
+    
+    Writer w = null;
+    try {
+      w = new OutputStreamWriter(os, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't handle encoding UTF-8: ");
+      sb.append(os.toString());
+      throw new WebException(sb.toString(), e);
+    }      
+    
+    try {
       w.write(buffer.toString());
       w.close();
-    } catch (IOException ioe) {
-      System.err.println("Exception: " + ioe);
-      ioe.printStackTrace();
-      System.exit(1);
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't write file: ");
+      sb.append(w.toString());
+      throw new WebException(sb.toString(), e);
     }
   }
 }
