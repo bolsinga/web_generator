@@ -43,16 +43,16 @@ public class Main implements com.bolsinga.web.Backgroundable {
     main.complete();
   }
     
-  Main(final com.bolsinga.web.Backgrounder backgrounder) {
+  private Main(final com.bolsinga.web.Backgrounder backgrounder) {
     fBackgrounder = backgrounder;
     fBackgrounder.addInterest(this);
   }
   
-  void complete() {
+  private void complete() {
     fBackgrounder.removeInterest(this);
   }
   
-  boolean generate(String command, String diaryFile, String musicFile, String user, String password, String output, String itunes, String shows, String venue, String sort, String relations, String comments, String statics, String settingsFile, String cssFile) {
+  private boolean generate(String command, String diaryFile, String musicFile, String user, String password, String output, String itunes, String shows, String venue, String sort, String relations, String comments, String statics, String settingsFile, String cssFile) {
     boolean musicXML = command.equals("musicxml") || command.equals("xml");
     boolean diaryXML = command.equals("diaryxml") || command.equals("xml");
     boolean musicImport = command.equals("musicimport") || command.equals("import");

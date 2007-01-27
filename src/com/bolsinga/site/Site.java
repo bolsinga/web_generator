@@ -44,12 +44,12 @@ public class Site implements com.bolsinga.web.Backgroundable {
     site.complete();
   }
   
-  Site(final com.bolsinga.web.Backgrounder backgrounder) {
+  private Site(final com.bolsinga.web.Backgrounder backgrounder) {
     fBackgrounder = backgrounder;
     fBackgrounder.addInterest(this);
   }
   
-  void complete() {
+  private void complete() {
     fBackgrounder.removeInterest(this);
   }
 
@@ -59,7 +59,7 @@ public class Site implements com.bolsinga.web.Backgroundable {
       System.exit(0);
   }
 
-  public void generate(final Diary diary, final Music music, final String outputDir, final String variant) {
+  private void generate(final Diary diary, final Music music, final String outputDir, final String variant) {
     com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
     Site.generate(fBackgrounder, this, encoder, diary, music, outputDir, variant);
   }
