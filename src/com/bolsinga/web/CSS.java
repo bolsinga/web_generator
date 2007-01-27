@@ -127,16 +127,16 @@ public class CSS {
 
     try {
       Util.createSettings(args[0]);
+    
+      CSS.install(args[1], args[2]);
     } catch (WebException e) {
       System.err.println(e);
       e.printStackTrace();
       System.exit(1);
     }
-    
-    CSS.install(args[1], args[2]);
   }
   
-  public static void install(final String srcFileName, final String outputDir) {
+  public static void install(final String srcFileName, final String outputDir) throws WebException {
     File srcFile = new File(srcFileName);
     StringBuilder sb = new StringBuilder();
     sb.append(outputDir);
@@ -144,66 +144,84 @@ public class CSS {
     sb.append(Links.STYLES_DIR);
     File dstFile = new File(sb.toString(), Util.getSettings().getCssFile());
     
-    try {
-      CSS.install(srcFile, dstFile);
-    } catch (IOException e) {
-      System.err.println("Exception trying to install CSS file: " + e);
-      e.printStackTrace();
-      System.exit(1);
-    }
+    CSS.install(srcFile, dstFile);
   }
     
-  private static void install(final File srcFile, final File dstFile) throws IOException {
+  private static void install(final File srcFile, final File dstFile) throws WebException {
     // Make sure the path the the dstFile exists
     File dstParent = new File(dstFile.getParent());
     if (!dstParent.mkdirs()) {
       if (!dstParent.exists()) {
-        System.out.println("CSS cannot mkdirs: " + dstParent.getAbsolutePath());
+        System.err.println("CSS cannot mkdirs: " + dstParent.getAbsolutePath());
       }
     }
 
     CSS.filterFile(srcFile, dstFile);
   }
   
-  private static void filterFile(final File src, final File dst) throws IOException {
+  private static void filterFile(final File src, final File dst) throws WebException {
     // Copy source file, line by line. If a line has a "@@" delimiter, map
-    //  the contents to the proper CSS class name with sCSSMapping.
+    //  the contents to the proper CSS class name with sCSSMapping.    
+    Reader r = null;
+    try {
+      r = new FileReader(src);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(src);
+      throw new WebException(sb.toString());
+    }
+
     StringBuilder sb = new StringBuilder();
     
-    BufferedReader in = null;
     try {
-      in = new BufferedReader(new FileReader(src));
-      String s = null;
-      
-      while ((s = in.readLine()) != null) {
-        Matcher m = sDelimitedPattern.matcher(s);
-        if (m.find()) {
-          int offset = 0;
-          do {
-            sb.append(s.substring(offset, m.start()));
-            sb.append(sCSSMapping.get(m.group(1)));
-            offset = m.end();
-          } while (m.find());
-          sb.append(s.substring(offset, m.regionEnd()));
-        } else {
-          sb.append(s);
+      BufferedReader in = null;
+      try {
+        in = new BufferedReader(r);
+        String s = null;
+        
+        while ((s = in.readLine()) != null) {
+          Matcher m = sDelimitedPattern.matcher(s);
+          if (m.find()) {
+            int offset = 0;
+            do {
+              sb.append(s.substring(offset, m.start()));
+              sb.append(sCSSMapping.get(m.group(1)));
+              offset = m.end();
+            } while (m.find());
+            sb.append(s.substring(offset, m.regionEnd()));
+          } else {
+            sb.append(s);
+          }
+          Util.appendPretty(sb);
         }
-        Util.appendPretty(sb);
+      } finally {
+        if (in != null) {
+          in.close();
+        }
       }
-    } finally {
-      if (in != null) {
-        in.close();
-      }
+    } catch (IOException e) {
+      sb = new StringBuilder();
+      sb.append("Error reading: ");
+      sb.append(r.toString());
+      throw new WebException(sb.toString(), e);
     }
     
-    Writer out = null;
     try {
-      out = new FileWriter(dst);
-      out.append(sb);
-    } finally {
-      if (out != null) {
-        out.close();
+      Writer out = null;
+      try {
+        out = new FileWriter(dst);
+        out.append(sb);
+      } finally {
+        if (out != null) {
+          out.close();
+        }
       }
+    } catch (IOException e) {
+      sb = new StringBuilder();
+      sb.append("Error writing: ");
+      sb.append(dst);
+      throw new WebException(sb.toString(), e);
     }
   }
 }
