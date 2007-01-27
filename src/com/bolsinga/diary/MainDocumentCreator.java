@@ -61,32 +61,32 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
 
               public Element getArtistNavigator() {
                 return fLinks.getArtistLink(createPreviewLine(Util.getArtistsUnmodifiable(fMusic).size(),
-                                                                  Util.getResourceString("bands")));
+                                                              Util.getResourceString("bands")));
               }
 
               public Element getTrackNavigator() {
                 return fLinks.getTracksLink(createPreviewLine(Util.getSongsUnmodifiable(fMusic).size(),
-                                                                  Util.getResourceString("tracks")));
+                                                              Util.getResourceString("tracks")));
               }
 
               public Element getAlbumNavigator() {
                 return fLinks.getAlbumsLink(createPreviewLine(Util.getAlbumsUnmodifiable(fMusic).size(),
-                                                                  Util.getResourceString("albums")));
+                                                              Util.getResourceString("albums")));
               }
               
               public Element getShowNavigator() {
                 return fLinks.getShowLink(createPreviewLine(Util.getShowsUnmodifiable(fMusic).size(),
-                                                                Util.getResourceString("dates")));
+                                                            Util.getResourceString("dates")));
               }
               
               public Element getVenueNavigator() {
                 return fLinks.getVenueLink(createPreviewLine(Util.getVenuesUnmodifiable(fMusic).size(),
-                                                                Util.getResourceString("venues")));
+                                                            Util.getResourceString("venues")));
               }
               
               public Element getCityNavigator() {
                 return fLinks.getCityLink(createPreviewLine(fLookup.getCities().size(),
-                                                                Util.getResourceString("cities")));
+                                                            Util.getResourceString("cities")));
               }
               
               public Element getCurrentNavigator() {

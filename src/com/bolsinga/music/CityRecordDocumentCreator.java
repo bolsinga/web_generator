@@ -1,6 +1,7 @@
 package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
+import com.bolsinga.web.*;
 
 import java.text.*;
 import java.util.*;
@@ -10,7 +11,7 @@ import org.apache.ecs.html.*;
 
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
 
-  public static void createDocuments(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable, final Music music, final String outputDir) {
+  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     CityRecordDocumentCreator creator = new CityRecordDocumentCreator(music, outputDir);
     creator.createStats(backgrounder, backgroundable);
   }
@@ -19,7 +20,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
     super(music, outputDir);
   }
 
-  protected void createStats(final com.bolsinga.web.Backgrounder backgrounder, final com.bolsinga.web.Backgroundable backgroundable) {
+  protected void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new StatsRecordFactory() {
@@ -28,22 +29,22 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
           
           public String getDirectory() {
-            return com.bolsinga.web.Links.CITIES_DIR;
+            return Links.CITIES_DIR;
           }
 
           public String getTitle() {
-            Object typeArgs[] = { com.bolsinga.web.Util.getResourceString("city") };
-            return MessageFormat.format(com.bolsinga.web.Util.getResourceString("statistics"), typeArgs);
+            Object typeArgs[] = { Util.getResourceString("city") };
+            return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
           }
 
-          public com.bolsinga.web.Navigator getNavigator() {
-            return new com.bolsinga.web.Navigator(fLinks) {
+          public Navigator getNavigator() {
+            return new Navigator(fLinks) {
               public Element getCityNavigator() {
                 return getCurrentNavigator();
               }
               
               public Element getCurrentNavigator() {
-                return new StringElement(com.bolsinga.web.Util.getResourceString("cities"));
+                return new StringElement(Util.getResourceString("cities"));
               }
             };
           }
@@ -90,10 +91,10 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
     }
                 
-    String typeString = com.bolsinga.web.Util.getResourceString("city");
+    String typeString = Util.getResourceString("city");
     Object typeArgs[] = { typeString };
-    String tableTitle = MessageFormat.format(com.bolsinga.web.Util.getResourceString("showsby"), typeArgs);
+    String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
 
-    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, com.bolsinga.web.Util.getResourceString("citystatsummary"));
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("citystatsummary"));
   }
 }

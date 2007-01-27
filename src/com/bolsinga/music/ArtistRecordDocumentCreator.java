@@ -215,7 +215,9 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
                         
     String comment = show.getComment();
     if (comment != null) {
-      e.add(Util.createInternalA(fLinks.getLinkTo(show), Util.getResourceString("showsummary"), Util.getResourceString("showsummarytitle")));
+      e.add(Util.createInternalA( fLinks.getLinkTo(show),
+                                  Util.getResourceString("showsummary"),
+                                  Util.getResourceString("showsummarytitle")));
     }
     
     return e;

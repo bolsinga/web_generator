@@ -1,6 +1,7 @@
 package com.bolsinga.diary;
 
 import com.bolsinga.diary.data.*;
+import com.bolsinga.web.*;
 
 import java.sql.*;
 import java.util.*;
@@ -19,7 +20,7 @@ public class MySQLCreator {
         
         String sqlDATETIME = rset.getString("timestamp");
         GregorianCalendar utcCal = com.bolsinga.sql.Util.toCalendarUTC(sqlDATETIME);
-        entry.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(utcCal));
+        entry.setTimestamp(Util.toXMLGregorianCalendar(utcCal));
         entry.setComment(rset.getString("comment"));
         entry.setId("e" + (rset.getLong("id") - 1));
         
@@ -131,7 +132,7 @@ public class MySQLCreator {
       MySQLCreator.createTitle(stmt, diary);
 
       // timestamp
-      diary.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
+      diary.setTimestamp(Util.toXMLGregorianCalendar(Util.nowUTC()));
     } catch (Exception e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();

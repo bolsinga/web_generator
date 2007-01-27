@@ -7,6 +7,7 @@ import java.util.*;
 import javax.xml.bind.*;
 
 import com.bolsinga.music.data.*;
+import com.bolsinga.web.*;
 
 public class MySQLCreator {
   private final ObjectFactory objFactory;
@@ -390,7 +391,7 @@ public class MySQLCreator {
         String sqlDATETIME = rset.getString("last_played");
         if (!rset.wasNull()) {
           GregorianCalendar utcCal = com.bolsinga.sql.Util.toCalendarUTC(sqlDATETIME);
-          song.setLastPlayed(com.bolsinga.web.Util.toXMLGregorianCalendar(utcCal));
+          song.setLastPlayed(Util.toXMLGregorianCalendar(utcCal));
         }
         long playCount = rset.getLong("playcount");
         if (!rset.wasNull()) {
@@ -529,7 +530,7 @@ public class MySQLCreator {
     createShows();
     createRelations();
 
-    music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
+    music.setTimestamp(Util.toXMLGregorianCalendar(Util.nowUTC()));
 
     return music;
   }
