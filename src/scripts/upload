@@ -2,7 +2,7 @@
 
 usage()
 {
-  echo "upload site_dir ftp_password <diary|all>"
+  echo "upload site_dir ftp_password"
   echo $1
   exit 1
 }
@@ -21,23 +21,8 @@ if [ -z "$FTP_PASSWORD" ] ; then
   usage "No ftp_password."
 fi
 
-TYPE=$3
-if [ -z "$TYPE" ] ; then
-  TYPE=upload
-else
-  if [ "$TYPE" = diary ] ; then
-    TYPE=uploadDiary
-  else
-    if [ "$TYPE" = all ] ; then
-      TYPE=upload
-    else
-      usage "Need to pass 'diary' or 'all'."
-    fi
-  fi
-fi
-
 PRG="$0"
 PROG_HOME=`dirname "$PRG"`
 PROG_HOME=`cd "$PROG_HOME" && pwd`
 
-ant -f $PROG_HOME/lib/upload.xml -Doutput.dir=$SITE_DIR -Dftp.user=bolsinga -Dftp.site=ftp.io.com -Dftp.password=$FTP_PASSWORD -Dftp.remote_dir=public-web $TYPE
+ant -f $PROG_HOME/lib/upload.xml -Doutput.dir=$SITE_DIR -Dftp.user=bolsinga -Dftp.site=ftp.io.com -Dftp.password=$FTP_PASSWORD -Dftp.remote_dir=public-web upload

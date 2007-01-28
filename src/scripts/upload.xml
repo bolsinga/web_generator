@@ -24,18 +24,4 @@
   </ftp>
 </target>
 
-<target name="uploadDiary">
-  <ftp    server="${ftp.site}"
-          userid="${ftp.user}"
-          password="${ftp.password}"
-          remotedir="${ftp.remote_dir}"
-          verbose="yes" >
-    <fileset dir="${output.dir}">
-      <include name="index.html" />
-      <include name="archives/*" />
-      <include name="alt/*" />
-    </fileset>
-  </ftp>
-</target>
-
 </project>
