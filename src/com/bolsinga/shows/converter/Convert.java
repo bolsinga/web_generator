@@ -26,24 +26,23 @@ public class Convert {
       System.out.println("\tcomments, shows, venuemap, bandsort, relations statics");
       System.exit(0);
     }
-                
+    
     try {
       Convert c = new Convert(args[0], args[1]);
       c.convert();
-    } catch (IOException ioexception) {
-      System.err.println(ioexception);
+    } catch (ConvertException e) {
+      System.err.println(e);
+      e.printStackTrace();
       System.exit(1);
     }
-                
-    System.exit(0);
   }
 
-  public Convert(final String type, final String file) {
+  private Convert(final String type, final String file) {
     fType = type;
     fFile = file;
   }
 
-  public void convert() throws IOException {
+  private void convert() throws ConvertException {
     Collection<?> l = null;
     if (fType.equals("relations")) {
       l = relation(fFile);
@@ -58,236 +57,368 @@ public class Convert {
     } else if (fType.equals("comments")) {
       l = comments(fFile);
     } else {
-      System.err.println("Unknown type: " + fType);
-      System.exit(1);
+      StringBuilder sb = new StringBuilder();
+      sb.append("Unknown conversion type: ");
+      sb.append(fType);
+      throw new ConvertException(sb.toString());
     }
     dump(l);
   }
 
-  public static List<Relation> relation(final String filename) throws IOException {
+  public static List<Relation> relation(final String filename) throws ConvertException {
     Vector<Relation> relations = new Vector<Relation>();
 
-    BufferedReader in = null;
+    Reader reader = null;
     try {
-      in = new BufferedReader(new FileReader(filename));
-      String s = null;
-      StringTokenizer st = null;
-      while ((s = in.readLine()) != null) {
-        st = new StringTokenizer(s, "|");
-        
-        Relation r = new Relation(st.nextToken(), st.nextToken());
-        
-        while (st.hasMoreElements()) {
-          r.addMember(st.nextToken());
+      reader = new FileReader(filename);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new ConvertException(sb.toString(), e);
+    }
+    
+    try {
+      BufferedReader in = null;
+      try {
+        in = new BufferedReader(reader);
+        String s = null;
+        StringTokenizer st = null;
+        while ((s = in.readLine()) != null) {
+          st = new StringTokenizer(s, "|");
+          
+          Relation r = new Relation(st.nextToken(), st.nextToken());
+          
+          while (st.hasMoreElements()) {
+            r.addMember(st.nextToken());
+          }
+          
+          relations.add(r);
         }
-        
-        relations.add(r);
+      } finally {
+        if (in != null) {
+          in.close();
+        }
       }
-    } finally {
-      if (in != null) {
-        in.close();
-      }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't read relations file: ");
+      sb.append(reader.toString());
+      throw new ConvertException(sb.toString(), e);
     }
                 
     return relations;
   }
         
-  public static List<BandMap> bandsort(final String filename) throws IOException {
+  public static List<BandMap> bandsort(final String filename) throws ConvertException {
     Vector<BandMap> bandMaps = new Vector<BandMap>();
-                
-    BufferedReader in = null;
+
+    Reader reader = null;
     try {
-      in = new BufferedReader(new FileReader(filename));
-      String s = null;
-      StringTokenizer st = null;
-      while ((s = in.readLine()) != null) {
-        st = new StringTokenizer(s, "*");
-        
-        bandMaps.add(new BandMap(st.nextToken(), st.nextToken()));
+      reader = new FileReader(filename);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new ConvertException(sb.toString(), e);
+    }
+    
+    try {
+      BufferedReader in = null;
+      try {
+        in = new BufferedReader(reader);
+        String s = null;
+        StringTokenizer st = null;
+        while ((s = in.readLine()) != null) {
+          st = new StringTokenizer(s, "*");
+          
+          bandMaps.add(new BandMap(st.nextToken(), st.nextToken()));
+        }
+      } finally {
+        if (in != null) {
+          in.close();
+        }
       }
-    } finally {
-      if (in != null) {
-        in.close();
-      }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't read bandsort file: ");
+      sb.append(reader.toString());
+      throw new ConvertException(sb.toString(), e);
     }
 
     return bandMaps;
   }
         
-  public static List<Venue> venuemap(final String filename) throws IOException {
+  public static List<Venue> venuemap(final String filename) throws ConvertException {
     Vector<Venue> venues = new Vector<Venue>();
-                
-    BufferedReader in = null;
+
+    Reader reader = null;
     try {
-      in = new BufferedReader(new FileReader(filename));
-      String s = null;
-      StringTokenizer st = null;
+      reader = new FileReader(filename);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new ConvertException(sb.toString(), e);
+    }
 
-      String name, city, state, address, url;
+    try {
+      BufferedReader in = null;
+      try {
+        in = new BufferedReader(reader);
+        String s = null;
+        StringTokenizer st = null;
 
-      while ((s = in.readLine()) != null) {
-        st = new StringTokenizer(s, "*");
+        String name, city, state, address, url;
 
-        name = st.nextToken();
-        city = st.nextToken();
-        state = st.nextToken();
-        
-        if (st.hasMoreElements()) {
-          address = st.nextToken();
-        } else {
-          address = null;
+        while ((s = in.readLine()) != null) {
+          st = new StringTokenizer(s, "*");
+
+          name = st.nextToken();
+          city = st.nextToken();
+          state = st.nextToken();
+          
+          if (st.hasMoreElements()) {
+            address = st.nextToken();
+          } else {
+            address = null;
+          }
+          
+          if (st.hasMoreElements()) {
+            url = st.nextToken();
+          } else {
+            url = null;
+          }
+          
+          Venue v = new Venue(name, city, state, address, url);
+          
+          venues.add(v);
         }
-        
-        if (st.hasMoreElements()) {
-          url = st.nextToken();
-        } else {
-          url = null;
+      } finally {
+        if (in != null) {
+          in.close();
         }
-        
-        Venue v = new Venue(name, city, state, address, url);
-        
-        venues.add(v);
       }
-    } finally {
-      if (in != null) {
-        in.close();
-      }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't read venuemap file: ");
+      sb.append(reader.toString());
+      throw new ConvertException(sb.toString(), e);
     }
 
     return venues;
   }
         
-  public static List<Show> shows(final String filename) throws IOException {
+  public static List<Show> shows(final String filename) throws ConvertException {
     final String SHOW_DELIMITER = "^";
         
     Vector<Show> shows = new Vector<Show>();
 
-    BufferedReader in = null;
+    Reader reader = null;
     try {
-      in = new BufferedReader(new FileReader(filename));
-      String l = null;
-      StringTokenizer st = null, bt = null;
-      while ((l = in.readLine()) != null) {
-        st = new StringTokenizer(l, SHOW_DELIMITER, true);
-        
-        String date = st.nextToken();       // date
-        st.nextToken();                     // delim
-        String bandstring = st.nextToken(); // delimited bands
-        st.nextToken();                     // delim
-        String venue = st.nextToken();      // venue
-        String comment = null;
-        // The rest is optional
-        if (st.hasMoreElements()) {
-          st.nextToken();                                         // delim
+      reader = new FileReader(filename);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new ConvertException(sb.toString(), e);
+    }
+
+    try {
+      BufferedReader in = null;
+      try {
+        in = new BufferedReader(reader);
+        String l = null;
+        StringTokenizer st = null, bt = null;
+        while ((l = in.readLine()) != null) {
+          st = new StringTokenizer(l, SHOW_DELIMITER, true);
           
-          // Need to see if there are comments
+          String date = st.nextToken();       // date
+          st.nextToken();                     // delim
+          String bandstring = st.nextToken(); // delimited bands
+          st.nextToken();                     // delim
+          String venue = st.nextToken();      // venue
+          String comment = null;
+          // The rest is optional
           if (st.hasMoreElements()) {
-            comment = st.nextToken();
+            st.nextToken();                                         // delim
+            
+            // Need to see if there are comments
+            if (st.hasMoreElements()) {
+              comment = st.nextToken();
+            }
           }
+          
+          bt = new StringTokenizer(bandstring, "|");
+          Vector<String> bands = new Vector<String>();
+          while (bt.hasMoreElements()) {
+            bands.add(bt.nextToken());
+          }
+          
+          shows.add(new Show(date, bands, venue, comment));
         }
-        
-        bt = new StringTokenizer(bandstring, "|");
-        Vector<String> bands = new Vector<String>();
-        while (bt.hasMoreElements()) {
-          bands.add(bt.nextToken());
+      } finally {
+        if (in != null) {
+          in.close();
         }
-        
-        shows.add(new Show(date, bands, venue, comment));
       }
-    } finally {
-      if (in != null) {
-        in.close();
-      }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't read shows file: ");
+      sb.append(reader.toString());
+      throw new ConvertException(sb.toString(), e);
     }
                 
     return shows;
   }
         
-  public static List<Statics> statics(final String filename) throws IOException {
+  public static List<Statics> statics(final String filename) throws ConvertException {
     Vector<Statics> statics = new Vector<Statics>();
 
     FileInputStream fis = null;
     try {
       fis = new FileInputStream(new File(filename));
-      FileChannel fc = null;
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new ConvertException(sb.toString(), e);
+    }
+
+    try {
       try {
-        fc = fis.getChannel();
-        ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-        CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
-        
-        Matcher staticMatcher = sStaticPattern.matcher(cb);
-        if (staticMatcher.find()) {
-          do {
-            String entry = staticMatcher.group(1);
-            Matcher locationMatcher = sLocationPattern.matcher(entry);
-            if (locationMatcher.find()) {
-              Matcher dataMatcher = sDataPattern.matcher(entry);
-              if (dataMatcher.find()) {
-                statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
+        FileChannel fc = null;
+        try {
+          fc = fis.getChannel();
+          ByteBuffer bb = null;
+          try {
+            bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+          } catch (IOException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Can't map: ");
+            sb.append(fc.toString());
+            throw new ConvertException(sb.toString(), e);
+          }
+          CharBuffer cb = null;
+          try {
+            cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
+          } catch (java.nio.charset.CharacterCodingException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Bad Encoding US-ASCII: ");
+            sb.append(bb.toString());
+            throw new ConvertException(sb.toString(), e);
+          }
+          
+          Matcher staticMatcher = sStaticPattern.matcher(cb);
+          if (staticMatcher.find()) {
+            do {
+              String entry = staticMatcher.group(1);
+              Matcher locationMatcher = sLocationPattern.matcher(entry);
+              if (locationMatcher.find()) {
+                Matcher dataMatcher = sDataPattern.matcher(entry);
+                if (dataMatcher.find()) {
+                  statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
+                } else {
+                  System.err.println("No Data: " + entry);
+                }
               } else {
-                System.err.println("No Data: " + entry);
+                System.err.println("No Location: " + entry);
               }
-            } else {
-              System.err.println("No Location: " + entry);
-            }
-          } while (staticMatcher.find());
-        } else {
-          System.err.println("No statics: " + cb);
+            } while (staticMatcher.find());
+          } else {
+            System.err.println("No statics: " + cb);
+          }
+        } finally {
+          if (fc != null) {
+            fc.close();
+          }
         }
       } finally {
-        if (fc != null) {
-          fc.close();
+        if (fis != null) {
+          fis.close();
         }
       }
-    } finally {
-      if (fis != null) {
-        fis.close();
-      }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't read statics file: ");
+      sb.append(filename);
+      throw new ConvertException(sb.toString(), e);
     }
 
     return statics;
   }
 
-  public static List<Comments> comments(final String filename) throws IOException {
+  public static List<Comments> comments(final String filename) throws ConvertException {
     Vector<Comments> comments = new Vector<Comments>();
 
     FileInputStream fis = null;
     try {
       fis = new FileInputStream(new File(filename));
-      FileChannel fc = null;
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new ConvertException(sb.toString(), e);
+    }
+
+    try {
       try {
-        fc = fis.getChannel();
-        ByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-        CharBuffer cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
-        
-        Matcher commentMatcher = sCommentPattern.matcher(cb);
-        if (commentMatcher.find()) {
-          do {
-            String entry = commentMatcher.group(1);
-            Matcher dateMatcher = sDatePattern.matcher(entry);
-            if (dateMatcher.find()) {
-              Matcher dataMatcher = sDataPattern.matcher(entry);
-              if (dataMatcher.find()) {
-                comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
+        FileChannel fc = null;
+        try {
+          fc = fis.getChannel();
+          ByteBuffer bb = null;
+          try {
+            bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+          } catch (IOException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Can't map: ");
+            sb.append(fc.toString());
+            throw new ConvertException(sb.toString(), e);
+          }
+          CharBuffer cb = null;
+          try {
+            cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
+          } catch (java.nio.charset.CharacterCodingException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Bad Encoding US-ASCII: ");
+            sb.append(bb.toString());
+            throw new ConvertException(sb.toString(), e);
+          }
+          
+          Matcher commentMatcher = sCommentPattern.matcher(cb);
+          if (commentMatcher.find()) {
+            do {
+              String entry = commentMatcher.group(1);
+              Matcher dateMatcher = sDatePattern.matcher(entry);
+              if (dateMatcher.find()) {
+                Matcher dataMatcher = sDataPattern.matcher(entry);
+                if (dataMatcher.find()) {
+                  comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
+                } else {
+                  System.err.println("No data: " + entry);
+                }
               } else {
-                System.err.println("No data: " + entry);
+                System.err.println("No date: " + entry);
               }
-            } else {
-              System.err.println("No date: " + entry);
-            }
-          } while (commentMatcher.find());
-        } else {
-          System.err.println("No comment: " + cb);
+            } while (commentMatcher.find());
+          } else {
+            System.err.println("No comment: " + cb);
+          }
+        } finally {
+          if (fc != null) {
+            fc.close();
+          }
         }
       } finally {
-        if (fc != null) {
-          fc.close();
+        if (fis != null) {
+          fis.close();
         }
       }
-    } finally {
-      if (fis != null) {
-        fis.close();
-      }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't read statics file: ");
+      sb.append(filename);
+      throw new ConvertException(sb.toString(), e);
     }
                 
     return comments;

@@ -18,57 +18,56 @@ public class Diary {
       System.out.println("Usage: Diary [comments] [statics] [output]");
       System.exit(0);
     }
-                
-    Diary.convert(args[0], args[1], args[2]);
-  }
-        
-  public static void convert(final String commentsFile, final String staticsFile, final String outputFile) {
-    List<Comments> comments = null;
-    List<Statics> statics = null;
-                
+    
     try {
-      comments = Convert.comments(commentsFile);
-                        
-      statics = Convert.statics(staticsFile);
-    } catch (IOException e) {
-      System.err.println(e);
-      System.exit(1);
-    }
-
-    ObjectFactory objFactory = new ObjectFactory();
-                
-    try {
-      com.bolsinga.diary.data.xml.Diary diary = objFactory.createDiary();
-
-      createStatics(objFactory, diary, statics);
-
-      createComments(objFactory, diary, comments);
-
-      diary.setTimestamp(Util.toXMLGregorianCalendar(Util.nowUTC()));
-
-      // Write out to the output file.
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
-      Marshaller m = jc.createMarshaller();
-      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                        
-      OutputStream os = null;
-      try {
-        os = new FileOutputStream(outputFile);
-      } catch (IOException ioe) {
-        System.err.println(ioe);
-        ioe.printStackTrace();
-        System.exit(1);
-      }
-      m.marshal(diary, os);
-                        
-    } catch (JAXBException e) {
+      Diary.convert(args[0], args[1], args[2]);
+    } catch (ConvertException e) {
       System.err.println(e);
       e.printStackTrace();
       System.exit(1);
     }
   }
         
-  private static void createStatics(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Statics> statics) throws JAXBException {
+  public static void convert(final String commentsFile, final String staticsFile, final String outputFile) throws ConvertException {
+    List<Comments> comments = Convert.comments(commentsFile);
+    List<Statics> statics = Convert.statics(staticsFile);
+
+    ObjectFactory objFactory = new ObjectFactory();
+                
+    com.bolsinga.diary.data.xml.Diary diary = objFactory.createDiary();
+
+    createStatics(objFactory, diary, statics);
+
+    createComments(objFactory, diary, comments);
+
+    diary.setTimestamp(Util.toXMLGregorianCalendar(Util.nowUTC()));
+
+    OutputStream os = null;
+    try {
+      os = new FileOutputStream(outputFile);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(outputFile);
+      throw new ConvertException(sb.toString(), e);
+    }
+    
+    try {
+      // Write out to the output file.
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
+      Marshaller m = jc.createMarshaller();
+      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+      m.marshal(diary, os);
+    } catch (JAXBException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't marshall: ");
+      sb.append(os.toString());
+      throw new ConvertException(sb.toString(), e);
+    }
+  }
+        
+  private static void createStatics(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Statics> statics) {
     for (Statics oldStatic : statics) {
       String location = oldStatic.getLocation();
                         
@@ -88,7 +87,7 @@ public class Diary {
     }
   }
 
-  private static void createComments(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Comments> comments) throws JAXBException {
+  private static void createComments(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Comments> comments) {
     com.bolsinga.diary.data.xml.Entry xEntry = null;
     int index = comments.size() - 1;
 

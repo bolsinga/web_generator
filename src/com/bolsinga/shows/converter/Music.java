@@ -28,44 +28,59 @@ public class Music {
       System.out.println("Usage: Music [shows] [venuemap] [bandsort] [relations] [itunes] [output]");
       System.exit(0);
     }
-                
-    Music.convert(args[0], args[1], args[2], args[3], args[4], args[5]);
+
+    try {
+      Music.convert(args[0], args[1], args[2], args[3], args[4], args[5]);
+    } catch (ConvertException e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
+    }
   }
         
-  public static void convert(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String outputFile) {
+  public static void convert(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String outputFile) throws ConvertException {
                 
     ObjectFactory objFactory = new ObjectFactory();
                 
+    com.bolsinga.music.data.xml.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile);
+
     try {
-      com.bolsinga.music.data.xml.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile);
-
       com.bolsinga.itunes.converter.ITunes.addMusic(objFactory, music, iTunesFile);
+    } catch (com.bolsinga.itunes.converter.ITunesException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't convert iTunes file: ");
+      sb.append(iTunesFile);
+      throw new ConvertException(sb.toString(), e);
+    }
 
-      music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
+    music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
 
-      if (Music.TIDY_XML) {
-        com.bolsinga.music.Compare.tidy(music);
-      }
-                        
+    if (Music.TIDY_XML) {
+      com.bolsinga.music.Compare.tidy(music);
+    }
+
+    OutputStream os = null;
+    try {
+      os = new FileOutputStream(outputFile);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(outputFile);
+      throw new ConvertException(sb.toString(), e);
+    }
+
+    try {
       // Write out to the output file.
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                        
-      OutputStream os = null;
-      try {
-        os = new FileOutputStream(outputFile);
-      } catch (IOException ioe) {
-        System.err.println(ioe);
-        ioe.printStackTrace();
-        System.exit(1);
-      }
+
       m.marshal(music, os);
-                        
     } catch (JAXBException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't marshall: ");
+      sb.append(os.toString());
+      throw new ConvertException(sb.toString(), e);
     }
   }
         
@@ -82,28 +97,13 @@ public class Music {
         bands.add(s);
       }
     }
-                
-    System.exit(0);
   }
 
-  public static com.bolsinga.music.data.xml.Music createMusic(final ObjectFactory objFactory, final String showsFile, final String venueFile, final String bandFile, final String relationFile)  throws JAXBException {
-    List<Show> shows = null;
-    List<Venue> venues = null;
-    List<BandMap> bands = null;
-    List<Relation> relations = null;
-                
-    try {
-      shows = Convert.shows(showsFile);
-                
-      venues = Convert.venuemap(venueFile);
-
-      bands = Convert.bandsort(bandFile);
-
-      relations = Convert.relation(relationFile);
-    } catch (IOException e) {
-      System.err.println(e);
-      System.exit(1);
-    }
+  private static com.bolsinga.music.data.xml.Music createMusic(final ObjectFactory objFactory, final String showsFile, final String venueFile, final String bandFile, final String relationFile) throws ConvertException {
+    List<Show> shows = Convert.shows(showsFile);
+    List<Venue> venues = Convert.venuemap(venueFile);
+    List<BandMap> bands = Convert.bandsort(bandFile);
+    List<Relation> relations = Convert.relation(relationFile);
 
     com.bolsinga.music.data.xml.Music music = objFactory.createMusic();
         
@@ -120,7 +120,7 @@ public class Music {
     return music;
   }
         
-  private static void createVenues(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Venue> venues) throws JAXBException {
+  private static void createVenues(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Venue> venues) {
     // Go through each venue.
     //  Create a Venue for each             
     // Make a hash of the Venue information by name
@@ -152,14 +152,14 @@ public class Music {
     }
   }
         
-  private static void createBandSort(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<BandMap> bands) throws JAXBException {
+  private static void createBandSort(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<BandMap> bands) {
     // Make a hash of the band sort names by name
     for (BandMap bandMap : bands) {
       sBandSorts.put(bandMap.getName(), bandMap.getSortName());
     }
   }
         
-  private static void createRelations(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Relation> relations) throws JAXBException {
+  private static void createRelations(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Relation> relations) {
     com.bolsinga.music.data.xml.Relation xRelation = null;
     String type = null, reason = null;
     int index = 0;
@@ -195,7 +195,7 @@ public class Music {
     }
   }
         
-  private static com.bolsinga.music.data.xml.Date createDate(final ObjectFactory objFactory, final String date) throws JAXBException {
+  private static com.bolsinga.music.data.xml.Date createDate(final ObjectFactory objFactory, final String date) {
     com.bolsinga.music.data.xml.Date result = objFactory.createDate();
                 
     String monthString, dayString, yearString = null;
@@ -230,7 +230,7 @@ public class Music {
     return result;
   }
         
-  public static Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final String name) throws JAXBException {
+  public static Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final String name) {
     Artist result = null;
     if (!sArtists.containsKey(name)) {
       result = objFactory.createArtist();
@@ -247,7 +247,7 @@ public class Music {
     return result;
   }
                 
-  private static void convert(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Show> shows) throws JAXBException {
+  private static void convert(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Show> shows) {
     // Go through each show.
     //  Create an Artist for each band in the set, if it doesn't already exist. Use the sort name.
     //  Create a Date.
@@ -285,10 +285,15 @@ public class Music {
     }
   }
         
-  private static void dump(final com.bolsinga.music.data.xml.Music music) throws JAXBException {
-    JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
-    Marshaller m = jc.createMarshaller();
-    m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    m.marshal( music, System.out );
+  private static void dump(final com.bolsinga.music.data.xml.Music music) {
+    try {
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
+      Marshaller m = jc.createMarshaller();
+      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      m.marshal( music, System.out );
+    } catch (JAXBException e) {
+      System.err.println("Can't dump!");
+      e.printStackTrace();
+    }
   }
 }

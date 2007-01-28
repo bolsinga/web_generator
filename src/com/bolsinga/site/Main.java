@@ -68,14 +68,20 @@ public class Main implements com.bolsinga.web.Backgroundable {
     try {
       com.bolsinga.web.Util.createSettings(settingsFile);
 
-      if (musicXML || diaryXML) {
-        if (musicXML) {
-          com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, musicFile);
+      try {
+        if (musicXML || diaryXML) {
+          if (musicXML) {
+            com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, musicFile);
+          }
+          if (diaryXML) {
+            com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
+          }
+          return true;
         }
-        if (diaryXML) {
-          com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
-        }
-        return true;
+      } catch (com.bolsinga.shows.converter.ConvertException e) {
+        System.err.println(e);
+        e.printStackTrace();
+        System.exit(1);
       }
 
       if (musicImport || diaryImport) {
