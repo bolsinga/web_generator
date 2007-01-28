@@ -640,7 +640,7 @@ public class Util {
       Unmarshaller u = jc.createUnmarshaller();
                         
       music = (Music)u.unmarshal(is);
-    } catch (Exception e) {
+    } catch (JAXBException e) {
       throw new WebException("Can't create music", e);
     }
     return music;
