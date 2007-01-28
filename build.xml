@@ -403,6 +403,11 @@
 
 <target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
 
+<!--
+The package target below used to also install the sql jar:
+  <copy file="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" todir="${dst.lib}" />
+-->
+
 <target name="package" depends="site, jar" >
   <exec executable="cp" >
     <arg line="${src.dir}/scripts/site ${dst.dir}" />
@@ -415,7 +420,6 @@
   </exec>
   <copy file="${build.lib}/${ant.project.name}.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
-  <copy file="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" todir="${dst.lib}" />
   <copy file="${src.dir}/scripts/upload.xml" todir="${dst.lib}" />
   <copy todir="${dst.lib}/jwsdp-2.0">
     <fileset dir="${jwsdp.home}">
