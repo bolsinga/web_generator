@@ -123,7 +123,6 @@ public class Compare {
             id2 = convert(2, a2.getId());
           } else {
             System.err.println("Relation not Artist: " + o2);
-            System.exit(1);
           }
         } else if (o1 instanceof Venue) {
           if (o2 instanceof Venue) {
@@ -135,11 +134,9 @@ public class Compare {
             id2 = convert(1, v2.getId());
           } else {
             System.err.println("Relation not Venue: " + o2);
-            System.exit(1);
           }
         } else {
           System.err.println("Unknown Relation: " + o1);
-          System.exit(1);
         }
         return id1 - id2;
       }
