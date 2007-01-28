@@ -271,14 +271,14 @@ public class Convert {
                 if (dataMatcher.find()) {
                   statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
                 } else {
-                  System.err.println("No Data: " + entry);
+                  throw new ConvertException("No Data: " + entry);
                 }
               } else {
-                System.err.println("No Location: " + entry);
+                throw new ConvertException("No Location: " + entry);
               }
             } while (staticMatcher.find());
           } else {
-            System.err.println("No statics: " + cb);
+            throw new ConvertException("No statics: " + cb);
           }
         } finally {
           if (fc != null) {
@@ -347,14 +347,14 @@ public class Convert {
                 if (dataMatcher.find()) {
                   comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
                 } else {
-                  System.err.println("No data: " + entry);
+                  throw new ConvertException("No data: " + entry);
                 }
               } else {
-                System.err.println("No date: " + entry);
+                throw new ConvertException("No date: " + entry);
               }
             } while (commentMatcher.find());
           } else {
-            System.err.println("No comment: " + cb);
+            throw new ConvertException("No comment: " + cb);
           }
         } finally {
           if (fc != null) {
