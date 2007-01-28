@@ -57,13 +57,13 @@ public class ICal {
       }
 
       Util.createSettings(settings);
+        
+      ICal.generate(music, output);
     } catch (WebException e) {
       System.err.println(e);
       e.printStackTrace();
       System.exit(1);
     }
-        
-    ICal.generate(music, output);
   }
 
   private static void usage() {
@@ -78,34 +78,52 @@ public class ICal {
     generate(music, outputDir);
   }
         
-  public static void generate(final Music music, final String outputDir) {
-    OutputStreamWriter w = null;
-
+  public static void generate(final Music music, final String outputDir) throws WebException {
     String name = Util.getSettings().getIcalName();
                 
-    try {
-      StringBuilder sb = new StringBuilder();
-      sb.append(outputDir);
-      sb.append(File.separator);
-      sb.append(Links.ALT_DIR);
-      File f = new File(sb.toString(), name + ".ics");
-      File parent = new File(f.getParent());
-      if (!parent.mkdirs()) {
-        if (!parent.exists()) {
-          System.out.println("ICal cannot mkdirs: " + parent.getAbsolutePath());
-        }
+    StringBuilder sb = new StringBuilder();
+    sb.append(outputDir);
+    sb.append(File.separator);
+    sb.append(Links.ALT_DIR);
+    File f = new File(sb.toString(), name + ".ics");
+    File parent = new File(f.getParent());
+    if (!parent.mkdirs()) {
+      if (!parent.exists()) {
+        System.err.println("ICal cannot mkdirs: " + parent.getAbsolutePath());
       }
-      w = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
-    } catch (IOException ioe) {
-      System.err.println("Exception: " + ioe);
-      ioe.printStackTrace();
-      System.exit(1);
     }
-                
-    generate(music, name, w);
+    
+    OutputStream os = null;
+    try {
+      os = new FileOutputStream(f);
+    } catch (FileNotFoundException e) {
+      sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(f.toString());
+      throw new WebException(sb.toString(), e);
+    }
+
+    Writer w = null;
+    try {
+      w = new OutputStreamWriter(os, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      sb = new StringBuilder();
+      sb.append("Can't handle encoding UTF-8: ");
+      sb.append(os.toString());
+      throw new WebException(sb.toString(), e);
+    }
+    
+    try {
+      generate(music, name, w);
+    } catch (IOException e) {
+      sb = new StringBuilder();
+      sb.append("Can't write: ");
+      sb.append(name);
+      throw new WebException(sb.toString(), e);
+    }
   }
         
-  private static void generate(final Music music, final String name, final Writer w) {                
+  private static void generate(final Music music, final String name, final Writer w) throws IOException {                
     List<Show> items = Util.getShowsCopy(music);
     Collections.sort(items, Compare.SHOW_COMPARATOR);
                     

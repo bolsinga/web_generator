@@ -22,32 +22,26 @@ public class VEvent {
     fUID = uid;
   }
 
-  public void output(final Writer w) {
-    try {
-      VCalendar.write(w, "BEGIN:VEVENT");
+  public void output(final Writer w) throws IOException {
+    VCalendar.write(w, "BEGIN:VEVENT");
 
-      writeAllDay(w);
-      
-      StringBuilder sb = new StringBuilder();
-      sb.append("UID:");
-      sb.append(fUID);
-      VCalendar.write(w, sb.toString());
-      
-      sb = new StringBuilder();
-      sb.append("SUMMARY:");
-      sb.append(fSummary);
-      VCalendar.write(w, sb.toString());
+    writeAllDay(w);
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append("UID:");
+    sb.append(fUID);
+    VCalendar.write(w, sb.toString());
+    
+    sb = new StringBuilder();
+    sb.append("SUMMARY:");
+    sb.append(fSummary);
+    VCalendar.write(w, sb.toString());
 
-      VCalendar.write(w, "RRULE:FREQ=YEARLY;INTERVAL=1");
+    VCalendar.write(w, "RRULE:FREQ=YEARLY;INTERVAL=1");
 
-      VCalendar.write(w, "END:VEVENT");
+    VCalendar.write(w, "END:VEVENT");
 
-      w.flush();
-    } catch (IOException ioe) {
-      System.err.println("Exception: " + ioe);
-      ioe.printStackTrace();
-      System.exit(1);
-    }
+    w.flush();
   }
         
   private void writeAllDay(final Writer w) throws IOException {

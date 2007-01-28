@@ -82,7 +82,13 @@ public class Site implements com.bolsinga.web.Backgroundable {
     if (!diaryOnly) {
       com.bolsinga.music.Web.generate(backgrounder, backgroundable, music, encoder, outputDir);
       if (!webOnly) {
-        com.bolsinga.music.ICal.generate(music, outputDir);
+        try {
+          com.bolsinga.music.ICal.generate(music, outputDir);
+        } catch (com.bolsinga.web.WebException e) {
+          System.err.println(e);
+          e.printStackTrace();
+          System.exit(1);
+        }
       }
     }
     try {
