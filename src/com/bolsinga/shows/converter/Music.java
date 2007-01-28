@@ -159,7 +159,7 @@ public class Music {
     }
   }
         
-  private static void createRelations(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Relation> relations) {
+  private static void createRelations(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Relation> relations) throws ConvertException {
     com.bolsinga.music.data.xml.Relation xRelation = null;
     String type = null, reason = null;
     int index = 0;
@@ -187,8 +187,10 @@ public class Music {
           xRelation.getMember().add(objFactory.createRelationMember(sVenues.get(member)));
         }
       } else {
-        System.err.println("Unknown relation type: " + type);
-        System.exit(1);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Unknown relation type: ");
+        sb.append(type);
+        throw new ConvertException(sb.toString());
       }
                         
       music.getRelation().add(xRelation); // Modification required.
