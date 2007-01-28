@@ -67,7 +67,7 @@ public class Main implements Backgroundable {
     com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
   }
   
-  private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws WebException {
+  private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws Exception {
     final com.bolsinga.music.data.xml.Music music = Util.createMusic(musicFile);
     final com.bolsinga.diary.data.xml.Diary diary = Util.createDiary(diaryFile);
   
@@ -88,6 +88,8 @@ public class Main implements Backgroundable {
     TracksRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
 
     com.bolsinga.music.ICal.generate(music, output);
+    
+    com.bolsinga.rss.RSS.generate(diary, music, output);
   }
 
   private static void usage(final String[] badargs, final String reason) {
