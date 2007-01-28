@@ -10,6 +10,8 @@ import java.util.*;
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 
+import javax.xml.bind.JAXBElement;
+
 public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final java.util.Map<String, IndexPair> fIndex;
@@ -193,14 +195,38 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Record getShowRecord(final Show show) {
+    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, fUpOneLevel);
+  }
+  
+  // This is used for the main page.
+  public static Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean upOneLevel) {
+    Vector<Element> e = new Vector<Element>();
+    StringBuilder sb = new StringBuilder();
+    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
+    while (bi.hasNext()) {
+      Artist performer = (Artist)bi.next().getValue();
+                        
+      String t = Util.createTitle("moreinfoartist", performer.getName());
+      sb.append(Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer), t));
+                        
+      if (bi.hasNext()) {
+        sb.append(", ");
+      }
+    }
+    e.add(new StringElement(sb.toString()));
+                
+    Venue venue = (Venue)show.getVenue();
+    String t = Util.createTitle("moreinfovenue", venue.getName());
+    A venueA = Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue), t);
+    Location l = (Location)venue.getLocation();
+    e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
+
     String comment = show.getComment();
     if (comment != null) {
-      comment = fEncoder.embedLinks(show, fUpOneLevel);
+      comment = encoder.embedLinks(show, upOneLevel);
     }
-    return Record.createRecordListWithComment(
-      Util.createNamedTarget(show.getId(), Util.toString(show.getDate())), 
-      Web.getShowListing(fLookup, fLinks, show),
-      comment);
+    
+    return Record.createRecordListWithComment(Util.createNamedTarget(show.getId(), Util.toString(show.getDate())), e, comment);
   }
 
   private Record getShowMonthRecordSection(final Vector<Show> shows) {

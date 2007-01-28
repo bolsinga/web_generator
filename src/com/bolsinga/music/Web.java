@@ -126,47 +126,4 @@ public class Web implements Backgroundable {
 
     TracksRecordDocumentCreator.createDocuments(backgrounder, backgroundable, music, outputDir);
   }
-        
-  static Vector<Element> getShowListing(final Lookup lookup, final Links links, final Show show) {
-    Vector<Element> e = new Vector<Element>();
-    StringBuilder sb = new StringBuilder();
-    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
-    while (bi.hasNext()) {
-      Artist performer = (Artist)bi.next().getValue();
-                        
-      String t = Util.createTitle("moreinfoartist", performer.getName());
-      sb.append(Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer), t));
-                        
-      if (bi.hasNext()) {
-        sb.append(", ");
-      }
-    }
-    e.add(new StringElement(sb.toString()));
-                
-    Venue venue = (Venue)show.getVenue();
-    String t = Util.createTitle("moreinfovenue", venue.getName());
-    A venueA = Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue), t);
-    Location l = (Location)venue.getLocation();
-    e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
-                
-    return e;
-  }
-
-  // Used by the unified (diary & music) main page.
-  public static Element addItem(final Encode encoder, final Lookup lookup, final Links links, final Show show, final boolean upOneLevel) {
-    Vector<Element> e = new Vector<Element>();
-
-    e.add(new H3().addElement(Util.createNamedTarget(show.getId(), Util.toString(show.getDate()))));
-
-    e.add(Util.createUnorderedList(Web.getShowListing(lookup, links, show)));
-
-    String comment = show.getComment();
-    if (comment != null) {
-      e.add(new StringElement(Util.convertToParagraphs(encoder.embedLinks(show, upOneLevel))));
-    }
-
-    Div d = Util.createDiv(CSS.ENTRY_ITEM);
-    d.addElement(Util.createUnorderedList(e));
-    return d;
-  }
 }
