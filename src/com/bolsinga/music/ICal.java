@@ -2,12 +2,10 @@ package com.bolsinga.music;
 
 import com.bolsinga.ical.*;
 import com.bolsinga.music.data.xml.*;
-import com.bolsinga.settings.data.*;
 
 import com.bolsinga.web.*;
 
 import java.io.*;
-import java.text.*;
 import java.util.*;
 
 import javax.xml.bind.*;
@@ -17,55 +15,6 @@ import javax.xml.bind.*;
  */
 
 public class ICal {
-
-  public static void main(String[] args) {
-    if ((args.length != 4) && (args.length != 5)) {
-      ICal.usage();
-    }
-
-    String type = args[0];
-
-    String settings = null;
-    String output = null;
-
-    Music music = null;
-
-    try {
-      if (type.equals("xml")) {
-        if (args.length != 4) {
-          ICal.usage();
-        }
-        
-        String musicFile = args[1];
-        settings = args[2];
-        output = args[3];
-
-        music = Util.createMusic(musicFile);
-      } else {
-        ICal.usage();
-      }
-
-      Util.createSettings(settings);
-        
-      ICal.generate(music, output);
-    } catch (WebException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-  }
-
-  private static void usage() {
-    System.out.println("Usage: ICal xml [source.xml] [settings.xml] [output.dir]");
-    System.exit(0);
-  }
-
-  private static void generate(final String sourceFile, final String outputDir) throws WebException {
-    Music music = Util.createMusic(sourceFile);
-                
-    generate(music, outputDir);
-  }
-        
   public static void generate(final Music music, final String outputDir) throws WebException {
     String name = Util.getSettings().getIcalName();
                 

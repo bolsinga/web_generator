@@ -402,7 +402,7 @@
 </target>
 
 <target name="generateICal" depends="music, jar, prepare_output">
-  <java classname="com.bolsinga.music.ICal" fork="true">
+  <java classname="com.bolsinga.test.ICalTest" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
     <arg value="xml" />
