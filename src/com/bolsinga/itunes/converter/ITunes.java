@@ -87,7 +87,7 @@ public class ITunes {
     ITunes.convert(args[0], args[1]);
   }
         
-  public static void convert(final String itunesFile, final String outputFile) {          
+  private static void convert(final String itunesFile, final String outputFile) {          
     try {
       Music music = ITunes.convert(itunesFile);
 
@@ -114,8 +114,7 @@ public class ITunes {
     }
   }
         
-  public static Music convert(final String itunesFile) throws JAXBException {
-
+  private static Music convert(final String itunesFile) throws JAXBException {
     ObjectFactory objFactory = new ObjectFactory();
                 
     Music music = objFactory.createMusic();
@@ -174,7 +173,6 @@ public class ITunes {
   }
         
   public static void addMusic(final ObjectFactory objFactory, final Music music, final String itunesFile) throws JAXBException {
-        
     // Create a list of all known iTunes keys. This way if a new one shows up, the program will let us know.
     createKnownKeys();
 
