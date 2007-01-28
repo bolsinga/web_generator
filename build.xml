@@ -389,7 +389,7 @@
 </target>
 
 <target name="generateRSS" depends="rss, jar, prepare_output" >
-  <java classname="com.bolsinga.rss.RSS" fork="true" >
+  <java classname="com.bolsinga.test.RSSTest" fork="true" >
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
     <arg value="xml" />

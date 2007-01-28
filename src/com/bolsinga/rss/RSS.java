@@ -3,7 +3,6 @@ package com.bolsinga.rss;
 import com.bolsinga.diary.data.xml.*;
 import com.bolsinga.music.data.xml.*;
 import com.bolsinga.rss.data.*;
-import com.bolsinga.settings.data.*;
 
 import java.io.*;
 import java.text.*;
@@ -13,68 +12,6 @@ import javax.xml.bind.*;
 
 public class RSS {
 
-  public static void main(String[] args) {
-    if (args.length != 5) {
-      RSS.usage();
-    }
-
-    String type = args[0];
-
-    String settings = args[3];
-    String output = args[4];
-
-    Diary diary = null;
-    Music music = null;
-
-    try {
-      if (type.equals("xml")) {
-        String diaryFile = args[1];
-        String musicFile = args[2];
-
-        diary = com.bolsinga.web.Util.createDiary(diaryFile);
-        music = com.bolsinga.web.Util.createMusic(musicFile);
-      } else {
-        RSS.usage();
-      }
-
-      com.bolsinga.web.Util.createSettings(settings);
-    } catch (com.bolsinga.web.WebException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-    
-    try {
-      RSS.generate(diary, music, output);
-    } catch (RSSException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-  }
-
-  private static void usage() {
-    System.out.println("Usage: RSS xml [diary.xml] [music.xml] [settings.xml] [output.dir]");
-    System.exit(0);
-  }
-
-  private static void generate(final String diaryFile, final String musicFile, final String outputDir) throws RSSException {
-    Diary diary = null;
-    try {
-      diary = com.bolsinga.web.Util.createDiary(diaryFile);
-    } catch (com.bolsinga.web.WebException e) {
-      throw new RSSException("Can't create Diary", e);
-    }
-    Music music = null;
-    try {
-      music = com.bolsinga.web.Util.createMusic(musicFile);
-    } catch (com.bolsinga.web.WebException e) {
-      throw new RSSException("Can't create Music", e);
-    }
-                
-    generate(diary, music, outputDir);
-  }
-        
   public static void generate(final Diary diary, final Music music, final String outputDir) throws RSSException {
     OutputStream os = null;
     StringBuilder sb = new StringBuilder();
