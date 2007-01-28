@@ -199,6 +199,9 @@
     <compilerarg value="${javac.lint}" compiler="javac1.5" />
     <src path="${src.dir}" />
     <include name="com/bolsinga/sql/*.java" />
+    <include name="com/bolsinga/sql/diary/*.java" />
+    <include name="com/bolsinga/sql/music/*.java" />
+    <classpath refid="web_classpath" />
   </javac>
 </target>
 
@@ -270,6 +273,7 @@
 <target name="jar">
         <jar jarfile="${build.lib}/${ant.project.name}.jar"
                 basedir="${build.classes}" >
+                <exclude name="com/bolsinga/sql/**" />
                 <include name="com/bolsinga/**" />
         </jar>
 </target>
@@ -309,35 +313,6 @@
                 <arg value="${data.dir}diary.xml" />
                 <classpath refid="music_classpath" />
         </java>
-</target>
-
-<path id="exe_db_classpath">
-  <path refid="music_classpath" />
-  <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
-</path>
-
-<target name="generateDiaryDB" depends="diary, jar">
-  <java classname="com.bolsinga.diary.DBImporter" fork="true">
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="${data.dir}diary.xml" />
-    <arg value="${db.user}" />
-    <arg value="${db.password}" />
-    <arg value="clear" />
-    <classpath refid="exe_db_classpath" />
-  </java>
-</target>
-
-<target name="generateMusicDB" depends="music, jar">
-  <java classname="com.bolsinga.music.DBImporter" fork="true">
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="${data.dir}music.xml" />
-    <arg value="${db.user}" />
-    <arg value="${db.password}" />
-    <arg value="clear" />
-    <classpath refid="exe_db_classpath" />
-  </java>
 </target>
 
 <path id="generate_web_classpath">
@@ -423,63 +398,6 @@
     <arg value="${data.dir}settings.xml" />
     <arg value="${output.dir}" />
     <classpath refid="generate_web_classpath" />
-  </java>
-</target>
-
-<path id="generate_db_web_classpath">
-  <path refid="generate_web_classpath" />
-  <pathelement path="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" />
-</path>
-
-<target name="generateDBMusicWeb" depends="music, jar, prepare_output">
-  <java classname="com.bolsinga.music.Web" fork="true">
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="db" />
-    <arg value="${db.user}" />
-    <arg value="${db.password}" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="generate_db_web_classpath" />
-  </java>
-</target>
-
-<target name="generateDBDiaryWeb" depends="diary, jar, prepare_output">
-  <java classname="com.bolsinga.diary.Web" fork="true">
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="db" />
-    <arg value="${db.user}" />
-    <arg value="${db.password}" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="generate_db_web_classpath" />
-  </java>
-</target>
-
-<target name="generateDBRSS" depends="rss, jar, prepare_output" >
-  <java classname="com.bolsinga.rss.RSS" fork="true" >
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="db" />
-    <arg value="${db.user}" />
-    <arg value="${db.password}" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="generate_db_web_classpath" />
-  </java>
-</target>
-
-<target name="generateDBICal" depends="music, jar, prepare_output">
-  <java classname="com.bolsinga.music.ICal" fork="true">
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="db" />
-    <arg value="${db.user}" />
-    <arg value="${db.password}" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="generate_db_web_classpath" />
   </java>
 </target>
 

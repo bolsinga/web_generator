@@ -1,4 +1,4 @@
-package com.bolsinga.music;
+package com.bolsinga.sql.music;
 
 import java.math.*;
 import java.sql.*;

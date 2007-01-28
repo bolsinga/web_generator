@@ -1,4 +1,4 @@
-package com.bolsinga.diary;
+package com.bolsinga.sql.diary;
 
 import java.sql.*;
 import java.text.*;

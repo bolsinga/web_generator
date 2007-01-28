@@ -33,12 +33,6 @@ public class RSS {
 
         diary = com.bolsinga.web.Util.createDiary(diaryFile);
         music = com.bolsinga.web.Util.createMusic(musicFile);
-      } else if (type.equals("db")) {
-        String user = args[1];
-        String password = args[2];
-
-        music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
-        diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
       } else {
         RSS.usage();
       }
@@ -61,7 +55,6 @@ public class RSS {
 
   private static void usage() {
     System.out.println("Usage: RSS xml [diary.xml] [music.xml] [settings.xml] [output.dir]");
-    System.out.println("Usage: RSS db [user] [password] [settings.xml] [output.dir]");
     System.exit(0);
   }
 

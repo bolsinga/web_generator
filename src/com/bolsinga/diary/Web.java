@@ -40,12 +40,6 @@ public class Web implements Backgroundable {
         
         diary = Util.createDiary(diaryFile);
         music = Util.createMusic(musicFile);
-      } else if (args[0].equals("db")) {
-        String user = args[1];
-        String password = args[2];
-
-        diary = MySQLCreator.createDiary(user, password);
-        music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
       } else {
         Web.usage();
       }
@@ -80,7 +74,6 @@ public class Web implements Backgroundable {
 
   private static void usage() {
     System.out.println("Usage: Web xml [diary.xml] [music.xml] [settings.xml] [output.dir]");
-    System.out.println("Usage: Web db [user] [password] [settings.xml] [output.dir]");
     System.exit(0);
   }
 

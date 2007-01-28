@@ -41,17 +41,6 @@ public class ICal {
         output = args[3];
 
         music = Util.createMusic(musicFile);
-      } else if (type.equals("db")) {
-        if (args.length != 5) {
-          ICal.usage();
-        }
-
-        String user = args[1];
-        String password = args[2];
-        settings = args[3];
-        output = args[4];
-        
-        music = MySQLCreator.createMusic(user, password);
       } else {
         ICal.usage();
       }
@@ -68,7 +57,6 @@ public class ICal {
 
   private static void usage() {
     System.out.println("Usage: ICal xml [source.xml] [settings.xml] [output.dir]");
-    System.out.println("Usage: ICal db [user] [password] [settings.xml] [output.dir]");
     System.exit(0);
   }
 

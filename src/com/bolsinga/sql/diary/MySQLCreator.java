@@ -1,4 +1,4 @@
-package com.bolsinga.diary;
+package com.bolsinga.sql.diary;
 
 import com.bolsinga.diary.data.xml.*;
 import com.bolsinga.web.*;
