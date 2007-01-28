@@ -1,22 +1,19 @@
-package com.bolsinga.diary;
+package com.bolsinga.test;
 
 import com.bolsinga.diary.data.xml.*;
 import com.bolsinga.music.data.xml.*;
 import com.bolsinga.settings.data.*;
 
+import com.bolsinga.diary.*;
 import com.bolsinga.web.*;
 
 import java.io.*;
-import java.util.*;
-
-import org.apache.ecs.*;
-import org.apache.ecs.html.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class Web implements Backgroundable {
+public class DiaryTest implements Backgroundable {
 
   private static final boolean GENERATE_XML = false;
 
@@ -24,7 +21,7 @@ public class Web implements Backgroundable {
   
   public static void main(String[] args) {
     if (args.length != 5) {
-      Web.usage();
+      DiaryTest.usage();
     }
 
     String settings = args[3];
@@ -41,13 +38,13 @@ public class Web implements Backgroundable {
         diary = Util.createDiary(diaryFile);
         music = Util.createMusic(musicFile);
       } else {
-        Web.usage();
+        DiaryTest.usage();
       }
 
       Util.createSettings(settings);
     
-      if (Web.GENERATE_XML) {
-        Web.export(diary);
+      if (DiaryTest.GENERATE_XML) {
+        DiaryTest.export(diary);
         System.exit(0);
       }
     } catch (WebException e) {
@@ -58,12 +55,12 @@ public class Web implements Backgroundable {
 
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     Encode encoder = Encode.getEncode(music, diary);                
-    Web web = new Web(backgrounder);
+    DiaryTest web = new DiaryTest(backgrounder);
     web.generate(diary, music, encoder, output);
     web.complete();
   }
   
-  private Web(final Backgrounder backgrounder) {
+  private DiaryTest(final Backgrounder backgrounder) {
     fBackgrounder = backgrounder;
     backgrounder.addInterest(this);
   }
@@ -73,7 +70,7 @@ public class Web implements Backgroundable {
   }
 
   private static void usage() {
-    System.out.println("Usage: Web xml [diary.xml] [music.xml] [settings.xml] [output.dir]");
+    System.out.println("Usage: DiaryTest xml [diary.xml] [music.xml] [settings.xml] [output.dir]");
     System.exit(0);
   }
 
@@ -114,13 +111,13 @@ public class Web implements Backgroundable {
     Music music = Util.createMusic(musicFile);
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     Encode encoder = Encode.getEncode(music, diary);                
-    Web web = new Web(backgrounder);
+    DiaryTest web = new DiaryTest(backgrounder);
     web.generate(diary, music, encoder, outputDir);
     web.complete();
   }
         
   private void generate(final Diary diary, final Music music, final Encode encoder, final String outputDir) {
-    Web.generate(fBackgrounder, this, diary, music, encoder, outputDir);
+    DiaryTest.generate(fBackgrounder, this, diary, music, encoder, outputDir);
   }
 
   public static void generate(final Backgrounder backgrounder, final Backgroundable backgroundable, final Diary diary, final Music music, final Encode encoder, final String outputDir) {

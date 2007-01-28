@@ -274,6 +274,7 @@
         <jar jarfile="${build.lib}/${ant.project.name}.jar"
                 basedir="${build.classes}" >
                 <exclude name="com/bolsinga/sql/**" />
+                <exclude name="com/bolsinga/test/**" />
                 <include name="com/bolsinga/**" />
         </jar>
 </target>
@@ -283,7 +284,18 @@
         <pathelement path="${build.lib}/${ant.project.name}.jar" />
 </path>
 
-<target name="site" depends="music, diary, rss, music_converter">
+<target name="test" depends="music, diary, rss, music_converter">
+        <javac  destdir="${build.classes}"
+                debug="${javac.debug}"
+                deprecation="on">
+          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <src path="${src.dir}" />
+          <include name="com/bolsinga/test/*.java" />
+          <classpath refid="web_classpath" />
+        </javac>
+</target>
+
+<target name="site" depends="test">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
@@ -352,7 +364,7 @@
 -->
 
 <target name="generateMusicWeb" depends="music, jar, prepare_output">
-  <java classname="com.bolsinga.music.Web" fork="true">
+  <java classname="com.bolsinga.test.MusicTest" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
     <arg value="xml" />
@@ -364,7 +376,7 @@
 </target>
 
 <target name="generateDiaryWeb" depends="diary, jar, prepare_output">
-  <java classname="com.bolsinga.diary.Web" fork="true">
+  <java classname="com.bolsinga.test.DiaryTest" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
     <arg value="xml" />

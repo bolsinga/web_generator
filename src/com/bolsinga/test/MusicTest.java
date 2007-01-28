@@ -1,23 +1,18 @@
-package com.bolsinga.music;
+package com.bolsinga.test;
 
 import com.bolsinga.music.data.xml.*;
 import com.bolsinga.settings.data.*;
 
+import com.bolsinga.music.*;
 import com.bolsinga.web.*;
 
 import java.io.*;
-import java.text.*;
-import java.util.*;
-
-import org.apache.ecs.*;
-import org.apache.ecs.html.*;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class Web implements Backgroundable {
+public class MusicTest implements Backgroundable {
 
   private static final boolean GENERATE_XML = false;
 
@@ -25,7 +20,7 @@ public class Web implements Backgroundable {
    
   public static void main(String[] args) {
     if ((args.length != 4) && (args.length != 5)) {
-      Web.usage();
+      MusicTest.usage();
     }
 
     String type = args[0];
@@ -38,7 +33,7 @@ public class Web implements Backgroundable {
     try {
       if (type.equals("xml")) {
         if (args.length != 4) {
-          Web.usage();
+          MusicTest.usage();
         }
         
         String musicFile = args[1];
@@ -47,13 +42,13 @@ public class Web implements Backgroundable {
 
         music = Util.createMusic(musicFile);
       } else {
-        Web.usage();
+        MusicTest.usage();
       }
   
       Util.createSettings(settings);
 
-      if (Web.GENERATE_XML) {
-        Web.export(music);
+      if (MusicTest.GENERATE_XML) {
+        MusicTest.export(music);
         System.exit(0);
       }
     } catch (WebException e) {
@@ -64,12 +59,12 @@ public class Web implements Backgroundable {
 
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     Encode encoder = Encode.getEncode(music, null);
-    Web web = new Web(backgrounder);
+    MusicTest web = new MusicTest(backgrounder);
     web.generate(music, encoder, output);
     web.complete();
   }
   
-  private Web(final Backgrounder backgrounder) {
+  private MusicTest(final Backgrounder backgrounder) {
     fBackgrounder = backgrounder;
     fBackgrounder.addInterest(this);
   }
@@ -79,7 +74,7 @@ public class Web implements Backgroundable {
   }
   
   private static void usage() {
-    System.out.println("Usage: Web xml [source.xml] [settings.xml] [output.dir]");
+    System.out.println("Usage: MusicTest xml [source.xml] [settings.xml] [output.dir]");
     System.exit(0);
   }
         
@@ -112,7 +107,7 @@ public class Web implements Backgroundable {
   }
 
   private void generate(final Music music, final Encode encoder, final String outputDir) {
-    Web.generate(fBackgrounder, this, music, encoder, outputDir);
+    MusicTest.generate(fBackgrounder, this, music, encoder, outputDir);
   }
 
   public static void generate(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final Encode encoder, final String outputDir) {
