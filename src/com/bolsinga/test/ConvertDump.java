@@ -1,4 +1,4 @@
-package com.bolsinga.shows.converter;
+package com.bolsinga.test;
 
 import com.bolsinga.shows.converter.*;
 
