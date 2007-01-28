@@ -142,9 +142,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
         // This appears at the top level
         diaryDiv.addElement(com.bolsinga.music.Web.addItem(fEncoder, fLookup, fLinks, (Show)o, false));
       } else {
-        System.err.println("Unknown recent item." + o.toString());
-        Thread.dumpStack();
-        System.exit(1);
+        System.err.println("Unknown recent item: " + o.toString());
       }
     }
                 

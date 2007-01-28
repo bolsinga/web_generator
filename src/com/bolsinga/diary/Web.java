@@ -13,6 +13,7 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 public class Web implements Backgroundable {
@@ -50,15 +51,15 @@ public class Web implements Backgroundable {
       }
 
       Util.createSettings(settings);
+    
+      if (Web.GENERATE_XML) {
+        Web.export(diary);
+        System.exit(0);
+      }
     } catch (WebException e) {
       System.err.println(e);
       e.printStackTrace();
       System.exit(1);
-    }
-    
-    if (Web.GENERATE_XML) {
-      Web.export(diary);
-      System.exit(0);
     }
 
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
@@ -83,27 +84,30 @@ public class Web implements Backgroundable {
     System.exit(0);
   }
 
-  private static void export(final Diary diary) {
-    try {
-      File outputFile = new File("/tmp", "diary_db.xml");
+  private static void export(final Diary diary) throws WebException {
+    File outputFile = new File("/tmp", "diary_db.xml");
 
+    OutputStream os = null;
+    try {
+      os = new FileOutputStream(outputFile);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(outputFile);
+      throw new WebException(sb.toString(), e);
+    }
+
+    try {
       JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                         
-      OutputStream os = null;
-      try {
-        os = new FileOutputStream(outputFile);
-      } catch (IOException ioe) {
-        System.err.println(ioe);
-        ioe.printStackTrace();
-        System.exit(1);
-      }
       m.marshal(diary, os);
-    } catch (Exception e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
+    } catch (JAXBException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't marshall: ");
+      sb.append(os.toString());
+      throw new WebException(sb.toString(), e);
     }
   }
 
