@@ -307,7 +307,7 @@
 </target>
 
 <target name="generateMusicXML" depends="music_converter, jar">
-        <java classname="com.bolsinga.shows.converter.Music" fork="true">
+        <java classname="com.bolsinga.test.ConvertMusicTest" fork="true">
                 <arg value="${legacy_data.dir}shows.txt" />
                 <arg value="${legacy_data.dir}venuemap.txt" />
                 <arg value="${legacy_data.dir}bandsort.txt" />

@@ -23,21 +23,6 @@ public class Music {
 
   private static final boolean TIDY_XML = false;
         
-  public static void main(String[] args) {
-    if (args.length != 6) {
-      System.out.println("Usage: Music [shows] [venuemap] [bandsort] [relations] [itunes] [output]");
-      System.exit(0);
-    }
-
-    try {
-      Music.convert(args[0], args[1], args[2], args[3], args[4], args[5]);
-    } catch (ConvertException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-  }
-        
   public static void convert(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String outputFile) throws ConvertException {
                 
     ObjectFactory objFactory = new ObjectFactory();
@@ -81,21 +66,6 @@ public class Music {
       sb.append("Can't marshall: ");
       sb.append(os.toString());
       throw new ConvertException(sb.toString(), e);
-    }
-  }
-        
-  private static void dumpSimilarArtists(final com.bolsinga.music.data.xml.Music music) {
-    String s;
-    HashSet<String> bands = new HashSet<String>();
-    
-    List<Artist> artists = Util.getArtistsUnmodifiable(music);
-    for (Artist artist : artists) {
-      s = artist.getName().toLowerCase();
-      if (bands.contains(s)) {
-        System.out.println(s);
-      } else {
-        bands.add(s);
-      }
     }
   }
 
@@ -284,18 +254,6 @@ public class Music {
       xShow.setId("sh" + index++);
                         
       music.getShow().add(xShow); // Modification required.
-    }
-  }
-        
-  private static void dump(final com.bolsinga.music.data.xml.Music music) {
-    try {
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
-      Marshaller m = jc.createMarshaller();
-      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      m.marshal( music, System.out );
-    } catch (JAXBException e) {
-      System.err.println("Can't dump!");
-      e.printStackTrace();
     }
   }
 }
