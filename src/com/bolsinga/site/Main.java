@@ -1,5 +1,7 @@
 package com.bolsinga.site;
 
+import com.bolsinga.diary.*;
+import com.bolsinga.music.*;
 import com.bolsinga.web.*;
 
 public class Main implements Backgroundable {
@@ -73,8 +75,18 @@ public class Main implements Backgroundable {
 
     final Encode encoder = Encode.getEncode(music, diary);
 
-    com.bolsinga.diary.Web.generate(fBackgrounder, this, diary, music, encoder, output);
-    com.bolsinga.music.Web.generate(fBackgrounder, this, music, encoder, output);
+    // Diary items
+    MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, encoder, music);
+    EntryRecordDocumentCreator.createDocuments(fBackgrounder, this, diary, output, encoder);
+    AltDocumentCreator.createDocuments(fBackgrounder, this, diary, output);
+
+    // Music items
+    ArtistRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
+    VenueRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
+    ShowRecordDocumentCreator.createDocuments(fBackgrounder, this, music, encoder, output);
+    CityRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
+    TracksRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
+
     com.bolsinga.music.ICal.generate(music, output);
   }
 
