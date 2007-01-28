@@ -114,22 +114,27 @@ public abstract class RecordDocumentCreator implements Backgroundable {
 
     OutputStream os = null;
     try {
-      os = new FileOutputStream(f);
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(f.toString());
-      throw new WebException(sb.toString(), e);
-    }
-    
-    d.output(os);
-    try {
-      os.close();
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't close file: ");
-      sb.append(os.toString());
-      throw new WebException(sb.toString(), e);
+      try {
+        os = new FileOutputStream(f);
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(f.toString());
+        throw new WebException(sb.toString(), e);
+      }
+      
+      d.output(os);
+    } finally {
+      if (os != null) {
+        try {
+          os.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Can't close file: ");
+          sb.append(f);
+          throw new WebException(sb.toString(), e);
+        }
+      }
     }
   }
 }

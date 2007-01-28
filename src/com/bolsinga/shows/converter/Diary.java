@@ -29,26 +29,39 @@ public class Diary {
 
     OutputStream os = null;
     try {
-      os = new FileOutputStream(outputFile);
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(outputFile);
-      throw new ConvertException(sb.toString(), e);
-    }
-    
-    try {
-      // Write out to the output file.
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
-      Marshaller m = jc.createMarshaller();
-      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+      try {
+        os = new FileOutputStream(outputFile);
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(outputFile);
+        throw new ConvertException(sb.toString(), e);
+      }
+      
+      try {
+        // Write out to the output file.
+        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
+        Marshaller m = jc.createMarshaller();
+        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-      m.marshal(diary, os);
-    } catch (JAXBException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't marshall: ");
-      sb.append(os.toString());
-      throw new ConvertException(sb.toString(), e);
+        m.marshal(diary, os);
+      } catch (JAXBException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't marshall: ");
+        sb.append(outputFile);
+        throw new ConvertException(sb.toString(), e);
+      }
+    } finally {
+      if (os != null) {
+        try {
+          os.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(outputFile);
+          throw new ConvertException(sb.toString(), e);
+        }
+      }
     }
   }
         

@@ -135,66 +135,86 @@ public class CSS {
   private static void filterFile(final File src, final File dst) throws WebException {
     // Copy source file, line by line. If a line has a "@@" delimiter, map
     //  the contents to the proper CSS class name with sCSSMapping.    
-    Reader r = null;
-    try {
-      r = new FileReader(src);
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(src);
-      throw new WebException(sb.toString());
-    }
-
-    StringBuilder sb = new StringBuilder();
+    StringBuilder sb = CSS.readFile(src);
+    CSS.writeFile(dst, sb);
+  }
+  
+  private static StringBuilder readFile(final File src) throws WebException {
+    StringBuilder result = new StringBuilder();
     
+    BufferedReader in = null;
     try {
-      BufferedReader in = null;
       try {
-        in = new BufferedReader(r);
-        String s = null;
-        
+        in = new BufferedReader(new FileReader(src));
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(src);
+        throw new WebException(sb.toString());
+      }
+      
+      String s = null;
+      try {
         while ((s = in.readLine()) != null) {
           Matcher m = sDelimitedPattern.matcher(s);
           if (m.find()) {
             int offset = 0;
             do {
-              sb.append(s.substring(offset, m.start()));
-              sb.append(sCSSMapping.get(m.group(1)));
+              result.append(s.substring(offset, m.start()));
+              result.append(sCSSMapping.get(m.group(1)));
               offset = m.end();
             } while (m.find());
-            sb.append(s.substring(offset, m.regionEnd()));
+            result.append(s.substring(offset, m.regionEnd()));
           } else {
-            sb.append(s);
+            result.append(s);
           }
-          Util.appendPretty(sb);
+          Util.appendPretty(result);
         }
-      } finally {
-        if (in != null) {
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Error reading: ");
+        sb.append(src);
+        throw new WebException(sb.toString(), e);
+      }
+    } finally {
+      if (in != null) {
+        try {
           in.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(src);
+          throw new WebException(sb.toString(), e);
         }
       }
-    } catch (IOException e) {
-      sb = new StringBuilder();
-      sb.append("Error reading: ");
-      sb.append(r.toString());
-      throw new WebException(sb.toString(), e);
     }
     
+    return result;
+  }
+  
+  private static void writeFile(final File dst, final StringBuilder data) throws WebException {
+    Writer out = null;
     try {
-      Writer out = null;
       try {
         out = new FileWriter(dst);
-        out.append(sb);
-      } finally {
-        if (out != null) {
+        out.append(data);
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Error writing: ");
+        sb.append(dst);
+        throw new WebException(sb.toString(), e);
+      }
+    } finally {
+      if (out != null) {
+        try {
           out.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(dst);
+          throw new WebException(sb.toString(), e);
         }
       }
-    } catch (IOException e) {
-      sb = new StringBuilder();
-      sb.append("Error writing: ");
-      sb.append(dst);
-      throw new WebException(sb.toString(), e);
     }
   }
 }

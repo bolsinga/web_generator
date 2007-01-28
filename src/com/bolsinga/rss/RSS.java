@@ -13,7 +13,6 @@ import javax.xml.bind.*;
 public class RSS {
 
   public static void generate(final Diary diary, final Music music, final String outputDir) throws RSSException {
-    OutputStream os = null;
     StringBuilder sb = new StringBuilder();
     sb.append(outputDir);
     sb.append(File.separator);
@@ -26,16 +25,30 @@ public class RSS {
       }
     }
     
+    OutputStream os = null;
     try {
-      os = new FileOutputStream(f);
-    } catch (IOException e) {
-      sb = new StringBuilder();
-      sb.append("Can't create: ");
-      sb.append(f.toString());
-      throw new RSSException(sb.toString(), e);
-    }
+      try {
+        os = new FileOutputStream(f);
+      } catch (IOException e) {
+        sb = new StringBuilder();
+        sb.append("Can't create rss file: ");
+        sb.append(f.toString());
+        throw new RSSException(sb.toString(), e);
+      }
 
-    generate(diary, music, os);
+      generate(diary, music, os);
+    } finally {
+      if (os != null) {
+        try {
+          os.close();
+        } catch (IOException e) {
+          sb = new StringBuilder();
+          sb.append("Unable to close rss file: ");
+          sb.append(f.toString());
+          throw new RSSException(sb.toString(), e);
+        }
+      }
+    }
   }
 
   private static void add(final Show show, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {

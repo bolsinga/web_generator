@@ -129,35 +129,42 @@ public class EncodeTest {
         System.err.println("EncodeTest cannot mkdirs: " + parent.getAbsolutePath());
       }
     }
-    
-    OutputStream os = null;
-    try {
-     os = new FileOutputStream(f);
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(f.toString());
-      throw new WebException(sb.toString(), e);
-    }
-    
+
     Writer w = null;
     try {
-      w = new OutputStreamWriter(os, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't handle encoding UTF-8: ");
-      sb.append(os.toString());
-      throw new WebException(sb.toString(), e);
-    }      
-    
-    try {
-      w.write(buffer.toString());
-      w.close();
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't write file: ");
-      sb.append(w.toString());
-      throw new WebException(sb.toString(), e);
+      try {
+        w = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(f);
+        throw new WebException(sb.toString(), e);
+      } catch (UnsupportedEncodingException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't handle encoding UTF-8: ");
+        sb.append(f);
+        throw new WebException(sb.toString(), e);
+      }      
+      
+      try {
+        w.write(buffer.toString());
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't write file: ");
+        sb.append(f);
+        throw new WebException(sb.toString(), e);
+      }
+    } finally {
+      if (w != null) {
+        try {
+          w.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Can't close file: ");
+          sb.append(f);
+          throw new WebException(sb.toString(), e);
+        }
+      }
     }
   }
 }

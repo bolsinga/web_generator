@@ -32,31 +32,44 @@ public class ICal {
     
     OutputStream os = null;
     try {
-      os = new FileOutputStream(f);
-    } catch (FileNotFoundException e) {
-      sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(f.toString());
-      throw new WebException(sb.toString(), e);
-    }
+      try {
+        os = new FileOutputStream(f);
+      } catch (FileNotFoundException e) {
+        sb = new StringBuilder();
+        sb.append("Can't find ical file: ");
+        sb.append(f);
+        throw new WebException(sb.toString(), e);
+      }
 
-    Writer w = null;
-    try {
-      w = new OutputStreamWriter(os, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      sb = new StringBuilder();
-      sb.append("Can't handle encoding UTF-8: ");
-      sb.append(os.toString());
-      throw new WebException(sb.toString(), e);
-    }
-    
-    try {
-      generate(music, name, w);
-    } catch (IOException e) {
-      sb = new StringBuilder();
-      sb.append("Can't write: ");
-      sb.append(name);
-      throw new WebException(sb.toString(), e);
+      Writer w = null;
+      try {
+        w = new OutputStreamWriter(os, "UTF-8");
+      } catch (UnsupportedEncodingException e) {
+        sb = new StringBuilder();
+        sb.append("Can't handle encoding UTF-8: ");
+        sb.append(f);
+        throw new WebException(sb.toString(), e);
+      }
+      
+      try {
+        generate(music, name, w);
+      } catch (IOException e) {
+        sb = new StringBuilder();
+        sb.append("Can't write ical file: ");
+        sb.append(f);
+        throw new WebException(sb.toString(), e);
+      }
+    } finally {
+      if (os != null) {
+        try {
+          os.close();
+        } catch (IOException e) {
+          sb = new StringBuilder();
+          sb.append("Unable to close ical file: ");
+          sb.append(f);
+          throw new WebException(sb.toString(), e);
+        }
+      }
     }
   }
         

@@ -20,22 +20,20 @@ public class Convert {
   public static List<Relation> relation(final String filename) throws ConvertException {
     Vector<Relation> relations = new Vector<Relation>();
 
-    Reader reader = null;
+    BufferedReader in = null;
     try {
-      reader = new FileReader(filename);
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(filename);
-      throw new ConvertException(sb.toString(), e);
-    }
-    
-    try {
-      BufferedReader in = null;
       try {
-        in = new BufferedReader(reader);
-        String s = null;
-        StringTokenizer st = null;
+        in = new BufferedReader(new FileReader(filename));
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+      
+      String s = null;
+      StringTokenizer st = null;
+      try {
         while ((s = in.readLine()) != null) {
           st = new StringTokenizer(s, "|");
           
@@ -47,16 +45,23 @@ public class Convert {
           
           relations.add(r);
         }
-      } finally {
-        if (in != null) {
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't read relations file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+    } finally {
+      if (in != null) {
+        try {
           in.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(filename);
+          throw new ConvertException(sb.toString(), e);
         }
       }
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't read relations file: ");
-      sb.append(reader.toString());
-      throw new ConvertException(sb.toString(), e);
     }
                 
     return relations;
@@ -65,37 +70,42 @@ public class Convert {
   public static List<BandMap> bandsort(final String filename) throws ConvertException {
     Vector<BandMap> bandMaps = new Vector<BandMap>();
 
-    Reader reader = null;
+    BufferedReader in = null;
     try {
-      reader = new FileReader(filename);
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(filename);
-      throw new ConvertException(sb.toString(), e);
-    }
-    
-    try {
-      BufferedReader in = null;
       try {
-        in = new BufferedReader(reader);
-        String s = null;
-        StringTokenizer st = null;
+        in = new BufferedReader(new FileReader(filename));
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+      
+      String s = null;
+      StringTokenizer st = null;
+      try {
         while ((s = in.readLine()) != null) {
           st = new StringTokenizer(s, "*");
           
           bandMaps.add(new BandMap(st.nextToken(), st.nextToken()));
         }
-      } finally {
-        if (in != null) {
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't read bandsort file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+    } finally {
+      if (in != null) {
+        try {
           in.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(filename);
+          throw new ConvertException(sb.toString(), e);
         }
       }
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't read bandsort file: ");
-      sb.append(reader.toString());
-      throw new ConvertException(sb.toString(), e);
     }
 
     return bandMaps;
@@ -104,25 +114,21 @@ public class Convert {
   public static List<Venue> venuemap(final String filename) throws ConvertException {
     Vector<Venue> venues = new Vector<Venue>();
 
-    Reader reader = null;
+    BufferedReader in = null;
     try {
-      reader = new FileReader(filename);
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(filename);
-      throw new ConvertException(sb.toString(), e);
-    }
-
-    try {
-      BufferedReader in = null;
       try {
-        in = new BufferedReader(reader);
-        String s = null;
-        StringTokenizer st = null;
+        in = new BufferedReader(new FileReader(filename));
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
 
-        String name, city, state, address, url;
-
+      String s = null;
+      StringTokenizer st = null;
+      String name, city, state, address, url;
+      try {
         while ((s = in.readLine()) != null) {
           st = new StringTokenizer(s, "*");
 
@@ -146,16 +152,23 @@ public class Convert {
           
           venues.add(v);
         }
-      } finally {
-        if (in != null) {
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't read venuemap file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+    } finally {
+      if (in != null) {
+        try {
           in.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(filename);
+          throw new ConvertException(sb.toString(), e);
         }
       }
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't read venuemap file: ");
-      sb.append(reader.toString());
-      throw new ConvertException(sb.toString(), e);
     }
 
     return venues;
@@ -166,22 +179,20 @@ public class Convert {
         
     Vector<Show> shows = new Vector<Show>();
 
-    Reader reader = null;
+    BufferedReader in = null;
     try {
-      reader = new FileReader(filename);
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(filename);
-      throw new ConvertException(sb.toString(), e);
-    }
-
-    try {
-      BufferedReader in = null;
       try {
-        in = new BufferedReader(reader);
-        String l = null;
-        StringTokenizer st = null, bt = null;
+        in = new BufferedReader(new FileReader(filename));
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+
+      String l = null;
+      StringTokenizer st = null, bt = null;
+      try {
         while ((l = in.readLine()) != null) {
           st = new StringTokenizer(l, SHOW_DELIMITER, true);
           
@@ -209,16 +220,23 @@ public class Convert {
           
           shows.add(new Show(date, bands, venue, comment));
         }
-      } finally {
-        if (in != null) {
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't read shows file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+    } finally {
+      if (in != null) {
+        try {
           in.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(filename);
+          throw new ConvertException(sb.toString(), e);
         }
       }
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't read shows file: ");
-      sb.append(reader.toString());
-      throw new ConvertException(sb.toString(), e);
     }
                 
     return shows;
@@ -227,74 +245,67 @@ public class Convert {
   public static List<Statics> statics(final String filename) throws ConvertException {
     Vector<Statics> statics = new Vector<Statics>();
 
-    FileInputStream fis = null;
-    try {
-      fis = new FileInputStream(new File(filename));
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(filename);
-      throw new ConvertException(sb.toString(), e);
-    }
-
+    FileChannel fc = null;
     try {
       try {
-        FileChannel fc = null;
-        try {
-          fc = fis.getChannel();
-          ByteBuffer bb = null;
-          try {
-            bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-          } catch (IOException e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Can't map: ");
-            sb.append(fc.toString());
-            throw new ConvertException(sb.toString(), e);
-          }
-          CharBuffer cb = null;
-          try {
-            cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
-          } catch (java.nio.charset.CharacterCodingException e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Bad Encoding US-ASCII: ");
-            sb.append(bb.toString());
-            throw new ConvertException(sb.toString(), e);
-          }
-          
-          Matcher staticMatcher = sStaticPattern.matcher(cb);
-          if (staticMatcher.find()) {
-            do {
-              String entry = staticMatcher.group(1);
-              Matcher locationMatcher = sLocationPattern.matcher(entry);
-              if (locationMatcher.find()) {
-                Matcher dataMatcher = sDataPattern.matcher(entry);
-                if (dataMatcher.find()) {
-                  statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
-                } else {
-                  throw new ConvertException("No Data: " + entry);
-                }
-              } else {
-                throw new ConvertException("No Location: " + entry);
-              }
-            } while (staticMatcher.find());
+        fc = new FileInputStream(new File(filename)).getChannel();
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+
+      ByteBuffer bb = null;
+      try {
+        bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't map: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+      
+      CharBuffer cb = null;
+      try {
+        cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
+      } catch (java.nio.charset.CharacterCodingException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Bad Encoding US-ASCII: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+      
+      Matcher staticMatcher = sStaticPattern.matcher(cb);
+      if (staticMatcher.find()) {
+        do {
+          String entry = staticMatcher.group(1);
+          Matcher locationMatcher = sLocationPattern.matcher(entry);
+          if (locationMatcher.find()) {
+            Matcher dataMatcher = sDataPattern.matcher(entry);
+            if (dataMatcher.find()) {
+              statics.add(new Statics(locationMatcher.group(1), dataMatcher.group(1)));
+            } else {
+              throw new ConvertException("No Data: " + entry);
+            }
           } else {
-            throw new ConvertException("No statics: " + cb);
+            throw new ConvertException("No Location: " + entry);
           }
-        } finally {
-          if (fc != null) {
-            fc.close();
-          }
-        }
-      } finally {
-        if (fis != null) {
-          fis.close();
+        } while (staticMatcher.find());
+      } else {
+        throw new ConvertException("No statics: " + cb);
+      }
+    } finally {
+      if (fc != null) {
+        try {
+          fc.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(filename);
+          throw new ConvertException(sb.toString(), e);
         }
       }
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't read statics file: ");
-      sb.append(filename);
-      throw new ConvertException(sb.toString(), e);
     }
 
     return statics;
@@ -303,76 +314,69 @@ public class Convert {
   public static List<Comments> comments(final String filename) throws ConvertException {
     Vector<Comments> comments = new Vector<Comments>();
 
-    FileInputStream fis = null;
-    try {
-      fis = new FileInputStream(new File(filename));
-    } catch (FileNotFoundException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't find file: ");
-      sb.append(filename);
-      throw new ConvertException(sb.toString(), e);
-    }
-
+    FileChannel fc = null;
     try {
       try {
-        FileChannel fc = null;
-        try {
-          fc = fis.getChannel();
-          ByteBuffer bb = null;
-          try {
-            bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-          } catch (IOException e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Can't map: ");
-            sb.append(fc.toString());
-            throw new ConvertException(sb.toString(), e);
-          }
-          CharBuffer cb = null;
-          try {
-            cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
-          } catch (java.nio.charset.CharacterCodingException e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Bad Encoding US-ASCII: ");
-            sb.append(bb.toString());
-            throw new ConvertException(sb.toString(), e);
-          }
-          
-          Matcher commentMatcher = sCommentPattern.matcher(cb);
-          if (commentMatcher.find()) {
-            do {
-              String entry = commentMatcher.group(1);
-              Matcher dateMatcher = sDatePattern.matcher(entry);
-              if (dateMatcher.find()) {
-                Matcher dataMatcher = sDataPattern.matcher(entry);
-                if (dataMatcher.find()) {
-                  comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
-                } else {
-                  throw new ConvertException("No data: " + entry);
-                }
-              } else {
-                throw new ConvertException("No date: " + entry);
-              }
-            } while (commentMatcher.find());
+        fc = new FileInputStream(new File(filename)).getChannel();
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+      
+      ByteBuffer bb = null;
+      try {
+        bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't map: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+      
+      CharBuffer cb = null;
+      try {
+        cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
+      } catch (java.nio.charset.CharacterCodingException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Bad Encoding US-ASCII: ");
+        sb.append(filename);
+        throw new ConvertException(sb.toString(), e);
+      }
+      
+      Matcher commentMatcher = sCommentPattern.matcher(cb);
+      if (commentMatcher.find()) {
+        do {
+          String entry = commentMatcher.group(1);
+          Matcher dateMatcher = sDatePattern.matcher(entry);
+          if (dateMatcher.find()) {
+            Matcher dataMatcher = sDataPattern.matcher(entry);
+            if (dataMatcher.find()) {
+              comments.add(new Comments(dateMatcher.group(1), dataMatcher.group(1)));
+            } else {
+              throw new ConvertException("No data: " + entry);
+            }
           } else {
-            throw new ConvertException("No comment: " + cb);
+            throw new ConvertException("No date: " + entry);
           }
-        } finally {
-          if (fc != null) {
-            fc.close();
-          }
-        }
-      } finally {
-        if (fis != null) {
-          fis.close();
+        } while (commentMatcher.find());
+      } else {
+        throw new ConvertException("No comment: " + cb);
+      }
+    } finally {
+      if (fc != null) {
+        try {
+          fc.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(filename);
+          throw new ConvertException(sb.toString(), e);
         }
       }
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't read statics file: ");
-      sb.append(filename);
-      throw new ConvertException(sb.toString(), e);
     }
-                
+
     return comments;
   }
 }

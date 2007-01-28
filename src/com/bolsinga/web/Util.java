@@ -407,22 +407,39 @@ public class Util {
         
   public synchronized static void createSettings(final String sourceFile) throws WebException {
     if (sSettings == null) {
-      
       InputStream is = null;
       try {
-        is = new FileInputStream(sourceFile);
-      } catch (FileNotFoundException e) {
-        throw new WebException("Can't find file", e);
-      }
-      
-      try {
-        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
-        Unmarshaller u = jc.createUnmarshaller();
-                
-        sSettings = (com.bolsinga.settings.data.Settings)u.unmarshal(is);
-
-      } catch (JAXBException e) {
-        throw new WebException("Can't create settings", e);
+        try {
+          is = new FileInputStream(sourceFile);
+        } catch (FileNotFoundException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Can't find settings file: ");
+          sb.append(sourceFile);
+          throw new WebException(sb.toString(), e);
+        }
+        
+        try {
+          JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
+          Unmarshaller u = jc.createUnmarshaller();
+                  
+          sSettings = (com.bolsinga.settings.data.Settings)u.unmarshal(is);
+        } catch (JAXBException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Can't unmarsal settings file: ");
+          sb.append(sourceFile);
+          throw new WebException(sb.toString(), e);
+        }
+      } finally {
+        if (is != null) {
+          try {
+            is.close();
+          } catch (IOException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Unable to close settings file: ");
+            sb.append(sourceFile);
+            throw new WebException(sb.toString(), e);
+          }
+        }
       }
     }
   }
@@ -477,21 +494,42 @@ public class Util {
     
   public static Diary createDiary(final String sourceFile) throws WebException {
     Diary diary = null;
+    
     InputStream is = null;
     try {
-      is = new FileInputStream(sourceFile);
-    } catch (FileNotFoundException e) {
-      throw new WebException("Can't find file", e);
+      try {
+        is = new FileInputStream(sourceFile);
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find diary file: ");
+        sb.append(sourceFile);
+        throw new WebException(sb.toString(), e);
+      }
+      
+      try {
+        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
+        Unmarshaller u = jc.createUnmarshaller();
+                          
+        diary = (Diary)u.unmarshal(is);
+      } catch (JAXBException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't unmarsal diary file: ");
+        sb.append(sourceFile);
+        throw new WebException(sb.toString(), e);
+      }
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close diary file: ");
+          sb.append(sourceFile);
+          throw new WebException(sb.toString(), e);
+        }
+      }
     }
     
-    try {
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
-      Unmarshaller u = jc.createUnmarshaller();
-                        
-      diary = (Diary)u.unmarshal(is);
-    } catch (JAXBException e) {
-        throw new WebException("Can't create diary", e);
-    }
     return diary;
   }
   
@@ -624,21 +662,42 @@ public class Util {
 
   public static Music createMusic(final String sourceFile) throws WebException {
     Music music = null;
+    
     InputStream is = null;
     try {
-      is = new FileInputStream(sourceFile);
-    } catch (FileNotFoundException e) {
-      throw new WebException("Can't find file", e);
+      try {
+        is = new FileInputStream(sourceFile);
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find music file: ");
+        sb.append(sourceFile);
+        throw new WebException(sb.toString(), e);
+      }
+      
+      try {
+        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
+        Unmarshaller u = jc.createUnmarshaller();
+                          
+        music = (Music)u.unmarshal(is);
+      } catch (JAXBException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't unmarsal music file: ");
+        sb.append(sourceFile);
+        throw new WebException(sb.toString(), e);
+      }
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close music file: ");
+          sb.append(sourceFile);
+          throw new WebException(sb.toString(), e);
+        }
+      }
     }
     
-    try {
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
-      Unmarshaller u = jc.createUnmarshaller();
-                        
-      music = (Music)u.unmarshal(is);
-    } catch (JAXBException e) {
-      throw new WebException("Can't create music", e);
-    }
     return music;
   }
         
