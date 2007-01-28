@@ -17,54 +17,6 @@ public class Convert {
   private static final Pattern sCommentPattern = Pattern.compile("<comment>(.*?)</comment>", Pattern.DOTALL);
   private static final Pattern sDatePattern    = Pattern.compile("<date>(.*?)</date>", Pattern.DOTALL);
 
-  private final String fType;
-  private final String fFile;
-        
-  public static void main(String args[]) {
-    if (args.length != 2) {
-      System.out.println("Usage: Convert [type] [file]");
-      System.out.println("\tcomments, shows, venuemap, bandsort, relations statics");
-      System.exit(0);
-    }
-    
-    try {
-      Convert c = new Convert(args[0], args[1]);
-      c.convert();
-    } catch (ConvertException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-  }
-
-  private Convert(final String type, final String file) {
-    fType = type;
-    fFile = file;
-  }
-
-  private void convert() throws ConvertException {
-    Collection<?> l = null;
-    if (fType.equals("relations")) {
-      l = relation(fFile);
-    } else if (fType.equals("bandsort")) {
-      l = bandsort(fFile);
-    } else if (fType.equals("venuemap")) {
-      l = venuemap(fFile);
-    } else if (fType.equals("shows")) {
-      l = shows(fFile);
-    } else if (fType.equals("statics")) {
-      l = statics(fFile);
-    } else if (fType.equals("comments")) {
-      l = comments(fFile);
-    } else {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Unknown conversion type: ");
-      sb.append(fType);
-      throw new ConvertException(sb.toString());
-    }
-    dump(l);
-  }
-
   public static List<Relation> relation(final String filename) throws ConvertException {
     Vector<Relation> relations = new Vector<Relation>();
 
@@ -422,11 +374,5 @@ public class Convert {
     }
                 
     return comments;
-  }
-        
-  private static void dump(final Collection<?> c) {
-    for (Object t : c) {
-      System.out.println(t);
-    }
   }
 }
