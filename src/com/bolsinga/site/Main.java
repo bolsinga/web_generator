@@ -1,8 +1,10 @@
 package com.bolsinga.site;
 
-public class Main implements com.bolsinga.web.Backgroundable {
+import com.bolsinga.web.*;
 
-  private final com.bolsinga.web.Backgrounder fBackgrounder;
+public class Main implements Backgroundable {
+
+  private final Backgrounder fBackgrounder;
   
   public static void main(String[] args) {
     if (args.length != 13) {
@@ -28,7 +30,7 @@ public class Main implements com.bolsinga.web.Backgroundable {
 
     String command = args[12];
 
-    com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
+    Backgrounder backgrounder = Backgrounder.getBackgrounder();
     
     try {
       Main main = new Main(backgrounder, settingsFile);
@@ -47,11 +49,11 @@ public class Main implements com.bolsinga.web.Backgroundable {
     }
   }
     
-  private Main(final com.bolsinga.web.Backgrounder backgrounder, final String settingsFile) throws com.bolsinga.web.WebException {
+  private Main(final Backgrounder backgrounder, final String settingsFile) throws WebException {
     fBackgrounder = backgrounder;
     fBackgrounder.addInterest(this);
 
-    com.bolsinga.web.Util.createSettings(settingsFile);
+    Util.createSettings(settingsFile);
   }
   
   private void complete() {
@@ -63,13 +65,13 @@ public class Main implements com.bolsinga.web.Backgroundable {
     com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
   }
   
-  private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws com.bolsinga.web.WebException {
-    final com.bolsinga.music.data.xml.Music music = com.bolsinga.web.Util.createMusic(musicFile);
-    final com.bolsinga.diary.data.xml.Diary diary = com.bolsinga.web.Util.createDiary(diaryFile);
+  private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws WebException {
+    final com.bolsinga.music.data.xml.Music music = Util.createMusic(musicFile);
+    final com.bolsinga.diary.data.xml.Diary diary = Util.createDiary(diaryFile);
   
-    com.bolsinga.web.CSS.install(cssFile, output);
+    CSS.install(cssFile, output);
 
-    final com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
+    final Encode encoder = Encode.getEncode(music, diary);
 
     com.bolsinga.diary.Web.generate(fBackgrounder, this, diary, music, encoder, output);
     com.bolsinga.music.Web.generate(fBackgrounder, this, music, encoder, output);
