@@ -12,21 +12,6 @@ import javax.xml.bind.Marshaller;
 import com.bolsinga.diary.data.xml.*;
 
 public class Diary {
-
-  public static void main(String[] args) {
-    if (args.length != 3) {
-      System.out.println("Usage: Diary [comments] [statics] [output]");
-      System.exit(0);
-    }
-    
-    try {
-      Diary.convert(args[0], args[1], args[2]);
-    } catch (ConvertException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-  }
         
   public static void convert(final String commentsFile, final String staticsFile, final String outputFile) throws ConvertException {
     List<Comments> comments = Convert.comments(commentsFile);

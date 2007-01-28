@@ -319,7 +319,7 @@
 </target>
 
 <target name="generateDiaryXML" depends="music_converter, jar">
-        <java classname="com.bolsinga.shows.converter.Diary" fork="true">
+        <java classname="com.bolsinga.test.ConvertDiaryTest" fork="true">
                 <arg value="${legacy_data.dir}comments.txt" />
                 <arg value="${legacy_data.dir}statics.txt" />
                 <arg value="${data.dir}diary.xml" />
