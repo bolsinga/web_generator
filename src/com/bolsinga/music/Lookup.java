@@ -130,8 +130,7 @@ public class Lookup {
             rLabels.add(label);
           }
         } else {
-          System.err.println("No Relation: " + o);
-          System.exit(1);
+          throw new Error("No Relation: " + o.toString());
         }
       }
     }
