@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "site data_dir output_dir user password  xml | musicxml | diaryxml | import | musicimport | diaryimport | site | musicsite | diarysite"
+    echo "site data_dir output_dir <xml | site>"
     echo $1
     exit 1
 }
@@ -90,37 +90,16 @@ if [ ! -d "${OUTPUT_HOME}" ] ; then
     usage "Can't find ${OUTPUT_HOME}"
 fi
 
-if [ -z "$4" ] ; then
- ACTION="$3"
- if [ -z "$ACTION" ] ; then
-     usage "No action"
- fi
- DB_USER="none";
- DB_PASSWORD="none";
-else
- DB_USER="$3"
- if [ -z "$DB_USER" ] ; then
-     usage "No db user"
- fi
- DB_PASSWORD="$4"
- if [ -z "$DB_PASSWORD" ] ; then
-     usage "No db password"
- fi
- ACTION="$5"
- if [ -z "$ACTION" ] ; then
-     usage "No action"
- fi
- TESTIMPORT=`echo $ACTION | sed -e's|import||'`
- if [ "$ACTION" = "$TESTIMPORT" ] ; then
-     ACTION="$ACTION-db"
- fi
+ACTION="$3"
+if [ -z "$ACTION" ] ; then
+   usage "No action"
 fi
 
 COMMAND="exec \"$JAVA_CMD\" -Xms96m -Xmx96m"
 if [ ! -z "$JAVA_OPTS" ] ; then
     COMMAND="$COMMAND $JAVA_OPTS"
 fi
-COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $DATA_FILES $DB_USER $DB_PASSWORD $OUTPUT_HOME $ACTION"
+COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $DATA_FILES $OUTPUT_HOME $ACTION"
 
 if [ ! -z "$DUMP" ] ; then
     echo "$COMMAND"

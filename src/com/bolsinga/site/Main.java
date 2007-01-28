@@ -5,21 +5,10 @@ public class Main implements com.bolsinga.web.Backgroundable {
   private final com.bolsinga.web.Backgrounder fBackgrounder;
   
   public static void main(String[] args) {
-    if (args.length != 15) {
+    if (args.length != 13) {
       Main.usage(args, "Wrong number of arguments");
     }
 
-    // General arguments
-    String command = args[14];
-    String diaryFile = args[7];
-    String musicFile = args[8];
-
-    String user = args[11];
-    String password = args[12];
-
-    String output = args[13];
-
-    // XML conversion arguments
     String itunes = args[0];
     String shows = args[1];
     String venue = args[2];
@@ -27,111 +16,68 @@ public class Main implements com.bolsinga.web.Backgroundable {
     String relations = args[4];
     String comments = args[5];
     String statics = args[6];
+
+    String diaryFile = args[7];
+    String musicFile = args[8];
     
-    // Site generation arguments
     String settingsFile = args[9];
     
     String cssFile = args[10];
 
+    String output = args[11];
+
+    String command = args[12];
+
     com.bolsinga.web.Backgrounder backgrounder = com.bolsinga.web.Backgrounder.getBackgrounder();
-   
-    Main main = new Main(backgrounder);
-    boolean success = main.generate(command, diaryFile, musicFile, user, password, output, itunes, shows, venue, sort, relations, comments, statics, settingsFile, cssFile);
-    if (!success) {
-      Main.usage(args, "Invalid action");
+    
+    try {
+      Main main = new Main(backgrounder, settingsFile);
+      if (command.equals("xml")) {
+        main.generateXML(diaryFile, musicFile, itunes, shows, venue, sort, relations, comments, statics);
+      } else if (command.equals("site")) {
+        main.generateSite(diaryFile, musicFile, output, cssFile);
+      } else {
+        Main.usage(args, "Invalid action");
+      }
+      main.complete();
+    } catch (Exception e) {
+      System.err.println(e);
+      e.printStackTrace();
+      System.exit(1);
     }
-    main.complete();
   }
     
-  private Main(final com.bolsinga.web.Backgrounder backgrounder) {
+  private Main(final com.bolsinga.web.Backgrounder backgrounder, final String settingsFile) throws com.bolsinga.web.WebException {
     fBackgrounder = backgrounder;
     fBackgrounder.addInterest(this);
+
+    com.bolsinga.web.Util.createSettings(settingsFile);
   }
   
   private void complete() {
     fBackgrounder.removeInterest(this);
   }
   
-  private boolean generate(String command, String diaryFile, String musicFile, String user, String password, String output, String itunes, String shows, String venue, String sort, String relations, String comments, String statics, String settingsFile, String cssFile) {
-    boolean musicXML = command.equals("musicxml") || command.equals("xml");
-    boolean diaryXML = command.equals("diaryxml") || command.equals("xml");
-    boolean musicImport = command.equals("musicimport") || command.equals("import");
-    boolean diaryImport = command.equals("diaryimport") || command.equals("import");
-    boolean site = command.matches("^site.*");
-    boolean musicsite = command.matches("^musicsite.*");
-    boolean diarysite = command.matches("^diarysite.*");
+  private void generateXML(final String diaryFile, final String musicFile, final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics) throws com.bolsinga.shows.converter.ConvertException {
+    com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, musicFile);
+    com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
+  }
+  
+  private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws com.bolsinga.web.WebException {
+    final com.bolsinga.music.data.xml.Music music = com.bolsinga.web.Util.createMusic(musicFile);
+    final com.bolsinga.diary.data.xml.Diary diary = com.bolsinga.web.Util.createDiary(diaryFile);
+  
+    com.bolsinga.web.CSS.install(cssFile, output);
 
-    if (!(musicXML | diaryXML | musicImport | diaryImport | site | musicsite | diarysite)) {
-      return false;
-    }
+    final com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
 
-    try {
-      com.bolsinga.web.Util.createSettings(settingsFile);
-
-      try {
-        if (musicXML || diaryXML) {
-          if (musicXML) {
-            com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, musicFile);
-          }
-          if (diaryXML) {
-            com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
-          }
-          return true;
-        }
-      } catch (com.bolsinga.shows.converter.ConvertException e) {
-        System.err.println(e);
-        e.printStackTrace();
-        System.exit(1);
-      }
-
-      if (musicImport || diaryImport) {
-        if (musicImport) {
-          com.bolsinga.music.MySQLImporter.importData(musicFile, user, password, true);
-        }
-        if (diaryImport) {
-          com.bolsinga.diary.MySQLImporter.importData(diaryFile, user, password, true);
-        }
-        return true;
-      }
-
-      boolean useDB = command.matches(".*-db$");
-
-      com.bolsinga.music.data.xml.Music music = null;
-      com.bolsinga.diary.data.xml.Diary diary = null;
-
-      if (!useDB) {
-        diary = com.bolsinga.web.Util.createDiary(diaryFile);
-        music = com.bolsinga.web.Util.createMusic(musicFile);
-      } else {
-        diary = com.bolsinga.diary.MySQLCreator.createDiary(user, password);
-        music = com.bolsinga.music.MySQLCreator.createMusic(user, password);
-      }
-    
-      // Everything needs the CSS file.
-      com.bolsinga.web.CSS.install(cssFile, output);
-
-      com.bolsinga.web.Encode encoder = com.bolsinga.web.Encode.getEncode(music, diary);
-
-      if (site) {
-        com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "all");
-      }
-      if (musicsite) {
-        com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "music");
-      }
-      if (diarysite) {
-        com.bolsinga.site.Site.generate(fBackgrounder, this, encoder, diary, music, output, "diary");
-      }
-    } catch (com.bolsinga.web.WebException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-
-    return true;
+    com.bolsinga.diary.Web.generate(fBackgrounder, this, diary, music, encoder, output);
+    com.bolsinga.music.Web.generate(fBackgrounder, this, music, encoder, output);
+    com.bolsinga.music.ICal.generate(music, output);
   }
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [layout.css] [user] [password] [output.dir] <xml|musicxml|diaryxml|import|musicimport|diaryimport|site|musicsite|diarysite|site-ddb|musicsite-db|diarysite-db>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [layout.css] [output.dir] <xml|site>");
     System.out.println(reason);
     System.out.println("Arguments:");
     for (int i = 0; i < badargs.length; i++) {
