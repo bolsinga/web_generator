@@ -338,7 +338,7 @@
 </target>
 
 <target name="generateCSSTemplate" depends="web, jar, prepare_output">
-  <java classname="com.bolsinga.web.CSS" fork="true">
+  <java classname="com.bolsinga.test.CSSTest" fork="true">
     <arg value="${data.dir}settings.xml" />
     <arg value="${data.dir}layout.css" />
     <arg value="${output.dir}" />

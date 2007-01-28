@@ -108,23 +108,6 @@ public class CSS {
     RECORD_SECTION   = sCSSMapping.get(LONG_RECORD_SECTION);
     RECORD_ITEM_LIST = sCSSMapping.get(LONG_RECORD_ITEM_LIST);
   }
-                                                       
-  public static void main(String[] args) {
-    if (args.length != 3) {
-      System.out.println("Usage: CSS [settings.xml] [layout.css] [output.dir]");
-      System.exit(0);
-    }
-
-    try {
-      Util.createSettings(args[0]);
-    
-      CSS.install(args[1], args[2]);
-    } catch (WebException e) {
-      System.err.println(e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-  }
   
   public static void install(final String srcFileName, final String outputDir) throws WebException {
     File srcFile = new File(srcFileName);
