@@ -71,11 +71,9 @@ public class Util {
     try {
       sXMLDatatypeFactory = DatatypeFactory.newInstance();
     } catch (DatatypeConfigurationException e) {
-      System.err.println("Exception: " + e);
-      e.printStackTrace();
-      System.exit(1);
+      throw new Error(e);
     }
-
+    
     StringBuilder sb = new StringBuilder();
     Util.appendPretty(sb);
     sb.append(new P());
