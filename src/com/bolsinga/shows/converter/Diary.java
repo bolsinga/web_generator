@@ -52,7 +52,7 @@ public class Diary {
     }
   }
         
-  private static void createStatics(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Statics> statics) {
+  private static void createStatics(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Statics> statics) throws ConvertException {
     for (Statics oldStatic : statics) {
       String location = oldStatic.getLocation();
                         
@@ -67,7 +67,10 @@ public class Diary {
       } else if (location.equalsIgnoreCase("colophon")) {
         diary.setColophon(oldStatic.getData());
       } else {
-        System.err.println("Unknown statics location: " + location);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Unknown statics location: ");
+        sb.append(location);
+        throw new ConvertException(sb.toString());
       }
     }
   }
