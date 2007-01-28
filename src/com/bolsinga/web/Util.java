@@ -506,9 +506,7 @@ public class Util {
       StringBuilder sb = new StringBuilder();
       sb.append("Can't convert unknown date to UTC: ");
       sb.append(date.toString());
-      // TODO: Should this throw a WebException?
-      // throw new WebException(sb.toString());
-      System.err.println(sb.toString());
+      throw new Error(sb.toString());
     }
     // Convert to UTC
     GregorianCalendar result = Util.nowUTC();
