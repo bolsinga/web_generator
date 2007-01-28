@@ -9,8 +9,6 @@ public class CSS {
 
   private static final String LONG_ENTRY_INDEX      = "entry_index";
   private static final String LONG_ENTRY_INDEX_SUB  = "entry_index_sub";
-  private static final String LONG_ENTRY_ITEM       = "entry_item";
-  private static final String LONG_ENTRY_RELATION   = "entry_relation";
   private static final String LONG_INTERNAL         = "internal";
   private static final String LONG_PERMANENT        = "permanent";
   private static final String LONG_ACTIVE           = "active";
@@ -29,28 +27,24 @@ public class CSS {
 
   private static final String SHORT_ENTRY_INDEX      = "a";
   private static final String SHORT_ENTRY_INDEX_SUB  = "b";
-  private static final String SHORT_ENTRY_ITEM       = "c";
-  private static final String SHORT_ENTRY_RELATION   = "d";
-  private static final String SHORT_INTERNAL         = "e";
-  private static final String SHORT_PERMANENT        = "f";
-  private static final String SHORT_ACTIVE           = "g";
-  private static final String SHORT_DOC_2_COL_BODY   = "h";
-  private static final String SHORT_DOC_3_COL_BODY   = "i";
-  private static final String SHORT_NAV_HEADER       = "j";
-  private static final String SHORT_STATICS_HEADER   = "k";
-  private static final String SHORT_STATICS_OFFSITE  = "l";
-  private static final String SHORT_DOC_SUB          = "m";
-  private static final String SHORT_COLOPHON         = "n";
-  private static final String SHORT_TABLE_HEADER     = "o";
-  private static final String SHORT_TABLE_ROW_ALT    = "p";
-  private static final String SHORT_TABLE_FOOTER     = "q";
-  private static final String SHORT_RECORD_SECTION   = "r";
-  private static final String SHORT_RECORD_ITEM_LIST = "s";
+  private static final String SHORT_INTERNAL         = "c";
+  private static final String SHORT_PERMANENT        = "d";
+  private static final String SHORT_ACTIVE           = "e";
+  private static final String SHORT_DOC_2_COL_BODY   = "f";
+  private static final String SHORT_DOC_3_COL_BODY   = "g";
+  private static final String SHORT_NAV_HEADER       = "h";
+  private static final String SHORT_STATICS_HEADER   = "i";
+  private static final String SHORT_STATICS_OFFSITE  = "j";
+  private static final String SHORT_DOC_SUB          = "k";
+  private static final String SHORT_COLOPHON         = "l";
+  private static final String SHORT_TABLE_HEADER     = "m";
+  private static final String SHORT_TABLE_ROW_ALT    = "n";
+  private static final String SHORT_TABLE_FOOTER     = "o";
+  private static final String SHORT_RECORD_SECTION   = "p";
+  private static final String SHORT_RECORD_ITEM_LIST = "q";
 
   public static String ENTRY_INDEX;
   public static String ENTRY_INDEX_SUB;
-  public static String ENTRY_ITEM;
-  public static String ENTRY_RELATION;
   public static String INTERNAL;
   public static String PERMANENT;
   public static String ACTIVE;
@@ -80,8 +74,6 @@ public class CSS {
 
     sCSSMapping.put(LONG_ENTRY_INDEX,      debug ? LONG_ENTRY_INDEX      : SHORT_ENTRY_INDEX);
     sCSSMapping.put(LONG_ENTRY_INDEX_SUB,  debug ? LONG_ENTRY_INDEX_SUB  : SHORT_ENTRY_INDEX_SUB);
-    sCSSMapping.put(LONG_ENTRY_ITEM,       debug ? LONG_ENTRY_ITEM       : SHORT_ENTRY_ITEM);
-    sCSSMapping.put(LONG_ENTRY_RELATION,   debug ? LONG_ENTRY_RELATION   : SHORT_ENTRY_RELATION);
     sCSSMapping.put(LONG_INTERNAL,         debug ? LONG_INTERNAL         : SHORT_INTERNAL);
     sCSSMapping.put(LONG_PERMANENT,        debug ? LONG_PERMANENT        : SHORT_PERMANENT);
     sCSSMapping.put(LONG_ACTIVE,           debug ? LONG_ACTIVE           : SHORT_ACTIVE);
@@ -100,8 +92,6 @@ public class CSS {
 
     ENTRY_INDEX      = sCSSMapping.get(LONG_ENTRY_INDEX);
     ENTRY_INDEX_SUB  = sCSSMapping.get(LONG_ENTRY_INDEX_SUB);
-    ENTRY_ITEM       = sCSSMapping.get(LONG_ENTRY_ITEM);
-    ENTRY_RELATION   = sCSSMapping.get(LONG_ENTRY_RELATION);
     INTERNAL         = sCSSMapping.get(LONG_INTERNAL);
     PERMANENT        = sCSSMapping.get(LONG_PERMANENT);
     ACTIVE           = sCSSMapping.get(LONG_ACTIVE);
