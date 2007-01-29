@@ -17,18 +17,16 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final java.util.Map<String, IndexPair> fIndex;
 
   private final Encode fEncoder;
-  private final boolean fUpOneLevel;
 
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final Encode encoder, final String outputDir) {
-    ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir, encoder, true);
+    ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir, encoder);
     creator.create(backgrounder, backgroundable);
     creator.createStats(backgrounder, backgroundable);
   }
     
-  private ShowRecordDocumentCreator(final Music music, final String outputDir, final Encode encoder, final boolean upOneLevel) {
+  private ShowRecordDocumentCreator(final Music music, final String outputDir, final Encode encoder) {
     super(music, outputDir);
     fEncoder = encoder;
-    fUpOneLevel = upOneLevel;
     fIndex = createIndex();
   }
   
@@ -195,7 +193,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Record getShowRecord(final Show show) {
-    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, fUpOneLevel);
+    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, true);
   }
   
   // This is used for the main page.
