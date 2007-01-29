@@ -1,6 +1,5 @@
 package com.bolsinga.shows.converter;
 
-import java.io.*;
 import java.util.*;
 
 public class Relation {

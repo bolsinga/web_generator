@@ -1,8 +1,5 @@
 package com.bolsinga.shows.converter;
 
-import java.io.*;
-import java.util.*;
-
 public class Venue {
   private final String fName;
   private final String fCity;

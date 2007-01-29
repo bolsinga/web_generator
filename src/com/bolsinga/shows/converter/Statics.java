@@ -1,9 +1,6 @@
 package com.bolsinga.shows.converter;
 
-import java.io.*;
 import java.util.*;
-
-import com.bolsinga.shows.converter.*;
 
 public class Statics {
   private final String fLocation;
