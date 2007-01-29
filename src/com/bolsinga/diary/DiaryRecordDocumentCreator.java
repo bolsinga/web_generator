@@ -4,7 +4,7 @@ import com.bolsinga.diary.data.xml.*;
 
 import com.bolsinga.web.*;
 
-public abstract class DiaryRecordDocumentCreator extends com.bolsinga.web.RecordDocumentCreator {
+public abstract class DiaryRecordDocumentCreator extends RecordDocumentCreator {
 
   protected final Diary fDiary;
   protected final int fStartYear;
