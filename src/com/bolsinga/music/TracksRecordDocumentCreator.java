@@ -15,8 +15,6 @@ import javax.xml.bind.JAXBElement;
 public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private final java.util.Map<String, IndexPair> fIndex;
-  
-  private Vector<Album> fItems;
 
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     TracksRecordDocumentCreator creator = new TracksRecordDocumentCreator(music, outputDir);
