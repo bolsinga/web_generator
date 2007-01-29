@@ -19,13 +19,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   
   protected void create(final RecordFactory factory) {
     Document d = populate(factory);
-    try {
-      writeDocument(factory, d);
-    } catch (WebException e) {
-      // TODO: What to do with these exceptions while running in Backgrounder!!!
-      System.err.println(e);
-      e.printStackTrace();
-    }
+    writeDocument(factory, d);
   }
   
   private Document populate(final RecordFactory factory) {
@@ -103,7 +97,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
         
-  private void writeDocument(final RecordFactory factory, final Document d) throws WebException {
+  private void writeDocument(final RecordFactory factory, final Document d) {
     File f = new File(fOutputDir, factory.getFilePath());
     File parent = new File(f.getParent());
     if (!parent.mkdirs()) {
@@ -112,29 +106,24 @@ public abstract class RecordDocumentCreator implements Backgroundable {
       }
     }
 
-    OutputStream os = null;
     try {
+      OutputStream os = null;
       try {
         os = new FileOutputStream(f);
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(f.toString());
-        throw new WebException(sb.toString(), e);
-      }
-      
-      d.output(os);
-    } finally {
-      if (os != null) {
-        try {
+        d.output(os);
+      } finally {
+        if (os != null) {
           os.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Can't close file: ");
-          sb.append(f);
-          throw new WebException(sb.toString(), e);
         }
       }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("The RecordDocument: ");
+      sb.append(f);
+      sb.append(" could not be written.");
+      System.err.println(sb.toString());
+      System.err.println(e);
+      e.printStackTrace();
     }
   }
 }
