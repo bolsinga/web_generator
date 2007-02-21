@@ -57,6 +57,7 @@ public class ITunes {
   private static final String TK_SKIP_DATE            = "Skip Date";
   private static final String TK_RELEASE_DATE         = "Release Date";
   private static final String TK_PODCAST              = "Podcast";
+  private static final String TK_MOVIE                = "Movie";
     
   private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
   private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
@@ -124,6 +125,7 @@ public class ITunes {
     sITunesKeys.add(TK_SKIP_DATE);
     sITunesKeys.add(TK_RELEASE_DATE);
     sITunesKeys.add(TK_PODCAST);
+    sITunesKeys.add(TK_MOVIE);
   }
         
   public static void addMusic(final ObjectFactory objFactory, final Music music, final String itunesFile) throws ITunesException {
