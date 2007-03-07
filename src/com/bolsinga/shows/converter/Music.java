@@ -161,13 +161,33 @@ public class Music {
         xRelation.setType(RelationType.fromValue("artist"));
 
         for (String member : oldRelation.getMembers()) {
-          xRelation.getMember().add(objFactory.createRelationMember(sArtists.get(member)));
+          Artist mArtist = sArtists.get(member);
+          if (mArtist != null) {
+            xRelation.getMember().add(objFactory.createRelationMember(mArtist));
+          } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Unknown artist relation: ");
+            sb.append(reason);
+            sb.append(" -> ");
+            sb.append(member);
+            throw new ConvertException(sb.toString());
+          }
         }
       } else if (type.equals("venue")) {
         xRelation.setType(RelationType.fromValue(type));
 
         for (String member : oldRelation.getMembers()) {
-          xRelation.getMember().add(objFactory.createRelationMember(sVenues.get(member)));
+          com.bolsinga.music.data.xml.Venue mVenue = sVenues.get(member);
+          if (mVenue != null) {
+            xRelation.getMember().add(objFactory.createRelationMember(mVenue));
+          } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Unknown venue relation: ");
+            sb.append(reason);
+            sb.append(" -> ");
+            sb.append(member);
+            throw new ConvertException(sb.toString());
+          }
         }
       } else {
         StringBuilder sb = new StringBuilder();
