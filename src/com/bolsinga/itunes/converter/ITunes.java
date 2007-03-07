@@ -174,7 +174,7 @@ public class ITunes {
     }
   }
         
-  private static void addTracks(final ObjectFactory objFactory, final Music music, final java.util.List<Object> tracks) {
+  private static void addTracks(final ObjectFactory objFactory, final Music music, final java.util.List<Object> tracks) throws ITunesException {
     Iterator<Object> i = tracks.iterator();
     while (i.hasNext()) {
       Object key = i.next(); // key not used
@@ -190,11 +190,12 @@ public class ITunes {
     sortAlbumsSongOrder(music);
   }
         
-  private static void addTrack(final ObjectFactory objFactory, final Music music, final com.bolsinga.plist.data.Dict track) {
+  private static void addTrack(final ObjectFactory objFactory, final Music music, final com.bolsinga.plist.data.Dict track) throws ITunesException {
     Iterator<Object> i = track.getKeyAndArrayOrData().iterator();
             
     String songTitle = null;
     String artist = null;
+    String sortArtist = null;
     XMLGregorianCalendar lastPlayed = null;
     int playCount = 0;
     String genre = null;
@@ -217,6 +218,10 @@ public class ITunes {
       }
       if (key.equals(TK_ARTIST)) {
         artist = (String)jovalue.getValue();
+        continue;
+      }
+      if (key.equals(TK_SORT_ARTIST)) {
+        sortArtist = (String)jovalue.getValue();
         continue;
       }
       if (key.equals(TK_ALBUM)) {
@@ -269,13 +274,23 @@ public class ITunes {
     }
 
     if (!isVideo && !isPodcast) {
-      ITunes.createTrack(objFactory, music, artist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
+      ITunes.createTrack(objFactory, music, artist, sortArtist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
         
-  private static void createTrack(final ObjectFactory objFactory, final Music music, final String artistName, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount, final boolean compilation) {
+  private static void createTrack(final ObjectFactory objFactory, final Music music, final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount, final boolean compilation) throws ITunesException {
     // Get or create the artist
-    Artist artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName);
+    Artist artist = null;
+    try {
+      artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName, sortArtist);
+    } catch (com.bolsinga.shows.converter.ConvertException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't add artist: ");
+      sb.append(artistName);
+      sb.append(" sort name: ");
+      sb.append(sortArtist);
+      throw new ITunesException(sb.toString(), e);
+    }
                 
     // Get or create the album.
     Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);

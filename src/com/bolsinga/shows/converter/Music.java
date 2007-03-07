@@ -235,24 +235,46 @@ public class Music {
     return result;
   }
         
-  public static Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final String name) {
+  public static Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final String name, final String sortName) throws ConvertException {
     Artist result = null;
     if (!sArtists.containsKey(name)) {
       result = objFactory.createArtist();
       result.setName(name);
       result.setId("ar" + sArtists.size());
-      if (sBandSorts.containsKey(name)) {
-        result.setSortname(sBandSorts.get(name));
+
+      if (sortName != null) {
+        result.setSortname(sortName);
       }
+      
       music.getArtist().add(result); // Modification required.
       sArtists.put(name, result);
     } else {
       result = sArtists.get(name);
+
+      // Be sure the sort name is set as expected (it may be only known at later calls!)
+      String curSortName = result.getSortname();
+      if ((curSortName != null) && (sortName != null)) {
+        // Ensure what we are passed matches
+        if (!curSortName.equals(sortName)) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Different Sort Names for: ");
+          sb.append(name);
+          sb.append("(");
+          sb.append(curSortName);
+          sb.append(", ");
+          sb.append(sortName);
+          sb.append(")");
+          throw new ConvertException(sb.toString());
+        }
+      } if ((curSortName == null) && (sortName != null)) {
+        result.setSortname(sortName);
+      }
     }
+
     return result;
   }
                 
-  private static void convert(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Show> shows) {
+  private static void convert(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Show> shows) throws ConvertException {
     // Go through each show.
     //  Create an Artist for each band in the set, if it doesn't already exist. Use the sort name.
     //  Create a Date.
@@ -275,7 +297,11 @@ public class Music {
       xShow.setDate(xDate);
                    
       for (String oldBand : oldShow.getBands()) {     
-        xArtist = addArtist(objFactory, music, oldBand);
+        String sortName = null;
+        if (sBandSorts.containsKey(oldBand)) {
+          sortName = sBandSorts.get(oldBand);
+        }
+        xArtist = addArtist(objFactory, music, oldBand, sortName);
                                 
         xShow.getArtist().add(objFactory.createShowArtist(xArtist));
       }
