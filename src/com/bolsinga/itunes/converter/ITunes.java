@@ -77,6 +77,7 @@ public class ITunes {
   private static final HashMap<String, Album> sAlbums = new HashMap<String, Album>();
 
   private static final HashSet<String> sITunesKeys = new HashSet<String>();
+  private static final Set<String> sNewITunesKeys = new TreeSet<String>();
   
   private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
   
@@ -167,6 +168,10 @@ public class ITunes {
         Object o = i.next();
       }
     }
+    
+    for (String key : sNewITunesKeys) {
+        System.out.println("iTunes added a new key: " + key);
+    }
   }
         
   private static void addTracks(final ObjectFactory objFactory, final Music music, final java.util.List<Object> tracks) {
@@ -255,7 +260,7 @@ public class ITunes {
       }
 
       if (!sITunesKeys.contains(key)) {
-        System.out.println("iTunes added a new key: " + key);
+        sNewITunesKeys.add(key);
       }
     }
 
