@@ -27,16 +27,7 @@ public class Music {
                 
     ObjectFactory objFactory = new ObjectFactory();
                 
-    com.bolsinga.music.data.xml.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile);
-
-    try {
-      com.bolsinga.itunes.converter.ITunes.addMusic(objFactory, music, iTunesFile);
-    } catch (com.bolsinga.itunes.converter.ITunesException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't convert iTunes file: ");
-      sb.append(iTunesFile);
-      throw new ConvertException(sb.toString(), e);
-    }
+    com.bolsinga.music.data.xml.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile, iTunesFile  );
 
     music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
 
@@ -82,7 +73,7 @@ public class Music {
     }
   }
 
-  private static com.bolsinga.music.data.xml.Music createMusic(final ObjectFactory objFactory, final String showsFile, final String venueFile, final String bandFile, final String relationFile) throws ConvertException {
+  private static com.bolsinga.music.data.xml.Music createMusic(final ObjectFactory objFactory, final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile) throws ConvertException {
     List<Show> shows = Convert.shows(showsFile);
     List<Venue> venues = Convert.venuemap(venueFile);
     List<BandMap> bands = Convert.bandsort(bandFile);
@@ -97,6 +88,15 @@ public class Music {
     convert(objFactory, music, shows);
 
     Collections.sort(music.getArtist(), com.bolsinga.music.Compare.ARTIST_COMPARATOR); // Modification required.
+
+    try {
+      com.bolsinga.itunes.converter.ITunes.addMusic(objFactory, music, iTunesFile);
+    } catch (com.bolsinga.itunes.converter.ITunesException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't convert iTunes file: ");
+      sb.append(iTunesFile);
+      throw new ConvertException(sb.toString(), e);
+    }
 
     createRelations(objFactory, music, relations);
                 
