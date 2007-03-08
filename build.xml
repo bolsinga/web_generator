@@ -306,7 +306,7 @@
         </javac>
 </target>
 
-<target name="generateMusicXML" depends="music_converter, jar">
+<target name="generateMusicXML" depends="music_converter">
         <java classname="com.bolsinga.test.ConvertMusicTest" fork="true">
                 <arg value="${legacy_data.dir}shows.txt" />
                 <arg value="${legacy_data.dir}venuemap.txt" />
@@ -318,7 +318,7 @@
         </java>
 </target>
 
-<target name="generateDiaryXML" depends="music_converter, jar">
+<target name="generateDiaryXML" depends="music_converter">
         <java classname="com.bolsinga.test.ConvertDiaryTest" fork="true">
                 <arg value="${legacy_data.dir}comments.txt" />
                 <arg value="${legacy_data.dir}statics.txt" />
@@ -337,7 +337,7 @@
   <mkdir dir="${output.dir}" />
 </target>
 
-<target name="generateCSSTemplate" depends="web, jar, prepare_output">
+<target name="generateCSSTemplate" depends="web, prepare_output">
   <java classname="com.bolsinga.test.CSSTest" fork="true">
     <arg value="${data.dir}settings.xml" />
     <arg value="${data.dir}layout.css" />
@@ -347,7 +347,7 @@
   </java>
 </target>
 
-<target name="encoding" depends="music, diary, jar">
+<target name="encoding" depends="music, diary">
   <java classname="com.bolsinga.test.EncodeTest" fork="true">
     <arg value="${data.dir}diary.xml" />
     <arg value="${data.dir}music.xml" />
@@ -363,7 +363,7 @@
                 <sysproperty key="web.debug_output" value="true" />
 -->
 
-<target name="generateMusicWeb" depends="music, jar, prepare_output">
+<target name="generateMusicWeb" depends="music, prepare_output">
   <java classname="com.bolsinga.test.MusicTest" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -375,7 +375,7 @@
   </java>
 </target>
 
-<target name="generateDiaryWeb" depends="diary, jar, prepare_output">
+<target name="generateDiaryWeb" depends="diary, prepare_output">
   <java classname="com.bolsinga.test.DiaryTest" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -388,7 +388,7 @@
   </java>
 </target>
 
-<target name="generateRSS" depends="rss, jar, prepare_output" >
+<target name="generateRSS" depends="rss, prepare_output" >
   <java classname="com.bolsinga.test.RSSTest" fork="true" >
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
@@ -401,7 +401,7 @@
   </java>
 </target>
 
-<target name="generateICal" depends="music, jar, prepare_output">
+<target name="generateICal" depends="music, prepare_output">
   <java classname="com.bolsinga.test.ICalTest" fork="true">
     <jvmarg value="-Xms96m" />
     <jvmarg value="-Xmx96m" />
