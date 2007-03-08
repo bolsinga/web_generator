@@ -156,21 +156,7 @@ public class Compare {
       Collections.sort(r.getMember(), Compare.RELATION_ID_COMPARATOR);
     }
   }
-  
-  public static void displayNoSorts(final Music music) {
-    // This is run during testing only, so modificaiton is expected.
-    List<Artist> artists = music.getArtist();
-    Collections.sort(artists, Compare.ARTIST_COMPARATOR);
-    for (Artist a : artists) {
-      if (a.getSortname() == null) {
-        String name = a.getName();
-        if (name.contains(" ")) {
-          System.out.println(name);
-        }
-      }
-    }
-  }
-        
+
   public static final Comparator<String> LIBRARY_COMPARATOR = new Comparator<String>() {
       public int compare(final String s1, final String s2) {
         return simplify(s1).compareToIgnoreCase(simplify(s2));

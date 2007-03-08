@@ -8,7 +8,7 @@ import javax.xml.bind.Marshaller;
 
 import com.bolsinga.music.data.xml.*;
 
-import com.bolsinga.shows.converter.*;
+import com.bolsinga.music.*;
 import com.bolsinga.web.*;
 
 public class ConvertMusicTest {
@@ -18,13 +18,29 @@ public class ConvertMusicTest {
       System.out.println("Usage: Music [shows] [venuemap] [bandsort] [relations] [itunes] [output]");
       System.exit(0);
     }
-
+  
+    com.bolsinga.music.data.xml.Music music = null;
     try {
-      com.bolsinga.shows.converter.Music.convert(args[0], args[1], args[2], args[3], args[4], args[5]);
-    } catch (ConvertException e) {
+      music = com.bolsinga.shows.converter.Music.createMusic(args[0], args[1], args[2], args[3], args[4]);
+    } catch (com.bolsinga.shows.converter.ConvertException e) {
       System.err.println(e);
       e.printStackTrace();
       System.exit(1);
+    }
+    
+    ConvertMusicTest.displayNoSorts(music);
+  }
+  
+  public static void displayNoSorts(final com.bolsinga.music.data.xml.Music music) {
+    List<Artist> artists = music.getArtist();
+    Collections.sort(artists, Compare.ARTIST_COMPARATOR);
+    for (Artist a : artists) {
+      if (a.getSortname() == null) {
+        String name = a.getName();
+        if (name.contains(" ")) {
+          System.out.println(name);
+        }
+      }
     }
   }
         

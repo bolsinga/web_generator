@@ -20,26 +20,20 @@ public class Music {
   private static final HashMap<String, String> sBandSorts = new HashMap<String, String>();
   private static final HashMap<String, Artist> sArtists =
     new HashMap<String, Artist>();
-
-  private static final boolean TIDY_XML = false;
-  private static final boolean DISPLAY_POTENTIAL_SORT_PROBLEMS = false;
         
-  public static void convert(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String outputFile) throws ConvertException {
-                
+  public static com.bolsinga.music.data.xml.Music createMusic(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile) throws ConvertException {
     ObjectFactory objFactory = new ObjectFactory();
                 
-    com.bolsinga.music.data.xml.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile, iTunesFile  );
+    com.bolsinga.music.data.xml.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile, iTunesFile);
 
     music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
-
-    if (Music.TIDY_XML) {
-      com.bolsinga.music.Compare.tidy(music);
-    }
     
-    if (Music.DISPLAY_POTENTIAL_SORT_PROBLEMS) {
-      com.bolsinga.music.Compare.displayNoSorts(music);
-    }
+    return music;
+  }
 
+  public static void convert(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String outputFile) throws ConvertException {
+    com.bolsinga.music.data.xml.Music music = Music.createMusic(showsFile, venueFile, bandFile, relationFile, iTunesFile);
+    
     OutputStream os = null;
     try {
       try {
