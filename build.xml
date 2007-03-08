@@ -2,9 +2,9 @@
 
 <project name="web_generator" default="package" basedir=".">
 
-<property name="legacy_data.dir" value="../data/" />
-<property name="itunes.dir" value="../data/" />
-<property name="data.dir" value="../data/" />
+<property name="legacy_data.dir" value="../web_data/" />
+<property name="itunes.dir" value="../web_data/" />
+<property name="data.dir" value="../web_data/" />
 <property name="output.dir" value="/tmp/web" />
 
 <property name="src.dir" value="${basedir}/src" />
@@ -306,6 +306,11 @@
         </javac>
 </target>
 
+<path id="test_classpath">
+  <path refid="jaxb_binder_classpath" />
+  <pathelement path="${build.classes}" />
+</path>
+
 <target name="generateMusicXML" depends="music_converter">
         <java classname="com.bolsinga.test.ConvertMusicTest" fork="true">
                 <arg value="${legacy_data.dir}shows.txt" />
@@ -314,7 +319,7 @@
                 <arg value="${legacy_data.dir}relations.txt" />
                 <arg value="${itunes.dir}iTunes Music Library.xml" />
                 <arg value="${data.dir}music.xml" />
-                <classpath refid="music_classpath" />
+                <classpath refid="test_classpath" />
         </java>
 </target>
 
@@ -323,12 +328,12 @@
                 <arg value="${legacy_data.dir}comments.txt" />
                 <arg value="${legacy_data.dir}statics.txt" />
                 <arg value="${data.dir}diary.xml" />
-                <classpath refid="music_classpath" />
+                <classpath refid="test_classpath" />
         </java>
 </target>
 
-<path id="generate_web_classpath">
-        <path refid="music_classpath" />
+<path id="test_web_classpath">
+        <path refid="test_classpath" />
         <pathelement path="${jwsdp.home}/jwsdp-shared/lib/activation.jar" />
         <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
 </path>
@@ -342,7 +347,7 @@
     <arg value="${data.dir}settings.xml" />
     <arg value="${data.dir}layout.css" />
     <arg value="${output.dir}" />
-    <classpath refid="generate_web_classpath" />
+    <classpath refid="test_web_classpath" />
     <sysproperty key="web.debug_output" value="false" />
   </java>
 </target>
@@ -353,7 +358,7 @@
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
     <arg value="${output.dir}" />
-    <classpath refid="generate_web_classpath" />
+    <classpath refid="test_web_classpath" />
   </java>
 </target>
 
@@ -371,7 +376,7 @@
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
     <arg value="${output.dir}" />
-    <classpath refid="generate_web_classpath" />
+    <classpath refid="test_web_classpath" />
   </java>
 </target>
 
@@ -384,7 +389,7 @@
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
     <arg value="${output.dir}" />
-    <classpath refid="generate_web_classpath" />
+    <classpath refid="test_web_classpath" />
   </java>
 </target>
 
@@ -397,7 +402,7 @@
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
     <arg value="${output.dir}" />
-    <classpath refid="generate_web_classpath" />
+    <classpath refid="test_web_classpath" />
   </java>
 </target>
 
@@ -409,7 +414,7 @@
     <arg value="${data.dir}music.xml" />
     <arg value="${data.dir}settings.xml" />
     <arg value="${output.dir}" />
-    <classpath refid="generate_web_classpath" />
+    <classpath refid="test_web_classpath" />
   </java>
 </target>
 
