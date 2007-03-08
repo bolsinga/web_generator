@@ -28,6 +28,8 @@ public class Music {
 
     music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
     
+    Music.dumpSimilarArtists(music);
+    
     return music;
   }
 
@@ -68,6 +70,26 @@ public class Music {
           sb.append(outputFile);
           throw new ConvertException(sb.toString(), e);
         }
+      }
+    }
+  }
+
+  private static void dumpSimilarArtists(final com.bolsinga.music.data.xml.Music music) {
+    String s;
+    HashSet<String> bands = new HashSet<String>();
+    boolean displayed = false;
+    
+    List<Artist> artists = Util.getArtistsUnmodifiable(music);
+    for (Artist artist : artists) {
+      s = artist.getName().toLowerCase();
+      if (bands.contains(s)) {
+        if (!displayed) {
+          System.out.println("--Similar Artist Names--");
+          displayed = true;
+        }
+        System.out.println(s);
+      } else {
+        bands.add(s);
       }
     }
   }

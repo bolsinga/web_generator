@@ -30,10 +30,6 @@ public class ConvertMusicTest {
     
     System.out.println("--SORT CHECK--");
     ConvertMusicTest.displayNoSorts(music);
-    
-    System.out.println();
-    System.out.println("--NAME CHECK--");
-    ConvertMusicTest.dumpSimilarArtists(music);
   }
   
   public static void displayNoSorts(final com.bolsinga.music.data.xml.Music music) {
@@ -45,21 +41,6 @@ public class ConvertMusicTest {
         if (name.contains(" ")) {
           System.out.println(name);
         }
-      }
-    }
-  }
-        
-  private static void dumpSimilarArtists(final com.bolsinga.music.data.xml.Music music) {
-    String s;
-    HashSet<String> bands = new HashSet<String>();
-    
-    List<Artist> artists = Util.getArtistsUnmodifiable(music);
-    for (Artist artist : artists) {
-      s = artist.getName().toLowerCase();
-      if (bands.contains(s)) {
-        System.out.println(s);
-      } else {
-        bands.add(s);
       }
     }
   }
