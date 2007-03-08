@@ -28,7 +28,12 @@ public class ConvertMusicTest {
       System.exit(1);
     }
     
+    System.out.println("--SORT CHECK--");
     ConvertMusicTest.displayNoSorts(music);
+    
+    System.out.println();
+    System.out.println("--NAME CHECK--");
+    ConvertMusicTest.dumpSimilarArtists(music);
   }
   
   public static void displayNoSorts(final com.bolsinga.music.data.xml.Music music) {
