@@ -22,6 +22,7 @@ public class Music {
     new HashMap<String, Artist>();
 
   private static final boolean TIDY_XML = false;
+  private static final boolean DISPLAY_POTENTIAL_SORT_PROBLEMS = false;
         
   public static void convert(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String outputFile) throws ConvertException {
                 
@@ -33,6 +34,10 @@ public class Music {
 
     if (Music.TIDY_XML) {
       com.bolsinga.music.Compare.tidy(music);
+    }
+    
+    if (Music.DISPLAY_POTENTIAL_SORT_PROBLEMS) {
+      com.bolsinga.music.Compare.displayNoSorts(music);
     }
 
     OutputStream os = null;
