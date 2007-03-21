@@ -11,7 +11,7 @@ public class Util {
   private static final ThreadLocal<DateFormat> sRSSDateFormat = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
       DateFormat result = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-      result.setTimeZone(TimeZone.getTimeZone("UTC"));
+      result.setTimeZone(TimeZone.getTimeZone("GMT"));
       return result;
     }
   };
