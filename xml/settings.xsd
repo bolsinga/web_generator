@@ -34,6 +34,7 @@
       <xs:element name="showTime" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
       <xs:element name="copyrightStartYear" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
       <xs:element name="diaryEntryTime" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
+      <xs:element name="pageFooter" type="xs:string" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
   </xs:complexType>
 </xs:element>

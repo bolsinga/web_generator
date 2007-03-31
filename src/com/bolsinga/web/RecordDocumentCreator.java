@@ -98,6 +98,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   }
         
   private void writeDocument(final RecordFactory factory, final Document d) {
+    d.getBody().addElement(Util.getSettings().getPageFooter());
     File f = new File(fOutputDir, factory.getFilePath());
     File parent = new File(f.getParent());
     if (!parent.mkdirs()) {
