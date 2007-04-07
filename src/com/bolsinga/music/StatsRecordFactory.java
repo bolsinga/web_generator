@@ -11,7 +11,11 @@ public abstract class StatsRecordFactory implements RecordFactory {
 
   public Vector<Record> getRecords() {
     Vector<Record> items = new Vector<Record>(1);
-    items.add(Record.createRecordSimple(getTable()));
+    if (!Util.getSettings().isRedirect()) {
+      items.add(Record.createRecordSimple(getTable()));
+    } else {
+      items.add(Record.createRecordSimple(Util.getRedirectMessage(getFilePath())));
+    }
     return items;
   }
 

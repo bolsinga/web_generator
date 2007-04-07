@@ -16,6 +16,10 @@ import javax.xml.bind.*;
 
 public class ICal {
   public static void generate(final Music music, final String outputDir) throws WebException {
+    if (Util.getSettings().isRedirect()) {
+      return;
+    }
+    
     String name = Util.getSettings().getIcalName();
                 
     StringBuilder sb = new StringBuilder();

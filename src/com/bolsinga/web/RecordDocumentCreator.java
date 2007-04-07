@@ -64,6 +64,15 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     }
     h.addElement(new Meta().setContent(Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
+    
+    if (Util.getSettings().isRedirect()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("5;url=");
+      sb.append(Util.getSettings().getRoot());
+      sb.append("/");
+      sb.append(factory.getFilePath());
+      h.addElement(new Meta().setHttpEquiv("REFRESH").setContent(sb.toString()));
+    }
 
     d.getBody().setPrettyPrint(Util.getPrettyOutput());
 
@@ -77,28 +86,35 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     d.addElement(new H1().addElement(factory.getTitle()));
     d.addElement(Util.getLogo());
 
-    Navigator navigator = factory.getNavigator();
-    Vector<Element> e = new Vector<Element>();
-    e.add(navigator.getHomeNavigator());
-    e.add(navigator.getOverviewNavigator());
-    e.add(navigator.getArtistNavigator());
-    e.add(navigator.getShowNavigator());
-    e.add(navigator.getVenueNavigator());
-    e.add(navigator.getCityNavigator());
-    e.add(navigator.getTrackNavigator());
-    e.add(navigator.getAlbumNavigator());
-    e.add(navigator.getColophonNavigator());
-    
-    Div indexNavigator = Util.createDiv(CSS.ENTRY_INDEX);
-    indexNavigator.addElement(Util.createUnorderedList(e, navigator.getCurrentNavigator()));
-    
-    d.addElement(indexNavigator);
+    if (!Util.getSettings().isRedirect()) {
+      Navigator navigator = factory.getNavigator();
+      Vector<Element> e = new Vector<Element>();
+      e.add(navigator.getHomeNavigator());
+      e.add(navigator.getOverviewNavigator());
+      e.add(navigator.getArtistNavigator());
+      e.add(navigator.getShowNavigator());
+      e.add(navigator.getVenueNavigator());
+      e.add(navigator.getCityNavigator());
+      e.add(navigator.getTrackNavigator());
+      e.add(navigator.getAlbumNavigator());
+      e.add(navigator.getColophonNavigator());
+      
+      Div indexNavigator = Util.createDiv(CSS.ENTRY_INDEX);
+      indexNavigator.addElement(Util.createUnorderedList(e, navigator.getCurrentNavigator()));
+      
+      d.addElement(indexNavigator);
+    }
     
     return d;
   }
         
   private void writeDocument(final RecordFactory factory, final Document d) {
-    d.getBody().addElement(Util.getSettings().getPageFooter());
+    if (!Util.getSettings().isRedirect()) {
+      d.getBody().addElement(Util.getSettings().getPageFooter());
+    } else {
+      d.getBody().addElement(Util.getSettings().getRedirectPageFooter());
+    }
+    
     File f = new File(fOutputDir, factory.getFilePath());
     File parent = new File(f.getParent());
     if (!parent.mkdirs()) {

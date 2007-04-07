@@ -37,12 +37,17 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
             public Vector<Record> getRecords() {
               Vector<Record> records = new Vector<Record>();
               
-              for (Album item : group) {
-                records.add(getAlbumRecordSection(item));
+              if (!Util.getSettings().isRedirect()) {
+                for (Album item : group) {
+                  records.add(getAlbumRecordSection(item));
+                }
+              } else {
+                records.add(Record.createRecordSimple(Util.getRedirectMessage(getFilePath())));
               }
               
               return records;
             }
+            
             public String getTitle() {
               return Util.createPageTitle(curName, Util.getResourceString("tracks"));
             }

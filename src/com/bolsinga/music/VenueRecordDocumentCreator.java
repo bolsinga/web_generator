@@ -37,8 +37,12 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
             public Vector<Record> getRecords() {
               Vector<Record> records = new Vector<Record>();
               
-              for (Venue item : group) {
-                records.add(getVenueRecordSection(item));
+              if (!Util.getSettings().isRedirect()) {
+                for (Venue item : group) {
+                  records.add(getVenueRecordSection(item));
+                }
+              } else {
+                records.add(Record.createRecordSimple(Util.getRedirectMessage(getFilePath())));
               }
               
               return records;

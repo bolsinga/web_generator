@@ -36,12 +36,7 @@ public class AltDocumentCreator extends DiaryRecordDocumentCreator {
           }
           
           public String getFilePath() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(Links.ALT_DIR);
-            sb.append(File.separator);
-            sb.append("index");
-            sb.append(Links.HTML_EXT);
-            return sb.toString();
+            return AltDocumentCreator.this.getFilePath();
           }
           
           public Navigator getNavigator() {
@@ -59,8 +54,25 @@ public class AltDocumentCreator extends DiaryRecordDocumentCreator {
       }
     });
   }
+  
+  private String getFilePath() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(Links.ALT_DIR);
+    sb.append(File.separator);
+    sb.append("index");
+    sb.append(Links.HTML_EXT);
+    return sb.toString();
+  }
 
   private Element getAlt() {
+    if (!Util.getSettings().isRedirect()) {
+      return getRealAlt();
+    } else {
+      return Util.getRedirectMessage(getFilePath());
+    }
+  }
+  
+  private Element getRealAlt() {
     // Add data from diary colophon
     UL list = Util.convertToUnOrderedList(fDiary.getColophon());
     

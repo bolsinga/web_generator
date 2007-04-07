@@ -719,4 +719,17 @@ public class Util {
                 
     return tracks;
   }
+  
+  public static Div getRedirectMessage(final String filePath) {
+      Div d = Util.createDiv(CSS.REDIRECT);
+      
+      StringBuilder sb = new StringBuilder();
+      sb.append(Util.getSettings().getRoot());
+      sb.append("/");
+      sb.append(filePath);
+      
+      String link = sb.toString();
+      d.addElement(new StringElement(MessageFormat.format(Util.getResourceString("redirect"), new A(link, link).toString())));
+      return d;
+  }
 }

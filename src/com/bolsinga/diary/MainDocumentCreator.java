@@ -47,10 +47,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
           }
           
           public String getFilePath() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("index");
-            sb.append(Links.HTML_EXT);
-            return sb.toString();
+            return MainDocumentCreator.this.getFilePath();
           }
           
           public Navigator getNavigator() {
@@ -98,6 +95,13 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
       }
     });
   }
+  
+  private String getFilePath() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("index");
+    sb.append(Links.HTML_EXT);
+    return sb.toString();
+  }
 
   private String createPreviewLine(final int count, final String name) {
     Object[] args = { Integer.valueOf(count), name };
@@ -105,11 +109,15 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   }
   
   private Element getMain() {
-    ElementContainer ec = new ElementContainer();
-    ec.addElement(getStaticHeader());
-    ec.addElement(Util.convertToUnOrderedList(fDiary.getHeader()));
-    ec.addElement(getDiary());
-    return ec;
+    if (!Util.getSettings().isRedirect()) {
+      ElementContainer ec = new ElementContainer();
+      ec.addElement(getStaticHeader());
+      ec.addElement(Util.convertToUnOrderedList(fDiary.getHeader()));
+      ec.addElement(getDiary());
+      return ec;
+    } else {
+      return Util.getRedirectMessage(getFilePath());
+    }
   }
 
   private static Div createStaticsOffsite(final String title, final String data) {
