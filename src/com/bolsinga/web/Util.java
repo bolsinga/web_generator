@@ -533,8 +533,8 @@ public class Util {
     return diary;
   }
   
-  public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.xml.Date date) {
-    Calendar localTime = Calendar.getInstance(); // LocalTime OK
+  public static GregorianCalendar toCalendarLocal(final com.bolsinga.music.data.xml.Date date) {
+    GregorianCalendar localTime = new GregorianCalendar(); // LocalTime OK
     boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
       int showTime = Util.getSettings().getShowTime().intValue();
@@ -542,10 +542,15 @@ public class Util {
       localTime.set(date.getYear().intValue(), date.getMonth().intValue() - 1, date.getDay().intValue(), showTime, 0);
     } else {
       StringBuilder sb = new StringBuilder();
-      sb.append("Can't convert unknown date to UTC: ");
+      sb.append("Can't convert unknown date to GregorianCalendar: ");
       sb.append(date.toString());
       throw new Error(sb.toString());
     }
+    return localTime;
+  }
+
+  public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.xml.Date date) {
+    Calendar localTime = Util.toCalendarLocal(date);
     // Convert to UTC
     GregorianCalendar result = Util.nowUTC();
     result.setTimeInMillis(localTime.getTimeInMillis());

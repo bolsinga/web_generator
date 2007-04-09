@@ -4,6 +4,7 @@ import com.bolsinga.music.data.xml.*;
 
 import com.bolsinga.web.*;
 
+import java.math.*;
 import java.text.*;
 import java.util.*;
 
@@ -14,9 +15,9 @@ import javax.xml.bind.JAXBElement;
 
 public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
-  private final java.util.Map<String, IndexPair> fIndex;
-
   private final Encode fEncoder;
+  private final java.util.Map<String, IndexPair> fIndex;
+  private final Collection<Vector<Show>> fGroups;
 
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final Encode encoder, final String outputDir) {
     ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir, encoder);
@@ -28,10 +29,11 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     super(music, outputDir);
     fEncoder = encoder;
     fIndex = createIndex();
+    fGroups = createGroups();
   }
   
   protected void create(final Backgrounder backgrounder, final Backgroundable backgroundable) {
-    for (final Vector<Show> group : getGroups()) {
+    for (final Vector<Show> group : fGroups) {
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           final Show first = group.firstElement();
@@ -135,12 +137,10 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableMap(m);
   }
 
-  private Collection<Vector<Show>> getGroups() {
+  private Collection<Vector<Show>> createGroups() {
     List<Show> shows = Util.getShowsCopy(fMusic);
     // Each group is per page, so they are grouped by Show who have the same starting sort letter.
-    HashMap<String, Vector<Show>> result = new HashMap<String, Vector<Show>>(shows.size());
-    
-    Collections.sort(shows, Compare.SHOW_COMPARATOR);
+    TreeMap<String, Vector<Show>> result = new TreeMap<String, Vector<Show>>();
     
     for (Show show : shows) {
       String key = fLinks.getPageFileName(show);
@@ -157,45 +157,113 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     
     return Collections.unmodifiableCollection(result.values());
   }
-  
-  private Table getStats() {
-    List<Show> items = Util.getShowsCopy(fMusic);
-    Collections.sort(items, Compare.SHOW_COMPARATOR);
 
-    Collection<Show> showCollection = null;
-    TreeMap<Show, Collection<Show>> dates = new TreeMap<Show, Collection<Show>>(Compare.SHOW_STATS_COMPARATOR);
-                
-    for (Show item : items) {
-      if (dates.containsKey(item)) {
-        showCollection = dates.get(item);
-        showCollection.add(item);
-      } else {
-        showCollection = new Vector<Show>();
-        showCollection.add(item);
-        dates.put(item, showCollection);
+  private Table getStats() {    
+    // fGroups has as many items as the number of years (inc unknown). Add one for the final footer total row.
+    // There are 12 months in a year, Add three, one for the year, one for unknonwn month, and one for the total column.
+    // 12 months + 3 (year column, other, total)
+    String[][] runningTable = new String[fGroups.size() + 1][12 + 3];
+    int[] monthTotals = new int[13];  // including unknown as index '12'
+    String[] curRow;
+    
+    int row = 0;
+    for (final Vector<Show> showGroup : fGroups) {
+      curRow = runningTable[row];
+
+      String year = fLinks.getPageFileName(showGroup.firstElement());
+      
+      IndexPair p = fIndex.get(year);
+      curRow[0] = new TD(Util.createInternalA(p.getLink(), year, p.getTitle())).toString();
+      
+      int[] groupMonthTotals = new int[13]; // including unknown as index '12'
+      for (Show show : showGroup) {
+        com.bolsinga.music.data.xml.Date date = show.getDate();
+        if (!Util.convert(date.isUnknown())) {
+          Calendar cal = Util.toCalendarLocal(date); // don't want UTC...
+          groupMonthTotals[cal.get(Calendar.MONTH) - Calendar.JANUARY]++;
+        } else {
+          // See if the month is known.
+          BigInteger month = date.getMonth();
+          if (month != null) {
+            groupMonthTotals[month.intValue() - 1]++;
+          } else {
+            groupMonthTotals[12]++;
+          }
+        }
       }
+      
+      for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER + 1; i++) {
+        int val = groupMonthTotals[i - Calendar.JANUARY];
+        
+        String content = Integer.toString(val);
+        if (val != 0) {
+          content = getLinkToShowMonthYear(year, i, content).toString();
+        }
+        curRow[(i - Calendar.JANUARY) + 1] = new TD(content).toString();
+        
+        monthTotals[i - Calendar.JANUARY] += val;
+      }
+      
+      curRow[14] = new TD(Integer.toString(showGroup.size())).toString();
+      
+      row++;
     }
-
-    int i = 0;
-    String[] names = new String[dates.size()];
-    int[] values = new int[dates.size()];
-
-    for (Show item : dates.keySet()) {
-      String letter = fLinks.getPageFileName(item);
-      IndexPair p = fIndex.get(letter);
-      names[i] = Util.createInternalA(p.getLink(), letter, p.getTitle()).toString();
-      values[i] = dates.get(item).size();
-                        
-      i++;
+    
+    final String totalStr = Util.getResourceString("archivestotal");
+    curRow = runningTable[runningTable.length - 1];
+    curRow[0] = new TH(totalStr).toString();
+    
+    for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER + 1; i++) {
+      curRow[(i - Calendar.JANUARY) + 1] = new TH(Integer.toString(monthTotals[i - Calendar.JANUARY])).toString();
     }
-                
-    String typeString = Util.getResourceString("year");
-    Object typeArgs[] = { typeString };
-    String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
-
-    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("datestatssummary"));
+    int totalEntries = 0;
+    for (int cnt : monthTotals) {
+      totalEntries += cnt;
+    }
+    curRow[14] = new TH(Integer.toString(totalEntries)).toString();
+    
+    final String[][] table = runningTable;
+    return Util.makeTable(Util.getResourceString("datestats"),
+                          Util.getResourceString("datestatssummary"), 
+                          new TableHandler() {
+      public TR getHeaderRow() {
+        TR trow = new TR().addElement(new TH());
+        Calendar cal = Calendar.getInstance();
+        for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {
+          cal.set(Calendar.DAY_OF_MONTH, 1);
+          cal.set(Calendar.MONTH, i);
+          trow.addElement(new TH(Util.getShortMonthName(cal)));
+        }
+        trow.addElement(new TH(Util.getResourceString("unknownmonthshort")));
+        trow.addElement(new TH(totalStr));
+        return trow;
+      }
+      
+      public int getRowCount() {
+        // Last 'row' in table is totals row.
+        return table.length - 1;
+      }
+      
+      private TR fillRow(final String[] rowData) {
+        TR trow = new TR();
+        for (int i = 0; i < rowData.length; i++) {
+          trow.addElement(rowData[i]);
+        }
+        return trow;
+      }
+      
+      public TR getRow(final int row) {
+        String[] curRow = table[row];
+        return fillRow(curRow);
+      }
+      
+      public TR getFooterRow() {
+        String[] curRow = table[getRowCount()];
+        return fillRow(curRow);
+      }
+    });
   }
-  
+
   private Record getShowRecord(final Show show) {
     return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, true);
   }
@@ -242,5 +310,32 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
 
     return Record.createRecordSection(title, items);
+  }
+  
+  private Element getLinkToShowMonthYear(final String year, final int month, final String value) {
+    String monthStr;
+    if (month <= Calendar.DECEMBER) {
+      Calendar cal = Calendar.getInstance();
+      cal.set(Calendar.DAY_OF_MONTH, 1);
+      cal.set(Calendar.MONTH, month);
+      monthStr = Util.getMonth(cal);
+    } else {
+      monthStr = Util.getResourceString("unknownmonth");
+    }
+    
+    StringBuilder url = new StringBuilder();
+    url.append(fIndex.get(year).getLink());
+    url.append(Links.HASH);
+    url.append(monthStr);
+    
+    StringBuilder tip = new StringBuilder();
+    tip.append(monthStr);
+    tip.append(", ");
+    tip.append(year);
+    
+    Object[] args = { tip.toString() };
+    String t = MessageFormat.format(Util.getResourceString("moreinfoshow"), args);
+    
+    return Util.createInternalA(url.toString(), value, t);
   }
 }
