@@ -38,9 +38,10 @@ public class Convert {
           st = new StringTokenizer(s, "|");
           
           Relation r = new Relation(st.nextToken(), st.nextToken());
+          Collection<String> members = r.getMembers();
           
           while (st.hasMoreElements()) {
-            r.addMember(st.nextToken());
+            members.add(st.nextToken());
           }
           
           relations.add(r);

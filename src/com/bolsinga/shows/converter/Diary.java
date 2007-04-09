@@ -21,7 +21,7 @@ public class Diary {
                 
     com.bolsinga.diary.data.xml.Diary diary = objFactory.createDiary();
 
-    createStatics(objFactory, diary, statics);
+    createStatics(diary, statics);
 
     createComments(objFactory, diary, comments);
 
@@ -65,7 +65,7 @@ public class Diary {
     }
   }
         
-  private static void createStatics(final ObjectFactory objFactory, final com.bolsinga.diary.data.xml.Diary diary, final List<Statics> statics) throws ConvertException {
+  private static void createStatics(final com.bolsinga.diary.data.xml.Diary diary, final List<Statics> statics) throws ConvertException {
     for (Statics oldStatic : statics) {
       String location = oldStatic.getLocation();
                         

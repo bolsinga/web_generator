@@ -23,10 +23,6 @@ public class Show {
     return fBands;
   }
         
-  public void addBand(String band) {
-    fBands.add(band);
-  }
-        
   public String getVenue() {
     return fVenue;
   }

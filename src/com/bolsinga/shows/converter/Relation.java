@@ -13,23 +13,13 @@ public class Relation {
     fReason = reason;
     fMembers = new Vector<String>();
   }
-        
-  public Relation(String type, String reason, Collection<String> members) {
-    fType = type;
-    fReason = reason;
-    fMembers = members;
-  }
-        
+
   public String getType() {
     return fType;
   }
         
   public String getReason() {
     return fReason;
-  }
-        
-  public void addMember(String member) {
-    fMembers.add(member);
   }
         
   public Collection<String> getMembers() {
