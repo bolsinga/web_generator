@@ -7,7 +7,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.web.*;
 
@@ -15,16 +15,16 @@ public class Music {
 
   private static final int UNKNOWN_YEAR = 1900;
   
-  private static final HashMap<String, com.bolsinga.music.data.xml.Venue> sVenues =
-    new HashMap<String, com.bolsinga.music.data.xml.Venue>();
+  private static final HashMap<String, com.bolsinga.music.data.xml.impl.Venue> sVenues =
+    new HashMap<String, com.bolsinga.music.data.xml.impl.Venue>();
   private static final HashMap<String, String> sBandSorts = new HashMap<String, String>();
   private static final HashMap<String, Artist> sArtists =
     new HashMap<String, Artist>();
         
-  public static com.bolsinga.music.data.xml.Music createMusic(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile) throws ConvertException {
+  public static com.bolsinga.music.data.xml.impl.Music createMusic(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile) throws ConvertException {
     ObjectFactory objFactory = new ObjectFactory();
                 
-    com.bolsinga.music.data.xml.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile, iTunesFile);
+    com.bolsinga.music.data.xml.impl.Music music = Music.createMusic(objFactory, showsFile, venueFile, bandFile, relationFile, iTunesFile);
 
     music.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(com.bolsinga.web.Util.nowUTC()));
     
@@ -34,7 +34,7 @@ public class Music {
   }
 
   public static void convert(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String outputFile) throws ConvertException {
-    com.bolsinga.music.data.xml.Music music = Music.createMusic(showsFile, venueFile, bandFile, relationFile, iTunesFile);
+    com.bolsinga.music.data.xml.impl.Music music = Music.createMusic(showsFile, venueFile, bandFile, relationFile, iTunesFile);
     
     OutputStream os = null;
     try {
@@ -49,7 +49,7 @@ public class Music {
 
       try {
         // Write out to the output file.
-        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
+        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml.impl");
         Marshaller m = jc.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
@@ -74,7 +74,7 @@ public class Music {
     }
   }
 
-  private static void dumpSimilarArtists(final com.bolsinga.music.data.xml.Music music) {
+  private static void dumpSimilarArtists(final com.bolsinga.music.data.xml.impl.Music music) {
     String s;
     HashSet<String> bands = new HashSet<String>();
     boolean displayed = false;
@@ -94,13 +94,13 @@ public class Music {
     }
   }
 
-  private static com.bolsinga.music.data.xml.Music createMusic(final ObjectFactory objFactory, final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile) throws ConvertException {
+  private static com.bolsinga.music.data.xml.impl.Music createMusic(final ObjectFactory objFactory, final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile) throws ConvertException {
     List<Show> shows = Convert.shows(showsFile);
     List<Venue> venues = Convert.venuemap(venueFile);
     List<BandMap> bands = Convert.bandsort(bandFile);
     List<Relation> relations = Convert.relation(relationFile);
 
-    com.bolsinga.music.data.xml.Music music = objFactory.createMusic();
+    com.bolsinga.music.data.xml.impl.Music music = objFactory.createMusic();
         
     createVenues(objFactory, music, venues);
                 
@@ -124,12 +124,12 @@ public class Music {
     return music;
   }
         
-  private static void createVenues(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Venue> venues) {
+  private static void createVenues(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.impl.Music music, final List<Venue> venues) {
     // Go through each venue.
     //  Create a Venue for each             
     // Make a hash of the Venue information by name
 
-    com.bolsinga.music.data.xml.Venue xVenue = null;
+    com.bolsinga.music.data.xml.impl.Venue xVenue = null;
     Location xLocation = null;
     String name = null;
     int index = 0;
@@ -156,15 +156,15 @@ public class Music {
     }
   }
         
-  private static void createBandSort(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<BandMap> bands) {
+  private static void createBandSort(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.impl.Music music, final List<BandMap> bands) {
     // Make a hash of the band sort names by name
     for (BandMap bandMap : bands) {
       sBandSorts.put(bandMap.getName(), bandMap.getSortName());
     }
   }
         
-  private static void createRelations(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Relation> relations) throws ConvertException {
-    com.bolsinga.music.data.xml.Relation xRelation = null;
+  private static void createRelations(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.impl.Music music, final List<Relation> relations) throws ConvertException {
+    com.bolsinga.music.data.xml.impl.Relation xRelation = null;
     String type = null, reason = null;
     int index = 0;
 
@@ -198,7 +198,7 @@ public class Music {
         xRelation.setType(RelationType.fromValue(type));
 
         for (String member : oldRelation.getMembers()) {
-          com.bolsinga.music.data.xml.Venue mVenue = sVenues.get(member);
+          com.bolsinga.music.data.xml.impl.Venue mVenue = sVenues.get(member);
           if (mVenue != null) {
             xRelation.getMember().add(objFactory.createRelationMember(mVenue));
           } else {
@@ -221,8 +221,8 @@ public class Music {
     }
   }
         
-  private static com.bolsinga.music.data.xml.Date createDate(final ObjectFactory objFactory, final String date) {
-    com.bolsinga.music.data.xml.Date result = objFactory.createDate();
+  private static com.bolsinga.music.data.xml.impl.Date createDate(final ObjectFactory objFactory, final String date) {
+    com.bolsinga.music.data.xml.impl.Date result = objFactory.createDate();
                 
     String monthString, dayString, yearString = null;
     int month, day, year = 0;
@@ -256,7 +256,7 @@ public class Music {
     return result;
   }
         
-  public static Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final String name, final String sortName) throws ConvertException {
+  public static Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.impl.Music music, final String name, final String sortName) throws ConvertException {
     Artist result = null;
     if (!sArtists.containsKey(name)) {
       result = objFactory.createArtist();
@@ -295,7 +295,7 @@ public class Music {
     return result;
   }
                 
-  private static void convert(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.Music music, final List<Show> shows) throws ConvertException {
+  private static void convert(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.impl.Music music, final List<Show> shows) throws ConvertException {
     // Go through each show.
     //  Create an Artist for each band in the set, if it doesn't already exist. Use the sort name.
     //  Create a Date.
@@ -303,9 +303,9 @@ public class Music {
     //  Create a Comment.
     //  Create a Show with the above.
                 
-    com.bolsinga.music.data.xml.Show xShow = null;
+    com.bolsinga.music.data.xml.impl.Show xShow = null;
     Artist xArtist = null;
-    com.bolsinga.music.data.xml.Date xDate = null;
+    com.bolsinga.music.data.xml.impl.Date xDate = null;
 
     int index = 0;
                 

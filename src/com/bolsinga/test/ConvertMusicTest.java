@@ -6,7 +6,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.music.*;
 import com.bolsinga.web.*;
@@ -19,7 +19,7 @@ public class ConvertMusicTest {
       System.exit(0);
     }
   
-    com.bolsinga.music.data.xml.Music music = null;
+    com.bolsinga.music.data.xml.impl.Music music = null;
     try {
       music = com.bolsinga.shows.converter.Music.createMusic(args[0], args[1], args[2], args[3], args[4]);
     } catch (com.bolsinga.shows.converter.ConvertException e) {
@@ -32,7 +32,7 @@ public class ConvertMusicTest {
     ConvertMusicTest.displayNoSorts(music);
   }
   
-  public static void displayNoSorts(final com.bolsinga.music.data.xml.Music music) {
+  public static void displayNoSorts(final com.bolsinga.music.data.xml.impl.Music music) {
     List<Artist> artists = music.getArtist();
     Collections.sort(artists, Compare.ARTIST_COMPARATOR);
     for (Artist a : artists) {
@@ -45,9 +45,9 @@ public class ConvertMusicTest {
     }
   }
 
-  private static void dump(final com.bolsinga.music.data.xml.Music music) {
+  private static void dump(final com.bolsinga.music.data.xml.impl.Music music) {
     try {
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml.impl");
       Marshaller m = jc.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       m.marshal( music, System.out );

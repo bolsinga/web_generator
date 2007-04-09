@@ -1,6 +1,6 @@
 package com.bolsinga.test;
 
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 import com.bolsinga.settings.data.*;
 
 import com.bolsinga.music.*;
@@ -93,7 +93,7 @@ public class MusicTest implements Backgroundable {
     }
 
     try {
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml.impl");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                         

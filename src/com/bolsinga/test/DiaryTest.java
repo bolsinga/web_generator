@@ -1,7 +1,7 @@
 package com.bolsinga.test;
 
-import com.bolsinga.diary.data.xml.*;
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.diary.data.xml.impl.*;
+import com.bolsinga.music.data.xml.impl.*;
 import com.bolsinga.settings.data.*;
 
 import com.bolsinga.diary.*;
@@ -88,7 +88,7 @@ public class DiaryTest implements Backgroundable {
     }
 
     try {
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml.impl");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                         

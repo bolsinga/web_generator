@@ -15,8 +15,8 @@ import org.json.*;
 import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
-import com.bolsinga.music.data.xml.*;
-import com.bolsinga.diary.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.diary.data.xml.impl.*;
 
 public class Util {
 
@@ -583,7 +583,7 @@ public class Util {
       }
       
       try {
-        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml");
+        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.diary.data.xml.impl");
         Unmarshaller u = jc.createUnmarshaller();
                           
         diary = (Diary)u.unmarshal(is);
@@ -609,7 +609,7 @@ public class Util {
     return diary;
   }
   
-  public static GregorianCalendar toCalendarLocal(final com.bolsinga.music.data.xml.Date date) {
+  public static GregorianCalendar toCalendarLocal(final com.bolsinga.music.data.xml.impl.Date date) {
     GregorianCalendar localTime = new GregorianCalendar(); // LocalTime OK
     boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
@@ -625,7 +625,7 @@ public class Util {
     return localTime;
   }
 
-  public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.xml.Date date) {
+  public static GregorianCalendar toCalendarUTC(final com.bolsinga.music.data.xml.impl.Date date) {
     Calendar localTime = Util.toCalendarLocal(date);
     // Convert to UTC
     GregorianCalendar result = Util.nowUTC();
@@ -633,7 +633,7 @@ public class Util {
     return result;
   }
 
-  public static String toString(final com.bolsinga.music.data.xml.Date date) {
+  public static String toString(final com.bolsinga.music.data.xml.impl.Date date) {
     boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
       return sWebFormat.get().format(Util.toCalendarUTC(date).getTime());
@@ -645,7 +645,7 @@ public class Util {
     }
   }
         
-  public static String toMonth(final com.bolsinga.music.data.xml.Date date) {
+  public static String toMonth(final com.bolsinga.music.data.xml.impl.Date date) {
     boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
       return sMonthFormat.get().format(Util.toCalendarUTC(date).getTime());
@@ -685,12 +685,12 @@ public class Util {
     return new ArrayList<Artist>(music.getArtist());
   }
 
-  public static List<com.bolsinga.music.data.xml.Label> getLabelsUnmodifiable(final Music music) {
+  public static List<com.bolsinga.music.data.xml.impl.Label> getLabelsUnmodifiable(final Music music) {
     return Collections.unmodifiableList(music.getLabel());
   }
 
-  public static List<com.bolsinga.music.data.xml.Label> getLabelsCopy(final Music music) {
-    return new ArrayList<com.bolsinga.music.data.xml.Label>(music.getLabel());
+  public static List<com.bolsinga.music.data.xml.impl.Label> getLabelsCopy(final Music music) {
+    return new ArrayList<com.bolsinga.music.data.xml.impl.Label>(music.getLabel());
   }
 
   public static List<Relation> getRelationsUnmodifiable(final Music music) {
@@ -758,7 +758,7 @@ public class Util {
       }
       
       try {
-        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
+        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml.impl");
         Unmarshaller u = jc.createUnmarshaller();
                           
         music = (Music)u.unmarshal(is);

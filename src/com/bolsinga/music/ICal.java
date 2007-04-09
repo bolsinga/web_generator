@@ -1,7 +1,7 @@
 package com.bolsinga.music;
 
 import com.bolsinga.ical.*;
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.web.*;
 
@@ -94,7 +94,7 @@ public class ICal {
   }
         
   private static void addItem(final Show show, final VCalendar calendar) {
-    com.bolsinga.music.data.xml.Date d = show.getDate();
+    com.bolsinga.music.data.xml.impl.Date d = show.getDate();
     Calendar date = Calendar.getInstance(); // UTC isn't required
     date.set(Calendar.MONTH, d.getMonth().intValue() - 1);
     date.set(Calendar.DAY_OF_MONTH, d.getDay().intValue());

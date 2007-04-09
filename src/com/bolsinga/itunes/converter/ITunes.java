@@ -8,7 +8,7 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 import com.bolsinga.plist.*;
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 public class ITunes {
 
@@ -383,8 +383,8 @@ public class ITunes {
     return result;
   }
 
-  private static com.bolsinga.music.data.xml.Date releaseYear(final ObjectFactory objFactory, final int year) {
-    com.bolsinga.music.data.xml.Date release = objFactory.createDate();
+  private static com.bolsinga.music.data.xml.impl.Date releaseYear(final ObjectFactory objFactory, final int year) {
+    com.bolsinga.music.data.xml.impl.Date release = objFactory.createDate();
     release.setUnknown(true);
     release.setYear(java.math.BigInteger.valueOf(year));
     return release;
@@ -409,7 +409,7 @@ public class ITunes {
   private static void setAlbumYears(final ObjectFactory objFactory, final Music music) {
     List<Album> albums = com.bolsinga.web.Util.getAlbumsUnmodifiable(music);
     int albumYear, songYear;
-    com.bolsinga.music.data.xml.Date date;
+    com.bolsinga.music.data.xml.impl.Date date;
     for (Album a : albums) {
       if (a.getReleaseDate() != null) {
         // The album already has a date; don't change it.

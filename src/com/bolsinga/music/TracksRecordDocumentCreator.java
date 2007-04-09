@@ -1,6 +1,6 @@
 package com.bolsinga.music;
 
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.web.*;
 
@@ -228,7 +228,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = null;
     boolean isCompilation = Util.convert(album.isCompilation());
-    com.bolsinga.music.data.xml.Date albumRelease = album.getReleaseDate();
+    com.bolsinga.music.data.xml.impl.Date albumRelease = album.getReleaseDate();
 
     List<JAXBElement<Object>> songs = Util.getSongsUnmodifiable(album);
     for (JAXBElement<Object> jsong : songs) {
@@ -244,7 +244,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
       sb.append(Util.toHTMLSafe(song.getTitle()));
                         
       if (albumRelease == null) {
-        com.bolsinga.music.data.xml.Date songRelease = song.getReleaseDate();
+        com.bolsinga.music.data.xml.impl.Date songRelease = song.getReleaseDate();
         if (songRelease != null) {
           sb.append(" (");
           sb.append(songRelease.getYear());
@@ -268,7 +268,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
       String t = Util.createTitle("moreinfoartist", artist.getName());
       sb.append(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t));
     }
-    com.bolsinga.music.data.xml.Date albumRelease = album.getReleaseDate();
+    com.bolsinga.music.data.xml.impl.Date albumRelease = album.getReleaseDate();
     if (albumRelease != null) {
       sb.append(" (");
       sb.append(albumRelease.getYear());

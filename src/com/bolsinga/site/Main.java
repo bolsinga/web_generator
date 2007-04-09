@@ -68,8 +68,8 @@ public class Main implements Backgroundable {
   }
   
   private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws Exception {
-    final com.bolsinga.music.data.xml.Music music = Util.createMusic(musicFile);
-    final com.bolsinga.diary.data.xml.Diary diary = Util.createDiary(diaryFile);
+    final com.bolsinga.music.data.xml.impl.Music music = Util.createMusic(musicFile);
+    final com.bolsinga.diary.data.xml.impl.Diary diary = Util.createDiary(diaryFile);
   
     CSS.install(cssFile, output);
 

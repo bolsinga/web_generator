@@ -60,15 +60,15 @@
 </target>
 
 <target name="music_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data.xml" removeOldOutput="yes">
+        <xjc schema="${basedir}/xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data.xml.impl" removeOldOutput="yes">
                 <depends dir="${basedir}/xml" includes="music.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/music/data" />
+                <produces dir="${build.gensrc}/com/bolsinga/music/data/xml/impl" />
         </xjc>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${build.gensrc}" />
-                <include name="com/bolsinga/music/data/**" />
+                <include name="com/bolsinga/music/data/xml/impl/**" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
@@ -79,15 +79,15 @@
 </target>
 
 <target name="diary_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data.xml" removeOldOutput="yes">
+        <xjc schema="${basedir}/xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data.xml.impl" removeOldOutput="yes">
                 <depends dir="${basedir}/xml" includes="diary.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/diary/data" />
+                <produces dir="${build.gensrc}/com/bolsinga/diary/data/xml/impl" />
         </xjc>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
                 <src path="${build.gensrc}" />
-                <include name="com/bolsinga/diary/data/**" />
+                <include name="com/bolsinga/diary/data/xml/impl/**" />
                 <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">

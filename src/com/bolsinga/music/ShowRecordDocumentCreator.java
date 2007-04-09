@@ -1,6 +1,6 @@
 package com.bolsinga.music;
 
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.web.*;
 
@@ -107,11 +107,11 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Collection<Vector<Show>> getMonthlies(final Vector<Show> items) {
-    TreeMap<com.bolsinga.music.data.xml.Date, Vector<Show>> result =
-      new TreeMap<com.bolsinga.music.data.xml.Date, Vector<Show>>(Compare.DATE_MONTH_COMPARATOR);
+    TreeMap<com.bolsinga.music.data.xml.impl.Date, Vector<Show>> result =
+      new TreeMap<com.bolsinga.music.data.xml.impl.Date, Vector<Show>>(Compare.DATE_MONTH_COMPARATOR);
 
     for (Show item : items) {
-      com.bolsinga.music.data.xml.Date key = item.getDate();
+      com.bolsinga.music.data.xml.impl.Date key = item.getDate();
       Vector<Show> showList;
       if (result.containsKey(key)) {
         showList = result.get(key);
@@ -177,7 +177,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
       
       int[] groupMonthTotals = new int[13]; // including unknown as index '12'
       for (Show show : showGroup) {
-        com.bolsinga.music.data.xml.Date date = show.getDate();
+        com.bolsinga.music.data.xml.impl.Date date = show.getDate();
         if (!Util.convert(date.isUnknown())) {
           Calendar cal = Util.toCalendarLocal(date); // don't want UTC...
           groupMonthTotals[cal.get(Calendar.MONTH) - Calendar.JANUARY]++;

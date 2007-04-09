@@ -1,6 +1,6 @@
 package com.bolsinga.music;
 
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.web.*;
 
@@ -238,7 +238,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
       StringBuilder sb = new StringBuilder();
       String t = Util.createTitle("moreinfoalbum", album.getTitle());
       sb.append(Util.createInternalA(fLinks.getLinkTo(album), fLookup.getHTMLName(album), t));
-      com.bolsinga.music.data.xml.Date albumRelease = album.getReleaseDate();
+      com.bolsinga.music.data.xml.impl.Date albumRelease = album.getReleaseDate();
       if (albumRelease != null) {
         sb.append(" (");
         sb.append(albumRelease.getYear());

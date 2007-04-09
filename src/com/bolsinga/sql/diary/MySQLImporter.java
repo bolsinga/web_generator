@@ -5,7 +5,7 @@ import java.text.*;
 import java.util.*;
 import java.util.regex.*;
 
-import com.bolsinga.diary.data.xml.*;
+import com.bolsinga.diary.data.xml.impl.*;
 
 import com.bolsinga.web.*;
 

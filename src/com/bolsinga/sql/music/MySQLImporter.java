@@ -1,6 +1,6 @@
 package com.bolsinga.sql.music;
 
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.web.*;
 
@@ -232,14 +232,14 @@ public class MySQLImporter {
     //     }
     //     rowItems[index++] = (producer != null) ? MySQLImporter.toSQLID(producer) : null;
     rowItems[index++] = null;
-    com.bolsinga.music.data.xml.Date releaseDate = song.getReleaseDate();
+    com.bolsinga.music.data.xml.impl.Date releaseDate = song.getReleaseDate();
     if (releaseDate == null) {
       releaseDate = album.getReleaseDate();
     }
     rowItems[index++] = (releaseDate != null) ? MySQLImporter.toSQLString(releaseDate) : null;
     boolean unknown = (releaseDate != null) ? Util.convert(releaseDate.isUnknown()) : true;
     rowItems[index++] = Integer.toString(unknown ? 1 : 0);
-    com.bolsinga.music.data.xml.Date purchaseDate = album.getPurchaseDate();
+    com.bolsinga.music.data.xml.impl.Date purchaseDate = album.getPurchaseDate();
     rowItems[index++] = (purchaseDate != null) ? MySQLImporter.toSQLString(purchaseDate) : null;
     unknown = (purchaseDate != null) ? Util.convert(purchaseDate.isUnknown()) : true;
     rowItems[index++] = Integer.toString(unknown ? 1 : 0);
@@ -425,7 +425,7 @@ public class MySQLImporter {
     return toSQLID(2, show.getId());
   }
 
-  private static String toSQLString(final com.bolsinga.music.data.xml.Date date) {
+  private static String toSQLString(final com.bolsinga.music.data.xml.impl.Date date) {
     boolean unknown = Util.convert(date.isUnknown());
     if (!unknown) {
       return sSQLFormat.get().format(Util.toCalendarUTC(date).getTime());
@@ -444,7 +444,7 @@ public class MySQLImporter {
     int index = 0;
 
     rowItems[index++] = MySQLImporter.toSQLID(show);
-    com.bolsinga.music.data.xml.Date showDate = show.getDate();
+    com.bolsinga.music.data.xml.impl.Date showDate = show.getDate();
     rowItems[index++] = (showDate != null) ? MySQLImporter.toSQLString(showDate) : null;
     boolean unknown = (showDate != null) ? Util.convert(showDate.isUnknown()) : true;
     rowItems[index++] = Integer.toString(unknown ? 1 : 0);

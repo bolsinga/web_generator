@@ -6,7 +6,7 @@ import javax.xml.bind.*;
 
 import com.bolsinga.itunes.converter.*;
 import com.bolsinga.plist.*;
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 public class ITunesTest {
 
@@ -42,7 +42,7 @@ public class ITunesTest {
     
     try {
       // Write out to the output file.
-      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml");
+      JAXBContext jc = JAXBContext.newInstance("com.bolsinga.music.data.xml.impl");
       Marshaller m = jc.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                         

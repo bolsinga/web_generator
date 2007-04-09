@@ -6,7 +6,7 @@ import java.util.regex.*;
 
 import javax.xml.bind.*;
 
-import com.bolsinga.music.data.xml.*;
+import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.web.*;
 
@@ -34,7 +34,7 @@ public class Compare {
     fMusic = music;
   }
         
-  private static int convert(final com.bolsinga.music.data.xml.Date d) {
+  private static int convert(final com.bolsinga.music.data.xml.impl.Date d) {
     // Converts to an unusually obtained integer
     int y;
     BigInteger year = d.getYear();
@@ -57,7 +57,7 @@ public class Compare {
     return y * 10000 + m + day;
   }
   
-  private static int convertMonth(final com.bolsinga.music.data.xml.Date d) {
+  private static int convertMonth(final com.bolsinga.music.data.xml.impl.Date d) {
     int m;
     BigInteger month = d.getMonth();
     if (month != null) {
@@ -186,14 +186,14 @@ public class Compare {
       }
     };
         
-  private static final Comparator<com.bolsinga.music.data.xml.Date> DATE_COMPARATOR = new Comparator<com.bolsinga.music.data.xml.Date>() {
-      public int compare(final com.bolsinga.music.data.xml.Date r1, final com.bolsinga.music.data.xml.Date r2) {
+  private static final Comparator<com.bolsinga.music.data.xml.impl.Date> DATE_COMPARATOR = new Comparator<com.bolsinga.music.data.xml.impl.Date>() {
+      public int compare(final com.bolsinga.music.data.xml.impl.Date r1, final com.bolsinga.music.data.xml.impl.Date r2) {
         return convert(r1) - convert(r2);
       }
     };
     
-  public static final Comparator<com.bolsinga.music.data.xml.Date> DATE_MONTH_COMPARATOR = new Comparator<com.bolsinga.music.data.xml.Date>() {
-    public int compare(final com.bolsinga.music.data.xml.Date r1, final com.bolsinga.music.data.xml.Date r2) {
+  public static final Comparator<com.bolsinga.music.data.xml.impl.Date> DATE_MONTH_COMPARATOR = new Comparator<com.bolsinga.music.data.xml.impl.Date>() {
+    public int compare(final com.bolsinga.music.data.xml.impl.Date r1, final com.bolsinga.music.data.xml.impl.Date r2) {
       return convertMonth(r1) - convertMonth(r2);
     }
   };
@@ -347,8 +347,8 @@ public class Compare {
         
   public static final Comparator<Show> SHOW_STATS_COMPARATOR = new Comparator<Show>() {
       public int compare(final Show r1, final Show r2) {
-        com.bolsinga.music.data.xml.Date d1 = r1.getDate();
-        com.bolsinga.music.data.xml.Date d2 = r2.getDate();
+        com.bolsinga.music.data.xml.impl.Date d1 = r1.getDate();
+        com.bolsinga.music.data.xml.impl.Date d2 = r2.getDate();
 
         return ((d1.getYear() != null) ? d1.getYear().intValue() : 0) - ((d2.getYear() != null) ? d2.getYear().intValue() : 0);
       }

@@ -1,6 +1,6 @@
 package com.bolsinga.sql.diary;
 
-import com.bolsinga.diary.data.xml.*;
+import com.bolsinga.diary.data.xml.impl.*;
 import com.bolsinga.web.*;
 
 import java.sql.*;
