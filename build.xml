@@ -157,6 +157,7 @@
 <path id="web_classpath">
   <path refid="jaxb_binder_classpath" />
   <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
+  <pathelement path="${lib.dir}/json.jar" />
 </path>
 
 <target name="plist_utilities" depends="plist_binding">
@@ -430,6 +431,7 @@ The package target below used to also install the sql jar:
   </exec>
   <copy file="${build.lib}/${ant.project.name}.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
+  <copy file="${lib.dir}/json.jar" todir="${dst.lib}" />
   <copy todir="${dst.lib}/jwsdp-2.0">
     <fileset dir="${jwsdp.home}">
       <include name="jaxb/lib/jaxb-api.jar" />
