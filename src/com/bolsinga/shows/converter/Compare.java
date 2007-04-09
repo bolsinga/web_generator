@@ -14,8 +14,17 @@ public class Compare {
     yearString = st.nextToken();
                 
     month = Integer.parseInt(monthString);
+    if (month == 0) {
+      month = 13;
+    }
     day = Integer.parseInt(dayString);
+    if (day == 0) {
+      day = 32;
+    }
     year = Integer.parseInt(yearString);
+    if (year == 0) {
+      year = 3000;
+    }
 
     // Converts to an unusually obtained integer (I believe it assures where 'unknown' dates get sorted)
     return (year * 10000) + (month * 100) + day;

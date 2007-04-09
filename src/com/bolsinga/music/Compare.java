@@ -35,14 +35,37 @@ public class Compare {
   }
         
   private static int convert(final com.bolsinga.music.data.xml.Date d) {
-    // Converts to an unusually obtained integer (I believe it assures where 'unknown' dates get sorted)
-    return ((d.getYear() != null) ? d.getYear().intValue() * 10000 : 0) +
-      ((d.getMonth() != null) ? d.getMonth().intValue() * 100 : 0) +
-      ((d.getDay() != null) ? d.getDay().intValue() : 0);
+    // Converts to an unusually obtained integer
+    int y;
+    BigInteger year = d.getYear();
+    if (year != null) {
+      y = year.intValue();
+    } else {
+      y = 3000; // 1000 years from now, this program won't work.
+    }
+    
+    int m = Compare.convertMonth(d);
+    
+    int day;
+    BigInteger dayOfMonth = d.getDay();
+    if (dayOfMonth != null) {
+      day = dayOfMonth.intValue();
+    } else {
+      day = 32; // past the last day of month
+    }
+    
+    return y * 10000 + m + day;
   }
   
   private static int convertMonth(final com.bolsinga.music.data.xml.Date d) {
-    return ((d.getMonth() != null) ? d.getMonth().intValue() * 100 : 0);
+    int m;
+    BigInteger month = d.getMonth();
+    if (month != null) {
+      m = month.intValue();
+    } else {
+      m = 13; // Unknown sorts after.
+    }
+    return m * 100;
   }
                 
   public static String simplify(final String s) {
@@ -163,7 +186,7 @@ public class Compare {
       }
     };
         
-  public static final Comparator<com.bolsinga.music.data.xml.Date> DATE_COMPARATOR = new Comparator<com.bolsinga.music.data.xml.Date>() {
+  private static final Comparator<com.bolsinga.music.data.xml.Date> DATE_COMPARATOR = new Comparator<com.bolsinga.music.data.xml.Date>() {
       public int compare(final com.bolsinga.music.data.xml.Date r1, final com.bolsinga.music.data.xml.Date r2) {
         return convert(r1) - convert(r2);
       }
@@ -308,7 +331,8 @@ public class Compare {
         
   public static final Comparator<Show> SHOW_COMPARATOR = new Comparator<Show>() {
       public int compare(final Show r1, final Show r2) {
-        int result = DATE_COMPARATOR.compare(r1.getDate(), r2.getDate());
+        // Reverse the comparison so unknown's sort first.
+        int result = DATE_COMPARATOR.compare(r2.getDate(), r1.getDate());
         if (result == 0) {
           result = VENUE_COMPARATOR.compare((Venue)r1.getVenue(), (Venue)r2.getVenue());
           if (result == 0) {
