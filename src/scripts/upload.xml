@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<project name="web_upload" default="upload" basedir=".">
+
+<property name="output.dir" value="/tmp/web" />
+
+<target name="upload">
+  <ftp    server="${ftp.site}"
+          userid="${ftp.user}"
+          password="${ftp.password}"
+          remotedir="${ftp.remote_dir}"
+          verbose="yes" >
+    <fileset dir="${output.dir}">
+      <include name="index.html" />
+      <include name="archives/*" />
+      <include name="alt/*" />
+      <include name="bands/*" />
+      <include name="cities/*" />
+      <include name="dates/*" />
+      <include name="styles/*" />
+      <include name="tracks/*" />
+      <include name="venues/*" />
+    </fileset>
+  </ftp>
+</target>
+
+</project>
