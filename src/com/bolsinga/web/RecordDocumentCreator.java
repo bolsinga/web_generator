@@ -65,15 +65,6 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     h.addElement(new Meta().setContent(Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
     
-    if (Util.getSettings().isRedirect()) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("5;url=");
-      sb.append(Util.getSettings().getRoot());
-      sb.append("/");
-      sb.append(factory.getFilePath());
-      h.addElement(new Meta().setHttpEquiv("REFRESH").setContent(sb.toString()));
-    }
-
     d.getBody().setPrettyPrint(Util.getPrettyOutput());
 
     d.getBody().addElement(getHeaderDiv(factory));
@@ -86,7 +77,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     d.addElement(new H1().addElement(factory.getTitle()));
     d.addElement(Util.getLogo());
 
-    if (!Util.getSettings().isRedirect()) {
+    if (!Util.getSettings().isForward()) {
       Navigator navigator = factory.getNavigator();
       Vector<Element> e = new Vector<Element>();
       e.add(navigator.getHomeNavigator());
@@ -109,10 +100,10 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   }
         
   private void writeDocument(final RecordFactory factory, final Document d) {
-    if (!Util.getSettings().isRedirect()) {
+    if (!Util.getSettings().isForward()) {
       d.getBody().addElement(Util.getSettings().getPageFooter());
     } else {
-      d.getBody().addElement(Util.getSettings().getRedirectPageFooter());
+      d.getBody().addElement(Util.getSettings().getForwardPageFooter());
     }
     
     File f = new File(fOutputDir, factory.getFilePath());

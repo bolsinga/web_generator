@@ -65,10 +65,10 @@ public class AltDocumentCreator extends DiaryRecordDocumentCreator {
   }
 
   private Element getAlt() {
-    if (!Util.getSettings().isRedirect()) {
+    if (!Util.getSettings().isForward()) {
       return getRealAlt();
     } else {
-      return Util.getRedirectMessage(getFilePath());
+      return Util.getisForwardMessage(getFilePath());
     }
   }
   

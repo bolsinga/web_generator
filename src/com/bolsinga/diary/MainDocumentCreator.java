@@ -109,14 +109,14 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   }
   
   private Element getMain() {
-    if (!Util.getSettings().isRedirect()) {
+    if (!Util.getSettings().isForward()) {
       ElementContainer ec = new ElementContainer();
       ec.addElement(getStaticHeader());
       ec.addElement(Util.convertToUnOrderedList(fDiary.getHeader()));
       ec.addElement(getDiary());
       return ec;
     } else {
-      return Util.getRedirectMessage(getFilePath());
+      return Util.getisForwardMessage(getFilePath());
     }
   }
 

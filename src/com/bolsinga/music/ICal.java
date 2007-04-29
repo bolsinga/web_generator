@@ -16,7 +16,7 @@ import javax.xml.bind.*;
 
 public class ICal {
   public static void generate(final Music music, final String outputDir) throws WebException {
-    if (Util.getSettings().isRedirect()) {
+    if (Util.getSettings().isForward()) {
       return;
     }
     

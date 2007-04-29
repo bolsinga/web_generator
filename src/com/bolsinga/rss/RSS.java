@@ -129,7 +129,7 @@ public class RSS {
 
     int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
     
-    if (com.bolsinga.web.Util.getSettings().isRedirect()) {
+    if (com.bolsinga.web.Util.getSettings().isForward()) {
       entryCount = 1;
     }
 
