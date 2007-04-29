@@ -35,37 +35,14 @@ public class Compare {
   }
         
   private static int convert(final com.bolsinga.music.data.xml.impl.Date d) {
-    // Converts to an unusually obtained integer
-    int y;
-    BigInteger year = d.getYear();
-    if (year != null) {
-      y = year.intValue();
-    } else {
-      y = 3000; // 1000 years from now, this program won't work.
-    }
-    
-    int m = Compare.convertMonth(d);
-    
-    int day;
-    BigInteger dayOfMonth = d.getDay();
-    if (dayOfMonth != null) {
-      day = dayOfMonth.intValue();
-    } else {
-      day = 32; // past the last day of month
-    }
-    
-    return y * 10000 + m + day;
+    // Converts to an unusually obtained integer (I believe it assures where 'unknown' dates get sorted)
+    return ((d.getYear() != null) ? d.getYear().intValue() * 10000 : 0) +
+      ((d.getMonth() != null) ? d.getMonth().intValue() * 100 : 0) +
+      ((d.getDay() != null) ? d.getDay().intValue() : 0);
   }
   
   private static int convertMonth(final com.bolsinga.music.data.xml.impl.Date d) {
-    int m;
-    BigInteger month = d.getMonth();
-    if (month != null) {
-      m = month.intValue();
-    } else {
-      m = 13; // Unknown sorts after.
-    }
-    return m * 100;
+    return ((d.getMonth() != null) ? d.getMonth().intValue() * 100 : 0);
   }
                 
   public static String simplify(final String s) {
@@ -331,8 +308,7 @@ public class Compare {
         
   public static final Comparator<Show> SHOW_COMPARATOR = new Comparator<Show>() {
       public int compare(final Show r1, final Show r2) {
-        // Reverse the comparison so unknown's sort first.
-        int result = DATE_COMPARATOR.compare(r2.getDate(), r1.getDate());
+        int result = DATE_COMPARATOR.compare(r1.getDate(), r2.getDate());
         if (result == 0) {
           result = VENUE_COMPARATOR.compare((Venue)r1.getVenue(), (Venue)r2.getVenue());
           if (result == 0) {
