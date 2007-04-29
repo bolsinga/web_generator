@@ -42,6 +42,9 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   
   protected abstract String getCopyright();
   protected abstract String getMainDivClass();
+  protected Meta getAdditionalMeta() {
+    return null;
+  }
   
   private Document createDocument(final RecordFactory factory) {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
@@ -64,6 +67,11 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     }
     h.addElement(new Meta().setContent(Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
+    
+    Meta additional = getAdditionalMeta();
+    if (additional != null) {
+      h.addElement(additional);
+    }
     
     d.getBody().setPrettyPrint(Util.getPrettyOutput());
 

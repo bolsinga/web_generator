@@ -5,6 +5,7 @@ import com.bolsinga.music.data.xml.impl.*;
 
 import com.bolsinga.music.*;
 import com.bolsinga.web.*;
+import com.bolsinga.settings.data.*;
 
 import java.text.*;
 import java.util.*;
@@ -30,6 +31,16 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   
   protected String getMainDivClass() {
     return CSS.DOC_3_COL_BODY;
+  }
+
+  protected Meta getAdditionalMeta() {
+    GoogleMeta gm;
+    if (!Util.getSettings().isForward()) {
+      gm = Util.getSettings().getGoogleMeta();
+    } else {
+      gm = Util.getSettings().getForwardGoogleMeta();
+    }
+    return new Meta().setContent(gm.getContent()).setName(gm.getName());
   }
   
   protected void create(final Backgrounder backgrounder, final Backgroundable backgroundable) {
