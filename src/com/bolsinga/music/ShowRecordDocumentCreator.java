@@ -313,20 +313,22 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Element getLinkToShowMonthYear(final String year, final int month, final String value) {
-    String monthStr;
+    String monthStr, monthStrHash;
     if (month <= Calendar.DECEMBER) {
       Calendar cal = Calendar.getInstance();
       cal.set(Calendar.DAY_OF_MONTH, 1);
       cal.set(Calendar.MONTH, month);
       monthStr = Util.getMonth(cal);
+      monthStrHash = monthStr;
     } else {
       monthStr = Util.getResourceString("unknownmonth");
+      monthStrHash = Util.getResourceString("unknownmonthshort");
     }
     
     StringBuilder url = new StringBuilder();
     url.append(fIndex.get(year).getLink());
     url.append(Links.HASH);
-    url.append(monthStr);
+    url.append(monthStrHash);
     
     StringBuilder tip = new StringBuilder();
     tip.append(monthStr);
