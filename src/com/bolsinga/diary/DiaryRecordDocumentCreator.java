@@ -18,8 +18,4 @@ public abstract class DiaryRecordDocumentCreator extends RecordDocumentCreator {
   protected String getCopyright() {
     return Util.getCopyright(fStartYear);
   }
-  
-  protected String getMainDivClass() {
-    return CSS.DOC_2_COL_BODY;
-  }
 }

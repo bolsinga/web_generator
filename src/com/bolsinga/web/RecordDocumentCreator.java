@@ -22,7 +22,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     writeDocument(factory, d);
   }
   
-  private Document populate(final RecordFactory factory) {
+  protected Document populate(final RecordFactory factory) {
     Document d = createDocument(factory);
     
     Div main = Util.createDiv(getMainDivClass());
@@ -41,7 +41,11 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   }
   
   protected abstract String getCopyright();
-  protected abstract String getMainDivClass();
+  
+  protected String getMainDivClass() {
+    return CSS.DOC_2_COL_BODY;
+  }
+  
   protected Meta getAdditionalMeta() {
     return null;
   }

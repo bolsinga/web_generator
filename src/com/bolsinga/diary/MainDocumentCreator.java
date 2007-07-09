@@ -33,6 +33,14 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     return CSS.DOC_3_COL_BODY;
   }
 
+  protected Document populate(final RecordFactory factory) {
+    Document d = super.populate(factory);
+    
+    d.getBody().addElement(getStaticHeader());
+
+    return d;
+  }
+
   protected Meta getAdditionalMeta() {
     GoogleMeta gm;
     if (!Util.getSettings().isForward()) {
@@ -122,7 +130,6 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   private Element getMain() {
     if (!Util.getSettings().isForward()) {
       ElementContainer ec = new ElementContainer();
-      ec.addElement(getStaticHeader());
       ec.addElement(Util.convertToUnOrderedList(fDiary.getHeader()));
       ec.addElement(getDiary());
       return ec;

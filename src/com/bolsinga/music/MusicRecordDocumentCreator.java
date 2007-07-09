@@ -19,8 +19,4 @@ public abstract class MusicRecordDocumentCreator extends RecordDocumentCreator {
   protected String getCopyright() {
     return Util.getCopyright(Util.getSettings().getCopyrightStartYear().intValue());
   }
-  
-  protected String getMainDivClass() {
-    return CSS.DOC_2_COL_BODY;
-  }
 }
