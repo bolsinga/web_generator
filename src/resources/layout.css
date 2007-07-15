@@ -47,6 +47,8 @@ text-align: center;
 .@@doc_3_col_body@@ {
 margin-left: 200px;
 margin-right: 200px;
+padding-left: 10px;
+padding-right: 10px;
 }
 
 .@@doc_2_col_body@@ {
