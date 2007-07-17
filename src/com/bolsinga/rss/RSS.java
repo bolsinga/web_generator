@@ -147,7 +147,8 @@ public class RSS {
     }
 
     TRss rss = objFactory.createTRss();
-    rss.setVersion(new java.math.BigDecimal(2.0));
+//    rss.setVersion(new java.math.BigDecimal(2.0));
+    rss.setVersion("2.0");
     rss.setChannel(channel);
 
     JAXBElement<TRss> jrss = objFactory.createRss(rss);                                                
