@@ -64,6 +64,8 @@ public class ITunes {
   private static final String TK_SORT_ARTIST          = "Sort Artist";
   private static final String TK_SORT_COMPOSER        = "Sort Composer";
   private static final String TK_SORT_NAME            = "Sort Name";
+  private static final String TK_CONTENT_RATING       = "Content Rating";
+  private static final String TK_DISABLED             = "Disabled";
     
   private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
   private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
@@ -139,6 +141,8 @@ public class ITunes {
     sITunesKeys.add(TK_SORT_ARTIST);
     sITunesKeys.add(TK_SORT_COMPOSER);
     sITunesKeys.add(TK_SORT_NAME);
+    sITunesKeys.add(TK_CONTENT_RATING);
+    sITunesKeys.add(TK_DISABLED);
   }
         
   public static void addMusic(final ObjectFactory objFactory, final Music music, final String itunesFile) throws ITunesException {
