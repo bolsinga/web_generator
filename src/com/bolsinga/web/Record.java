@@ -88,7 +88,9 @@ public class Record {
     }
     
     if (permaLink != null) {
-      d.addElement(permaLink);
+      StringElement se = new StringElement("&nbsp;");
+      se.addElement(permaLink);
+      d.addElement(se);
     }
     
     fElement = d;
