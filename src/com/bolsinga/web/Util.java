@@ -568,7 +568,7 @@ public class Util {
   }
     
   public static Diary createDiary(final String sourceFile) throws WebException {
-    dumpJSON(sourceFile);
+    //    dumpJSON(sourceFile);
     Diary diary = null;
     
     InputStream is = null;
@@ -742,7 +742,7 @@ public class Util {
   }
   
   public static Music createMusic(final String sourceFile) throws WebException {
-    dumpJSON(sourceFile);
+    //    dumpJSON(sourceFile);
     
     Music music = null;
     
