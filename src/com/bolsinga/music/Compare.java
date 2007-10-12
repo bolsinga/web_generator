@@ -17,7 +17,7 @@ public class Compare {
   private static final String A    = "a ";
   private static final String AN   = "an ";
     
-  private static final Pattern sChomp = Pattern.compile("\\W");
+  private static final Pattern sChomp = Pattern.compile("^\\p{Punct}+");
         
   private static Compare sCompare = null;
         
@@ -62,7 +62,7 @@ public class Compare {
     }
                 
     Matcher m = sChomp.matcher(lower);
-    String result = m.replaceAll("");
+    String result = m.replaceFirst("");
     if ((result != null) && (result.length() > 0)) {
       return result;
     }
