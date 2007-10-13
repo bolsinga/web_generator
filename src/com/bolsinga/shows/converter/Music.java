@@ -255,16 +255,40 @@ public class Music {
                 
     return result;
   }
+  
+  private static String getSortName(final String name, final String sortName) {
+    // This will return a diacritical-free sortName, based upon sortName if it is provided, otherwise name.
+    //  It will return null if sortName is null and name does not include diacriticals.
+    String result = null;
+    
+    String nameToBeStripped = (sortName != null) ? sortName : name;
+
+    // The following is JDK 1.5 only. It was moved to java.text.Normalizer in JDK 1.6 with a different API.
+    String stripped = sun.text.Normalizer.normalize(nameToBeStripped, sun.text.Normalizer.DECOMP, 0);
+    
+    if (!stripped.equals(nameToBeStripped)) {
+      result = stripped;
+    }
+    
+    if (result == null) {
+      result = sortName;
+    }
+    
+    return result;
+  }
         
   public static Artist addArtist(final ObjectFactory objFactory, final com.bolsinga.music.data.xml.impl.Music music, final String name, final String sortName) throws ConvertException {
     Artist result = null;
+    
+    String calcSortName = Music.getSortName(name, sortName);
+
     if (!sArtists.containsKey(name)) {
       result = objFactory.createArtist();
       result.setName(name);
       result.setId("ar" + sArtists.size());
-
-      if (sortName != null) {
-        result.setSortname(sortName);
+      
+      if (calcSortName != null) {
+        result.setSortname(calcSortName);
       }
       
       music.getArtist().add(result); // Modification required.
@@ -274,21 +298,21 @@ public class Music {
 
       // Be sure the sort name is set as expected (it may be only known at later calls!)
       String curSortName = result.getSortname();
-      if ((curSortName != null) && (sortName != null)) {
+      if ((curSortName != null) && (calcSortName != null)) {
         // Ensure what we are passed matches
-        if (!curSortName.equals(sortName)) {
+        if (!curSortName.equals(calcSortName)) {
           StringBuilder sb = new StringBuilder();
           sb.append("Different Sort Names for: ");
           sb.append(name);
           sb.append("(");
           sb.append(curSortName);
           sb.append(", ");
-          sb.append(sortName);
+          sb.append(calcSortName);
           sb.append(")");
           throw new ConvertException(sb.toString());
         }
-      } if ((curSortName == null) && (sortName != null)) {
-        result.setSortname(sortName);
+      } if ((curSortName == null) && (calcSortName != null)) {
+        result.setSortname(calcSortName);
       }
     }
 
