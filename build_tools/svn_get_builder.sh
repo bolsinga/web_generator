@@ -28,7 +28,7 @@ PROG_HOME=`cd "$PROG_HOME" && pwd`
 
 GET_BUILDER_TYPE=$PROG_HOME/get_builder_type.sh
 
-SVNLOOK=/usr/local/bin/svnlook
+SVNLOOK=/usr/bin/svnlook
 
 SVNREVIS="-r $REVIS"
 

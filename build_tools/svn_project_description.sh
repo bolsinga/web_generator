@@ -29,7 +29,7 @@ if [ -z "$REVIS" ] ; then
   usage "No revision."
 fi
 
-SVNLOOK=/usr/local/bin/svnlook
+SVNLOOK=/usr/bin/svnlook
 
 SVNREVIS="-r $REVIS"
 

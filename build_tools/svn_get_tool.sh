@@ -39,7 +39,7 @@ if [ -z "$PROJ_NAME" ] ; then
   usage "No project_name."
 fi
 
-SVNLOOK=/usr/local/bin/svnlook
+SVNLOOK=/usr/bin/svnlook
 
 AUTO_BUILD_PROP=auto-build
 
