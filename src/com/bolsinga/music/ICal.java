@@ -1,14 +1,12 @@
 package com.bolsinga.music;
 
 import com.bolsinga.ical.*;
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.music.data.*;
 
 import com.bolsinga.web.*;
 
 import java.io.*;
 import java.util.*;
-
-import javax.xml.bind.*;
 
 /*
  * http://www.imc.org/pdi/vcal-10.txt
@@ -78,14 +76,13 @@ public class ICal {
   }
         
   private static void generate(final Music music, final String name, final Writer w) throws IOException {                
-    List<Show> items = Util.getShowsCopy(music);
+    List<Show> items = music.getShowsCopy();
     Collections.sort(items, Compare.SHOW_COMPARATOR);
                     
     VCalendar cal = new VCalendar(name);
 
     for (Show item : items) {
-      boolean unknown = Util.convert(item.getDate().isUnknown());
-      if (!unknown) {
+      if (!item.getDate().isUnknown()) {
         addItem(item, cal);
       }
     }
@@ -94,16 +91,16 @@ public class ICal {
   }
         
   private static void addItem(final Show show, final VCalendar calendar) {
-    com.bolsinga.music.data.xml.impl.Date d = show.getDate();
+    com.bolsinga.music.data.Date d = show.getDate();
     Calendar date = Calendar.getInstance(); // UTC isn't required
-    date.set(Calendar.MONTH, d.getMonth().intValue() - 1);
-    date.set(Calendar.DAY_OF_MONTH, d.getDay().intValue());
+    date.set(Calendar.MONTH, d.getMonth() - 1);
+    date.set(Calendar.DAY_OF_MONTH, d.getDay());
                 
     StringBuilder summary = new StringBuilder();
 
-    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
+    Iterator<Artist> bi = show.getArtists().iterator();
     while (bi.hasNext()) {
-      Artist a = (Artist)bi.next().getValue();
+      Artist a = bi.next();
                         
       summary.append(a.getName());
                         
@@ -120,6 +117,6 @@ public class ICal {
     summary.append(d.getYear());
     summary.append(")");
                 
-    calendar.add(new VEvent(date, summary.toString(), show.getId()));
+    calendar.add(new VEvent(date, summary.toString(), show.getID()));
   }
 }

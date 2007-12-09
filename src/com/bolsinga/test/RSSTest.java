@@ -1,7 +1,7 @@
 package com.bolsinga.test;
 
-import com.bolsinga.diary.data.xml.impl.*;
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.diary.data.*;
+import com.bolsinga.music.data.*;
 
 import com.bolsinga.rss.*;
 
@@ -25,8 +25,8 @@ public class RSSTest {
         String diaryFile = args[1];
         String musicFile = args[2];
 
-        diary = com.bolsinga.web.Util.createDiary(diaryFile);
-        music = com.bolsinga.web.Util.createMusic(musicFile);
+        diary = com.bolsinga.diary.data.xml.Diary.create(diaryFile);
+        music = com.bolsinga.music.data.xml.Music.create(musicFile);
       } else {
         RSSTest.usage();
       }

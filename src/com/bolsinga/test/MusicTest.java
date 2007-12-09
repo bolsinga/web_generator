@@ -1,6 +1,6 @@
 package com.bolsinga.test;
 
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.music.data.*;
 import com.bolsinga.settings.data.*;
 
 import com.bolsinga.music.*;
@@ -40,7 +40,7 @@ public class MusicTest implements Backgroundable {
         settings = args[2];
         output = args[3];
 
-        music = Util.createMusic(musicFile);
+        music = com.bolsinga.music.data.xml.Music.create(musicFile);
       } else {
         MusicTest.usage();
       }

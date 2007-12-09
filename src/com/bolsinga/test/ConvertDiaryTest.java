@@ -1,7 +1,5 @@
 package com.bolsinga.test;
 
-import com.bolsinga.shows.converter.*;
-
 public class ConvertDiaryTest {
 
   public static void main(String[] args) {
@@ -11,8 +9,9 @@ public class ConvertDiaryTest {
     }
     
     try {
-      Diary.convert(args[0], args[1], args[2]);
-    } catch (ConvertException e) {
+      com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(args[0], args[1]);
+      com.bolsinga.diary.data.xml.Diary.export(diary, args[2]);
+    } catch (Exception e) {
       System.err.println(e);
       e.printStackTrace();
       System.exit(1);

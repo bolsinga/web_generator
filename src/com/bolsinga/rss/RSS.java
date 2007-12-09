@@ -1,7 +1,7 @@
 package com.bolsinga.rss;
 
-import com.bolsinga.diary.data.xml.impl.*;
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.diary.data.*;
+import com.bolsinga.music.data.*;
 import com.bolsinga.rss.data.*;
 
 import java.io.*;
@@ -61,9 +61,9 @@ public class RSS {
     sb.append(com.bolsinga.web.Util.toString(show.getDate()));
     sb.append(" - ");
 
-    Iterator<JAXBElement<Object>> i = show.getArtist().iterator();
+    Iterator<Artist> i = show.getArtists().iterator();
     while (i.hasNext()) {
-      Artist performer = (Artist)i.next().getValue();
+      Artist performer = i.next();
                         
       sb.append(performer.getName());
                         
@@ -79,10 +79,10 @@ public class RSS {
   }
 
   private static void add(final Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {
-    add(com.bolsinga.web.Util.getTitle(entry), entry.getTimestamp().toGregorianCalendar(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
+    add(com.bolsinga.web.Util.getTitle(entry), entry.getTimestamp(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
   }
 
-  private static void add(final String title, final GregorianCalendar cal, final String link, final String description, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {
+  private static void add(final String title, final Calendar cal, final String link, final String description, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {
     TRssItem item = objFactory.createTRssItem();
     List<Object> itemElements = item.getTitleOrDescriptionOrLink();
 

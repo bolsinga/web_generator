@@ -1,6 +1,6 @@
 package com.bolsinga.music;
 
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.music.data.*;
 
 import com.bolsinga.web.*;
 
@@ -10,8 +10,6 @@ import java.util.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
-
-import javax.xml.bind.JAXBElement;
 
 public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
@@ -107,11 +105,11 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Collection<Vector<Show>> getMonthlies(final Vector<Show> items) {
-    TreeMap<com.bolsinga.music.data.xml.impl.Date, Vector<Show>> result =
-      new TreeMap<com.bolsinga.music.data.xml.impl.Date, Vector<Show>>(Compare.DATE_MONTH_COMPARATOR);
+    TreeMap<com.bolsinga.music.data.Date, Vector<Show>> result =
+      new TreeMap<com.bolsinga.music.data.Date, Vector<Show>>(Compare.DATE_MONTH_COMPARATOR);
 
     for (Show item : items) {
-      com.bolsinga.music.data.xml.impl.Date key = item.getDate();
+      com.bolsinga.music.data.Date key = item.getDate();
       Vector<Show> showList;
       if (result.containsKey(key)) {
         showList = result.get(key);
@@ -128,7 +126,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private java.util.Map<String, IndexPair> createIndex() {
     java.util.Map<String, IndexPair> m = new TreeMap<String, IndexPair>();
-    for (Show s : Util.getShowsUnmodifiable(fMusic)) {
+    for (Show s : fMusic.getShows()) {
       String letter = fLinks.getPageFileName(s);
       if (!m.containsKey(letter)) {
         m.put(letter, new IndexPair(fLinks.getLinkToPage(s), Util.createPageTitle(letter, Util.getResourceString("dates"))));
@@ -138,7 +136,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Collection<Vector<Show>> createGroups() {
-    List<Show> shows = Util.getShowsCopy(fMusic);
+    List<Show> shows = fMusic.getShowsCopy();
     // Each group is per page, so they are grouped by Show who have the same starting sort letter.
     TreeMap<String, Vector<Show>> result = new TreeMap<String, Vector<Show>>();
     
@@ -177,15 +175,15 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
       
       int[] groupMonthTotals = new int[13]; // including unknown as index '12'
       for (Show show : showGroup) {
-        com.bolsinga.music.data.xml.impl.Date date = show.getDate();
-        if (!Util.convert(date.isUnknown())) {
+        com.bolsinga.music.data.Date date = show.getDate();
+        if (!date.isUnknown()) {
           Calendar cal = Util.toCalendarLocal(date); // don't want UTC...
           groupMonthTotals[cal.get(Calendar.MONTH) - Calendar.JANUARY]++;
         } else {
           // See if the month is known.
-          BigInteger month = date.getMonth();
-          if (month != null) {
-            groupMonthTotals[month.intValue() - 1]++;
+          int month = date.getMonth();
+          if (month != com.bolsinga.music.data.Date.UNKNOWN) {
+            groupMonthTotals[month - 1]++;
           } else {
             groupMonthTotals[12]++;
           }
@@ -272,9 +270,9 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   public static Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
-    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
+    Iterator<Artist> bi = show.getArtists().iterator();
     while (bi.hasNext()) {
-      Artist performer = (Artist)bi.next().getValue();
+      Artist performer = bi.next();
                         
       String t = Util.createTitle("moreinfoartist", performer.getName());
       sb.append(Util.createInternalA(links.getLinkTo(performer), lookup.getHTMLName(performer), t));
@@ -296,7 +294,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
       comment = encoder.embedLinks(show, upOneLevel);
     }
     
-    return Record.createRecordListWithComment(Util.createNamedTarget(show.getId(), Util.toString(show.getDate())), e, comment);
+    return Record.createRecordListWithComment(Util.createNamedTarget(show.getID(), Util.toString(show.getDate())), e, comment);
   }
 
   private Record getShowMonthRecordSection(final Vector<Show> shows) {

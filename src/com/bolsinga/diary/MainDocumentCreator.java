@@ -1,7 +1,7 @@
 package com.bolsinga.diary;
 
-import com.bolsinga.diary.data.xml.impl.*;
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.diary.data.*;
+import com.bolsinga.music.data.*;
 
 import com.bolsinga.music.*;
 import com.bolsinga.web.*;
@@ -76,27 +76,27 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
               }
 
               public Element getArtistNavigator() {
-                return fLinks.getArtistLink(createPreviewLine(Util.getArtistsUnmodifiable(fMusic).size(),
+                return fLinks.getArtistLink(createPreviewLine(fMusic.getArtists().size(),
                                                               Util.getResourceString("bands")));
               }
 
               public Element getTrackNavigator() {
-                return fLinks.getTracksLink(createPreviewLine(Util.getSongsUnmodifiable(fMusic).size(),
+                return fLinks.getTracksLink(createPreviewLine(fMusic.getSongs().size(),
                                                               Util.getResourceString("tracks")));
               }
 
               public Element getAlbumNavigator() {
-                return fLinks.getAlbumsLink(createPreviewLine(Util.getAlbumsUnmodifiable(fMusic).size(),
+                return fLinks.getAlbumsLink(createPreviewLine(fMusic.getAlbums().size(),
                                                               Util.getResourceString("albums")));
               }
               
               public Element getShowNavigator() {
-                return fLinks.getShowLink(createPreviewLine(Util.getShowsUnmodifiable(fMusic).size(),
+                return fLinks.getShowLink(createPreviewLine(fMusic.getShows().size(),
                                                             Util.getResourceString("dates")));
               }
               
               public Element getVenueNavigator() {
-                return fLinks.getVenueLink(createPreviewLine(Util.getVenuesUnmodifiable(fMusic).size(),
+                return fLinks.getVenueLink(createPreviewLine(fMusic.getVenues().size(),
                                                             Util.getResourceString("venues")));
               }
               

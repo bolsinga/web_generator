@@ -1,7 +1,7 @@
 package com.bolsinga.web;
 
-import com.bolsinga.diary.data.xml.impl.*;
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.diary.data.*;
+import com.bolsinga.music.data.*;
 
 import java.io.*;
 import java.math.*;
@@ -89,11 +89,11 @@ public class Links {
     return file;
   }
         
-  public String getPageFileName(final BigInteger year) {
-    if (year == null) {
+  public String getPageFileName(final int year) {
+    if (year == com.bolsinga.music.data.Date.UNKNOWN) {
       return OTHER;
     } else {
-      return year.toString();
+      return Integer.toString(year);
     }
   }
         
@@ -110,7 +110,7 @@ public class Links {
   }
         
   public String getPageFileName(final Show show) {
-    BigInteger current = show.getDate().getYear();
+    int current = show.getDate().getYear();
     return getPageFileName(current);
   }
 
@@ -206,7 +206,7 @@ public class Links {
                 
     sb.append(getLinkToPage(artist));
     sb.append(HASH);
-    sb.append(artist.getId());
+    sb.append(artist.getID());
                 
     return sb.toString();
   }
@@ -216,7 +216,7 @@ public class Links {
                 
     sb.append(getLinkToPage(venue));
     sb.append(HASH);
-    sb.append(venue.getId());
+    sb.append(venue.getID());
                 
     return sb.toString();
   }
@@ -226,7 +226,7 @@ public class Links {
                 
     sb.append(getLinkToPage(show));
     sb.append(HASH);
-    sb.append(show.getId());
+    sb.append(show.getID());
                 
     return sb.toString();
   }
@@ -236,7 +236,7 @@ public class Links {
                 
     sb.append(getLinkToPage(album));
     sb.append(HASH);
-    sb.append(album.getId());
+    sb.append(album.getID());
                 
     return sb.toString();
   }
@@ -387,7 +387,7 @@ public class Links {
   }
 
   public String getPageFileName(final Entry entry) {
-    return sArchivePageFormat.get().format(entry.getTimestamp().toGregorianCalendar().getTime());
+    return sArchivePageFormat.get().format(entry.getTimestamp().getTime());
   }
 
   public String getPagePath(final Entry entry) {
@@ -419,7 +419,7 @@ public class Links {
                 
     sb.append(getLinkToPage(entry));
     sb.append(HASH);
-    sb.append(entry.getId());
+    sb.append(entry.getID());
                 
     return sb.toString();
   }

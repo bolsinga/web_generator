@@ -1,6 +1,6 @@
 package com.bolsinga.music;
 
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.music.data.*;
 
 import com.bolsinga.web.*;
 
@@ -9,8 +9,6 @@ import java.util.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
-
-import javax.xml.bind.JAXBElement;
 
 public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
 
@@ -103,7 +101,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   
   private java.util.Map<String, IndexPair> createIndex() {
     java.util.Map<String, IndexPair> m = new TreeMap<String, IndexPair>();
-    for (Venue v : Util.getVenuesUnmodifiable(fMusic)) {
+    for (Venue v : fMusic.getVenues()) {
       String letter = fLinks.getPageFileName(v);
       if (!m.containsKey(letter)) {
         m.put(letter, new IndexPair(fLinks.getLinkToPage(v), Util.createPageTitle(letter, Util.getResourceString("venues"))));
@@ -113,7 +111,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Collection<Vector<Venue>> getGroups() {
-    List<Venue> venues = Util.getVenuesCopy(fMusic);
+    List<Venue> venues = fMusic.getVenuesCopy();
     // Each group is per page, so they are grouped by Venue who have the same starting sort letter.
     HashMap<String, Vector<Venue>> result = new HashMap<String, Vector<Venue>>(venues.size());
     
@@ -136,7 +134,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Table getStats() {
-    List<Venue> items = Util.getVenuesCopy(fMusic);
+    List<Venue> items = fMusic.getVenuesCopy();
     Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
 
     int index = 0;
@@ -161,9 +159,9 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   private Vector<Element> getVenueShowListing(final Venue venue, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
-    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
+    Iterator<Artist> bi = show.getArtists().iterator();
     while (bi.hasNext()) {
-      Artist performer = (Artist)bi.next().getValue();
+      Artist performer = bi.next();
       String t = Util.createTitle("moreinfoartist", performer.getName());
       sb.append(Util.createInternalA(fLinks.getLinkTo(performer), fLookup.getHTMLName(performer), t));
       
@@ -207,7 +205,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
     }
 
-    A title = Util.createNamedTarget(venue.getId(), fLookup.getHTMLName(venue));
+    A title = Util.createNamedTarget(venue.getID(), fLookup.getHTMLName(venue));
     
     return Record.createRecordSection(title, items);
   }

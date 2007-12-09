@@ -1,6 +1,6 @@
 package com.bolsinga.music;
 
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.music.data.*;
 
 import com.bolsinga.web.*;
 
@@ -9,8 +9,6 @@ import java.util.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
-
-import javax.xml.bind.JAXBElement;
 
 public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 
@@ -103,7 +101,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 
   private java.util.Map<String, IndexPair> createIndex() {
     java.util.Map<String, IndexPair> m = new TreeMap<String, IndexPair>();
-    for (Artist art : Util.getArtistsUnmodifiable(fMusic)) {
+    for (Artist art : fMusic.getArtists()) {
       String letter = fLinks.getPageFileName(art);
       if (!m.containsKey(letter)) {
         m.put(letter, new IndexPair(fLinks.getLinkToPage(art), Util.createPageTitle(letter, Util.getResourceString("artists"))));
@@ -113,7 +111,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Collection<Vector<Artist>> getGroups() {
-    List<Artist> artists = Util.getArtistsCopy(fMusic);
+    List<Artist> artists = fMusic.getArtistsCopy();
     // Each group is per page, so they are grouped by Artist who have the same starting sort letter.
     HashMap<String, Vector<Artist>> result = new HashMap<String, Vector<Artist>>(artists.size());
     
@@ -136,7 +134,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Table getStats() {
-    List<Artist> items = Util.getArtistsCopy(fMusic);
+    List<Artist> items = fMusic.getArtistsCopy();
     Collections.sort(items, Compare.getCompare(fMusic).ARTIST_STATS_COMPARATOR);
 
     int index = 0;
@@ -169,7 +167,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   private Record getArtistRecordSection(final Artist artist) {
     Vector<Record> items = new Vector<Record>();
 
-    if (Util.getAlbumsUnmodifiable(artist).size() > 0) {
+    if (artist.getAlbums().size() > 0) {
       items.add(getAlbumRelations(artist));
     }
 
@@ -184,7 +182,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
     }
     
-    A title = Util.createNamedTarget(artist.getId(), fLookup.getHTMLName(artist));
+    A title = Util.createNamedTarget(artist.getID(), fLookup.getHTMLName(artist));
     
     return Record.createRecordSection(title, items);
   }
@@ -193,9 +191,9 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     Vector<Element> e = new Vector<Element>();
     
     StringBuilder sb = new StringBuilder();
-    Iterator<JAXBElement<Object>> bi = show.getArtist().iterator();
+    Iterator<Artist> bi = show.getArtists().iterator();
     while (bi.hasNext()) {
-      Artist performer = (Artist)bi.next().getValue();
+      Artist performer = bi.next();
       
       String htmlName = fLookup.getHTMLName(performer);
       if (artist.equals(performer)) {
@@ -230,15 +228,14 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   private Vector<Element> getTracks(final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
-    List<JAXBElement<Object>> albums = Util.getAlbumsCopy(artist);
-    Collections.sort(albums, Compare.JAXB_ALBUM_ORDER_COMPARATOR);
+    List<Album> albums = artist.getAlbumsCopy();
+    Collections.sort(albums, Compare.ALBUM_ORDER_COMPARATOR);
 
-    for (JAXBElement<Object> jalbum : albums) {
-      Album album = (Album)jalbum.getValue();
+    for (Album album : albums) {
       StringBuilder sb = new StringBuilder();
       String t = Util.createTitle("moreinfoalbum", album.getTitle());
       sb.append(Util.createInternalA(fLinks.getLinkTo(album), fLookup.getHTMLName(album), t));
-      com.bolsinga.music.data.xml.impl.Date albumRelease = album.getReleaseDate();
+      com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
       if (albumRelease != null) {
         sb.append(" (");
         sb.append(albumRelease.getYear());

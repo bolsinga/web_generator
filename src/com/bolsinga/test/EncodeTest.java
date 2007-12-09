@@ -1,7 +1,7 @@
 package com.bolsinga.test;
 
-import com.bolsinga.music.data.xml.impl.*;
-import com.bolsinga.diary.data.xml.impl.*;
+import com.bolsinga.music.data.*;
+import com.bolsinga.diary.data.*;
 import com.bolsinga.web.*;
 
 import java.io.*;
@@ -35,8 +35,8 @@ public class EncodeTest {
   }
   
   void generate(final String diaryFile, final String musicFile, final String outputDir) throws WebException {
-    Diary diary = Util.createDiary(diaryFile);
-    Music music = Util.createMusic(musicFile);
+    Diary diary = com.bolsinga.diary.data.xml.Diary.create(diaryFile);
+    Music music = com.bolsinga.music.data.xml.Music.create(musicFile);
     
     Encode encoder = Encode.getEncode(music, diary);
 
@@ -62,7 +62,7 @@ public class EncodeTest {
   }
 
   private static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) throws WebException {
-    List<Entry> items = Util.getEntriesCopy(diary);
+    List<Entry> items = diary.getEntriesCopy();
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;
@@ -74,7 +74,7 @@ public class EncodeTest {
       buffer.append(encoder.embedLinks(item, true));
       if (EncodeTest.ENCODE_TIMING) {
         current = System.currentTimeMillis() - start;
-        times.put(item.getId(), current);
+        times.put(item.getID(), current);
       }
     }
 
@@ -91,7 +91,7 @@ public class EncodeTest {
   }
 
   private static void generateMusic(final Music music, final Encode encoder, final String outputDir) throws WebException {
-    List<Show> items = Util.getShowsUnmodifiable(music);
+    List<Show> items = music.getShows();
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;
@@ -104,7 +104,7 @@ public class EncodeTest {
         buffer.append(encoder.embedLinks(item, true));
         if (EncodeTest.ENCODE_TIMING) {
           current = System.currentTimeMillis() - start;
-          times.put(item.getId(), current);
+          times.put(item.getID(), current);
         }
       }
     }

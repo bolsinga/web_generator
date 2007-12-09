@@ -4,6 +4,8 @@ import com.bolsinga.diary.*;
 import com.bolsinga.music.*;
 import com.bolsinga.web.*;
 
+import java.util.*;
+
 public class Main implements Backgroundable {
 
   private final Backgrounder fBackgrounder;
@@ -38,8 +40,10 @@ public class Main implements Backgroundable {
       Main main = new Main(backgrounder, settingsFile);
       if (command.equals("xml")) {
         main.generateXML(diaryFile, musicFile, itunes, shows, venue, sort, relations, comments, statics);
-      } else if (command.equals("site")) {
+      } else if (command.equals("xml-site")) {
         main.generateSite(diaryFile, musicFile, output, cssFile);
+      } else if (command.equals("site")) {
+        main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output, cssFile);
       } else {
         Main.usage(args, "Invalid action");
       }
@@ -62,17 +66,54 @@ public class Main implements Backgroundable {
     fBackgrounder.removeInterest(this);
   }
   
-  private void generateXML(final String diaryFile, final String musicFile, final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics) throws com.bolsinga.shows.converter.ConvertException {
-    com.bolsinga.shows.converter.Music.convert(shows, venue, sort, relations, itunes, musicFile);
-    com.bolsinga.shows.converter.Diary.convert(comments, statics, diaryFile);
+  private void generateXML(final String diaryFile, final String musicFile, final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics) throws Exception {
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
+    com.bolsinga.music.data.xml.Music.export(music, musicFile);
+
+    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
+    com.bolsinga.diary.data.xml.Diary.export(diary, diaryFile);
   }
   
   private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws Exception {
-    final com.bolsinga.music.data.xml.impl.Music music = Util.createMusic(musicFile);
-    final com.bolsinga.diary.data.xml.impl.Diary diary = Util.createDiary(diaryFile);
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.xml.Music.create(musicFile);
+    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.xml.Diary.create(diaryFile);
+    
+    generateSite(music, diary, output, cssFile);
+  }
+
+  private void generateDirect(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String output, final String cssFile) throws Exception {
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
+    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
+
+    generateSite(music, diary, output, cssFile);
+  }
+
+  private void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
+    String s;
+    HashSet<String> bands = new HashSet<String>();
+    boolean displayed = false;
+    
+    List<com.bolsinga.music.data.Artist> artists = music.getArtists();
+    for (com.bolsinga.music.data.Artist artist : artists) {
+      s = artist.getName().toLowerCase();
+      if (bands.contains(s)) {
+        if (!displayed) {
+          System.out.println("--Similar Artist Names--");
+          displayed = true;
+        }
+        System.out.println(s);
+      } else {
+        bands.add(s);
+      }
+    }
+  }
+  
+  private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output, final String cssFile) throws Exception {
   
     CSS.install(cssFile, output);
 
+    dumpSimilarArtists(music);
+    
     final Encode encoder = Encode.getEncode(music, diary);
 
     // Diary items
@@ -93,7 +134,7 @@ public class Main implements Backgroundable {
   }
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [layout.css] [output.dir] <xml|site>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [layout.css] [output.dir] <xml|xml-site|site>");
     System.out.println(reason);
     System.out.println("Arguments:");
     for (int i = 0; i < badargs.length; i++) {

@@ -1,6 +1,6 @@
 package com.bolsinga.diary;
 
-import com.bolsinga.diary.data.xml.impl.*;
+import com.bolsinga.diary.data.*;
 
 public abstract class DiaryEncoderRecordDocumentCreator extends DiaryRecordDocumentCreator {
 

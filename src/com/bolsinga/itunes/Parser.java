@@ -1,4 +1,4 @@
-package com.bolsinga.itunes.converter;
+package com.bolsinga.itunes;
 
 import java.io.*;
 import java.util.*;
@@ -8,10 +8,8 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 import com.bolsinga.plist.*;
-import com.bolsinga.music.data.xml.impl.*;
 
-public class ITunes {
-
+public class Parser {
   private static final String TK_ALBUM                = "Album";
   private static final String TK_ARTIST               = "Artist";
   private static final String TK_ARTWORK_COUNT        = "Artwork Count";
@@ -67,27 +65,199 @@ public class ITunes {
   private static final String TK_CONTENT_RATING       = "Content Rating";
   private static final String TK_DISABLED             = "Disabled";
     
-  private static final String FORMAT_12_INCH_LP       = "12 Inch LP";
-  private static final String FORMAT_12_INCH_EP       = "12 Inch EP";
-  private static final String FORMAT_12_INCH_SINGLE   = "12 Inch Single";
-  private static final String FORMAT_10_INCH_EP       = "10 Inch EP";
-  private static final String FORMAT_7_INCH_SINGLE    = "7 Inch Single";
-  private static final String FORMAT_CASSETTE         = "Cassette";
-  private static final String FORMAT_CD               = "CD";
-  private static final String FORMAT_DIGITAL_FILE     = "Digital File";
+  public class Album {
+    public static final int UNKNOWN_YEAR = 0;
     
-  private static final HashMap<String, Album> sAlbums = new HashMap<String, Album>();
+    private final String fTitle;
+    private final Artist fArtist;
+    private int fReleaseYear;
+    private final boolean fIsCompilation;
+    private final List<Song> fSongs;
+    
+    Album(final String title, final Artist artist) {
+      fTitle = title;
+      fArtist = artist;
+      fReleaseYear = Album.UNKNOWN_YEAR;
+      fIsCompilation = (artist == null);
+      fSongs = new ArrayList<Song>();
+    }
+    
+    public String getTitle() {
+      return fTitle;
+    }
+    
+    public Artist getArtist() {
+      return fArtist;
+    }
+        
+    public int getReleaseYear() {
+      return fReleaseYear;
+    }
+    
+    void setReleaseYear(final int year) {
+      fReleaseYear = year;
+    }
+    
+    public boolean isCompilation() {
+      return fIsCompilation;
+    }
+    
+    public List<Song> getSongs() {
+      return Collections.unmodifiableList(fSongs);
+    }
+    
+    void addSong(Song song) {
+      fSongs.add(song);
+    }
+
+    void sortSongs() {
+      Collections.sort(fSongs, Parser.SONG_ORDER_COMPARATOR);
+    }
+  }
+  
+  public class Artist {
+    private final String fName;
+    private final String fSortName;
+    private final List<Album> fAlbums;
+    
+    Artist(final String name, final String sortName) {
+      fName = name;
+      fSortName = sortName;
+      fAlbums = new ArrayList<Album>();
+    }
+    
+    public String getName() {
+      return fName;
+    }
+    
+    public String getSortname() {
+      return fSortName;
+    }
+
+    public List<Album> getAlbums() {
+      return Collections.unmodifiableList(fAlbums);
+    }
+    
+    void addAlbum(Album album) {
+      fAlbums.add(album);
+    }
+    
+    void sortAlbums() {
+      Collections.sort(fAlbums, ALBUM_ORDER_COMPARATOR);
+    }
+  }
+  
+  public class Song {
+    private static final int UNKNOWN_TRACK = 0;
+    
+    private final Artist fArtist;
+    private final String fTitle;
+    private final int fReleaseYear;
+    private final GregorianCalendar fLastPlayed;
+    private final int fTrack;
+    private final String fGenre;
+    private final int fPlayCount;
+    
+    Song(final Artist artist, final String title, final int year, final GregorianCalendar lastPlayed, final int track, final String genre, final int playCount) {
+      fArtist = artist;
+      fTitle = title;
+      fReleaseYear = year;
+      fLastPlayed = lastPlayed;
+      fTrack = track;
+      fGenre = genre;
+      fPlayCount = playCount;
+    }
+    
+    public Artist getArtist() {
+      return fArtist;
+    }
+    
+    public String getTitle() {
+      return fTitle;
+    }
+    
+    public int getReleaseYear() {
+      return fReleaseYear;
+    }
+    
+    public GregorianCalendar getLastPlayed() {
+      return fLastPlayed;
+    }
+    
+    public int getTrack() {
+      return fTrack;
+    }
+    
+    public String getGenre() {
+      return fGenre;
+    }
+    
+    public int getPlayCount() {
+      return fPlayCount;
+    }
+  }
 
   private static final HashSet<String> sITunesKeys = new HashSet<String>();
   private static final Set<String> sNewITunesKeys = new TreeSet<String>();
-  
-  private static final HashMap<String, HashSet<String>> sArtistAlbums= new HashMap<String, HashSet<String>>();
-  
+
   private static final Pattern sLTPattern = Pattern.compile("<");
   private static final String sLTReplacement = "&lt;";
   private static final Pattern sGTPattern = Pattern.compile(">");
   private static final String sGTReplacement = "&gt;";
+
+  // ArtistName -> Artist
+  private final HashMap<String, Artist> fArtistMap = new HashMap<String, Artist>();
+  
+  // AlbumKey -> Album
+  private final HashMap<String, Album> fAlbumMap = new HashMap<String, Album>();
+  
+  // AlbumKey's
+  private final HashSet<String> fArtistAlbumSet = new HashSet<String>();
+  
+  private static final Comparator<Artist> ARTIST_COMPARATOR = new Comparator<Artist>() {
+    public int compare(final Artist r1, final Artist r2) {
+      String n1 = r1.getSortname();
+      if (n1 == null) {
+        n1 = r1.getName();
+      }
+      String n2 = r2.getSortname();
+      if (n2 == null) {
+        n2 = r2.getName();
+      }
           
+      return com.bolsinga.music.Compare.LIBRARY_COMPARATOR.compare(n1, n2);
+    }
+  };
+
+  private static final Comparator<Album> ALBUM_COMPARATOR = new Comparator<Album>() {
+    public int compare(final Album r1, final Album r2) {
+      int result = com.bolsinga.music.Compare.LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
+      if (result == 0) {
+        result = ARTIST_COMPARATOR.compare((Artist)r1.getArtist(), (Artist)r2.getArtist());
+      }
+      return result;
+    }
+  };
+
+  private static final Comparator<Album> ALBUM_ORDER_COMPARATOR = new Comparator<Album>() {
+    public int compare(final Album r1, final Album r2) {
+      // The Integer.MAX_VALUE assures that 'unknown' album dates are after the known ones.
+      int date1 = (r1.getReleaseYear() != Album.UNKNOWN_YEAR) ? r1.getReleaseYear() : Integer.MAX_VALUE;
+      int date2 = (r2.getReleaseYear() != Album.UNKNOWN_YEAR) ? r2.getReleaseYear() : Integer.MAX_VALUE;
+      int result = date1 - date2;
+      if (result == 0) {
+        result = ALBUM_COMPARATOR.compare(r1, r2);
+      }
+      return result;
+    }
+  };
+
+  private static final Comparator<Song> SONG_ORDER_COMPARATOR = new Comparator<Song>() {
+    public int compare(final Song r1, final Song r2) {
+      return r1.getTrack() - r2.getTrack();
+    }
+  };
+
   private static void createKnownKeys() {
     sITunesKeys.add(TK_ALBUM);
     sITunesKeys.add(TK_ARTIST);
@@ -144,11 +314,13 @@ public class ITunes {
     sITunesKeys.add(TK_CONTENT_RATING);
     sITunesKeys.add(TK_DISABLED);
   }
-        
-  public static void addMusic(final ObjectFactory objFactory, final Music music, final String itunesFile) throws ITunesException {
-    // Create a list of all known iTunes keys. This way if a new one shows up, the program will let us know.
-    createKnownKeys();
 
+  static {
+    // Create a list of all known iTunes keys. This way if a new one shows up, the program will let us know.
+    Parser.createKnownKeys();
+  }
+  
+  public List<Album> parse(final String itunesFile) throws ParserException {
     com.bolsinga.plist.data.Plist plist = null;
     try {
       plist = Util.createPlist(itunesFile);
@@ -156,7 +328,7 @@ public class ITunes {
       StringBuilder sb = new StringBuilder();
       sb.append("Can't parse file: ");
       sb.append(itunesFile);
-      throw new ITunesException(sb.toString(), e);
+      throw new ParserException(sb.toString(), e);
     }
 
     Iterator<Object> i = plist.getDict().getKeyAndArrayOrData().iterator();
@@ -167,40 +339,42 @@ public class ITunes {
         com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
                                 
         List<Object> tracks = dict.getKeyAndArrayOrData();
-        ITunes.addTracks(objFactory, music, tracks);
+        addTracks(tracks);
       } else {
         Object o = i.next();
       }
     }
+
+    setAlbumYears();
+                
+    sortAlbumOrder();
+
+    sortAlbumsSongOrder();
     
     for (String key : sNewITunesKeys) {
         System.out.println("iTunes added a new key: " + key);
     }
+    
+    return Collections.unmodifiableList(new ArrayList<Album>(fAlbumMap.values()));
   }
         
-  private static void addTracks(final ObjectFactory objFactory, final Music music, final java.util.List<Object> tracks) throws ITunesException {
+  private void addTracks(final java.util.List<Object> tracks) throws ParserException {
     Iterator<Object> i = tracks.iterator();
     while (i.hasNext()) {
       Object key = i.next(); // key not used
 
       com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)i.next();
-      ITunes.addTrack(objFactory, music, track);
+      addTrack(track);
     }
-                
-    setAlbumYears(objFactory, music);
-                
-    sortAlbumOrder(music);
-
-    sortAlbumsSongOrder(music);
   }
         
-  private static void addTrack(final ObjectFactory objFactory, final Music music, final com.bolsinga.plist.data.Dict track) throws ITunesException {
+  private void addTrack(final com.bolsinga.plist.data.Dict track) throws ParserException {
     Iterator<Object> i = track.getKeyAndArrayOrData().iterator();
             
     String songTitle = null;
     String artist = null;
     String sortArtist = null;
-    XMLGregorianCalendar lastPlayed = null;
+    GregorianCalendar lastPlayed = null;
     int playCount = 0;
     String genre = null;
     String albumTitle = null;
@@ -245,7 +419,7 @@ public class ITunes {
         continue;
       }
       if (key.equals(TK_PLAY_DATE_UTC)) {
-        lastPlayed = (XMLGregorianCalendar)jovalue.getValue();
+        lastPlayed = ((XMLGregorianCalendar)jovalue.getValue()).toGregorianCalendar();
         continue;
       }
       if (key.equals(TK_PLAY_COUNT)) {
@@ -278,77 +452,61 @@ public class ITunes {
     }
 
     if (!isVideo && !isPodcast) {
-      ITunes.createTrack(objFactory, music, artist, sortArtist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
+      createTrack(artist, sortArtist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
         
-  private static void createTrack(final ObjectFactory objFactory, final Music music, final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount, final boolean compilation) throws ITunesException {
+  private void createTrack(final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final GregorianCalendar lastPlayed, final int playCount, final boolean compilation) throws ParserException {
     // Get or create the artist
-    Artist artist = null;
-    try {
-      artist = com.bolsinga.shows.converter.Music.addArtist(objFactory, music, artistName, sortArtist);
-    } catch (com.bolsinga.shows.converter.ConvertException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't add artist: ");
-      sb.append(artistName);
-      sb.append(" sort name: ");
-      sb.append(sortArtist);
-      throw new ITunesException(sb.toString(), e);
+    if (!fArtistMap.containsKey(artistName)) {
+      Artist artist = new Artist(artistName, sortArtist);
+      fArtistMap.put(artistName, artist);
     }
+    Artist artist = fArtistMap.get(artistName);
                 
     // Get or create the album.
-    Album album = ITunes.addAlbum(objFactory, music, albumTitle, compilation ? null : artist);
+    Album album = addAlbum(albumTitle, compilation ? null : artist);
                 
     // The song is always the new item. The artist and album may already be known.
-    ITunes.addAlbumTrack(objFactory, music, artist, album, songTitle, year, index, genre, lastPlayed, playCount);
+    addAlbumTrack(artist, album, songTitle, year, index, genre, lastPlayed, playCount);
   }
-        
-  private static Album addAlbum(final ObjectFactory objFactory, final Music music, final String name, final Artist artist) {
-    Album result = null;
-    StringBuilder keyBuffer = new StringBuilder();
-    keyBuffer.append(name);
+  
+  private static String getAlbumKey(final String albumTitle, final Artist artist) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(albumTitle);
     if (artist != null) {
-      keyBuffer.append(artist.getName());
+      sb.append(artist.getName());
     }
-    String key = keyBuffer.toString();
-    if (!sAlbums.containsKey(key)) {
-      result = objFactory.createAlbum();
-                        
-      result.setTitle(name);
-      if (artist != null) {
-        result.setPerformer(artist);
-      } else {
-        result.setCompilation(true);
-      }
-      result.getFormat().add(objFactory.createAlbumFormat(FORMAT_DIGITAL_FILE));
-      result.setId("a" + sAlbums.size());
-                        
-      music.getAlbum().add(result); // Modification required.
-      sAlbums.put(key, result);
-    } else {
-      result = sAlbums.get(key);
+    return sb.toString();
+  }
+  
+  private static String getAlbumKey(final Album album) {
+    return Parser.getAlbumKey(album.getTitle(), album.getArtist());
+  }
+  
+  private Album addAlbum(final String name, final Artist artist) {
+    String key = Parser.getAlbumKey(name, artist);    
+    if (!fAlbumMap.containsKey(key)) {      
+      Album album = new Album(name, artist);
+      fAlbumMap.put(key, album);
     }
-    return result;
+    return fAlbumMap.get(key);
   }
 
-  private static void addAlbumTrack(final ObjectFactory objFactory, final Music music, final Artist artist, final Album album, final String songTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount) {
+  private void addAlbumTrack(final Artist artist, final Album album, final String songTitle, final int year, final int index, final String genre, final GregorianCalendar lastPlayed, final int playCount) {
     // Create the song
-    Song song = ITunes.createSong(objFactory, music, artist, songTitle, year, index, genre, lastPlayed, playCount);
+    Song song = createSong(artist, songTitle, year, index, genre, lastPlayed, playCount);
             
     // Add the song to the album
-    List<JAXBElement<Object>> songs = album.getSong(); // Modification required.
-    songs.add(objFactory.createAlbumSong(song));
-            
+    album.addSong(song);
+
     // Add the album to the artist if it isn't there already.
-    HashSet<String> artistAlbums = sArtistAlbums.get(artist.getId());
-    if (artistAlbums == null) {
-      artistAlbums = new HashSet<String>();
-      sArtistAlbums.put(artist.getId(), artistAlbums);
-    }
-    if (!artistAlbums.contains(album.getId())) {
-      artistAlbums.add(album.getId());
-      JAXBElement<Object> jalbum = objFactory.createArtistAlbum(album);
-      artist.getAlbum().add(jalbum); // Modification required.
+    String key = Parser.getAlbumKey(album.getTitle(), artist);
+    if (!fArtistAlbumSet.contains(key)) {
+      fArtistAlbumSet.add(key);
+      if (artist != null) {
+        artist.addAlbum(album);
+      }
     }
   }
   
@@ -358,89 +516,55 @@ public class ITunes {
     return sGTPattern.matcher(sLTPattern.matcher(s).replaceAll(sLTReplacement)).replaceAll(sGTReplacement);
   }
   
-  private static Song createSong(final ObjectFactory objFactory, final Music music, final Artist artist, final String songTitle, final int year, final int index, final String genre, final XMLGregorianCalendar lastPlayed, final int playCount) {
-    List<Song> songs = music.getSong(); // Modification required.
-            
-    Song result = null;
-            
-    result = objFactory.createSong();
-    String cleanTitle = ITunes.cleanHTML(songTitle);
-    result.setTitle(cleanTitle);
-    result.setPerformer(artist);
-    result.setLastPlayed(lastPlayed);
-    result.setPlayCount(java.math.BigInteger.valueOf(playCount));
-    result.setGenre(genre);
-            
+  private Song createSong(final Artist artist, final String songTitle, final int year, final int index, final String genre, final GregorianCalendar lastPlayed, final int playCount) {
+    String cleanTitle = Parser.cleanHTML(songTitle);
+    int releaseYear = Album.UNKNOWN_YEAR;
     if (year != -1) {
-      result.setReleaseDate(releaseYear(objFactory, year));
+      releaseYear = year;
     }
-            
+    int track = Song.UNKNOWN_TRACK;
     if (index != -1) {
-      result.setTrack(java.math.BigInteger.valueOf(index));
+      track = index;
     }
-                    
-    result.setId("s" + songs.size());
-    result.setDigitized(true);
-            
-    songs.add(result);
-            
-    return result;
+    return new Song(artist, cleanTitle, releaseYear, lastPlayed, track, genre, playCount);
   }
 
-  private static com.bolsinga.music.data.xml.impl.Date releaseYear(final ObjectFactory objFactory, final int year) {
-    com.bolsinga.music.data.xml.impl.Date release = objFactory.createDate();
-    release.setUnknown(true);
-    release.setYear(java.math.BigInteger.valueOf(year));
-    return release;
-  }
-        
-  private static void sortAlbumOrder(final Music music) {
-    List<Artist> artists = com.bolsinga.web.Util.getArtistsUnmodifiable(music);
-    for (Artist a : artists) {
-      List<JAXBElement<Object>> albums = a.getAlbum(); // Modification required.
-      Collections.sort(albums, com.bolsinga.music.Compare.JAXB_ALBUM_ORDER_COMPARATOR);
+  private void sortAlbumOrder() {
+    for (Artist a : fArtistMap.values()) {
+      a.sortAlbums();
     }
   }
 
-  private static void sortAlbumsSongOrder(final Music music) {
-    List<Album> albums = com.bolsinga.web.Util.getAlbumsUnmodifiable(music);
-    for (Album a : albums) {
-      List<JAXBElement<Object>> songs = a.getSong(); // Modification required.
-      Collections.sort(songs, com.bolsinga.music.Compare.JAXB_SONG_ORDER_COMPARATOR);
+  private void sortAlbumsSongOrder() {
+    for (Album a : fAlbumMap.values()) {
+      a.sortSongs();
     }
   }
         
-  private static void setAlbumYears(final ObjectFactory objFactory, final Music music) {
-    List<Album> albums = com.bolsinga.web.Util.getAlbumsUnmodifiable(music);
+  private void setAlbumYears() {
     int albumYear, songYear;
-    com.bolsinga.music.data.xml.impl.Date date;
-    for (Album a : albums) {
-      if (a.getReleaseDate() != null) {
+    for (Album a : fAlbumMap.values()) {
+      if (a.getReleaseYear() != Album.UNKNOWN_YEAR) {
         // The album already has a date; don't change it.
         break;
       }
                         
-      albumYear = -1;
-      List<JAXBElement<Object>> songs = com.bolsinga.web.Util.getSongsUnmodifiable(a);
-      for (JAXBElement<Object> song : songs) {
-        date = ((Song)song.getValue()).getReleaseDate();
-        if (date != null) {
-          songYear = date.getYear().intValue();
-          if (albumYear == -1) {
-            albumYear = songYear;
-          } else {
-            if (songYear != albumYear) {
-              albumYear = -1;
-              break;
-            }
-          }
+      albumYear = Album.UNKNOWN_YEAR;
+      List<Song> songs = a.getSongs();
+      for (Song song : songs) {
+        songYear = song.getReleaseYear();
+        if (albumYear == Album.UNKNOWN_YEAR) {
+          albumYear = songYear;
         } else {
-          albumYear = -1;
+          if (songYear != albumYear) {
+            albumYear = Album.UNKNOWN_YEAR;
+            break;
+          }
         }
       }
                         
-      if (albumYear != -1) {
-        a.setReleaseDate(releaseYear(objFactory, albumYear));
+      if (albumYear != Album.UNKNOWN_YEAR) {
+        a.setReleaseYear(albumYear);
       }
     }
   }

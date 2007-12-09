@@ -1,6 +1,6 @@
 package com.bolsinga.diary;
 
-import com.bolsinga.diary.data.xml.impl.*;
+import com.bolsinga.diary.data.*;
 
 import com.bolsinga.web.*;
 
@@ -73,7 +73,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     TreeMap<Calendar, Vector<Entry>> result = new TreeMap<Calendar, Vector<Entry>>(Util.MONTH_COMPARATOR);
 
     for (Entry item : items) {
-      Calendar key = item.getTimestamp().toGregorianCalendar();
+      Calendar key = item.getTimestamp();
       Vector<Entry> list;
       if (result.containsKey(key)) {
         list = result.get(key);
@@ -108,7 +108,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   // This is used for the main page.
   public static Record createEntryRecord(final Entry entry, final Links links, final Encode encoder, final boolean upOneLevel) {
     return Record.createRecordPermalink(
-      Util.createNamedTarget(entry.getId(), Util.getTitle(entry)), 
+      Util.createNamedTarget(entry.getID(), Util.getTitle(entry)), 
       encoder.embedLinks(entry, upOneLevel),
       Util.createPermaLink(links.getLinkTo(entry)));
   }
@@ -154,7 +154,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
 
   private java.util.Map<String, IndexPair> createIndex() {
     java.util.Map<String, IndexPair> m = new TreeMap<String, IndexPair>();
-    for (Entry e : Util.getEntriesUnmodifiable(fDiary)) {
+    for (Entry e : fDiary.getEntries()) {
       String letter = fLinks.getPageFileName(e);
       if (!m.containsKey(letter)) {
         Object[] args = { letter };
@@ -166,7 +166,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   }
 
   private Collection<Vector<Entry>> createGroups() {
-    List<Entry> entries = Util.getEntriesCopy(fDiary);
+    List<Entry> entries = fDiary.getEntriesCopy();
     
     // Each group is per page, so they are grouped by Entry who have the same starting sort letter.
     // They are sorted within each group, as they are placed onto the Vector<Entry> in order.
@@ -210,7 +210,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
       
       int[] groupMonthTotals = new int[12];
       for (Entry entry : entryGroup) {
-        Calendar cal = entry.getTimestamp().toGregorianCalendar();
+        Calendar cal = entry.getTimestamp();
         groupMonthTotals[cal.get(Calendar.MONTH) - Calendar.JANUARY]++;
       }
       

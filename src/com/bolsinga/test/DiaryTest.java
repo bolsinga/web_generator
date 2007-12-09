@@ -1,7 +1,7 @@
 package com.bolsinga.test;
 
-import com.bolsinga.diary.data.xml.impl.*;
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.diary.data.*;
+import com.bolsinga.music.data.*;
 import com.bolsinga.settings.data.*;
 
 import com.bolsinga.diary.*;
@@ -35,8 +35,8 @@ public class DiaryTest implements Backgroundable {
         String diaryFile = args[1];
         String musicFile = args[2];
         
-        diary = Util.createDiary(diaryFile);
-        music = Util.createMusic(musicFile);
+        diary = com.bolsinga.diary.data.xml.Diary.create(diaryFile);
+        music = com.bolsinga.music.data.xml.Music.create(musicFile);
       } else {
         DiaryTest.usage();
       }
@@ -102,13 +102,13 @@ public class DiaryTest implements Backgroundable {
   }
 
   private static void generate(final String sourceFile, final String musicFile, final String outputDir) throws WebException {
-    Diary diary = Util.createDiary(sourceFile);
+    Diary diary = com.bolsinga.diary.data.xml.Diary.create(sourceFile);
 
     generate(diary, musicFile, outputDir);
   }
         
   private static void generate(final Diary diary, final String musicFile, final String outputDir) throws WebException {
-    Music music = Util.createMusic(musicFile);
+    Music music = com.bolsinga.music.data.xml.Music.create(musicFile);
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     Encode encoder = Encode.getEncode(music, diary);                
     DiaryTest web = new DiaryTest(backgrounder);

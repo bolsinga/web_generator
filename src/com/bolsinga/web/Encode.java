@@ -1,7 +1,7 @@
 package com.bolsinga.web;
 
-import com.bolsinga.music.data.xml.impl.*;
-import com.bolsinga.diary.data.xml.impl.*;
+import com.bolsinga.music.data.*;
+import com.bolsinga.diary.data.*;
 
 import java.io.*;
 import java.text.*;
@@ -225,18 +225,18 @@ class HashEncode extends Encode {
   
   HashEncode(final Music music, final Diary diary) {
     if (music != null) {
-      List<Show> shows = Util.getShowsUnmodifiable(music);
+      List<Show> shows = music.getShows();
       int numShows = (shows != null) ? shows.size() : 0;
-      List<Entry> entries = (diary != null) ? Util.getEntriesUnmodifiable(diary) : null;
+      List<Entry> entries = (diary != null) ? diary.getEntries() : null;
       int numDiary = (entries != null) ? entries.size() : 0;
       int numEncoded = numShows + numDiary;
       HashMap<String, HashSet<Object>> encodedMap = new HashMap<String, HashSet<Object>>(numEncoded * WORDS_PER_ENTRY);
       
-      List<Artist> artists = Util.getArtistsUnmodifiable(music);
+      List<Artist> artists = music.getArtists();
       int numArtist = (artists != null) ? artists.size() : 0;
-      List<Venue> venues = Util.getVenuesUnmodifiable(music);
+      List<Venue> venues = music.getVenues();
       int numVenue = (venues != null) ? venues.size() : 0;
-      List<Album> albums= Util.getAlbumsUnmodifiable(music);
+      List<Album> albums= music.getAlbums();
       int numAlbum = (albums != null) ? albums.size() : 0;
       int numEncoder = numArtist + numVenue + numAlbum;
 
@@ -329,7 +329,7 @@ class HashEncode extends Encode {
   }
 
   private void getMusicWords(final Music music, final HashMap<String, HashSet<Object>> encodedMap) {
-    List<Show> items = Util.getShowsUnmodifiable(music);
+    List<Show> items = music.getShows();
     
     for (Show item : items) {
       if (item.getComment() != null) {
@@ -340,7 +340,7 @@ class HashEncode extends Encode {
   
   private void getDiaryWords(final Diary diary, final HashMap<String, HashSet<Object>> encodedMap) {
     if (diary != null) {
-      Collection<Entry> items = Util.getEntriesUnmodifiable(diary);
+      Collection<Entry> items = diary.getEntries();
 
       for (Entry item : items) {
         addEncodedWords(item.getComment(), encodedMap, item, items.size());
@@ -358,7 +358,7 @@ class HashEncode extends Encode {
   }
 
   private void getArtistWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Artist> items = Util.getArtistsUnmodifiable(music);
+    List<Artist> items = music.getArtists();
 
     for (final Artist item : items) {
       EncodeItem encodeItem = new EncodeItem() {
@@ -372,7 +372,7 @@ class HashEncode extends Encode {
   }
 
   private void getVenueWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Venue> items = Util.getVenuesUnmodifiable(music);
+    List<Venue> items = music.getVenues();
 
     for (final Venue item : items) {
       if (!EncoderData.sStartsLowerCase.matcher(item.getName()).matches()) {
@@ -388,11 +388,11 @@ class HashEncode extends Encode {
   }
 
   private void getAlbumWords(final Music music, final HashMap<String, HashMap<Object, EncoderData>> encoderMap, final Links standardLinks, final Links upLinks) {
-    List<Album> items = Util.getAlbumsUnmodifiable(music);
+    List<Album> items = music.getAlbums();
 
     // Create a HashSet of all Artist names. If an Album has the same name as an
     //  Artist, prefer the Artist name over the Album.
-    List<Artist> artistList = Util.getArtistsUnmodifiable(music);
+    List<Artist> artistList = music.getArtists();
     HashSet<String> artists = new HashSet<String>(artistList.size());
     
     for (Artist artist : artistList) {

@@ -16,7 +16,7 @@ public class Util {
     }
   };
         
-  public static String getRSSDate(final GregorianCalendar c) {
+  public static String getRSSDate(final Calendar c) {
     return sRSSDateFormat.get().format(c.getTime());
   }
         

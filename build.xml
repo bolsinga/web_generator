@@ -206,35 +206,27 @@
   </javac>
 </target>
 
-<target name="itunes_converter" depends="plist_utilities, music">
+<target name="itunes" depends="plist_utilities">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
           <compilerarg value="${javac.lint}" compiler="javac1.5" />
           <src path="${src.dir}" />
-          <include name="com/bolsinga/itunes/converter/*.java" />
+          <include name="com/bolsinga/itunes/*.java" />
           <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
 
-<target name="music_converter" depends="music, itunes_converter, diary_binding">
-        <javac  destdir="${build.classes}"
-                debug="${javac.debug}"
-                deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
-          <src path="${src.dir}" />
-          <include name="com/bolsinga/shows/converter/*.java" />
-          <classpath refid="jaxb_binder_classpath" />
-        </javac>
-</target>
-
-<target name="music" depends="ical_gen, web, sql">
+<target name="music" depends="ical_gen, web, sql, itunes">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
           <compilerarg value="${javac.lint}" compiler="javac1.5" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/music/*.java" />
+          <include name="com/bolsinga/music/data/*.java" />
+          <include name="com/bolsinga/music/data/raw/*.java" />
+          <include name="com/bolsinga/music/data/xml/*.java" />
           <classpath refid="web_classpath" />
         </javac>
 </target>
@@ -246,6 +238,9 @@
           <compilerarg value="${javac.lint}" compiler="javac1.5" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/diary/*.java" />
+          <include name="com/bolsinga/diary/data/*.java" />
+          <include name="com/bolsinga/diary/data/raw/*.java" />
+          <include name="com/bolsinga/diary/data/xml/*.java" />
           <classpath refid="web_classpath" />
         </javac>
 </target>
@@ -285,7 +280,7 @@
         <pathelement path="${build.lib}/${ant.project.name}.jar" />
 </path>
 
-<target name="test" depends="music, diary, rss, music_converter">
+<target name="test" depends="music, diary, rss, itunes, diary_binding">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
@@ -314,19 +309,7 @@
   <pathelement path="${build.classes}" />
 </path>
 
-<target name="generateMusicXML" depends="music_converter">
-        <java classname="com.bolsinga.test.ConvertMusicTest" fork="true">
-                <arg value="${legacy_data.dir}shows.txt" />
-                <arg value="${legacy_data.dir}venuemap.txt" />
-                <arg value="${legacy_data.dir}bandsort.txt" />
-                <arg value="${legacy_data.dir}relations.txt" />
-                <arg value="${itunes.dir}iTunes Music Library.xml" />
-                <arg value="${data.dir}music.xml" />
-                <classpath refid="test_classpath" />
-        </java>
-</target>
-
-<target name="generateDiaryXML" depends="music_converter">
+<target name="generateDiaryXML" depends="music, itunes, diary_binding">
         <java classname="com.bolsinga.test.ConvertDiaryTest" fork="true">
                 <arg value="${legacy_data.dir}comments.txt" />
                 <arg value="${legacy_data.dir}statics.txt" />
@@ -414,8 +397,6 @@
     <classpath refid="test_classpath" />
   </java>
 </target>
-
-<target name="generateXML" depends="generateMusicXML, generateDiaryXML" />
 
 <!--
 The package target below used to also install the sql jar:

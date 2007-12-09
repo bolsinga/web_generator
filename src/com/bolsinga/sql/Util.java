@@ -58,7 +58,7 @@ public class Util {
     return c;
   }
 
-  public static String toDATETIME(final GregorianCalendar c) {
+  public static String toDATETIME(final Calendar c) {
     return sSQLDateTimeFormat.get().format(c.getTime());
   }
   

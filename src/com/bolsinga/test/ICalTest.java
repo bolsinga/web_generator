@@ -1,15 +1,13 @@
 package com.bolsinga.test;
 
 import com.bolsinga.ical.*;
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.music.data.*;
 import com.bolsinga.settings.data.*;
 
 import com.bolsinga.music.*;
 import com.bolsinga.web.*;
 
 import java.io.*;
-
-import javax.xml.bind.*;
 
 /*
  * http://www.imc.org/pdi/vcal-10.txt
@@ -39,7 +37,7 @@ public class ICalTest {
         settings = args[2];
         output = args[3];
 
-        music = Util.createMusic(musicFile);
+        music = com.bolsinga.music.data.xml.Music.create(musicFile);
       } else {
         ICalTest.usage();
       }

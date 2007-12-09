@@ -1,11 +1,10 @@
 package com.bolsinga.music;
 
-import com.bolsinga.music.data.xml.impl.*;
+import com.bolsinga.music.data.*;
 
 import com.bolsinga.web.*;
 
 import java.util.*;
-import javax.xml.bind.*;
 
 public class Lookup {
 
@@ -41,21 +40,21 @@ public class Lookup {
     String id = null;
     Collection<Show> showCollection = null;
     
-    for (Artist performer : Util.getArtistsUnmodifiable(music)) {
-      fArtistHTMLMap.put(performer.getId(), Util.toHTMLSafe(performer.getName()));
+    for (Artist performer : music.getArtists()) {
+      fArtistHTMLMap.put(performer.getID(), Util.toHTMLSafe(performer.getName()));
     }
 
-    for (Album album : Util.getAlbumsUnmodifiable(music)) {
-      fAlbumHTMLMap.put(album.getId(), Util.toHTMLSafe(album.getTitle()));
+    for (Album album : music.getAlbums()) {
+      fAlbumHTMLMap.put(album.getID(), Util.toHTMLSafe(album.getTitle()));
     }
 
-    for (Venue venue : Util.getVenuesUnmodifiable(music)) {
-      fVenueHTMLMap.put(venue.getId(), Util.toHTMLSafe(venue.getName()));
+    for (Venue venue : music.getVenues()) {
+      fVenueHTMLMap.put(venue.getID(), Util.toHTMLSafe(venue.getName()));
     }
 
-    List<Show> shows = Util.getShowsUnmodifiable(music);
+    List<Show> shows = music.getShows();
     for (Show show : shows) {
-      id = ((Venue)show.getVenue()).getId();
+      id = ((Venue)show.getVenue()).getID();
       if (fVenueMap.containsKey(id)) {
         showCollection = fVenueMap.get(id);
         showCollection.add(show);
@@ -75,9 +74,9 @@ public class Lookup {
         fCityMap.put(id, showCollection);
       }
 
-      List<JAXBElement<Object>> artists = show.getArtist();
-      for (JAXBElement<Object> artist : artists) {
-        id = ((Artist)artist.getValue()).getId();
+      List<Artist> artists = show.getArtists();
+      for (Artist artist : artists) {
+        id = artist.getID();
         if (fArtistMap.containsKey(id)) {
           showCollection = fArtistMap.get(id);
           showCollection.add(show);
@@ -88,44 +87,43 @@ public class Lookup {
         }
       }
     }
-    
-    List<Relation> relations = Util.getRelationsUnmodifiable(music);
+
+    List<Relation> relations = music.getRelations();
     for (Relation rel : relations) {
-      for (JAXBElement<Object> jo : rel.getMember()) {
-        Object o = jo.getValue();
+      for (Object o : rel.getMembers()) {
         if (o instanceof Artist) {
           Collection<Artist> rArtists;
-          id = ((Artist)o).getId();
+          id = ((Artist)o).getID();
           if (!fArtistRelationMap.containsKey(id)) {
             rArtists = new TreeSet<Artist>(Compare.ARTIST_COMPARATOR);
             fArtistRelationMap.put(id, rArtists);
           }
-          for (JAXBElement<Object> ja : rel.getMember()) {
-            Artist artist = (Artist)ja.getValue();
+          for (Object ja : rel.getMembers()) {
+            Artist artist = (Artist)ja;
             rArtists = fArtistRelationMap.get(id);
             rArtists.add(artist);
           }
         } else if (o instanceof Venue) {
           Collection<Venue> rVenues;
-          id = ((Venue)o).getId();
+          id = ((Venue)o).getID();
           if (!fVenueRelationMap.containsKey(id)) {
             rVenues = new TreeSet<Venue>(Compare.VENUE_COMPARATOR);
             fVenueRelationMap.put(id, rVenues);
           }
-          for (JAXBElement<Object> jv : rel.getMember()) {
-            Venue venue = (Venue)jv.getValue();
+          for (Object jv : rel.getMembers()) {
+            Venue venue = (Venue)jv;
             rVenues = fVenueRelationMap.get(id);
             rVenues.add(venue);
           }
         } else if (o instanceof Label) {
           Collection<Label> rLabels;
-          id = ((Label)o).getId();
+          id = ((Label)o).getID();
           if (!fLabelRelationMap.containsKey(id)) {
             rLabels = new TreeSet<Label>(Compare.LABEL_COMPARATOR);
             fLabelRelationMap.put(id, rLabels);
           }
-          for (JAXBElement<Object> jl : rel.getMember()) {
-            Label label = (Label)jl.getValue();
+          for (Object jl : rel.getMembers()) {
+            Label label = (Label)jl;
             rLabels = fLabelRelationMap.get(id);
             rLabels.add(label);
           }
@@ -137,23 +135,23 @@ public class Lookup {
   }
   
   public String getHTMLName(final Artist artist) {
-    return fArtistHTMLMap.get(artist.getId());
+    return fArtistHTMLMap.get(artist.getID());
   }
 
   public String getHTMLName(final Album album) {
-    return fAlbumHTMLMap.get(album.getId());
+    return fAlbumHTMLMap.get(album.getID());
   }
   
   public String getHTMLName(final Venue venue) {
-    return fVenueHTMLMap.get(venue.getId());
+    return fVenueHTMLMap.get(venue.getID());
   }
         
   public Collection<Show> getShows(final Artist artist) {
-    return fArtistMap.get(artist.getId());
+    return fArtistMap.get(artist.getID());
   }
         
   public Collection<Show> getShows(final Venue venue) {
-    return fVenueMap.get(venue.getId());
+    return fVenueMap.get(venue.getID());
   }
         
   public Collection<Show> getShows(final String city) {
@@ -161,15 +159,15 @@ public class Lookup {
   }
         
   public Collection<Artist> getRelations(final Artist artist) {
-    return fArtistRelationMap.get(artist.getId());
+    return fArtistRelationMap.get(artist.getID());
   }
         
   public Collection<Venue> getRelations(final Venue venue) {
-    return fVenueRelationMap.get(venue.getId());
+    return fVenueRelationMap.get(venue.getID());
   }
         
   public Collection<Label> getRelations(final Label label) {
-    return fLabelRelationMap.get(label.getId());
+    return fLabelRelationMap.get(label.getID());
   }
         
   public Collection<String> getCities() {
