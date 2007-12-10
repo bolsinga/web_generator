@@ -301,8 +301,15 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     Vector<Record> items = new Vector<Record>();
 
     // Note shows here is a Collection of Shows in a single month
-    String m = Util.toMonth(shows.firstElement().getDate());
-    A title = Util.createNamedTarget(m, m);
+    String name;
+    com.bolsinga.music.data.Date date = shows.firstElement().getDate();
+    String value = Util.toMonth(date);
+    if (!date.isUnknown() || (date.getMonth() != com.bolsinga.music.data.Date.UNKNOWN)) {
+      name = value;
+    } else {
+      name = Util.getResourceString("unknownmonthshort");
+    }
+    A title = Util.createNamedTarget(name, value);
     for (Show show : shows) {
       items.add(getShowRecord(show));
     }
