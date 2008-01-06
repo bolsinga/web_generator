@@ -172,14 +172,14 @@ public class Util {
   }
         
   public static A createInternalA(final String url, final String value, final String title) {
-    return internalA(url, value, title, CSS.INTERNAL);
+    return Util.createA(url, value, title, CSS.INTERNAL);
   }
   
   public static A createPermaLink(final String url) {
-    return internalA(url, Util.getResourceString("link"), Util.getResourceString("linktitle"), CSS.PERMANENT);
+    return Util.createA(url, Util.getResourceString("link"), Util.getResourceString("linktitle"), CSS.PERMANENT);
   }
   
-  private static A internalA(final String url, final String value, final String title, final String cssClass) {
+  private static A createA(final String url, final String value, final String title, final String cssClass) {
     A an = new A(url, value);
     an.setClass(cssClass);
     if (title != null) {
