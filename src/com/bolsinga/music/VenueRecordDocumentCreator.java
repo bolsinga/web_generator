@@ -188,7 +188,21 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     Vector<Record> items = new Vector<Record>();
 
     Location l = (Location)venue.getLocation();
-    items.add(Record.createRecordSimple(new StringElement(l.getCity() + ", " + l.getState())));
+    StringBuilder sb = new StringBuilder();
+    String s = l.getStreet();
+    if (s != null) {
+      sb.append(s);
+      sb.append(", ");
+    }
+    sb.append(l.getCity());
+    sb.append(", ");
+    sb.append(l.getState());
+    int zip = l.getZip();
+    if (zip != 0) {
+      sb.append(" ");
+      sb.append(Integer.toString(zip));
+    }
+    items.add(Record.createRecordSimple(new StringElement(sb.toString())));
     
     if (fLookup.getRelations(venue) != null) {
       items.add(getVenueRelations(venue));
