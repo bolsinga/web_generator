@@ -38,12 +38,8 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
             public Vector<Record> getRecords() {
               Vector<Record> records = new Vector<Record>();
               
-              if (!Util.getSettings().isForward()) {
-                for (Vector<Entry> item : getMonthlies(group)) {
-                  records.add(getEntryMonthRecordSection(item));
-                }
-              } else {
-                records.add(Record.createRecordSimple(Util.getisForwardMessage(getFilePath())));
+              for (Vector<Entry> item : getMonthlies(group)) {
+                records.add(getEntryMonthRecordSection(item));
               }
               
               return records;

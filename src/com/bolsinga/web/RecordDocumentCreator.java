@@ -111,34 +111,28 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     d.addElement(new H1().addElement(factory.getTitle()));
     d.addElement(Util.getLogo());
 
-    if (!Util.getSettings().isForward()) {
-      Navigator navigator = factory.getNavigator();
-      Vector<Element> e = new Vector<Element>();
-      e.add(navigator.getHomeNavigator());
-      e.add(navigator.getOverviewNavigator());
-      e.add(navigator.getArtistNavigator());
-      e.add(navigator.getShowNavigator());
-      e.add(navigator.getVenueNavigator());
-      e.add(navigator.getCityNavigator());
-      e.add(navigator.getTrackNavigator());
-      e.add(navigator.getAlbumNavigator());
-      e.add(navigator.getColophonNavigator());
-      
-      Div indexNavigator = Util.createDiv(CSS.ENTRY_INDEX);
-      indexNavigator.addElement(Util.createUnorderedList(e, navigator.getCurrentNavigator()));
-      
-      d.addElement(indexNavigator);
-    }
+    Navigator navigator = factory.getNavigator();
+    Vector<Element> e = new Vector<Element>();
+    e.add(navigator.getHomeNavigator());
+    e.add(navigator.getOverviewNavigator());
+    e.add(navigator.getArtistNavigator());
+    e.add(navigator.getShowNavigator());
+    e.add(navigator.getVenueNavigator());
+    e.add(navigator.getCityNavigator());
+    e.add(navigator.getTrackNavigator());
+    e.add(navigator.getAlbumNavigator());
+    e.add(navigator.getColophonNavigator());
+    
+    Div indexNavigator = Util.createDiv(CSS.ENTRY_INDEX);
+    indexNavigator.addElement(Util.createUnorderedList(e, navigator.getCurrentNavigator()));
+    
+    d.addElement(indexNavigator);
     
     return d;
   }
         
   private void writeDocument(final RecordFactory factory, final Document d) {
-    if (!Util.getSettings().isForward()) {
-      d.getBody().addElement(Util.getSettings().getPageFooter());
-    } else {
-      d.getBody().addElement(Util.getSettings().getForwardPageFooter());
-    }
+    d.getBody().addElement(Util.getSettings().getPageFooter());
     
     File f = new File(fOutputDir, factory.getFilePath());
     File parent = new File(f.getParent());

@@ -40,12 +40,8 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
             public Vector<Record> getRecords() {
               Vector<Record> records = new Vector<Record>();
               
-              if (!Util.getSettings().isForward()) {
-                for (Vector<Show> item : getMonthlies(group)) {
-                  records.add(getShowMonthRecordSection(item));
-                }
-              } else {
-                records.add(Record.createRecordSimple(Util.getisForwardMessage(getFilePath())));
+              for (Vector<Show> item : getMonthlies(group)) {
+                records.add(getShowMonthRecordSection(item));
               }
               
               return records;

@@ -627,17 +627,4 @@ public class Util {
                 
     return tracks;
   }
-  
-  public static Div getisForwardMessage(final String filePath) {
-      Div d = Util.createDiv(CSS.FORWARD);
-      
-      StringBuilder sb = new StringBuilder();
-      sb.append(Util.getSettings().getRoot());
-      sb.append("/");
-      sb.append(filePath);
-      
-      String link = sb.toString();
-      d.addElement(new StringElement(MessageFormat.format(Util.getResourceString("isForward"), new A(link, link).toString())));
-      return d;
-  }
 }

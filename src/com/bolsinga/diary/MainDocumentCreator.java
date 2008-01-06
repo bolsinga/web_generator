@@ -42,12 +42,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   }
 
   protected Meta getAdditionalMeta() {
-    GoogleMeta gm;
-    if (!Util.getSettings().isForward()) {
-      gm = Util.getSettings().getGoogleMeta();
-    } else {
-      gm = Util.getSettings().getForwardGoogleMeta();
-    }
+    GoogleMeta gm = Util.getSettings().getGoogleMeta();
     return new Meta().setContent(gm.getContent()).setName(gm.getName());
   }
 
@@ -132,14 +127,10 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   }
   
   private Element getMain() {
-    if (!Util.getSettings().isForward()) {
-      ElementContainer ec = new ElementContainer();
-      ec.addElement(Util.convertToUnOrderedList(fDiary.getHeader()));
-      ec.addElement(getDiary());
-      return ec;
-    } else {
-      return Util.getisForwardMessage(getFilePath());
-    }
+    ElementContainer ec = new ElementContainer();
+    ec.addElement(Util.convertToUnOrderedList(fDiary.getHeader()));
+    ec.addElement(getDiary());
+    return ec;
   }
 
   private static Div createStaticsOffsite(final String title, final String data) {

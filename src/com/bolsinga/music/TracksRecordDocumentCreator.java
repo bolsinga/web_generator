@@ -35,12 +35,8 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
             public Vector<Record> getRecords() {
               Vector<Record> records = new Vector<Record>();
               
-              if (!Util.getSettings().isForward()) {
-                for (Album item : group) {
-                  records.add(getAlbumRecordSection(item));
-                }
-              } else {
-                records.add(Record.createRecordSimple(Util.getisForwardMessage(getFilePath())));
+              for (Album item : group) {
+                records.add(getAlbumRecordSection(item));
               }
               
               return records;

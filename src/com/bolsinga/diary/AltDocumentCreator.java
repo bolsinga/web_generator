@@ -65,14 +65,6 @@ public class AltDocumentCreator extends DiaryRecordDocumentCreator {
   }
 
   private Element getAlt() {
-    if (!Util.getSettings().isForward()) {
-      return getRealAlt();
-    } else {
-      return Util.getisForwardMessage(getFilePath());
-    }
-  }
-  
-  private Element getRealAlt() {
     // Add data from diary colophon
     UL list = Util.convertToUnOrderedList(fDiary.getColophon());
     

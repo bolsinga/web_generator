@@ -24,7 +24,6 @@ public class CSS {
   private static final String LONG_TABLE_FOOTER     = "table_footer";
   private static final String LONG_RECORD_SECTION   = "record_section";
   private static final String LONG_RECORD_ITEM_LIST = "record_item_list";
-  private static final String LONG_FORWARD          = "forward";
 
   private static final String SHORT_ENTRY_INDEX      = "a";
   private static final String SHORT_ENTRY_INDEX_SUB  = "b";
@@ -43,7 +42,6 @@ public class CSS {
   private static final String SHORT_TABLE_FOOTER     = "o";
   private static final String SHORT_RECORD_SECTION   = "p";
   private static final String SHORT_RECORD_ITEM_LIST = "q";
-  private static final String SHORT_FORWARD          = "r";
 
   public static String ENTRY_INDEX;
   public static String ENTRY_INDEX_SUB;
@@ -62,7 +60,6 @@ public class CSS {
   public static String TABLE_FOOTER;
   public static String RECORD_SECTION;
   public static String RECORD_ITEM_LIST;
-  public static String FORWARD;
   
   private static final HashMap<String, String> sCSSMapping = new HashMap<String, String>();
 
@@ -92,7 +89,6 @@ public class CSS {
     sCSSMapping.put(LONG_TABLE_FOOTER,     debug ? LONG_TABLE_FOOTER     : SHORT_TABLE_FOOTER);
     sCSSMapping.put(LONG_RECORD_SECTION,   debug ? LONG_RECORD_SECTION   : SHORT_RECORD_SECTION);
     sCSSMapping.put(LONG_RECORD_ITEM_LIST, debug ? LONG_RECORD_ITEM_LIST : SHORT_RECORD_ITEM_LIST);
-    sCSSMapping.put(LONG_FORWARD,          debug ? LONG_FORWARD          : SHORT_FORWARD);
 
     ENTRY_INDEX      = sCSSMapping.get(LONG_ENTRY_INDEX);
     ENTRY_INDEX_SUB  = sCSSMapping.get(LONG_ENTRY_INDEX_SUB);
@@ -111,7 +107,6 @@ public class CSS {
     TABLE_FOOTER     = sCSSMapping.get(LONG_TABLE_FOOTER);
     RECORD_SECTION   = sCSSMapping.get(LONG_RECORD_SECTION);
     RECORD_ITEM_LIST = sCSSMapping.get(LONG_RECORD_ITEM_LIST);
-    FORWARD          = sCSSMapping.get(LONG_FORWARD);
   }
   
   public static void install(final String srcFileName, final String outputDir) throws WebException {

@@ -14,10 +14,6 @@ import java.util.*;
 
 public class ICal {
   public static void generate(final Music music, final String outputDir) throws WebException {
-    if (Util.getSettings().isForward()) {
-      return;
-    }
-    
     String name = Util.getSettings().getIcalName();
                 
     StringBuilder sb = new StringBuilder();
