@@ -188,7 +188,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     Vector<Record> items = new Vector<Record>();
 
     Location l = (Location)venue.getLocation();
-    items.add(Record.createRecordSimple(new StringElement(fLookup.getHTMLName(venue) + ", " + l.getCity() + ", " + l.getState())));
+    items.add(Record.createRecordSimple(new StringElement(l.getCity() + ", " + l.getState())));
     
     if (fLookup.getRelations(venue) != null) {
       items.add(getVenueRelations(venue));
@@ -201,7 +201,14 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
     }
 
-    A title = Util.createNamedTarget(venue.getID(), fLookup.getHTMLName(venue));
+    String venueLocName = null;
+    String url = l.getWeb();
+    if (url != null) {
+      venueLocName = Util.createExternalA(url, fLookup.getHTMLName(venue)).toString();
+    } else {
+      venueLocName = fLookup.getHTMLName(venue);
+    }
+    A title = Util.createNamedTarget(venue.getID(), venueLocName);
     
     return Record.createRecordSection(title, items);
   }
