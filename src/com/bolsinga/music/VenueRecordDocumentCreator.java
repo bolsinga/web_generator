@@ -184,34 +184,11 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       getVenueShowListing(venue, show));
   }
   
-//  http://maps.google.com/maps?f=q&hl=en&q=603+Red+River+Austin+TX
   private Record getVenueRecordSection(final Venue venue) {
     Vector<Record> items = new Vector<Record>();
 
     Location l = (Location)venue.getLocation();
-    StringBuilder val = new StringBuilder();
-    StringBuilder map = new StringBuilder();
-    map.append("http://maps.google.com/maps?f=q&hl=en&q=");
-    String s = l.getStreet();
-    if (s != null) {
-      val.append(s);
-      val.append(", ");
-      
-      map.append(s.replaceAll(" ", "+"));
-      map.append("+");
-    }
-    val.append(l.getCity());
-    map.append(l.getCity().replaceAll(" ", "+"));
-    map.append("+");
-    val.append(", ");
-    val.append(l.getState());
-    map.append(l.getState());
-    int zip = l.getZip();
-    if (zip != 0) {
-      val.append(" ");
-      val.append(Integer.toString(zip));
-    }
-    items.add(Record.createRecordSimple(Util.createExternalA(map.toString(), val.toString())));
+    items.add(Record.createRecordSimple(Util.createExternalA(Util.getGoogleMapsURL(l), Util.getCannonicalAddress(l))));
     
     if (fLookup.getRelations(venue) != null) {
       items.add(getVenueRelations(venue));

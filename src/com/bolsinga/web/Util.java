@@ -631,4 +631,37 @@ public class Util {
                 
     return tracks;
   }
+  
+  public static String getCannonicalAddress(final Location l) {
+    StringBuilder val = new StringBuilder();
+    String s = l.getStreet();
+    if (s != null) {
+      val.append(s);
+      val.append(", ");
+    }
+    val.append(l.getCity());
+    val.append(", ");
+    val.append(l.getState());
+    int zip = l.getZip();
+    if (zip != 0) {
+      val.append(" ");
+      val.append(Integer.toString(zip));
+    }
+    return val.toString();
+  }
+  
+  // http://maps.google.com/maps?f=q&hl=en&q=603+Red+River+Austin+TX
+  public static String getGoogleMapsURL(final Location l) {
+    StringBuilder map = new StringBuilder();
+    map.append("http://maps.google.com/maps?f=q&hl=en&q=");
+    String s = l.getStreet();
+    if (s != null) {
+      map.append(s.replaceAll(" ", "+"));
+      map.append("+");
+    }
+    map.append(l.getCity().replaceAll(" ", "+"));
+    map.append("+");
+    map.append(l.getState());
+    return map.toString();
+  }
 }
