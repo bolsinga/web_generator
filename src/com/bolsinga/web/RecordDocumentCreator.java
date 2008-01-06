@@ -11,6 +11,23 @@ public abstract class RecordDocumentCreator implements Backgroundable {
 
   protected final Links fLinks;
   private final String fOutputDir;
+  private static String fSiteRoot;
+  
+  static {
+    String rootURL = Util.getSettings().getRoot();
+    fSiteRoot = rootURL;
+    try {
+      String[] parts = new java.net.URL(rootURL).getHost().split("\\.");
+      if (parts.length >= 2) {
+        StringBuilder sb = new StringBuilder(parts[parts.length - 2]);
+        sb.append(".");
+        sb.append(parts[parts.length - 1]);
+        fSiteRoot = sb.toString();
+      }
+    } catch (java.net.MalformedURLException e) {
+      // drop it.
+    }
+  }
         
   protected RecordDocumentCreator(final Links links, final String outputDir) {
     fLinks = links;
@@ -50,13 +67,18 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return null;
   }
   
+  protected String getSitePageTitle(final String factoryTitle) {
+    Object[] args = { fSiteRoot, factoryTitle };
+    return MessageFormat.format(Util.getResourceString("sitepagetitle"), args);
+  }
+  
   private Document createDocument(final RecordFactory factory) {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
                 
     d.getHtml().setPrettyPrint(Util.getPrettyOutput());
                 
     d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
-    d.appendTitle(factory.getTitle());
+    d.appendTitle(getSitePageTitle(factory.getTitle()));
                 
     Head h = d.getHead();
     h.setPrettyPrint(Util.getPrettyOutput());

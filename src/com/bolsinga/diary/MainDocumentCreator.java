@@ -50,6 +50,10 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     }
     return new Meta().setContent(gm.getContent()).setName(gm.getName());
   }
+
+  protected String getSitePageTitle(final String factoryTitle) {
+    return factoryTitle;
+  }
   
   protected void create(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
