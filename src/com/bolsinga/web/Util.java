@@ -653,7 +653,7 @@ public class Util {
   // http://maps.google.com/maps?f=q&hl=en&q=603+Red+River+Austin+TX
   public static String getGoogleMapsURL(final Location l) {
     StringBuilder map = new StringBuilder();
-    map.append("http://maps.google.com/maps?f=q&hl=en&q=");
+    map.append("http://maps.google.com/maps?f=q&amp;hl=en&amp;q=");
     String s = l.getStreet();
     if (s != null) {
       map.append(s.replaceAll(" ", "+"));
