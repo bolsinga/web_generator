@@ -201,14 +201,13 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
     }
 
-    String venueLocName = null;
+    A title;
     String url = l.getWeb();
     if (url != null) {
-      venueLocName = Util.createExternalA(url, fLookup.getHTMLName(venue)).toString();
+      title = Util.createExternalAWithName(url, fLookup.getHTMLName(venue), venue.getID());
     } else {
-      venueLocName = fLookup.getHTMLName(venue);
+      title = Util.createNamedTarget(venue.getID(), fLookup.getHTMLName(venue));
     }
-    A title = Util.createNamedTarget(venue.getID(), venueLocName);
     
     return Record.createRecordSection(title, items);
   }

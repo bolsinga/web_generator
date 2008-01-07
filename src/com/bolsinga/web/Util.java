@@ -175,6 +175,12 @@ public class Util {
     return Util.createA(url, value, title, CSS.INTERNAL);
   }
   
+  public static A createExternalAWithName(final String url, final String value, final String name) {
+    A result = Util.createExternalA(url, value);
+    result.setName(name);
+    return result;
+  }
+  
   public static A createExternalA(final String url, final String value) {
     return Util.createA(url, value, Util.getResourceString("externallink"), CSS.EXTERNAL);
   }
