@@ -239,6 +239,7 @@
           <src path="${src.dir}" />
           <include name="com/bolsinga/diary/*.java" />
           <include name="com/bolsinga/diary/data/*.java" />
+          <include name="com/bolsinga/diary/data/json/*.java" />
           <include name="com/bolsinga/diary/data/raw/*.java" />
           <include name="com/bolsinga/diary/data/xml/*.java" />
           <classpath refid="web_classpath" />

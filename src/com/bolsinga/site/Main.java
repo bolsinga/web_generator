@@ -44,6 +44,8 @@ public class Main implements Backgroundable {
         main.generateSite(diaryFile, musicFile, output, cssFile);
       } else if (command.equals("site")) {
         main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output, cssFile);
+      } else if (command.equals("json")) {
+        main.generateJSON(itunes, shows, venue, sort, relations, comments, statics);
       } else {
         Main.usage(args, "Invalid action");
       }
@@ -86,6 +88,13 @@ public class Main implements Backgroundable {
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
 
     generateSite(music, diary, output, cssFile);
+  }
+  
+  private void generateJSON(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics) throws Exception {
+//    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
+
+    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
+    com.bolsinga.diary.data.json.Diary.export(diary, "diary.json");
   }
 
   private void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
