@@ -5,16 +5,25 @@ import java.text.*;
 import java.util.*;
 
 import org.json.*;
+import com.twolattes.json.*;
 
+@Entity
 public class Diary implements com.bolsinga.diary.data.Diary {
-  private static final String TIMESTAMP = "timestamp";
-  private static final String TITLE     = "title";
-  private static final String STATIC    = "static";
-  private static final String HEADER    = "header";
-  private static final String FRIENDS   = "friends";
-  private static final String COLOPHON  = "colophon";
-  private static final String ENTRIES   = "entries";
-
+  @Value
+  private String timestamp;
+  @Value
+  private String title;
+  @Value
+  private String statics;
+  @Value
+  private String header;
+  @Value
+  private String friends;
+  @Value
+  private String colophon;
+  @Value
+  private List<com.bolsinga.diary.data.json.Entry> entries;
+  
   private static final ThreadLocal<DateFormat> sJSONTimeFormat = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
       DateFormat result = DateFormat.getDateInstance();
@@ -22,22 +31,24 @@ public class Diary implements com.bolsinga.diary.data.Diary {
       return result;
     }
   };
-  
-  private final JSONObject fJSON;
-  
-  public static void export(final com.bolsinga.diary.data.Diary diary, final String outputFile) throws com.bolsinga.web.WebException {
-    JSONObject json = null;
+    
+  public static void export(final com.bolsinga.diary.data.Diary diary, final String outputFile) throws com.bolsinga.web.WebException {    
+    com.bolsinga.diary.data.json.Diary jsonDiary = null;
     if (diary instanceof com.bolsinga.diary.data.json.Diary) {
-      json = ((com.bolsinga.diary.data.json.Diary)diary).fJSON;
+      jsonDiary = (com.bolsinga.diary.data.json.Diary)diary;
     } else {
-      try {
-        json = Diary.export(diary);
-      } catch (JSONException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't convert diary: ");
-        sb.append(diary.getTitle());
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
+      jsonDiary = new Diary(diary);
+    }
+
+    JSONObject json = null;
+    Marshaller<com.bolsinga.diary.data.json.Diary> m = Marshaller.create(com.bolsinga.diary.data.json.Diary.class);
+    try {
+      json = m.marshall(jsonDiary);
+    } catch (JSONException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't convert diary: ");
+      sb.append(diary.getTitle());
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
     
     FileWriter fw = null;
@@ -73,36 +84,10 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     }
   }
   
-  static JSONObject export(final com.bolsinga.diary.data.Diary diary) throws JSONException {
-    JSONObject json = new JSONObject();
-
-    Diary.setCalendar(json, TIMESTAMP, diary.getTimestamp());
-    json.put(TITLE, diary.getTitle());
-    json.put(STATIC, diary.getStatic());
-    json.put(HEADER, diary.getHeader());
-    json.put(FRIENDS, diary.getFriends());
-    json.put(COLOPHON, diary.getColophon());
-    
-    JSONArray array = new JSONArray();
-    for (com.bolsinga.diary.data.Entry entry : diary.getEntries()) {
-      array.put(Entry.export(entry));
-    }
-    json.put(ENTRIES, array);
-    
-    return json;
-  }
-  
-  static GregorianCalendar getCalendar(final JSONObject json, final String key) {
-    String ts = null;
-    try {
-      ts = json.getString(key);
-    } catch (JSONException e) {
-      System.err.println(e);
-      ts = null;
-    }
+  static GregorianCalendar getCalendar(final String jsonCalendar) {
     java.util.Date d = null;
     try {
-      d = sJSONTimeFormat.get().parse(ts);
+      d = sJSONTimeFormat.get().parse(jsonCalendar);
     } catch (ParseException e) {
       System.err.println("Exception: " + e);
       e.printStackTrace();
@@ -113,116 +98,83 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     return c;
   }
   
-  static void setCalendar(final JSONObject json, final String key, final GregorianCalendar cal) {
-    try {
-      json.put(key, sJSONTimeFormat.get().format(cal.getTime()));
-    } catch (JSONException e) {
-      System.err.println(e);
-    }
+  static String setCalendar(final GregorianCalendar cal) {
+    return sJSONTimeFormat.get().format(cal.getTime());
   }
   
-  private Diary(final JSONObject json) {
-    fJSON = json;
+  private Diary() {
+  
   }
+
+  private Diary(final com.bolsinga.diary.data.Diary diary) {
+    setTimestamp(diary.getTimestamp());
+    title = diary.getTitle();
+    statics = diary.getStatic();
+    header = diary.getHeader();
+    friends = diary.getFriends();
+    colophon = diary.getColophon();
+    
+    List<? extends com.bolsinga.diary.data.Entry> srcEntries = diary.getEntries();
+    
+    entries = new ArrayList<com.bolsinga.diary.data.json.Entry>(srcEntries.size());
+    for (com.bolsinga.diary.data.Entry entry : srcEntries) {
+      entries.add(Entry.create(entry));
+    }
+}
   
   public GregorianCalendar getTimestamp() {
-    return Diary.getCalendar(fJSON, TIMESTAMP);
+    return Diary.getCalendar(timestamp);
   }
   
   public void setTimestamp(final GregorianCalendar timestamp) {
-    Diary.setCalendar(fJSON, TIMESTAMP, timestamp);
+    this.timestamp = Diary.setCalendar(timestamp);
   }
   
   public String getTitle() {
-    try {
-      return fJSON.getString(TITLE);
-    } catch (JSONException e) {
-      System.err.println(e);
-      return null;
-    }
+    return title;
   }
   
   public void setTitle(final String title) {
-    try {
-      fJSON.put(TITLE, title);
-    } catch (JSONException e) {
-      System.err.println(e);
-    }
+    this.title = title;
   }
   
   public String getStatic() {
-    try {
-      return fJSON.getString(STATIC);
-    } catch (JSONException e) {
-      System.err.println(e);
-      return null;
-    }
+    return statics;
   }
   
   public void setStatic(final String staticData) {
-    try {
-      fJSON.put(STATIC, staticData);
-    } catch (JSONException e) {
-      System.err.println(e);
-    }
+    this.statics = staticData;
   }
   
   public String getHeader() {
-    try {
-      return fJSON.getString(HEADER);
-    } catch (JSONException e) {
-      System.err.println(e);
-      return null;
-    }
+    return header;
   }
   
   public void setHeader(final String header) {
-    try {
-      fJSON.put(HEADER, header);
-    } catch (JSONException e) {
-      System.err.println(e);
-    }
+    this.header = header;
   }
   
   public String getFriends() {
-    try {
-      return fJSON.getString(FRIENDS);
-    } catch (JSONException e) {
-      System.err.println(e);
-      return null;
-    }
+    return friends;
   }
   
   public void setFriends(final String friends) {
-    try {
-      fJSON.put(FRIENDS, friends);
-    } catch (JSONException e) {
-      System.err.println(e);
-    }
+    this.friends = friends;
   }
   
   public String getColophon() {
-    try {
-      return fJSON.getString(COLOPHON);
-    } catch (JSONException e) {
-      System.err.println(e);
-      return null;
-    }
+    return colophon;
   }
   
   public void setColophon(final String colophon) {
-    try {
-      fJSON.put(COLOPHON, colophon);
-    } catch (JSONException e) {
-      System.err.println(e);
-    }
+    this.colophon = colophon;
   }
   
-  public List<? extends Entry> getEntries() {
-    return null;
+  public List<? extends com.bolsinga.diary.data.Entry> getEntries() {
+    return Collections.unmodifiableList(entries);
   }
   
-  public List<? extends Entry> getEntriesCopy() {
-    return null;
+  public List<? extends com.bolsinga.diary.data.Entry> getEntriesCopy() {
+    return new ArrayList<com.bolsinga.diary.data.Entry>(entries);
   }
 }

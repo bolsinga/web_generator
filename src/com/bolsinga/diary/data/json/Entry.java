@@ -3,71 +3,51 @@ package com.bolsinga.diary.data.json;
 import java.util.*;
 
 import org.json.*;
+import com.twolattes.json.*;
 
+@Entity
 public class Entry implements com.bolsinga.diary.data.Entry {
-  private static final String ID        = "id";
-  private static final String TIMESTAMP = "timestamp";
-  private static final String COMMENT   = "comment";
+  @Value
+  private String id;
+  @Value
+  private String timestamp;
+  @Value
+  private String comment;
   
-  private final JSONObject fJSON;
-
-  static JSONObject export(final com.bolsinga.diary.data.Entry srcEntry) throws JSONException {
-    JSONObject json = new JSONObject();
-    
-    json.put(ID, srcEntry.getID());
-    Diary.setCalendar(json, TIMESTAMP, srcEntry.getTimestamp());
-    json.put(COMMENT, srcEntry.getComment());
-      
-    return json;
+  public static Entry create(com.bolsinga.diary.data.Entry entry) {
+    return new Entry(entry);
   }
   
-  private Entry(final JSONObject json) {
-    fJSON = json;
+  private Entry() {
   }
   
-  JSONObject getJSON() {
-    return fJSON;
+  private Entry(final com.bolsinga.diary.data.Entry entry) {
+    setTimestamp(entry.getTimestamp());
+    id = entry.getID();
+    comment = entry.getComment();
   }
   
   public String getComment() {
-    try {
-      return fJSON.getString(COMMENT);
-    } catch (JSONException e) {
-      System.err.println(e);
-      return null;
-    }
+    return comment;
   }
     
   public void setComment(final String comment) {
-    try {
-      fJSON.put(COMMENT, comment);
-    } catch (JSONException e) {
-      System.err.println(e);
-    }
+    this.comment = comment;
   }
   
   public GregorianCalendar getTimestamp() {
-    return Diary.getCalendar(fJSON, TIMESTAMP);
+    return Diary.getCalendar(timestamp);
   }
   
   public void setTimestamp(final GregorianCalendar timestamp) {
-    Diary.setCalendar(fJSON, TIMESTAMP, timestamp);
+    this.timestamp = Diary.setCalendar(timestamp);
   }
   
   public String getID() {
-    try {
-      return fJSON.getString(ID);
-    } catch (JSONException e) {
-      System.err.println(e);
-      return null;
-    }
+    return id;
   }
   
   public void setID(final String id) {
-    try {
-      fJSON.put(ID, id);
-    } catch (JSONException e) {
-      System.err.println(e);
-    }
+    this.id = id;
   }
 }
