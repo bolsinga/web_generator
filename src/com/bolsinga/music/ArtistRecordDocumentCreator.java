@@ -107,7 +107,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Collection<Vector<Artist>> getGroups() {
-    List<Artist> artists = fMusic.getArtistsCopy();
+    List<? extends Artist> artists = fMusic.getArtistsCopy();
     // Each group is per page, so they are grouped by Artist who have the same starting sort letter.
     HashMap<String, Vector<Artist>> result = new HashMap<String, Vector<Artist>>(artists.size());
     
@@ -130,7 +130,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Table getStats() {
-    List<Artist> items = fMusic.getArtistsCopy();
+    List<? extends Artist> items = fMusic.getArtistsCopy();
     Collections.sort(items, Compare.getCompare(fMusic).ARTIST_STATS_COMPARATOR);
 
     int index = 0;

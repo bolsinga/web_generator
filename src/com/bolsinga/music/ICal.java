@@ -72,7 +72,7 @@ public class ICal {
   }
         
   private static void generate(final Music music, final String name, final Writer w) throws IOException {                
-    List<Show> items = music.getShowsCopy();
+    List<? extends Show> items = music.getShowsCopy();
     Collections.sort(items, Compare.SHOW_COMPARATOR);
                     
     VCalendar cal = new VCalendar(name);

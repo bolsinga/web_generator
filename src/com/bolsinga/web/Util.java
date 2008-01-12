@@ -369,7 +369,7 @@ public class Util {
   }
  
   public static List<Object> getRecentItems(final int count, final Music music, final Diary diary) {
-    List<Show> shows = music.getShowsCopy();
+    List<? extends Show> shows = music.getShowsCopy();
     Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(shows);
 

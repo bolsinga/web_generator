@@ -91,7 +91,7 @@ public class EncodeTest {
   }
 
   private static void generateMusic(final Music music, final Encode encoder, final String outputDir) throws WebException {
-    List<Show> items = music.getShows();
+    List<? extends Show> items = music.getShows();
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;

@@ -107,7 +107,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Collection<Vector<Venue>> getGroups() {
-    List<Venue> venues = fMusic.getVenuesCopy();
+    List<? extends Venue> venues = fMusic.getVenuesCopy();
     // Each group is per page, so they are grouped by Venue who have the same starting sort letter.
     HashMap<String, Vector<Venue>> result = new HashMap<String, Vector<Venue>>(venues.size());
     
@@ -130,7 +130,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private Table getStats() {
-    List<Venue> items = fMusic.getVenuesCopy();
+    List<? extends Venue> items = fMusic.getVenuesCopy();
     Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
 
     int index = 0;

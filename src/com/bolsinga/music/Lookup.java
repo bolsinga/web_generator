@@ -52,7 +52,7 @@ public class Lookup {
       fVenueHTMLMap.put(venue.getID(), Util.toHTMLSafe(venue.getName()));
     }
 
-    List<Show> shows = music.getShows();
+    List<? extends Show> shows = music.getShows();
     for (Show show : shows) {
       id = ((Venue)show.getVenue()).getID();
       if (fVenueMap.containsKey(id)) {
@@ -88,7 +88,7 @@ public class Lookup {
       }
     }
 
-    List<Relation> relations = music.getRelations();
+    List<? extends Relation> relations = music.getRelations();
     for (Relation rel : relations) {
       for (Object o : rel.getMembers()) {
         if (o instanceof Artist) {

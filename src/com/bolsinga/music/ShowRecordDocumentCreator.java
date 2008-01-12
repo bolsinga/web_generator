@@ -132,7 +132,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Collection<Vector<Show>> createGroups() {
-    List<Show> shows = fMusic.getShowsCopy();
+    List<? extends Show> shows = fMusic.getShowsCopy();
     // Each group is per page, so they are grouped by Show who have the same starting sort letter.
     TreeMap<String, Vector<Show>> result = new TreeMap<String, Vector<Show>>();
     

@@ -131,7 +131,7 @@ public class Compare {
   public static void tidy(final Music music) {
   // TODO This will not work!
     // This is run during testing only, so modificaiton is expected.
-    List<Artist> artists = music.getArtists();
+    List<? extends Artist> artists = music.getArtists();
     Collections.sort(artists, Compare.ARTIST_ID_COMPARATOR);
     for (Artist a : artists) {
       Collections.sort(a.getAlbums(), Compare.ALBUM_ID_COMPARATOR);

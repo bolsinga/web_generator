@@ -102,7 +102,7 @@ public class Main implements Backgroundable {
     HashSet<String> bands = new HashSet<String>();
     boolean displayed = false;
     
-    List<com.bolsinga.music.data.Artist> artists = music.getArtists();
+    List<? extends com.bolsinga.music.data.Artist> artists = music.getArtists();
     for (com.bolsinga.music.data.Artist artist : artists) {
       s = artist.getName().toLowerCase();
       if (bands.contains(s)) {
