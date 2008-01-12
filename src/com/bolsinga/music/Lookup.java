@@ -74,7 +74,7 @@ public class Lookup {
         fCityMap.put(id, showCollection);
       }
 
-      List<Artist> artists = show.getArtists();
+      List<? extends Artist> artists = show.getArtists();
       for (Artist artist : artists) {
         id = artist.getID();
         if (fArtistMap.containsKey(id)) {

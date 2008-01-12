@@ -170,11 +170,11 @@ public class Artist implements com.bolsinga.music.data.Artist {
     fComment = comment;
   }
   
-  public List<com.bolsinga.music.data.Album> getAlbums() {
+  public List<? extends com.bolsinga.music.data.Album> getAlbums() {
     return Collections.unmodifiableList(fAlbums);
   }
   
-  public List<com.bolsinga.music.data.Album> getAlbumsCopy() {
+  public List<? extends com.bolsinga.music.data.Album> getAlbumsCopy() {
     return new ArrayList<com.bolsinga.music.data.Album>(fAlbums);
   }
   

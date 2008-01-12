@@ -31,7 +31,7 @@ public class Show implements com.bolsinga.music.data.Show {
     }
   }
   
-  public List<com.bolsinga.music.data.Artist> getArtists() {
+  public List<? extends com.bolsinga.music.data.Artist> getArtists() {
     return Collections.unmodifiableList(fArtists);
   }
   

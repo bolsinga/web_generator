@@ -248,8 +248,8 @@ public class Compare {
         
   public static final Comparator<Artist> ARTIST_ALBUMS_COMPARATOR = new Comparator<Artist>() {
       public int compare(final Artist r1, final Artist r2) {
-        List<Album> albums1 = r1.getAlbums();
-        List<Album> albums2 = r2.getAlbums();
+        List<? extends Album> albums1 = r1.getAlbums();
+        List<? extends Album> albums2 = r2.getAlbums();
         
         int albumsCount1 = (albums1 != null) ? albums1.size() : 0;
         int albumsCount2 = (albums2 != null) ? albums2.size() : 0;

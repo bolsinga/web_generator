@@ -25,6 +25,6 @@ public interface Album {
   public Label getLabel();
   public String getComment();
   public void setComment(final String comment);
-  public List<Song> getSongs();
-  public List<Song> getSongsCopy();
+  public List<? extends Song> getSongs();
+  public List<? extends Song> getSongsCopy();
 }

@@ -623,10 +623,10 @@ public class Util {
 
   public static int trackCount(final Artist artist) {
     int tracks = 0;
-    List<Album> albums = artist.getAlbums();
+    List<? extends Album> albums = artist.getAlbums();
     if (albums != null) {
       for (Album album : albums) {
-        List<Song> songs = album.getSongs();
+        List<? extends Song> songs = album.getSongs();
         for (Song song : songs) {
           if (song.getPerformer().equals(artist)) {
             tracks++;

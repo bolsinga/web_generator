@@ -261,7 +261,7 @@ public class MySQLImporter {
   }
 
   private static void importSongs(final Statement stmt, final Album album) throws SQLException {
-    List<Song> items = album.getSongs();
+    List<? extends Song> items = album.getSongs();
     for (Song item : items) {
       try {
         importSong(stmt, item, album);
@@ -393,7 +393,7 @@ public class MySQLImporter {
   }
 
   private static long importPerformance(final Statement stmt, final Show show) throws SQLException {
-    List<Artist> items = show.getArtists();
+    List<? extends Artist> items = show.getArtists();
     int playOrder = 1;
 
     String[] rowItems = new String[3];

@@ -187,7 +187,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     Vector<Element> e = new Vector<Element>();
     
     StringBuilder sb = new StringBuilder();
-    Iterator<Artist> bi = show.getArtists().iterator();
+    Iterator<? extends Artist> bi = show.getArtists().iterator();
     while (bi.hasNext()) {
       Artist performer = bi.next();
       
@@ -224,7 +224,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   private Vector<Element> getTracks(final Artist artist) {
     Vector<Element> e = new Vector<Element>();
 
-    List<Album> albums = artist.getAlbumsCopy();
+    List<? extends Album> albums = artist.getAlbumsCopy();
     Collections.sort(albums, Compare.ALBUM_ORDER_COMPARATOR);
 
     for (Album album : albums) {

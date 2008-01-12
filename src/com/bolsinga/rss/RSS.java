@@ -61,7 +61,7 @@ public class RSS {
     sb.append(com.bolsinga.web.Util.toString(show.getDate()));
     sb.append(" - ");
 
-    Iterator<Artist> i = show.getArtists().iterator();
+    Iterator<? extends Artist> i = show.getArtists().iterator();
     while (i.hasNext()) {
       Artist performer = i.next();
                         

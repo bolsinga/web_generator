@@ -266,7 +266,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   public static Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
-    Iterator<Artist> bi = show.getArtists().iterator();
+    Iterator<? extends Artist> bi = show.getArtists().iterator();
     while (bi.hasNext()) {
       Artist performer = bi.next();
                         

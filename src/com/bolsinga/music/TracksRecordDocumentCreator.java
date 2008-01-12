@@ -206,7 +206,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     for (Artist artist : artists) {
       String t = Util.createTitle("moreinfoartist", artist.getName());
       names[index] = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
-      List<Album> albums = artist.getAlbums();
+      List<? extends Album> albums = artist.getAlbums();
       values[index] = (albums != null) ? albums.size() : 0;
                         
       index++;
@@ -224,7 +224,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     boolean isCompilation = album.isCompilation();
     com.bolsinga.music.data.Date albumRelease = album.getReleaseDate();
 
-    List<Song> songs = album.getSongs();
+    List<? extends Song> songs = album.getSongs();
     for (Song song : songs) {
       sb = new StringBuilder();
       if (isCompilation) {

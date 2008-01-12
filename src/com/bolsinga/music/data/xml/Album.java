@@ -92,11 +92,11 @@ public class Album implements com.bolsinga.music.data.Album {
     fAlbum.setComment(comment);
   }
 
-  public List<com.bolsinga.music.data.Song> getSongs() {
+  public List<? extends com.bolsinga.music.data.Song> getSongs() {
     return Collections.unmodifiableList(fSongs);
   }
   
-  public List<com.bolsinga.music.data.Song> getSongsCopy() {
+  public List<? extends com.bolsinga.music.data.Song> getSongsCopy() {
     return new ArrayList<com.bolsinga.music.data.Song>(fSongs);
   }
 }

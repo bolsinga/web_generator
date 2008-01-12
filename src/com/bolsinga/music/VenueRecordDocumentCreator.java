@@ -155,7 +155,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   private Vector<Element> getVenueShowListing(final Venue venue, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
-    Iterator<Artist> bi = show.getArtists().iterator();
+    Iterator<? extends Artist> bi = show.getArtists().iterator();
     while (bi.hasNext()) {
       Artist performer = bi.next();
       String t = Util.createTitle("moreinfoartist", performer.getName());

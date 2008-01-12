@@ -12,6 +12,6 @@ public interface Artist {
   public Location getLocation();
   public String getComment();
   public void setComment(final String comment);
-  public List<Album> getAlbums();
-  public List<Album> getAlbumsCopy();
+  public List<? extends Album> getAlbums();
+  public List<? extends Album> getAlbumsCopy();
 }

@@ -94,7 +94,7 @@ public class ICal {
                 
     StringBuilder summary = new StringBuilder();
 
-    Iterator<Artist> bi = show.getArtists().iterator();
+    Iterator<? extends Artist> bi = show.getArtists().iterator();
     while (bi.hasNext()) {
       Artist a = bi.next();
                         
