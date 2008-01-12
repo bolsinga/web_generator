@@ -218,11 +218,11 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     }
   }
   
-  public List<com.bolsinga.diary.data.Entry> getEntries() {
+  public List<? extends Entry> getEntries() {
     return null;
   }
   
-  public List<com.bolsinga.diary.data.Entry> getEntriesCopy() {
+  public List<? extends Entry> getEntriesCopy() {
     return null;
   }
 }

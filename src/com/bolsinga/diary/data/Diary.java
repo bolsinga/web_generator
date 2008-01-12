@@ -15,6 +15,6 @@ public interface Diary {
   public void setFriends(final String friends);
   public String getColophon();
   public void setColophon(final String colophon);
-  public List<Entry> getEntries();
-  public List<Entry> getEntriesCopy();
+  public List<? extends Entry> getEntries();
+  public List<? extends Entry> getEntriesCopy();
 }

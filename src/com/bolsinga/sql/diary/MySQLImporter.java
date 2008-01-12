@@ -115,7 +115,7 @@ public class MySQLImporter {
   }
 
   private static void importEntries(final Statement stmt, final Diary diary) throws SQLException {
-    List<Entry> items = diary.getEntriesCopy();
+    List<? extends Entry> items = diary.getEntriesCopy();
                 
     Collections.sort(items, Util.ENTRY_COMPARATOR);
 

@@ -62,7 +62,7 @@ public class EncodeTest {
   }
 
   private static void generateDiary(final Diary diary, final Encode encoder, final String outputDir) throws WebException {
-    List<Entry> items = diary.getEntriesCopy();
+    List<? extends Entry> items = diary.getEntriesCopy();
     StringBuilder buffer = new StringBuilder();
     HashMap<String, Long> times = new HashMap<String, Long>(items.size());
     long start, current;

@@ -373,7 +373,7 @@ public class Util {
     Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
     Collections.reverse(shows);
 
-    List<Entry> entries = diary.getEntriesCopy();
+    List<? extends Entry> entries = diary.getEntriesCopy();
     Collections.sort(entries, Util.ENTRY_COMPARATOR);
     Collections.reverse(entries);
     
@@ -478,7 +478,7 @@ public class Util {
   public static int getStartYear(final Diary diary) {
     synchronized (Util.class) {
       if (sDiaryStartYear == 0) {
-        List<Entry> items = diary.getEntriesCopy();
+        List<? extends Entry> items = diary.getEntriesCopy();
         Entry item = null;
 
         Collections.sort(items, Util.ENTRY_COMPARATOR);

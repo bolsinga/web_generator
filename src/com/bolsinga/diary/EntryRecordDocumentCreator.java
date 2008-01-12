@@ -162,7 +162,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   }
 
   private Collection<Vector<Entry>> createGroups() {
-    List<Entry> entries = fDiary.getEntriesCopy();
+    List<? extends Entry> entries = fDiary.getEntriesCopy();
     
     // Each group is per page, so they are grouped by Entry who have the same starting sort letter.
     // They are sorted within each group, as they are placed onto the Vector<Entry> in order.

@@ -165,11 +165,11 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     fColophon = colophon;
   }
   
-  public List<com.bolsinga.diary.data.Entry> getEntries() {
+  public List<? extends com.bolsinga.diary.data.Entry> getEntries() {
     return Collections.unmodifiableList(fEntries);
   }
 
-  public List<com.bolsinga.diary.data.Entry> getEntriesCopy() {
+  public List<? extends com.bolsinga.diary.data.Entry> getEntriesCopy() {
     return new ArrayList<com.bolsinga.diary.data.Entry>(fEntries);
   }
 }

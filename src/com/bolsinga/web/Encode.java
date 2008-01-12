@@ -227,7 +227,7 @@ class HashEncode extends Encode {
     if (music != null) {
       List<Show> shows = music.getShows();
       int numShows = (shows != null) ? shows.size() : 0;
-      List<Entry> entries = (diary != null) ? diary.getEntries() : null;
+      List<? extends Entry> entries = (diary != null) ? diary.getEntries() : null;
       int numDiary = (entries != null) ? entries.size() : 0;
       int numEncoded = numShows + numDiary;
       HashMap<String, HashSet<Object>> encodedMap = new HashMap<String, HashSet<Object>>(numEncoded * WORDS_PER_ENTRY);
@@ -340,7 +340,7 @@ class HashEncode extends Encode {
   
   private void getDiaryWords(final Diary diary, final HashMap<String, HashSet<Object>> encodedMap) {
     if (diary != null) {
-      Collection<Entry> items = diary.getEntries();
+      List<? extends Entry> items = diary.getEntries();
 
       for (Entry item : items) {
         addEncodedWords(item.getComment(), encodedMap, item, items.size());
