@@ -8,7 +8,7 @@ public class Show implements com.bolsinga.music.data.Show {
   private static final HashMap<String, Show> sMap = new HashMap<String, Show>();
 
   private final com.bolsinga.music.data.xml.impl.Show fShow;
-  private final List<com.bolsinga.music.data.Artist> fArtists;
+  private final List<Artist> fArtists;
 
   public static Show get(final com.bolsinga.music.data.xml.impl.Show item) {
     synchronized (sMap) {
@@ -24,14 +24,14 @@ public class Show implements com.bolsinga.music.data.Show {
   private Show(final com.bolsinga.music.data.xml.impl.Show show) {
     fShow = show;
 
-    fArtists = new ArrayList<com.bolsinga.music.data.Artist>(fShow.getArtist().size());
+    fArtists = new ArrayList<Artist>(fShow.getArtist().size());
     for (JAXBElement<Object> jartist : fShow.getArtist()) {
       com.bolsinga.music.data.xml.impl.Artist artist = (com.bolsinga.music.data.xml.impl.Artist)jartist.getValue();
       fArtists.add(Artist.get(artist));
     }
   }
   
-  public List<? extends com.bolsinga.music.data.Artist> getArtists() {
+  public List<Artist> getArtists() {
     return Collections.unmodifiableList(fArtists);
   }
   
@@ -39,7 +39,7 @@ public class Show implements com.bolsinga.music.data.Show {
     return Date.create(fShow.getDate());
   }
   
-  public com.bolsinga.music.data.Venue getVenue() {
+  public Venue getVenue() {
     return Venue.get((com.bolsinga.music.data.xml.impl.Venue)fShow.getVenue());
   }
   

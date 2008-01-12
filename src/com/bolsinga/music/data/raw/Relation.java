@@ -8,8 +8,8 @@ public class Relation implements com.bolsinga.music.data.Relation {
   private String fReason;
   private List<Object> fMembers;
   
-  static List<com.bolsinga.music.data.Relation> create(final String filename) throws com.bolsinga.web.WebException {
-    ArrayList<com.bolsinga.music.data.Relation> relations = new ArrayList<com.bolsinga.music.data.Relation>();
+  static List<Relation> create(final String filename) throws com.bolsinga.web.WebException {
+    ArrayList<Relation> relations = new ArrayList<Relation>();
     int index = 0;
     
     BufferedReader in = null;

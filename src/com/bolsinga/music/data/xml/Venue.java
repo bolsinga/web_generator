@@ -6,7 +6,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private static final HashMap<String, Venue> sMap = new HashMap<String, Venue>();
 
   private final com.bolsinga.music.data.xml.impl.Venue fVenue;
-  private final com.bolsinga.music.data.Location fLocation;
+  private final Location fLocation;
   
   public static Venue get(final com.bolsinga.music.data.xml.impl.Venue item) {
     synchronized (sMap) {
@@ -40,7 +40,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
     fVenue.setName(name);
   }
   
-  public com.bolsinga.music.data.Location getLocation() {
+  public Location getLocation() {
     return fLocation;
   }
 

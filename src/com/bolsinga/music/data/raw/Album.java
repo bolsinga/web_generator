@@ -5,21 +5,21 @@ import java.util.*;
 public class Album implements com.bolsinga.music.data.Album {
   private String fID;
   private String fTitle;
-  private final com.bolsinga.music.data.Artist fArtist;
+  private final Artist fArtist;
   private com.bolsinga.music.data.Date fReleaseDate;
   private com.bolsinga.music.data.Date fPurchaseDate;
   private boolean fIsCompilation;
   private List<String> fFormats;
-  private com.bolsinga.music.data.Label fLabel;
+  private Label fLabel;
   private String fComment;
-  private final List<com.bolsinga.music.data.Song> fSongs;
+  private final List<Song> fSongs;
   
-  static Album create(final int id, final String title, final com.bolsinga.music.data.Artist artist, final com.bolsinga.music.data.Date releaseDate, final List<com.bolsinga.music.data.Song> songs) {
+  static Album create(final int id, final String title, final Artist artist, final com.bolsinga.music.data.Date releaseDate, final List<Song> songs) {
     String s = (artist != null) ? artist.getName() : "null";
     return new Album("a" + id, title, artist, releaseDate, songs);
   }
   
-  Album(final String id, final String title, final com.bolsinga.music.data.Artist artist, final com.bolsinga.music.data.Date releaseDate, final List<com.bolsinga.music.data.Song> songs) {
+  Album(final String id, final String title, final Artist artist, final com.bolsinga.music.data.Date releaseDate, final List<Song> songs) {
     fID = id;
     fTitle = title;
     fArtist = artist;
@@ -50,7 +50,7 @@ public class Album implements com.bolsinga.music.data.Album {
     fTitle = title;
   }
   
-  public com.bolsinga.music.data.Artist getPerformer() {
+  public Artist getPerformer() {
     return fArtist;
   }
   
@@ -74,7 +74,7 @@ public class Album implements com.bolsinga.music.data.Album {
     return fFormats;
   }
   
-  public com.bolsinga.music.data.Label getLabel() {
+  public Label getLabel() {
     return fLabel;
   }
   
@@ -86,11 +86,11 @@ public class Album implements com.bolsinga.music.data.Album {
     fComment = comment;
   }
   
-  public List<? extends com.bolsinga.music.data.Song> getSongs() {
+  public List<Song> getSongs() {
     return Collections.unmodifiableList(fSongs);
   }
   
-  public List<? extends com.bolsinga.music.data.Song> getSongsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Song>(fSongs);
+  public List<Song> getSongsCopy() {
+    return new ArrayList<Song>(fSongs);
   }
 }

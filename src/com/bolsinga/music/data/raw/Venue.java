@@ -9,10 +9,10 @@ public class Venue implements com.bolsinga.music.data.Venue {
 
   private String fID;
   private String fName;
-  private com.bolsinga.music.data.Location fLocation;
+  private Location fLocation;
   private String fComment;
   
-  static List<com.bolsinga.music.data.Venue> create(final String filename) throws com.bolsinga.web.WebException {
+  static List<Venue> create(final String filename) throws com.bolsinga.web.WebException {
     BufferedReader in = null;
     try {
       try {
@@ -70,11 +70,11 @@ public class Venue implements com.bolsinga.music.data.Venue {
       }
     }
 
-    ArrayList<com.bolsinga.music.data.Venue> venues = new ArrayList<com.bolsinga.music.data.Venue>(sMap.values());
+    ArrayList<Venue> venues = new ArrayList<Venue>(sMap.values());
     java.util.Collections.sort(venues, com.bolsinga.music.Compare.VENUE_COMPARATOR);
 
     int index = 0;
-    for (com.bolsinga.music.data.Venue v : venues) {
+    for (Venue v : venues) {
       v.setID("v" + index++);
     }
     
@@ -95,7 +95,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
     }
   }
   
-  private Venue(final String name, final com.bolsinga.music.data.Location location) {
+  private Venue(final String name, final Location location) {
     fName = name;
     fLocation = location;
   }
@@ -117,7 +117,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
     fName = name;
   }
   
-  public com.bolsinga.music.data.Location getLocation() {
+  public Location getLocation() {
     return fLocation;
   }
   

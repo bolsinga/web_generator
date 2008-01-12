@@ -31,7 +31,7 @@ public class Song implements com.bolsinga.music.data.Song {
     fSong.setId(id);
   }
   
-  public com.bolsinga.music.data.Artist getPerformer() {
+  public Artist getPerformer() {
     return Artist.get((com.bolsinga.music.data.xml.impl.Artist)fSong.getPerformer());
   }
   

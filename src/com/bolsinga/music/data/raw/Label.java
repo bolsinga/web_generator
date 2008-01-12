@@ -34,7 +34,7 @@ public class Label implements com.bolsinga.music.data.Label {
     fName = name;
   }
   
-  public com.bolsinga.music.data.Location getLocation() {
+  public Location getLocation() {
     return fLocation;
   }
   

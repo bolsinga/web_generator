@@ -6,7 +6,7 @@ public class Label implements com.bolsinga.music.data.Label {
   private static final HashMap<String, Label> sMap = new HashMap<String, Label>();
 
   private final com.bolsinga.music.data.xml.impl.Label fLabel;
-  private final com.bolsinga.music.data.Location fLocation;
+  private final Location fLocation;
 
   public static Label get(final com.bolsinga.music.data.xml.impl.Label item) {
     synchronized (sMap) {
@@ -40,7 +40,7 @@ public class Label implements com.bolsinga.music.data.Label {
     fLabel.setName(name);
   }
 
-  public com.bolsinga.music.data.Location getLocation() {
+  public Location getLocation() {
     return fLocation;
   }
   

@@ -8,7 +8,7 @@ public class Album implements com.bolsinga.music.data.Album {
   private static final HashMap<String, Album> sMap = new HashMap<String, Album>();
 
   private final com.bolsinga.music.data.xml.impl.Album fAlbum;
-  private final List<com.bolsinga.music.data.Song> fSongs;
+  private final List<Song> fSongs;
   private final List<String> fFormats;
 
   public static Album get(final com.bolsinga.music.data.xml.impl.Album item) {
@@ -25,7 +25,7 @@ public class Album implements com.bolsinga.music.data.Album {
   private Album(final com.bolsinga.music.data.xml.impl.Album album) {
     fAlbum = album;
 
-    fSongs = new ArrayList<com.bolsinga.music.data.Song>(fAlbum.getSong().size());
+    fSongs = new ArrayList<Song>(fAlbum.getSong().size());
     for (JAXBElement<Object> jsong : fAlbum.getSong()) {
       com.bolsinga.music.data.xml.impl.Song song = (com.bolsinga.music.data.xml.impl.Song)jsong.getValue();
       fSongs.add(Song.get(song));
@@ -54,7 +54,7 @@ public class Album implements com.bolsinga.music.data.Album {
     fAlbum.setTitle(title);
   }
   
-  public com.bolsinga.music.data.Artist getPerformer() {
+  public Artist getPerformer() {
     Object performer = fAlbum.getPerformer();
     return (performer != null) ? Artist.get((com.bolsinga.music.data.xml.impl.Artist)performer) : null;
   }
@@ -80,7 +80,7 @@ public class Album implements com.bolsinga.music.data.Album {
     return Collections.unmodifiableList(fFormats);
   }
   
-  public com.bolsinga.music.data.Label getLabel() {
+  public Label getLabel() {
     return Label.get((com.bolsinga.music.data.xml.impl.Label)fAlbum.getLabel());
   }
 
@@ -92,11 +92,11 @@ public class Album implements com.bolsinga.music.data.Album {
     fAlbum.setComment(comment);
   }
 
-  public List<? extends com.bolsinga.music.data.Song> getSongs() {
+  public List<Song> getSongs() {
     return Collections.unmodifiableList(fSongs);
   }
   
-  public List<? extends com.bolsinga.music.data.Song> getSongsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Song>(fSongs);
+  public List<Song> getSongsCopy() {
+    return new ArrayList<Song>(fSongs);
   }
 }

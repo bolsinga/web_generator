@@ -8,13 +8,13 @@ import javax.xml.datatype.*;
 
 public class Music implements com.bolsinga.music.data.Music {
   private final com.bolsinga.music.data.xml.impl.Music fMusic;
-  private final List<com.bolsinga.music.data.Venue> fVenues;
-  private final List<com.bolsinga.music.data.Artist> fArtists;
-  private final List<com.bolsinga.music.data.Label> fLabels;
-  private final List<com.bolsinga.music.data.Relation> fRelations;
-  private final List<com.bolsinga.music.data.Song> fSongs;
-  private final List<com.bolsinga.music.data.Album> fAlbums;
-  private final List<com.bolsinga.music.data.Show> fShows;
+  private final List<Venue> fVenues;
+  private final List<Artist> fArtists;
+  private final List<Label> fLabels;
+  private final List<Relation> fRelations;
+  private final List<Song> fSongs;
+  private final List<Album> fAlbums;
+  private final List<Show> fShows;
 
   private static final Comparator<com.bolsinga.music.data.xml.impl.Artist> XML_ARTIST_COMPARATOR = new Comparator<com.bolsinga.music.data.xml.impl.Artist>() {
     public int compare(final com.bolsinga.music.data.xml.impl.Artist r1, final com.bolsinga.music.data.xml.impl.Artist r2) {
@@ -235,15 +235,15 @@ public class Music implements com.bolsinga.music.data.Music {
         
         boolean typeSet = false;
         for (Object member : item.getMembers()) {
-          if (member instanceof com.bolsinga.music.data.Artist) {
-            com.bolsinga.music.data.Artist artist = (com.bolsinga.music.data.Artist)member;
+          if (member instanceof Artist) {
+            Artist artist = (Artist)member;
             if (!typeSet) {
               xmlRelation.setType(com.bolsinga.music.data.xml.impl.RelationType.fromValue("artist"));
               typeSet = true;
             }
             xmlRelation.getMember().add(objFactory.createRelationMember(artistMap.get(artist.getID())));
-          } else if (member instanceof com.bolsinga.music.data.Venue) {
-            com.bolsinga.music.data.Venue venue = (com.bolsinga.music.data.Venue)member;
+          } else if (member instanceof Venue) {
+            Venue venue = (Venue)member;
             if (!typeSet) {
               xmlRelation.setType(com.bolsinga.music.data.xml.impl.RelationType.fromValue("venue"));
               typeSet = true;
@@ -430,37 +430,37 @@ public class Music implements com.bolsinga.music.data.Music {
   private Music(final com.bolsinga.music.data.xml.impl.Music music) {
     fMusic = music;
     
-    fVenues = new ArrayList<com.bolsinga.music.data.Venue>(fMusic.getVenue().size());
+    fVenues = new ArrayList<Venue>(fMusic.getVenue().size());
     for (com.bolsinga.music.data.xml.impl.Venue venue : fMusic.getVenue()) {
       fVenues.add(Venue.get(venue));
     }
 
-    fArtists = new ArrayList<com.bolsinga.music.data.Artist>(fMusic.getArtist().size());
+    fArtists = new ArrayList<Artist>(fMusic.getArtist().size());
     for (com.bolsinga.music.data.xml.impl.Artist artist : fMusic.getArtist()) {
       fArtists.add(Artist.get(artist));
     }
 
-    fLabels = new ArrayList<com.bolsinga.music.data.Label>(fMusic.getLabel().size());
+    fLabels = new ArrayList<Label>(fMusic.getLabel().size());
     for (com.bolsinga.music.data.xml.impl.Label label : fMusic.getLabel()) {
       fLabels.add(Label.get(label));
     }
 
-    fRelations = new ArrayList<com.bolsinga.music.data.Relation>(fMusic.getRelation().size());
+    fRelations = new ArrayList<Relation>(fMusic.getRelation().size());
     for (com.bolsinga.music.data.xml.impl.Relation relation : fMusic.getRelation()) {
       fRelations.add(Relation.get(relation));
     }
 
-    fSongs = new ArrayList<com.bolsinga.music.data.Song>(fMusic.getSong().size());
+    fSongs = new ArrayList<Song>(fMusic.getSong().size());
     for (com.bolsinga.music.data.xml.impl.Song song : fMusic.getSong()) {
       fSongs.add(Song.get(song));
     }
 
-    fAlbums = new ArrayList<com.bolsinga.music.data.Album>(fMusic.getAlbum().size());
+    fAlbums = new ArrayList<Album>(fMusic.getAlbum().size());
     for (com.bolsinga.music.data.xml.impl.Album album : fMusic.getAlbum()) {
       fAlbums.add(Album.get(album));
     }
 
-    fShows = new ArrayList<com.bolsinga.music.data.Show>(fMusic.getShow().size());
+    fShows = new ArrayList<Show>(fMusic.getShow().size());
     for (com.bolsinga.music.data.xml.impl.Show show : fMusic.getShow()) {
       fShows.add(Show.get(show));
     }
@@ -474,59 +474,59 @@ public class Music implements com.bolsinga.music.data.Music {
     fMusic.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(timestamp));
   }
   
-  public List<com.bolsinga.music.data.Venue> getVenues() {
+  public List<Venue> getVenues() {
     return Collections.unmodifiableList(fVenues);
   }
   
-  public List<com.bolsinga.music.data.Venue> getVenuesCopy() {
-    return new ArrayList<com.bolsinga.music.data.Venue>(fVenues);
+  public List<Venue> getVenuesCopy() {
+    return new ArrayList<Venue>(fVenues);
   }
   
-  public List<com.bolsinga.music.data.Artist> getArtists() {
+  public List<Artist> getArtists() {
     return Collections.unmodifiableList(fArtists);
   }
   
-  public List<com.bolsinga.music.data.Artist> getArtistsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Artist>(fArtists);
+  public List<Artist> getArtistsCopy() {
+    return new ArrayList<Artist>(fArtists);
   }
   
-  public List<com.bolsinga.music.data.Label> getLabels() {
+  public List<Label> getLabels() {
     return Collections.unmodifiableList(fLabels);
   }
   
-  public List<com.bolsinga.music.data.Label> getLabelsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Label>(fLabels);
+  public List<Label> getLabelsCopy() {
+    return new ArrayList<Label>(fLabels);
   }
   
-  public List<com.bolsinga.music.data.Relation> getRelations() {
+  public List<Relation> getRelations() {
     return Collections.unmodifiableList(fRelations);
   }
   
-  public List<com.bolsinga.music.data.Relation> getRelationsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Relation>(fRelations);
+  public List<Relation> getRelationsCopy() {
+    return new ArrayList<Relation>(fRelations);
   }
   
-  public List<com.bolsinga.music.data.Song> getSongs() {
+  public List<Song> getSongs() {
     return Collections.unmodifiableList(fSongs);
   }
   
-  public List<com.bolsinga.music.data.Song> getSongsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Song>(fSongs);
+  public List<Song> getSongsCopy() {
+    return new ArrayList<Song>(fSongs);
   }
   
-  public List<com.bolsinga.music.data.Album> getAlbums() {
+  public List<Album> getAlbums() {
     return Collections.unmodifiableList(fAlbums);
   }
   
-  public List<com.bolsinga.music.data.Album> getAlbumsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Album>(fAlbums);
+  public List<Album> getAlbumsCopy() {
+    return new ArrayList<Album>(fAlbums);
   }
   
-  public List<com.bolsinga.music.data.Show> getShows() {
+  public List<Show> getShows() {
     return Collections.unmodifiableList(fShows);
   }
   
-  public List<com.bolsinga.music.data.Show> getShowsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Show>(fShows);
+  public List<Show> getShowsCopy() {
+    return new ArrayList<Show>(fShows);
   }
 }

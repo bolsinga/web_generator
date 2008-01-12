@@ -8,8 +8,8 @@ public class Artist implements com.bolsinga.music.data.Artist {
   private static final HashMap<String, Artist> sMap = new HashMap<String, Artist>();
 
   private final com.bolsinga.music.data.xml.impl.Artist fArtist;
-  private final com.bolsinga.music.data.Location fLocation;
-  private final List<com.bolsinga.music.data.Album> fAlbums;
+  private final Location fLocation;
+  private final List<Album> fAlbums;
 
   public static Artist get(final com.bolsinga.music.data.xml.impl.Artist item) {
     synchronized (sMap) {
@@ -26,7 +26,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
     fArtist = artist;
     fLocation = Location.create(fArtist.getLocation());
     
-    fAlbums = new ArrayList<com.bolsinga.music.data.Album>(fArtist.getAlbum().size());
+    fAlbums = new ArrayList<Album>(fArtist.getAlbum().size());
     for (JAXBElement<Object> jalbum : fArtist.getAlbum()) {
       com.bolsinga.music.data.xml.impl.Album album = (com.bolsinga.music.data.xml.impl.Album)jalbum.getValue();
       fAlbums.add(Album.get(album));
@@ -57,7 +57,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
     fArtist.setSortname(name);
   }
 
-  public com.bolsinga.music.data.Location getLocation() {
+  public Location getLocation() {
     return fLocation;
   }
   
@@ -69,11 +69,11 @@ public class Artist implements com.bolsinga.music.data.Artist {
     fArtist.setComment(comment);
   }
   
-  public List<? extends com.bolsinga.music.data.Album> getAlbums() {
+  public List<Album> getAlbums() {
     return Collections.unmodifiableList(fAlbums);
   }
   
-  public List<? extends com.bolsinga.music.data.Album> getAlbumsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Album>(fAlbums);
+  public List<Album> getAlbumsCopy() {
+    return new ArrayList<Album>(fAlbums);
   }
 }

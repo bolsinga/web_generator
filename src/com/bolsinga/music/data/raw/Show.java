@@ -8,13 +8,13 @@ public class Show implements com.bolsinga.music.data.Show {
   private static final String SHOW_DELIMITER = "^";
   
   private com.bolsinga.music.data.Date fDate;
-  private List<com.bolsinga.music.data.Artist> fArtists;
-  private com.bolsinga.music.data.Venue fVenue;
+  private List<Artist> fArtists;
+  private Venue fVenue;
   private String fComment;
   private String fID;
 
-  static List<com.bolsinga.music.data.Show> create(final String filename) throws com.bolsinga.web.WebException {
-    List<com.bolsinga.music.data.Show> shows = new ArrayList<com.bolsinga.music.data.Show>();
+  static List<Show> create(final String filename) throws com.bolsinga.web.WebException {
+    List<Show> shows = new ArrayList<Show>();
 
     BufferedReader in = null;
     try {
@@ -50,7 +50,7 @@ public class Show implements com.bolsinga.music.data.Show {
           }
           
           bt = new StringTokenizer(bandstring, "|");
-          Vector<com.bolsinga.music.data.Artist> bands = new Vector<com.bolsinga.music.data.Artist>();
+          Vector<Artist> bands = new Vector<Artist>();
           while (bt.hasMoreElements()) {
             bands.add(Artist.createOrGet(bt.nextToken()));
           }
@@ -79,21 +79,21 @@ public class Show implements com.bolsinga.music.data.Show {
     java.util.Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
     int index = 0;
-    for (com.bolsinga.music.data.Show show : shows) {
+    for (Show show : shows) {
       show.setID("sh" + index++);
     }
                
     return shows;
   }
   
-  private Show(final com.bolsinga.music.data.Date date, final List<com.bolsinga.music.data.Artist> artists, final com.bolsinga.music.data.Venue venue, final String comment) {
+  private Show(final com.bolsinga.music.data.Date date, final List<Artist> artists, final Venue venue, final String comment) {
     fDate = date;
     fArtists = artists;
     fVenue = venue;
     fComment = comment;
   }
   
-  public List<? extends com.bolsinga.music.data.Artist> getArtists() {
+  public List<Artist> getArtists() {
     return Collections.unmodifiableList(fArtists);
   }
   
@@ -101,7 +101,7 @@ public class Show implements com.bolsinga.music.data.Show {
     return fDate;
   }
   
-  public com.bolsinga.music.data.Venue getVenue() {
+  public Venue getVenue() {
     return fVenue;
   }
   

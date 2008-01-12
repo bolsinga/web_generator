@@ -10,10 +10,10 @@ public class Artist implements com.bolsinga.music.data.Artist {
   private String fID;
   private String fName;
   private String fSortname;
-  private com.bolsinga.music.data.Location fLocation;
+  private Location fLocation;
   private String fComment;
-  private List<com.bolsinga.music.data.Album> fAlbums;
-  private HashSet<com.bolsinga.music.data.Album> fAlbumSet;
+  private List<Album> fAlbums;
+  private HashSet<Album> fAlbumSet;
 
   private static String getSortName(final String name, final String sortName) {
     // This will return a diacritical-free sortName, based upon sortName if it is provided, otherwise name.
@@ -107,7 +107,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
     }
   }
   
-  static List<com.bolsinga.music.data.Artist> getList(final String bandFile) throws com.bolsinga.web.WebException {
+  static List<Artist> getList(final String bandFile) throws com.bolsinga.web.WebException {
     synchronized (sMap) {
       setSortNames(bandFile);
       
@@ -115,11 +115,11 @@ public class Artist implements com.bolsinga.music.data.Artist {
         a.sortAlbums();
       }
       
-      List<com.bolsinga.music.data.Artist> artists = new ArrayList<com.bolsinga.music.data.Artist>(sMap.values());
+      List<Artist> artists = new ArrayList<Artist>(sMap.values());
       java.util.Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_COMPARATOR);
 
       int index = 0;
-      for (com.bolsinga.music.data.Artist a : artists) {
+      for (Artist a : artists) {
         a.setID("ar" + index++);
       }
             
@@ -130,7 +130,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
   private Artist(final String name) {
     fName = name;
     fSortname = Artist.getSortName(name, null);
-    fAlbumSet = new HashSet<com.bolsinga.music.data.Album>();
+    fAlbumSet = new HashSet<Album>();
   }
   
   public String getID() {
@@ -158,7 +158,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
     fSortname = Artist.getSortName(fName, name);
   }
   
-  public com.bolsinga.music.data.Location getLocation() {
+  public Location getLocation() {
     return fLocation;
   }
   
@@ -170,20 +170,20 @@ public class Artist implements com.bolsinga.music.data.Artist {
     fComment = comment;
   }
   
-  public List<? extends com.bolsinga.music.data.Album> getAlbums() {
+  public List<Album> getAlbums() {
     return Collections.unmodifiableList(fAlbums);
   }
   
-  public List<? extends com.bolsinga.music.data.Album> getAlbumsCopy() {
-    return new ArrayList<com.bolsinga.music.data.Album>(fAlbums);
+  public List<Album> getAlbumsCopy() {
+    return new ArrayList<Album>(fAlbums);
   }
   
-  void addAlbum(final com.bolsinga.music.data.Album album) {
+  void addAlbum(final Album album) {
     fAlbumSet.add(album);
   }
   
   void sortAlbums() {
-    fAlbums = new ArrayList<com.bolsinga.music.data.Album>(fAlbumSet);
+    fAlbums = new ArrayList<Album>(fAlbumSet);
     fAlbumSet = null;
     
     Collections.sort(fAlbums, com.bolsinga.music.Compare.ALBUM_ORDER_COMPARATOR);
