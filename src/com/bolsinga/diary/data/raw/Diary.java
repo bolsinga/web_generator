@@ -9,7 +9,7 @@ import java.util.regex.*;
 
 public class Diary implements com.bolsinga.diary.data.Diary {
 
-  private List<com.bolsinga.diary.data.Entry> fEntries = null;
+  private List<Entry> fEntries = null;
   private GregorianCalendar fDate = null;
   private String fTitle = null;
   private String fStatic = null;
@@ -28,7 +28,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     return diary;
   }
     
-  private Diary(final List<com.bolsinga.diary.data.Entry> entries) {
+  private Diary(final List<Entry> entries) {
     fEntries = entries;
     fDate = com.bolsinga.web.Util.nowUTC();
   }
@@ -165,11 +165,11 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     fColophon = colophon;
   }
   
-  public List<? extends com.bolsinga.diary.data.Entry> getEntries() {
+  public List<Entry> getEntries() {
     return Collections.unmodifiableList(fEntries);
   }
 
-  public List<? extends com.bolsinga.diary.data.Entry> getEntriesCopy() {
-    return new ArrayList<com.bolsinga.diary.data.Entry>(fEntries);
+  public List<Entry> getEntriesCopy() {
+    return new ArrayList<Entry>(fEntries);
   }
 }

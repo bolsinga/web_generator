@@ -22,7 +22,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   @Value
   private String colophon;
   @Value
-  private List<com.bolsinga.diary.data.json.Entry> entries;
+  private List<Entry> entries;
   
   private static final ThreadLocal<DateFormat> sJSONTimeFormat = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
@@ -116,7 +116,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     
     List<? extends com.bolsinga.diary.data.Entry> srcEntries = diary.getEntries();
     
-    entries = new ArrayList<com.bolsinga.diary.data.json.Entry>(srcEntries.size());
+    entries = new ArrayList<Entry>(srcEntries.size());
     for (com.bolsinga.diary.data.Entry entry : srcEntries) {
       entries.add(Entry.create(entry));
     }
@@ -170,11 +170,11 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     this.colophon = colophon;
   }
   
-  public List<? extends com.bolsinga.diary.data.Entry> getEntries() {
+  public List<Entry> getEntries() {
     return Collections.unmodifiableList(entries);
   }
   
-  public List<? extends com.bolsinga.diary.data.Entry> getEntriesCopy() {
-    return new ArrayList<com.bolsinga.diary.data.Entry>(entries);
+  public List<Entry> getEntriesCopy() {
+    return new ArrayList<Entry>(entries);
   }
 }

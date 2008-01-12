@@ -43,7 +43,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
     return result;
   }
 
-  static List<com.bolsinga.diary.data.Entry> create(final String filename) throws com.bolsinga.web.WebException {
+  static List<Entry> create(final String filename) throws com.bolsinga.web.WebException {
     TreeMap<GregorianCalendar, String> comments = new TreeMap<GregorianCalendar, String>();
 
     FileChannel fc = null;
@@ -109,7 +109,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
       }
     }
 
-    ArrayList<com.bolsinga.diary.data.Entry> entries = new ArrayList<com.bolsinga.diary.data.Entry>(comments.keySet().size());
+    ArrayList<Entry> entries = new ArrayList<Entry>(comments.keySet().size());
 
     int index = 0;
     for (Map.Entry<GregorianCalendar, String> entry : comments.entrySet()) {

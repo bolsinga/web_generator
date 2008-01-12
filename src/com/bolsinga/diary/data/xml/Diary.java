@@ -8,7 +8,7 @@ import javax.xml.datatype.*;
 
 public class Diary implements com.bolsinga.diary.data.Diary {
   private final com.bolsinga.diary.data.xml.impl.Diary fDiary;
-  private final List<com.bolsinga.diary.data.Entry> fEntries;
+  private final List<Entry> fEntries;
   
   public static Diary create(final String sourceFile) throws com.bolsinga.web.WebException {
     com.bolsinga.diary.data.xml.impl.Diary diary = null;
@@ -124,7 +124,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   
   private Diary(final com.bolsinga.diary.data.xml.impl.Diary diary) {
     fDiary = diary;
-    fEntries = new ArrayList<com.bolsinga.diary.data.Entry>(diary.getEntry().size());
+    fEntries = new ArrayList<Entry>(diary.getEntry().size());
     for (com.bolsinga.diary.data.xml.impl.Entry entry : diary.getEntry()) {
       fEntries.add(Entry.create(entry));
     }
@@ -178,11 +178,11 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     fDiary.setColophon(colophon);
   }
   
-  public List<? extends com.bolsinga.diary.data.Entry> getEntries() {
+  public List<Entry> getEntries() {
     return Collections.unmodifiableList(fEntries);
   }
 
-  public List<? extends com.bolsinga.diary.data.Entry> getEntriesCopy() {
-    return new ArrayList<com.bolsinga.diary.data.Entry>(fEntries);
+  public List<Entry> getEntriesCopy() {
+    return new ArrayList<Entry>(fEntries);
   }
 }
