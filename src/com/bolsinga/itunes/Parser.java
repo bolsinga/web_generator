@@ -64,6 +64,9 @@ public class Parser {
   private static final String TK_SORT_NAME            = "Sort Name";
   private static final String TK_CONTENT_RATING       = "Content Rating";
   private static final String TK_DISABLED             = "Disabled";
+  private static final String TK_PURCHASED            = "Purchased";
+  private static final String TK_VIDEO_HEIGHT         = "Video Height";
+  private static final String TK_VIDEO_WIDTH          = "Video Width";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
@@ -313,6 +316,9 @@ public class Parser {
     sITunesKeys.add(TK_SORT_NAME);
     sITunesKeys.add(TK_CONTENT_RATING);
     sITunesKeys.add(TK_DISABLED);
+    sITunesKeys.add(TK_PURCHASED);
+    sITunesKeys.add(TK_VIDEO_HEIGHT);
+    sITunesKeys.add(TK_VIDEO_WIDTH);
   }
 
   static {
