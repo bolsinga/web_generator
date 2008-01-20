@@ -83,6 +83,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     Head h = d.getHead();
     h.setPrettyPrint(Util.getPrettyOutput());
     h.addElement(Util.getIconLink());
+    h.addElement(Util.getWebClipIcon());
     h.addElement(fLinks.getLinkToRSS());
     h.addElement(fLinks.getLinkToStyleSheet());
                 

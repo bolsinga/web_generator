@@ -127,6 +127,13 @@ public class Util {
     result.setHref(Util.getSettings().getIco());
     return result;
   }
+  
+  public static Link getWebClipIcon() {
+    Link result = new Link();
+    result.setRel("apple-touch-icon");
+    result.setHref(Util.getSettings().getWebClipIcon());
+    return result;
+  }
         
   public static IMG getLogo() {
     com.bolsinga.settings.data.Image image = Util.getSettings().getLogoImage();
