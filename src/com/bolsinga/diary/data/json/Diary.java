@@ -24,14 +24,6 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   @Value
   private List<Entry> entries;
   
-  private static final ThreadLocal<DateFormat> sJSONTimeFormat = new ThreadLocal<DateFormat>() {
-    public DateFormat initialValue() {
-      DateFormat result = DateFormat.getDateInstance();
-      result.setTimeZone(TimeZone.getTimeZone("UTC"));
-      return result;
-    }
-  };
-    
   public static void export(final com.bolsinga.diary.data.Diary diary, final String outputFile) throws com.bolsinga.web.WebException {    
     com.bolsinga.diary.data.json.Diary jsonDiary = null;
     if (diary instanceof com.bolsinga.diary.data.json.Diary) {
@@ -84,24 +76,6 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     }
   }
   
-  static GregorianCalendar getCalendar(final String jsonCalendar) {
-    java.util.Date d = null;
-    try {
-      d = sJSONTimeFormat.get().parse(jsonCalendar);
-    } catch (ParseException e) {
-      System.err.println("Exception: " + e);
-      e.printStackTrace();
-      System.exit(1);
-    }
-    GregorianCalendar c = new GregorianCalendar(sJSONTimeFormat.get().getTimeZone());
-    c.setTime(d);
-    return c;
-  }
-  
-  static String setCalendar(final GregorianCalendar cal) {
-    return sJSONTimeFormat.get().format(cal.getTime());
-  }
-  
   private Diary() {
   
   }
@@ -120,14 +94,14 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     for (com.bolsinga.diary.data.Entry entry : srcEntries) {
       entries.add(Entry.create(entry));
     }
-}
+  }
   
   public GregorianCalendar getTimestamp() {
-    return Diary.getCalendar(timestamp);
+    return com.bolsinga.web.Util.fromJSONCalendar(timestamp);
   }
   
   public void setTimestamp(final GregorianCalendar timestamp) {
-    this.timestamp = Diary.setCalendar(timestamp);
+    this.timestamp = com.bolsinga.web.Util.toJSONCalendar(timestamp);
   }
   
   public String getTitle() {

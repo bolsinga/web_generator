@@ -36,11 +36,11 @@ public class Entry implements com.bolsinga.diary.data.Entry {
   }
   
   public GregorianCalendar getTimestamp() {
-    return Diary.getCalendar(timestamp);
+    return com.bolsinga.web.Util.fromJSONCalendar(timestamp);
   }
   
   public void setTimestamp(final GregorianCalendar timestamp) {
-    this.timestamp = Diary.setCalendar(timestamp);
+    this.timestamp = com.bolsinga.web.Util.toJSONCalendar(timestamp);
   }
   
   public String getID() {
