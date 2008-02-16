@@ -34,14 +34,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
 
     JSONObject json = null;
     Marshaller<com.bolsinga.diary.data.json.Diary> m = Marshaller.create(com.bolsinga.diary.data.json.Diary.class);
-    try {
-      json = m.marshall(jsonDiary);
-    } catch (JSONException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't convert diary: ");
-      sb.append(diary.getTitle());
-      throw new com.bolsinga.web.WebException(sb.toString(), e);
-    }
+    json = m.marshall(jsonDiary);
     
     FileWriter fw = null;
     try {

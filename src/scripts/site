@@ -28,7 +28,8 @@ fi
 
 for i in \
     "${SITE_LIB_DIR}" \
-    "${SITE_LIB_DIR}/json-0.8" \
+    "${SITE_LIB_DIR}/google-collections" \
+    "${SITE_LIB_DIR}/json-0.10" \
     "${SITE_LIB_DIR}/jwsdp-2.0/jaxb/lib" \
     "${SITE_LIB_DIR}/jwsdp-2.0/sjsxp/lib" \
     "${SITE_LIB_DIR}/jwsdp-2.0/jwsdp-shared/lib" ; do
