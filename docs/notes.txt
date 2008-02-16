@@ -241,3 +241,83 @@ Use PreparedStatement for: Location, Album, Performance, Song
 -------
 
 Java6 has JAXB built-in!
+
+-------
+
+JSON
+
+diary {
+ "title" : "",
+ "header" : "", // \n delimited array
+ "colophon" : "",  // \n delimited array
+ "timestamp" : "",
+ "friends" : "",  // \n delimited array
+ "statics" : "", // \n delimited array
+ "entries" : [
+    {
+      "comment" : "",
+      "timestamp" : "",
+      "id" : ""
+    },
+    ...
+  ]
+}
+
+music {
+  "venues" : { 
+    "<id>" : {
+      "comment" : ""
+      "location" : {
+        "web" : 
+        "street" :
+        "state" :
+        "zip" :
+        "city" :
+      },
+      "name" : ""
+    },
+    "<id+1>" : ...
+  },
+  "shows" : {
+    "<id>" : {
+      "id" : ""
+      "comment" : "",
+      "venue" : ID,
+      "artists" : [
+        "ID"
+      ],
+      "date" : ""
+    },
+    "<id+1>" : ...
+  },
+  "artists" : {
+    "<id>" : {
+      "id" : ""
+      "comment" : "",
+      "name" : "",
+      "sortname" : "",
+      "location" : {
+        "web" : 
+        "street" :
+        "state" :
+        "zip" :
+        "city" :
+      },
+      "active" : ""
+      "albums" : [
+        "ID"
+      ]
+    },
+    "<id+1>" : ...
+  },
+  "albums" : {
+    "<id>" : {
+      "id" : ""
+      "comment" : ""
+      "songs" : [
+        "ID"
+      ]
+    },
+    "<id+1>" : ...
+  }
+}

@@ -3,19 +3,24 @@ package com.bolsinga.diary.data.json;
 import java.util.*;
 
 import org.json.*;
-import com.twolattes.json.*;
 
-@Entity
 public class Entry implements com.bolsinga.diary.data.Entry {
-  @Value
   private String id;
-  @Value
   private String timestamp;
-  @Value
   private String comment;
   
   public static Entry create(com.bolsinga.diary.data.Entry entry) {
     return new Entry(entry);
+  }
+
+  static JSONObject createJSON(final com.bolsinga.diary.data.Entry entry) throws JSONException {
+    JSONObject json = new JSONObject();
+    
+    json.put("id", entry.getID());
+    json.put("timestamp", com.bolsinga.web.Util.toJSONCalendar(entry.getTimestamp()));
+    json.put("comment", entry.getComment());
+    
+    return json;
   }
   
   private Entry() {

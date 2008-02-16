@@ -43,7 +43,7 @@
         <classpath refid="jaxb_xjc_classpath" />
 </taskdef>
 
-<property name="javac.debug" value="no" />
+<property name="javac.debug" value="yes" />
 <property name="javac.lint" value="-Xlint:none" />
 
 <target name="clean">
@@ -157,10 +157,7 @@
 <path id="web_classpath">
   <path refid="jaxb_binder_classpath" />
   <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
-  <pathelement path="${lib.dir}/json-0.10/json-0.10.jar" />
-  <pathelement path="${lib.dir}/json-0.10/asm-2.2.3.jar" />
-  <pathelement path="${lib.dir}/json-0.10/asm-attrs-2.2.3.jar" />
-  <pathelement path="${lib.dir}/json-0.10/asm-commons-2.2.3.jar" />
+  <pathelement path="${lib.dir}/json.jar" />
 </path>
 
 <target name="plist_utilities" depends="plist_binding">
@@ -228,6 +225,7 @@
           <src path="${src.dir}" />
           <include name="com/bolsinga/music/*.java" />
           <include name="com/bolsinga/music/data/*.java" />
+          <include name="com/bolsinga/music/data/json/*.java" />
           <include name="com/bolsinga/music/data/raw/*.java" />
           <include name="com/bolsinga/music/data/xml/*.java" />
           <classpath refid="web_classpath" />
@@ -416,21 +414,7 @@ The package target below used to also install the sql jar:
   </exec>
   <copy file="${build.lib}/${ant.project.name}.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
-
-  <copy todir="${dst.lib}/json-0.10">
-    <fileset dir="${lib.dir}/json-0.10">
-      <include name="json-0.10.jar" />
-      <include name="asm-2.2.3.jar" />
-      <include name="asm-attrs-2.2.3.jar" />
-      <include name="asm-commons-2.2.3.jar" />
-    </fileset>
-  </copy>
-  
-  <copy todir="${dst.lib}/google-collections">
-    <fileset dir="${lib.dir}/google-collections">
-      <include name="google-collect-snapshot-20071022.jar" />
-    </fileset>
-  </copy>
+  <copy file="${lib.dir}/json.jar" todir="${dst.lib}" />
   
   <copy todir="${dst.lib}/jwsdp-2.0">
     <fileset dir="${jwsdp.home}">

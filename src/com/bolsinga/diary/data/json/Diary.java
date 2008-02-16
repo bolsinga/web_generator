@@ -5,36 +5,27 @@ import java.text.*;
 import java.util.*;
 
 import org.json.*;
-import com.twolattes.json.*;
 
-@Entity
+
 public class Diary implements com.bolsinga.diary.data.Diary {
-  @Value
   private String timestamp;
-  @Value
   private String title;
-  @Value
   private String statics;
-  @Value
   private String header;
-  @Value
   private String friends;
-  @Value
   private String colophon;
-  @Value
   private List<Entry> entries;
   
   public static void export(final com.bolsinga.diary.data.Diary diary, final String outputFile) throws com.bolsinga.web.WebException {    
-    com.bolsinga.diary.data.json.Diary jsonDiary = null;
-    if (diary instanceof com.bolsinga.diary.data.json.Diary) {
-      jsonDiary = (com.bolsinga.diary.data.json.Diary)diary;
-    } else {
-      jsonDiary = new Diary(diary);
-    }
-
     JSONObject json = null;
-    Marshaller<com.bolsinga.diary.data.json.Diary> m = Marshaller.create(com.bolsinga.diary.data.json.Diary.class);
-    json = m.marshall(jsonDiary);
+    try {
+      json = Diary.createJSON(diary);
+    } catch (JSONException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't export json: ");
+      sb.append(diary.getTitle());
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    }
     
     FileWriter fw = null;
     try {
@@ -48,7 +39,11 @@ public class Diary implements com.bolsinga.diary.data.Diary {
       }
       
       try {
-        fw.write(json.toString(2));
+        if (com.bolsinga.web.Util.getPrettyOutput()) {
+          fw.write(json.toString(2));
+        } else {
+          json.write(fw);
+        }
       } catch (Exception e) {
         StringBuilder sb = new StringBuilder();
         sb.append("Can't write file: ");
@@ -68,6 +63,25 @@ public class Diary implements com.bolsinga.diary.data.Diary {
       }
     }
   }
+
+  static JSONObject createJSON(final com.bolsinga.diary.data.Diary diary) throws JSONException {
+    JSONObject json = new JSONObject();
+    
+    json.put("timestamp", com.bolsinga.web.Util.toJSONCalendar(diary.getTimestamp()));
+    json.put("title", diary.getTitle());
+    json.put("statics", diary.getStatic());
+    json.put("header", diary.getHeader());
+    json.put("friends", diary.getFriends());
+    json.put("colophon", diary.getColophon());
+    
+    JSONObject entries = new JSONObject();
+    for (final com.bolsinga.diary.data.Entry e : diary.getEntries()) {
+      entries.put(e.getID(), Entry.createJSON(e));
+    }
+    json.put("entries", entries);
+    
+    return json;
+  }
   
   private Diary() {
   
@@ -83,12 +97,12 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     
     List<? extends com.bolsinga.diary.data.Entry> srcEntries = diary.getEntries();
     
-    entries = new ArrayList<Entry>(srcEntries.size());
+    List<Entry> entries = new ArrayList<Entry>(srcEntries.size());
     for (com.bolsinga.diary.data.Entry entry : srcEntries) {
       entries.add(Entry.create(entry));
     }
   }
-  
+
   public GregorianCalendar getTimestamp() {
     return com.bolsinga.web.Util.fromJSONCalendar(timestamp);
   }
