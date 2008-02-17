@@ -15,6 +15,33 @@ public class Location implements com.bolsinga.music.data.Location {
     }
     return new Location(location);
   }
+
+  static JSONObject createJSON(final com.bolsinga.music.data.Location location) throws JSONException {
+    JSONObject json = new JSONObject();
+    
+    String street = location.getStreet();
+    if (street != null) {
+      json.put("street", street);
+    }
+    String city = location.getCity();
+    if (city != null) {
+      json.put("city", city);
+    }
+    String state = location.getState();
+    if (state != null) {
+      json.put("state", state);
+    }
+    int zip = location.getZip();
+    if (zip != 0) {
+      json.put("zip", zip);
+    }
+    String web = location.getWeb();
+    if (web != null) {
+      json.put("web", web);
+    }
+    
+    return json;
+  }
   
   private Location() {
   

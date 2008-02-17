@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "site data_dir output_dir <xml | xml-site | site>"
+    echo "site data_dir output_dir <xml | xml-site | json | site>"
     echo $1
     exit 1
 }
@@ -28,8 +28,6 @@ fi
 
 for i in \
     "${SITE_LIB_DIR}" \
-    "${SITE_LIB_DIR}/google-collections" \
-    "${SITE_LIB_DIR}/json-0.10" \
     "${SITE_LIB_DIR}/jwsdp-2.0/jaxb/lib" \
     "${SITE_LIB_DIR}/jwsdp-2.0/sjsxp/lib" \
     "${SITE_LIB_DIR}/jwsdp-2.0/jwsdp-shared/lib" ; do
@@ -52,34 +50,6 @@ if [ ! -d "${DATA_HOME}" ] ; then
     usage "No $DATA_HOME"
 fi
 
-# These files are required. If this is the 'first time' these will not be 
-#  present. It is sufficient to make empty files.
-for i in \
-    "${DATA_HOME}/diary.xml" \
-    "${DATA_HOME}/music.xml" ; do
-  if [ ! -f "$i" ] ; then
-      touch "$i"
-  fi
-done
-
-for i in \
-    "${DATA_HOME}/iTunes Music Library.xml" \
-    "${DATA_HOME}/shows.txt" \
-    "${DATA_HOME}/venuemap.txt" \
-    "${DATA_HOME}/bandsort.txt" \
-    "${DATA_HOME}/relations.txt" \
-    "${DATA_HOME}/comments.txt" \
-    "${DATA_HOME}/statics.txt" \
-    "${DATA_HOME}/diary.xml" \
-    "${DATA_HOME}/music.xml" \
-    "${DATA_HOME}/settings.xml" \
-    "${DATA_HOME}/layout.css" ; do
-  if [ ! -f "$i" ] ; then
-      usage "Can't find $i"
-  fi
-  DATA_FILES="$DATA_FILES \"$i\""
-done
-
 OUTPUT_DIR="$2"
 if [ -z "$OUTPUT_DIR" ] ; then
     usage "No output_dir"
@@ -95,6 +65,39 @@ fi
 ACTION="$3"
 if [ -z "$ACTION" ] ; then
    usage "No action"
+fi
+
+for i in \
+    "${DATA_HOME}/iTunes Music Library.xml" \
+    "${DATA_HOME}/shows.txt" \
+    "${DATA_HOME}/venuemap.txt" \
+    "${DATA_HOME}/bandsort.txt" \
+    "${DATA_HOME}/relations.txt" \
+    "${DATA_HOME}/comments.txt" \
+    "${DATA_HOME}/statics.txt" \
+    "${DATA_HOME}/settings.xml" \
+    "${DATA_HOME}/layout.css" ; do
+  if [ ! -f "$i" ] ; then
+      usage "Can't find $i"
+  fi
+  DATA_FILES="$DATA_FILES \"$i\""
+done
+
+if [ $ACTION = "xml" ] ; then
+  DATA_FILES="$DATA_FILES \"${DATA_HOME}/diary.xml\" \"${DATA_HOME}/music.xml\""
+elif [ $ACTION = "json" ] ; then
+  DATA_FILES="$DATA_FILES \"${DATA_HOME}/diary.json\" \"${DATA_HOME}/music.json\""
+elif [ $ACTION = "xml-site" ] ; then
+  for i in \
+    "${DATA_HOME}/diary.xml" \
+    "${DATA_HOME}/music.xml" ; do
+    if [ ! -f "$i" ] ; then
+      usage "Can't find $i"
+    fi
+  DATA_FILES="$DATA_FILES \"$i\""
+  done
+elif [ $ACTION = "site" ] ; then
+  DATA_FILES="$DATA_FILES dummy_diary dummy_music"
 fi
 
 COMMAND="exec \"$JAVA_CMD\" -Xms96m -Xmx96m -ea:com.bolsinga..."

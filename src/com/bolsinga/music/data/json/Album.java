@@ -7,14 +7,14 @@ import org.json.*;
 public class Album implements com.bolsinga.music.data.Album {
   private String id;
   private String title;
-  private Artist performer; // TODO serialize ID
+  private Artist performer;
   private boolean compilation = false;
   private List<String> formats;
   private Date release = null;
   private Date purchase = null;
-  private Label label = null;  // TODO serialize ID
+  private Label label = null;
   private String comment = null;
-  private List<Song> songs;  // TODO serialize ID List
+  private List<Song> songs;
 
   private static final Map<String, Album> sMap = new HashMap<String, Album>();
 
@@ -34,6 +34,50 @@ public class Album implements com.bolsinga.music.data.Album {
       return result;
     }
   }
+
+  static JSONObject createJSON(final com.bolsinga.music.data.Album album) throws JSONException {
+    JSONObject json = new JSONObject();
+    
+    json.put("id", album.getID());
+    json.put("title", album.getTitle());
+    com.bolsinga.music.data.Artist a = album.getPerformer();
+    if (a != null) {
+      json.put("artist", a.getID());
+    }
+    if (album.isCompilation()) {
+      json.put("compilation", true);
+    }
+    List<String> formats = album.getFormats();
+    if (formats != null && formats.size() > 0) {
+      json.put("formats", formats);
+    }
+    com.bolsinga.music.data.Date d = album.getReleaseDate();
+    if (d != null) {
+      json.put("release", Date.createJSON(d));
+    }
+    d = album.getPurchaseDate();
+    if (d != null) {
+      json.put("purchase", Date.createJSON(d));
+    }
+    com.bolsinga.music.data.Label l = album.getLabel();
+    if (l != null) {
+      json.put("label", l.getID());
+    }
+    String comment = album.getComment();
+    if (comment != null) {
+      json.put("comment", comment);
+    }
+    List<? extends com.bolsinga.music.data.Song> songs = album.getSongs();
+    if (songs != null && songs.size() > 0) {
+      List<String> songIDs = new ArrayList<String>(songs.size());
+      for (final com.bolsinga.music.data.Song song : songs) {
+        songIDs.add(song.getID());
+      }
+      json.put("songs", songIDs);
+    }
+    
+    return json;
+  }
   
   private Album() {
   
@@ -42,9 +86,19 @@ public class Album implements com.bolsinga.music.data.Album {
   private Album(final com.bolsinga.music.data.Album src) {
     id = src.getID();
     title = src.getTitle();
-    compilation = src.isCompilation();
     performer = Artist.createOrGet(src.getPerformer());
+    compilation = src.isCompilation();
     formats = src.getFormats();
+    release = Date.create(src.getReleaseDate());
+    purchase = Date.create(src.getPurchaseDate());
+    label = Label.createOrGet(src.getLabel());
+    comment = src.getComment();
+
+    List<? extends com.bolsinga.music.data.Song> srcSongs = src.getSongs();
+    songs = new ArrayList<Song>(srcSongs.size());
+    for (com.bolsinga.music.data.Song song : srcSongs) {
+      songs.add(Song.createOrGet(song));
+    }
   }
 
   public String getID() {

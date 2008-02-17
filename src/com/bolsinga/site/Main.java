@@ -22,13 +22,13 @@ public class Main implements Backgroundable {
     String relations = args[4];
     String comments = args[5];
     String statics = args[6];
+    
+    String settingsFile = args[7];
+    
+    String cssFile = args[8];
 
-    String diaryFile = args[7];
-    String musicFile = args[8];
-    
-    String settingsFile = args[9];
-    
-    String cssFile = args[10];
+    String diaryFile = args[9];
+    String musicFile = args[10];
 
     String output = args[11];
 
@@ -45,7 +45,7 @@ public class Main implements Backgroundable {
       } else if (command.equals("site")) {
         main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output, cssFile);
       } else if (command.equals("json")) {
-        main.generateJSON(itunes, shows, venue, sort, relations, comments, statics);
+        main.generateJSON(diaryFile, musicFile, itunes, shows, venue, sort, relations, comments, statics);
       } else {
         Main.usage(args, "Invalid action");
       }
@@ -90,12 +90,12 @@ public class Main implements Backgroundable {
     generateSite(music, diary, output, cssFile);
   }
   
-  private void generateJSON(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics) throws Exception {
-//    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
-//    com.bolsinga.music.data.json.Music.export(music, "music.json");
+  private void generateJSON(final String diaryFile, final String musicFile, final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics) throws Exception {
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
+    com.bolsinga.music.data.json.Music.export(music, musicFile);
 
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
-    com.bolsinga.diary.data.json.Diary.export(diary, "diary.json");
+    com.bolsinga.diary.data.json.Diary.export(diary, diaryFile);
   }
 
   private void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
@@ -144,7 +144,7 @@ public class Main implements Backgroundable {
   }
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [diary.xml] [music.xml] [settings.xml] [layout.css] [output.dir] <xml|xml-site|site>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.xml] [layout.css] [diary input/output file] [music input/output file] [output.dir] <xml|xml-site|json|site>");
     System.out.println(reason);
     System.out.println("Arguments:");
     for (int i = 0; i < badargs.length; i++) {

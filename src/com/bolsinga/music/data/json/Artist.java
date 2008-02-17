@@ -31,6 +31,35 @@ public class Artist implements com.bolsinga.music.data.Artist {
     }
   }
 
+  static JSONObject createJSON(final com.bolsinga.music.data.Artist artist) throws JSONException {
+    JSONObject json = new JSONObject();
+    
+    json.put("id", artist.getID());
+    json.put("name", artist.getName());
+    String sortname = artist.getSortname();
+    if (sortname != null) {
+      json.put("sortname", sortname);
+    }
+    com.bolsinga.music.data.Location location = artist.getLocation();
+    if (location != null) {
+      json.put("location", Location.createJSON(location));
+    }
+    String comment = artist.getComment();
+    if (comment != null) {
+      json.put("comment", comment);
+    }
+    List<? extends com.bolsinga.music.data.Album> albums = artist.getAlbums();
+    if (albums != null && albums.size() > 0) {
+      List<String> albumIDs = new ArrayList<String>(albums.size());
+      for (final com.bolsinga.music.data.Album album : albums) {
+        albumIDs.add(album.getID());
+      }
+      json.put("albums", albumIDs);
+    }
+    
+    return json;
+  }
+
   private Artist() {
   
   }
@@ -41,13 +70,12 @@ public class Artist implements com.bolsinga.music.data.Artist {
     sortname = artist.getSortname();
     location = Location.create(artist.getLocation());
     comment = artist.getComment();
-    /*
+
     List<? extends com.bolsinga.music.data.Album> srcAlbums = artist.getAlbums();
     albums = new ArrayList<Album>(srcAlbums.size());
     for (com.bolsinga.music.data.Album album : srcAlbums) {
       albums.add(Album.createOrGet(album));
     }
-    */
   }
   
   public String getID() {

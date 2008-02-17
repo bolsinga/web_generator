@@ -10,25 +10,18 @@ public class Music implements com.bolsinga.music.data.Music {
   private List<Venue> venues;
   private List<Artist> artists;
   private List<Label> labels;
-
   private List<Relation> relations;
   private List<Song> songs;
   private List<Album> albums;
   private List<Show> shows;
 
   public static void export(final com.bolsinga.music.data.Music music, final String outputFile) throws com.bolsinga.web.WebException {    
-    com.bolsinga.music.data.json.Music jsonMusic = null;
-    if (music instanceof com.bolsinga.music.data.json.Music) {
-      jsonMusic = (com.bolsinga.music.data.json.Music)music;
-    } else {
-      jsonMusic = new Music(music);
-    }
-    
     JSONObject json = null;
-    /*
-    Marshaller<com.bolsinga.music.data.json.Music> m = Marshaller.create(com.bolsinga.music.data.json.Music.class);
-    json = m.marshall(jsonMusic);
-    */
+    try {
+      json = Music.createJSON(music);
+    } catch (JSONException e) {
+      throw new com.bolsinga.web.WebException("Can't export json music", e);
+    }
     
     FileWriter fw = null;
     try {
@@ -42,7 +35,11 @@ public class Music implements com.bolsinga.music.data.Music {
       }
       
       try {
-        fw.write(json.toString(2));
+        if (com.bolsinga.web.Util.getPrettyOutput()) {
+          fw.write(json.toString(2));
+        } else {
+          json.write(fw);
+        }
       } catch (Exception e) {
         StringBuilder sb = new StringBuilder();
         sb.append("Can't write file: ");
@@ -62,6 +59,56 @@ public class Music implements com.bolsinga.music.data.Music {
       }
     }
   }
+
+  static JSONObject createJSON(final com.bolsinga.music.data.Music music) throws JSONException {
+    JSONObject json = new JSONObject();
+    
+    json.put("timestamp", com.bolsinga.web.Util.toJSONCalendar(music.getTimestamp()));
+    
+    JSONObject sub = new JSONObject();
+    for (final com.bolsinga.music.data.Venue v : music.getVenues()) {
+      sub.put(v.getID(), Venue.createJSON(v));
+    }
+    json.put("venues", sub);
+    
+    sub = new JSONObject();
+    for (final com.bolsinga.music.data.Artist a : music.getArtists()) {
+      sub.put(a.getID(), Artist.createJSON(a));
+    }
+    json.put("artists", sub);
+
+    sub = new JSONObject();
+    for (final com.bolsinga.music.data.Label l : music.getLabels()) {
+      sub.put(l.getID(), Label.createJSON(l));
+    }
+    json.put("labels", sub);
+
+    sub = new JSONObject();
+    for (final com.bolsinga.music.data.Relation r : music.getRelations()) {
+      sub.put(r.getID(), Relation.createJSON(r));
+    }
+    json.put("relations", sub);
+
+    sub = new JSONObject();
+    for (final com.bolsinga.music.data.Song s : music.getSongs()) {
+      sub.put(s.getID(), Song.createJSON(s));
+    }
+    json.put("songs", sub);
+    
+    sub = new JSONObject();
+    for (final com.bolsinga.music.data.Album a : music.getAlbums()) {
+      sub.put(a.getID(), Album.createJSON(a));
+    }
+    json.put("albums", sub);
+    
+    sub = new JSONObject();
+    for (final com.bolsinga.music.data.Show s : music.getShows()) {
+      sub.put(s.getID(), Show.createJSON(s));
+    }
+    json.put("shows", sub);
+    
+    return json;
+  }
   
   private Music() {
   
@@ -72,20 +119,44 @@ public class Music implements com.bolsinga.music.data.Music {
     
     List<? extends com.bolsinga.music.data.Venue> srcVenues = music.getVenues();
     venues = new ArrayList<Venue>(srcVenues.size());
-    for (com.bolsinga.music.data.Venue venue : srcVenues) {
-      venues.add(Venue.create(venue));
-    }
-    
-    List<? extends com.bolsinga.music.data.Album> srcAlbums = music.getAlbums();
-    albums = new ArrayList<Album>(srcAlbums.size());
-    for (com.bolsinga.music.data.Album album : srcAlbums) {
-      albums.add(Album.createOrGet(album));
+    for (com.bolsinga.music.data.Venue a : srcVenues) {
+      venues.add(Venue.createOrGet(a));
     }
     
     List<? extends com.bolsinga.music.data.Artist> srcArtists = music.getArtists();
     artists = new ArrayList<Artist>(srcArtists.size());
-    for (com.bolsinga.music.data.Artist artist : srcArtists) {
-      artists.add(Artist.createOrGet(artist));
+    for (com.bolsinga.music.data.Artist a : srcArtists) {
+      artists.add(Artist.createOrGet(a));
+    }
+
+    List<? extends com.bolsinga.music.data.Label> srcLabels = music.getLabels();
+    labels = new ArrayList<Label>(srcLabels.size());
+    for (com.bolsinga.music.data.Label a : srcLabels) {
+      labels.add(Label.createOrGet(a));
+    }
+
+    List<? extends com.bolsinga.music.data.Relation> srcRelations = music.getRelations();
+    relations = new ArrayList<Relation>(srcRelations.size());
+    for (com.bolsinga.music.data.Relation a : srcRelations) {
+      relations.add(Relation.create(a));
+    }
+
+    List<? extends com.bolsinga.music.data.Song> srcSongs = music.getSongs();
+    songs = new ArrayList<Song>(srcSongs.size());
+    for (com.bolsinga.music.data.Song a : srcSongs) {
+      songs.add(Song.createOrGet(a));
+    }
+
+    List<? extends com.bolsinga.music.data.Album> srcAlbums = music.getAlbums();
+    albums = new ArrayList<Album>(srcAlbums.size());
+    for (com.bolsinga.music.data.Album a : srcAlbums) {
+      albums.add(Album.createOrGet(a));
+    }
+    
+    List<? extends com.bolsinga.music.data.Show> srcShows = music.getShows();
+    shows = new ArrayList<Show>(srcShows.size());
+    for (com.bolsinga.music.data.Show a : srcShows) {
+      shows.add(Show.create(a));
     }
   }
   

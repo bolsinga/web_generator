@@ -43,7 +43,7 @@
         <classpath refid="jaxb_xjc_classpath" />
 </taskdef>
 
-<property name="javac.debug" value="yes" />
+<property name="javac.debug" value="no" />
 <property name="javac.lint" value="-Xlint:none" />
 
 <target name="clean">

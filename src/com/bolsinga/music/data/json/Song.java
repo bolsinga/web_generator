@@ -8,13 +8,77 @@ public class Song implements com.bolsinga.music.data.Song {
   private String id;
   private Artist artist;
   private String title;
-  private Date release;
-  private String lastPlayed;
-  private int track;
-  private String genre;
+  private Date release = null;
+  private String lastPlayed = null;
+  private int track = 0;
+  private String genre = null;
   private int playCount;
-  private boolean digitized;
-  private boolean live;
+  private boolean digitized = true;
+  private boolean live = false;
+
+  private static final Map<String, Song> sMap = new HashMap<String, Song>();
+
+  static Song get(final com.bolsinga.music.data.Song src) {
+    synchronized (sMap) {
+      return sMap.get(src.getID());
+    }
+  }
+  
+  static Song createOrGet(final com.bolsinga.music.data.Song src) {
+    synchronized (sMap) {
+      Song result = sMap.get(src.getID());
+      if (result == null) {
+        result = new Song(src);
+        sMap.put(src.getID(), result);
+      }
+      return result;
+    }
+  }
+
+  static JSONObject createJSON(final com.bolsinga.music.data.Song song) throws JSONException {
+    JSONObject json = new JSONObject();
+    
+    json.put("id", song.getID());
+    json.put("artist", song.getPerformer().getID());
+    json.put("title", song.getTitle());
+    com.bolsinga.music.data.Date date = song.getReleaseDate();
+    if (date != null) {
+      json.put("release", Date.createJSON(date));
+    }
+    GregorianCalendar lastPlayed = song.getLastPlayed();
+    if (lastPlayed != null) {
+      json.put("lastPlayed", com.bolsinga.web.Util.toJSONCalendar(lastPlayed));
+    }
+    if (song.getTrack() != 0) {
+      json.put("track", song.getTrack());
+    }
+    String s = song.getGenre();
+    if (s != null) {
+      json.put("genre", s);
+    }
+    json.put("playCount", song.getPlayCount());
+    if (song.isDigitized()) {
+      json.put("digitized", true);
+    }
+    if (song.isLive()) {
+      json.put("live", true);
+    }
+    
+    return json;
+  }
+  
+  private Song(final com.bolsinga.music.data.Song song) {
+    id = song.getID();
+    artist = Artist.createOrGet(song.getPerformer());
+    title = song.getTitle();
+    release = Date.create(song.getReleaseDate());
+    lastPlayed = com.bolsinga.web.Util.toJSONCalendar(song.getLastPlayed());
+    track = song.getTrack();
+    genre = song.getGenre();
+    playCount = song.getPlayCount();
+    digitized = song.isDigitized();
+    live = song.isLive();
+  }
   
   public String getID() {
     return id;

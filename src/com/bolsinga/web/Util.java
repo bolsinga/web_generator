@@ -10,8 +10,6 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
 
-import org.json.*;
-
 import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
@@ -506,79 +504,6 @@ public class Util {
     return sDiaryStartYear;
   }
 
-  private static void dumpJSON(final String sourceFile) throws WebException {
-    File src = new File(sourceFile);
-    StringBuilder xmlsb = new StringBuilder();
-
-    BufferedReader br = null;
-    try {
-      try {
-        br = new BufferedReader(new InputStreamReader(new FileInputStream(src)));
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(sourceFile);
-        throw new WebException(sb.toString(), e);
-      }
-    
-      String line;
-      try {
-        while ((line = br.readLine()) != null) {
-          xmlsb.append(line);
-        }
-      } catch (IOException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't read file: ");
-        sb.append(sourceFile);
-        throw new WebException(sb.toString(), e);
-      }
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close file: ");
-          sb.append(sourceFile);
-          throw new WebException(sb.toString(), e);
-        }
-      }
-    }
-
-    JSONObject json;
-    try {
-      json = XML.toJSONObject(xmlsb.toString());
-    } catch (JSONException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't convert xml file to JSON: ");
-      sb.append(sourceFile);
-      throw new WebException(sb.toString(), e);
-    }
-
-    String name = new StringBuilder(sourceFile).append(".json").toString();
-    File f = new File(name);
-
-    try {
-      PrintWriter pw = null;
-      try {
-        pw = new PrintWriter(f);
-        pw.print(json.toString());
-      } finally {
-        if (pw != null) {
-          pw.close();
-        }
-      }
-    } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("The file: ");
-      sb.append(f);
-      sb.append(" could not be written.");
-      System.err.println(sb.toString());
-      System.err.println(e);
-      e.printStackTrace();
-    }
-  }
-  
   public static GregorianCalendar fromJSONCalendar(final String value) {
     java.util.Date d = null;
     try {

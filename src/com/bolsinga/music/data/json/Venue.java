@@ -1,5 +1,7 @@
 package com.bolsinga.music.data.json;
 
+import java.util.*;
+
 import org.json.*;
 
 public class Venue implements com.bolsinga.music.data.Venue {
@@ -8,8 +10,40 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private Location location = null;
   private String comment = null;
   
-  static Venue create(final com.bolsinga.music.data.Venue venue) {
-    return new Venue(venue);
+  private static final Map<String, Venue> sMap = new HashMap<String, Venue>();
+
+  static Venue get(final com.bolsinga.music.data.Venue src) {
+    synchronized (sMap) {
+      return sMap.get(src.getID());
+    }
+  }
+  
+  static Venue createOrGet(final com.bolsinga.music.data.Venue src) {
+    synchronized (sMap) {
+      Venue result = sMap.get(src.getID());
+      if (result == null) {
+        result = new Venue(src);
+        sMap.put(src.getID(), result);
+      }
+      return result;
+    }
+  }
+
+  static JSONObject createJSON(final com.bolsinga.music.data.Venue venue) throws JSONException {
+    JSONObject json = new JSONObject();
+    
+    json.put("id", venue.getID());
+    json.put("name", venue.getName());
+    com.bolsinga.music.data.Location location = venue.getLocation();
+    if (location != null) {
+      json.put("location", Location.createJSON(location));
+    }
+    String comment = venue.getComment();
+    if (comment != null) {
+      json.put("comment", comment);
+    }
+    
+    return json;
   }
   
   private Venue() {
