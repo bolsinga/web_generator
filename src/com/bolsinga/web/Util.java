@@ -54,8 +54,8 @@ public class Util {
 
   private static final ThreadLocal<DateFormat> sJSONTimeFormat = new ThreadLocal<DateFormat>() {
     public DateFormat initialValue() {
-      DateFormat result = DateFormat.getDateInstance();
-      result.setTimeZone(TimeZone.getTimeZone("UTC"));
+      DateFormat result = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+      result.setTimeZone(TimeZone.getTimeZone("GMT"));
       return result;
     }
   };
