@@ -235,15 +235,15 @@ public class Music implements com.bolsinga.music.data.Music {
         
         boolean typeSet = false;
         for (Object member : item.getMembers()) {
-          if (member instanceof Artist) {
-            Artist artist = (Artist)member;
+          if (member instanceof com.bolsinga.music.data.Artist) {
+            com.bolsinga.music.data.Artist artist = (com.bolsinga.music.data.Artist)member;
             if (!typeSet) {
               xmlRelation.setType(com.bolsinga.music.data.xml.impl.RelationType.fromValue("artist"));
               typeSet = true;
             }
             xmlRelation.getMember().add(objFactory.createRelationMember(artistMap.get(artist.getID())));
-          } else if (member instanceof Venue) {
-            Venue venue = (Venue)member;
+          } else if (member instanceof com.bolsinga.music.data.Venue) {
+            com.bolsinga.music.data.Venue venue = (com.bolsinga.music.data.Venue)member;
             if (!typeSet) {
               xmlRelation.setType(com.bolsinga.music.data.xml.impl.RelationType.fromValue("venue"));
               typeSet = true;
