@@ -1,6 +1,9 @@
 package com.bolsinga.web;
 
 import java.io.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.nio.charset.*;
 import java.math.*;
 import java.text.*;
 import java.util.*;
@@ -9,6 +12,8 @@ import java.util.regex.*;
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 import org.apache.ecs.filter.*;
+
+import org.json.*;
 
 import javax.xml.bind.*;
 import javax.xml.datatype.*;
@@ -628,5 +633,99 @@ public class Util {
     map.append("+");
     map.append(l.getState());
     return map.toString();
+  }
+  
+  public static JSONObject createJSON(final String sourceFile) throws com.bolsinga.web.WebException {
+    FileChannel fc = null;
+    try {
+      try {
+        fc = new FileInputStream(new File(sourceFile)).getChannel();
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+
+      ByteBuffer bb = null;
+      try {
+        bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't map: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+      
+      CharBuffer cb = null;
+      try {
+        cb = Charset.forName("UTF-8").newDecoder().decode(bb);
+      } catch (java.nio.charset.CharacterCodingException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Bad Encoding UTF-8: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+      
+      StringBuilder sbjson = new StringBuilder(cb);
+      JSONObject json = null;
+      try {
+        return new JSONObject(sbjson.toString());
+      } catch (JSONException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Cannot instantiate JSONObject: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+    } finally {
+      if (fc != null) {
+        try {
+          fc.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(sourceFile);
+          throw new com.bolsinga.web.WebException(sb.toString(), e);
+        }
+      }
+    }
+  }
+
+  public static void writeJSON(final JSONObject json, final String outputFile) throws com.bolsinga.web.WebException {    
+    FileWriter fw = null;
+    try {
+      try {
+        fw = new FileWriter(outputFile);
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(outputFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+      
+      try {
+        if (com.bolsinga.web.Util.getPrettyOutput()) {
+          fw.write(json.toString(2));
+        } else {
+          json.write(fw);
+        }
+      } catch (Exception e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't write file: ");
+        sb.append(outputFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+    } finally {
+      if (fw != null) {
+        try {
+          fw.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(outputFile);
+          throw new com.bolsinga.web.WebException(sb.toString(), e);
+        }
+      }
+    }
   }
 }
