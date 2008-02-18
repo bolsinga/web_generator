@@ -5,6 +5,10 @@ import java.util.*;
 import org.json.*;
 
 public class Relation implements com.bolsinga.music.data.Relation {
+  private static final String ID = "id";
+  private static final String REASON = "reason";
+  private static final String MEMBERS = "members";
+
   private String id;
   private String reason;
   private List<Object> members;
@@ -16,8 +20,8 @@ public class Relation implements com.bolsinga.music.data.Relation {
   static JSONObject createJSON(final com.bolsinga.music.data.Relation relation) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put("id", relation.getID());
-    json.put("reason", relation.getReason());
+    json.put(ID, relation.getID());
+    json.put(REASON, relation.getReason());
 
     List<Object> members = relation.getMembers();
     List<String> IDs = new ArrayList<String>(members.size());
@@ -32,7 +36,7 @@ public class Relation implements com.bolsinga.music.data.Relation {
         throw new Error("No Relation: " + o.toString());
       }
     }
-    json.put("members", IDs);
+    json.put(MEMBERS, IDs);
     
     return json;
   }

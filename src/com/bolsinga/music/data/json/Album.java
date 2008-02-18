@@ -5,6 +5,17 @@ import java.util.*;
 import org.json.*;
 
 public class Album implements com.bolsinga.music.data.Album {
+  private static final String ID = "id";
+  private static final String TITLE = "title";
+  private static final String PERFORMER = "performer";
+  private static final String COMPLIATION = "compilation";
+  private static final String FORMATS = "formats";
+  private static final String RELEASE = "release";
+  private static final String PURCHASE = "purchase";
+  private static final String LABEL = "label";
+  private static final String COMMENT = "comment";
+  private static final String SONGS = "songs";
+
   private String id;
   private String title;
   private Artist performer;
@@ -38,34 +49,34 @@ public class Album implements com.bolsinga.music.data.Album {
   static JSONObject createJSON(final com.bolsinga.music.data.Album album) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put("id", album.getID());
-    json.put("title", album.getTitle());
+    json.put(ID, album.getID());
+    json.put(TITLE, album.getTitle());
     com.bolsinga.music.data.Artist a = album.getPerformer();
     if (a != null) {
-      json.put("artist", a.getID());
+      json.put(PERFORMER, a.getID());
     }
     if (album.isCompilation()) {
-      json.put("compilation", true);
+      json.put(COMPLIATION, true);
     }
     List<String> formats = album.getFormats();
     if (formats != null && formats.size() > 0) {
-      json.put("formats", formats);
+      json.put(FORMATS, formats);
     }
     com.bolsinga.music.data.Date d = album.getReleaseDate();
     if (d != null) {
-      json.put("release", Date.createJSON(d));
+      json.put(RELEASE, Date.createJSON(d));
     }
     d = album.getPurchaseDate();
     if (d != null) {
-      json.put("purchase", Date.createJSON(d));
+      json.put(PURCHASE, Date.createJSON(d));
     }
     com.bolsinga.music.data.Label l = album.getLabel();
     if (l != null) {
-      json.put("label", l.getID());
+      json.put(LABEL, l.getID());
     }
     String comment = album.getComment();
     if (comment != null) {
-      json.put("comment", comment);
+      json.put(COMMENT, comment);
     }
     List<? extends com.bolsinga.music.data.Song> songs = album.getSongs();
     if (songs != null && songs.size() > 0) {
@@ -73,7 +84,7 @@ public class Album implements com.bolsinga.music.data.Album {
       for (final com.bolsinga.music.data.Song song : songs) {
         songIDs.add(song.getID());
       }
-      json.put("songs", songIDs);
+      json.put(SONGS, songIDs);
     }
     
     return json;

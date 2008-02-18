@@ -5,6 +5,17 @@ import java.util.*;
 import org.json.*;
 
 public class Song implements com.bolsinga.music.data.Song {
+  private static final String ID = "id";
+  private static final String ARTIST = "artist";
+  private static final String TITLE = "title";
+  private static final String RELEASE = "release";
+  private static final String LASTPLAYED = "lastPlayed";
+  private static final String TRACK = "track";
+  private static final String GENRE = "genre";
+  private static final String PLAYCOUNT = "playCount";
+  private static final String DIGITIZED = "digitized";
+  private static final String LIVE = "live";
+
   private String id;
   private Artist artist;
   private String title;
@@ -38,30 +49,30 @@ public class Song implements com.bolsinga.music.data.Song {
   static JSONObject createJSON(final com.bolsinga.music.data.Song song) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put("id", song.getID());
-    json.put("artist", song.getPerformer().getID());
-    json.put("title", song.getTitle());
+    json.put(ID, song.getID());
+    json.put(ARTIST, song.getPerformer().getID());
+    json.put(TITLE, song.getTitle());
     com.bolsinga.music.data.Date date = song.getReleaseDate();
     if (date != null) {
-      json.put("release", Date.createJSON(date));
+      json.put(RELEASE, Date.createJSON(date));
     }
     GregorianCalendar lastPlayed = song.getLastPlayed();
     if (lastPlayed != null) {
-      json.put("lastPlayed", com.bolsinga.web.Util.toJSONCalendar(lastPlayed));
+      json.put(LASTPLAYED, com.bolsinga.web.Util.toJSONCalendar(lastPlayed));
     }
     if (song.getTrack() != 0) {
-      json.put("track", song.getTrack());
+      json.put(TRACK, song.getTrack());
     }
     String s = song.getGenre();
     if (s != null) {
-      json.put("genre", s);
+      json.put(GENRE, s);
     }
-    json.put("playCount", song.getPlayCount());
+    json.put(PLAYCOUNT, song.getPlayCount());
     if (song.isDigitized()) {
-      json.put("digitized", true);
+      json.put(DIGITIZED, true);
     }
     if (song.isLive()) {
-      json.put("live", true);
+      json.put(LIVE, true);
     }
     
     return json;

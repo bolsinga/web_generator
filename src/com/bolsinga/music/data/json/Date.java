@@ -3,6 +3,11 @@ package com.bolsinga.music.data.json;
 import org.json.*;
 
 public class Date implements com.bolsinga.music.data.Date {
+  private static final String UNKNOWN = "unknown";
+  private static final String YEAR = "year";
+  private static final String MONTH = "month";
+  private static final String DAY = "day";
+
   private boolean unknown;
   private int year;
   private int month;
@@ -17,19 +22,19 @@ public class Date implements com.bolsinga.music.data.Date {
     
     boolean unknown = date.isUnknown();
     if (unknown) {
-      json.put("unknown", true);
+      json.put(UNKNOWN, true);
     }
     int i = date.getYear();
     if (i != com.bolsinga.music.data.Date.UNKNOWN) {
-      json.put("year", i);
+      json.put(YEAR, i);
     }
     i = date.getMonth();
     if (i != com.bolsinga.music.data.Date.UNKNOWN) {
-      json.put("month", i);
+      json.put(MONTH, i);
     }
     i = date.getDay();
     if (i != com.bolsinga.music.data.Date.UNKNOWN) {
-      json.put("day", i);
+      json.put(DAY, i);
     }
     
     return json;

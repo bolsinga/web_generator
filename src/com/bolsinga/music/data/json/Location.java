@@ -3,6 +3,12 @@ package com.bolsinga.music.data.json;
 import org.json.*;
 
 public class Location implements com.bolsinga.music.data.Location {
+  private static final String STREET = "street";
+  private static final String CITY = "city";
+  private static final String STATE = "state";
+  private static final String ZIP = "zip";
+  private static final String WEB = "web";
+
   private String street;
   private String city;
   private String state;
@@ -21,23 +27,23 @@ public class Location implements com.bolsinga.music.data.Location {
     
     String street = location.getStreet();
     if (street != null) {
-      json.put("street", street);
+      json.put(STREET, street);
     }
     String city = location.getCity();
     if (city != null) {
-      json.put("city", city);
+      json.put(CITY, city);
     }
     String state = location.getState();
     if (state != null) {
-      json.put("state", state);
+      json.put(STATE, state);
     }
     int zip = location.getZip();
     if (zip != 0) {
-      json.put("zip", zip);
+      json.put(ZIP, zip);
     }
     String web = location.getWeb();
     if (web != null) {
-      json.put("web", web);
+      json.put(WEB, web);
     }
     
     return json;

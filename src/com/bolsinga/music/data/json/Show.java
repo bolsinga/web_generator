@@ -5,12 +5,18 @@ import java.util.*;
 import org.json.*;
 
 public class Show implements com.bolsinga.music.data.Show {
+  private static final String ARTISTS = "artists";
+  private static final String DATE = "date";
+  private static final String VENUE = "venue";
+  private static final String COMMENT = "comment";
+  private static final String ID = "id";
+
   private List<Artist> artists;
   private Date date;
   private Venue venue;
   private String comment = null;
   private String id;
-  
+
   static Show create(final com.bolsinga.music.data.Show show) {
     return new Show(show);
   }
@@ -18,19 +24,19 @@ public class Show implements com.bolsinga.music.data.Show {
   static JSONObject createJSON(final com.bolsinga.music.data.Show show) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put("id", show.getID());
-    json.put("date", Date.createJSON(show.getDate()));
-    json.put("venue", show.getVenue().getID());
+    json.put(ID, show.getID());
+    json.put(DATE, Date.createJSON(show.getDate()));
+    json.put(VENUE, show.getVenue().getID());
     String comment = show.getComment();
     if (comment != null) {
-      json.put("comment", comment);
+      json.put(COMMENT, comment);
     }
     List<? extends com.bolsinga.music.data.Artist> artists = show.getArtists();
     List<String> artistIDs = new ArrayList<String>(artists.size());
     for (final com.bolsinga.music.data.Artist artist : artists) {
       artistIDs.add(artist.getID());
     }
-    json.put("artists", artistIDs);
+    json.put(ARTISTS, artistIDs);
     
     return json;
   }

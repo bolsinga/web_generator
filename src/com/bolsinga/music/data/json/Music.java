@@ -6,6 +6,15 @@ import java.util.*;
 import org.json.*;
 
 public class Music implements com.bolsinga.music.data.Music {
+  private static final String TIMESTAMP = "timestamp";
+  private static final String VENUES = "venues";
+  private static final String ARTISTS = "artists";
+  private static final String LABELS = "labels";
+  private static final String RELATIONS = "relations";
+  private static final String SONGS = "songs";
+  private static final String ALBUMS = "albums";
+  private static final String SHOWS = "shows";
+
   private String timestamp;
   private List<Venue> venues;
   private List<Artist> artists;
@@ -15,97 +24,74 @@ public class Music implements com.bolsinga.music.data.Music {
   private List<Album> albums;
   private List<Show> shows;
 
+  public static Music create(final String sourceFile) throws com.bolsinga.web.WebException {
+    JSONObject json = com.bolsinga.web.Util.createJSON(sourceFile);
+    try {
+      return new Music(json);
+    } catch (JSONException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Cannot create Music from JSON: ");
+      sb.append(sourceFile);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    }
+  }
+  
   public static void export(final com.bolsinga.music.data.Music music, final String outputFile) throws com.bolsinga.web.WebException {    
     JSONObject json = null;
     try {
       json = Music.createJSON(music);
     } catch (JSONException e) {
-      throw new com.bolsinga.web.WebException("Can't export json music", e);
+      throw new com.bolsinga.web.WebException("Can't export music to json", e);
     }
-    
-    FileWriter fw = null;
-    try {
-      try {
-        fw = new FileWriter(outputFile);
-      } catch (IOException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(outputFile);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
-      
-      try {
-        if (com.bolsinga.web.Util.getPrettyOutput()) {
-          fw.write(json.toString(2));
-        } else {
-          json.write(fw);
-        }
-      } catch (Exception e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't write file: ");
-        sb.append(outputFile);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
-    } finally {
-      if (fw != null) {
-        try {
-          fw.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(outputFile);
-          throw new com.bolsinga.web.WebException(sb.toString(), e);
-        }
-      }
-    }
+    com.bolsinga.web.Util.writeJSON(json, outputFile);
   }
 
   static JSONObject createJSON(final com.bolsinga.music.data.Music music) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put("timestamp", com.bolsinga.web.Util.toJSONCalendar(music.getTimestamp()));
+    json.put(TIMESTAMP, com.bolsinga.web.Util.toJSONCalendar(music.getTimestamp()));
     
     JSONObject sub = new JSONObject();
     for (final com.bolsinga.music.data.Venue v : music.getVenues()) {
       sub.put(v.getID(), Venue.createJSON(v));
     }
-    json.put("venues", sub);
+    json.put(VENUES, sub);
     
     sub = new JSONObject();
     for (final com.bolsinga.music.data.Artist a : music.getArtists()) {
       sub.put(a.getID(), Artist.createJSON(a));
     }
-    json.put("artists", sub);
+    json.put(ARTISTS, sub);
 
     sub = new JSONObject();
     for (final com.bolsinga.music.data.Label l : music.getLabels()) {
       sub.put(l.getID(), Label.createJSON(l));
     }
-    json.put("labels", sub);
+    json.put(LABELS, sub);
 
     sub = new JSONObject();
     for (final com.bolsinga.music.data.Relation r : music.getRelations()) {
       sub.put(r.getID(), Relation.createJSON(r));
     }
-    json.put("relations", sub);
+    json.put(RELATIONS, sub);
 
     sub = new JSONObject();
     for (final com.bolsinga.music.data.Song s : music.getSongs()) {
       sub.put(s.getID(), Song.createJSON(s));
     }
-    json.put("songs", sub);
+    json.put(SONGS, sub);
     
     sub = new JSONObject();
     for (final com.bolsinga.music.data.Album a : music.getAlbums()) {
       sub.put(a.getID(), Album.createJSON(a));
     }
-    json.put("albums", sub);
+    json.put(ALBUMS, sub);
     
     sub = new JSONObject();
     for (final com.bolsinga.music.data.Show s : music.getShows()) {
       sub.put(s.getID(), Show.createJSON(s));
     }
-    json.put("shows", sub);
+    json.put(SHOWS, sub);
     
     return json;
   }
@@ -158,6 +144,10 @@ public class Music implements com.bolsinga.music.data.Music {
     for (com.bolsinga.music.data.Show a : srcShows) {
       shows.add(Show.create(a));
     }
+  }
+  
+  private Music(final JSONObject json) throws JSONException {
+  
   }
   
   public GregorianCalendar getTimestamp() {

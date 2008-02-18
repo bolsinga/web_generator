@@ -5,6 +5,13 @@ import java.util.*;
 import org.json.*;
 
 public class Artist implements com.bolsinga.music.data.Artist {
+  private static final String ID = "id";
+  private static final String NAME = "name";
+  private static final String SORTNAME = "sortname";
+  private static final String LOCATION = "location";
+  private static final String COMMENT = "comment";
+  private static final String ALBUMS = "albums";
+
   private String id;
   private String name;
   private String sortname = null;
@@ -34,19 +41,19 @@ public class Artist implements com.bolsinga.music.data.Artist {
   static JSONObject createJSON(final com.bolsinga.music.data.Artist artist) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put("id", artist.getID());
-    json.put("name", artist.getName());
+    json.put(ID, artist.getID());
+    json.put(NAME, artist.getName());
     String sortname = artist.getSortname();
     if (sortname != null) {
-      json.put("sortname", sortname);
+      json.put(SORTNAME, sortname);
     }
     com.bolsinga.music.data.Location location = artist.getLocation();
     if (location != null) {
-      json.put("location", Location.createJSON(location));
+      json.put(LOCATION, Location.createJSON(location));
     }
     String comment = artist.getComment();
     if (comment != null) {
-      json.put("comment", comment);
+      json.put(COMMENT, comment);
     }
     List<? extends com.bolsinga.music.data.Album> albums = artist.getAlbums();
     if (albums != null && albums.size() > 0) {
@@ -54,7 +61,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
       for (final com.bolsinga.music.data.Album album : albums) {
         albumIDs.add(album.getID());
       }
-      json.put("albums", albumIDs);
+      json.put(ALBUMS, albumIDs);
     }
     
     return json;

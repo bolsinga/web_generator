@@ -5,6 +5,11 @@ import java.util.*;
 import org.json.*;
 
 public class Venue implements com.bolsinga.music.data.Venue {
+  private static final String ID = "id";
+  private static final String NAME = "name";
+  private static final String LOCATION = "location";
+  private static final String COMMENT = "comment";
+
   private String id;
   private String name;
   private Location location = null;
@@ -32,15 +37,15 @@ public class Venue implements com.bolsinga.music.data.Venue {
   static JSONObject createJSON(final com.bolsinga.music.data.Venue venue) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put("id", venue.getID());
-    json.put("name", venue.getName());
+    json.put(ID, venue.getID());
+    json.put(NAME, venue.getName());
     com.bolsinga.music.data.Location location = venue.getLocation();
     if (location != null) {
-      json.put("location", Location.createJSON(location));
+      json.put(LOCATION, Location.createJSON(location));
     }
     String comment = venue.getComment();
     if (comment != null) {
-      json.put("comment", comment);
+      json.put(COMMENT, comment);
     }
     
     return json;
