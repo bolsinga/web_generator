@@ -1,13 +1,23 @@
 package com.bolsinga.diary.data.json;
 
 import java.io.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.nio.charset.*;
 import java.text.*;
 import java.util.*;
 
 import org.json.*;
 
-
 public class Diary implements com.bolsinga.diary.data.Diary {
+  private static final String TIMESTAMP = "timestamp";
+  private static final String TITLE = "title";
+  private static final String STATICS = "statics";
+  private static final String HEADER = "header";
+  private static final String FRIENDS = "friends";
+  private static final String COLOPHON = "colophon";
+  private static final String ENTRIES = "entries";
+
   private String timestamp;
   private String title;
   private String statics;
@@ -15,6 +25,70 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   private String friends;
   private String colophon;
   private List<Entry> entries;
+  
+  public static Diary create(final String sourceFile) throws com.bolsinga.web.WebException {
+    FileChannel fc = null;
+    try {
+      try {
+        fc = new FileInputStream(new File(sourceFile)).getChannel();
+      } catch (FileNotFoundException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't find file: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+
+      ByteBuffer bb = null;
+      try {
+        bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't map: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+      
+      CharBuffer cb = null;
+      try {
+        cb = Charset.forName("UTF-8").newDecoder().decode(bb);
+      } catch (java.nio.charset.CharacterCodingException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Bad Encoding UTF-8: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+      
+      StringBuilder sbjson = new StringBuilder(cb);
+      JSONObject json = null;
+      try {
+        json = new JSONObject(sbjson.toString());
+      } catch (JSONException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Cannot instantiate JSONObject: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+      try {
+        return new Diary(json);
+      } catch (JSONException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Cannot create Diary from JSON: ");
+        sb.append(sourceFile);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+    } finally {
+      if (fc != null) {
+        try {
+          fc.close();
+        } catch (IOException e) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Unable to close: ");
+          sb.append(sourceFile);
+          throw new com.bolsinga.web.WebException(sb.toString(), e);
+        }
+      }
+    }
+  }
   
   public static void export(final com.bolsinga.diary.data.Diary diary, final String outputFile) throws com.bolsinga.web.WebException {    
     JSONObject json = null;
@@ -67,18 +141,18 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   static JSONObject createJSON(final com.bolsinga.diary.data.Diary diary) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put("timestamp", com.bolsinga.web.Util.toJSONCalendar(diary.getTimestamp()));
-    json.put("title", diary.getTitle());
-    json.put("statics", diary.getStatic());
-    json.put("header", diary.getHeader());
-    json.put("friends", diary.getFriends());
-    json.put("colophon", diary.getColophon());
+    json.put(TIMESTAMP, com.bolsinga.web.Util.toJSONCalendar(diary.getTimestamp()));
+    json.put(TITLE, diary.getTitle());
+    json.put(STATICS, diary.getStatic());
+    json.put(HEADER, diary.getHeader());
+    json.put(FRIENDS, diary.getFriends());
+    json.put(COLOPHON, diary.getColophon());
     
     JSONObject entries = new JSONObject();
     for (final com.bolsinga.diary.data.Entry e : diary.getEntries()) {
       entries.put(e.getID(), Entry.createJSON(e));
     }
-    json.put("entries", entries);
+    json.put(ENTRIES, entries);
     
     return json;
   }
@@ -100,6 +174,24 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     List<Entry> entries = new ArrayList<Entry>(srcEntries.size());
     for (com.bolsinga.diary.data.Entry entry : srcEntries) {
       entries.add(Entry.create(entry));
+    }
+  }
+  
+  private Diary(final JSONObject json) throws JSONException {
+    setTimestamp(com.bolsinga.web.Util.fromJSONCalendar(json.getString(TIMESTAMP)));
+    title = json.getString(TITLE);
+    statics = json.getString(STATICS);
+    header = json.getString(HEADER);
+    friends = json.getString(FRIENDS);
+    colophon = json.getString(COLOPHON);
+    
+    JSONObject jsonEntries = json.getJSONObject(ENTRIES);
+    entries = new ArrayList<Entry>(jsonEntries.length());
+    Iterator i = jsonEntries.keys();
+    while (i.hasNext()) {
+      String key = (String)i.next();
+      JSONObject jsonEntry = jsonEntries.getJSONObject(key);
+      entries.add(Entry.create(jsonEntry));
     }
   }
 
