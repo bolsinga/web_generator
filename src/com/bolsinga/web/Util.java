@@ -692,22 +692,23 @@ public class Util {
   }
 
   public static void writeJSON(final JSONObject json, final String outputFile) throws com.bolsinga.web.WebException {    
-    FileWriter fw = null;
+    FileOutputStream fos = null;
+    try {
+      fos = new FileOutputStream(outputFile);
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(outputFile);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    }
+    
+    OutputStreamWriter osw = new OutputStreamWriter(fos, Charset.forName("UTF-8"));
     try {
       try {
-        fw = new FileWriter(outputFile);
-      } catch (IOException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(outputFile);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
-      
-      try {
         if (com.bolsinga.web.Util.getPrettyOutput()) {
-          fw.write(json.toString(2));
+          osw.write(json.toString(2));
         } else {
-          json.write(fw);
+          json.write(osw);
         }
       } catch (Exception e) {
         StringBuilder sb = new StringBuilder();
@@ -716,9 +717,9 @@ public class Util {
         throw new com.bolsinga.web.WebException(sb.toString(), e);
       }
     } finally {
-      if (fw != null) {
+      if (osw != null) {
         try {
-          fw.close();
+          osw.close();
         } catch (IOException e) {
           StringBuilder sb = new StringBuilder();
           sb.append("Unable to close: ");
