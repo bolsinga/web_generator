@@ -20,6 +20,10 @@ public class Show implements com.bolsinga.music.data.Show {
   static Show create(final com.bolsinga.music.data.Show show) {
     return new Show(show);
   }
+  
+  static Show create(final JSONObject json) throws JSONException {
+    return new Show(json);
+  }
 
   static JSONObject createJSON(final com.bolsinga.music.data.Show show) throws JSONException {
     JSONObject json = new JSONObject();
@@ -55,6 +59,22 @@ public class Show implements com.bolsinga.music.data.Show {
     artists = new ArrayList<Artist>(srcArtists.size());
     for (final com.bolsinga.music.data.Artist artist : srcArtists) {
       artists.add(Artist.createOrGet(artist));
+    }
+  }
+  
+  private Show(final JSONObject json) throws JSONException {
+    id = json.getString(ID);
+    date = Date.create(json.getJSONObject(DATE));
+    comment = json.optString(COMMENT, null);
+    venue = Venue.get(json.getString(VENUE));
+    assert venue != null : "Show has no venue!";
+    JSONArray jsonArray = json.optJSONArray(ARTISTS);
+    artists = new ArrayList<Artist>(jsonArray.length());
+    for (int i = 0; i < jsonArray.length(); i++) {
+      String jsonID = jsonArray.getString(i);
+      Artist artist = Artist.get(jsonID);
+      assert artist != null : "Can't get Artist: " + jsonID;
+      artists.add(artist);
     }
   }
   

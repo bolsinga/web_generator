@@ -21,6 +21,10 @@ public class Location implements com.bolsinga.music.data.Location {
     }
     return new Location(location);
   }
+  
+  static Location create(final JSONObject json) throws JSONException {
+    return new Location(json);
+  }
 
   static JSONObject createJSON(final com.bolsinga.music.data.Location location) throws JSONException {
     JSONObject json = new JSONObject();
@@ -59,6 +63,14 @@ public class Location implements com.bolsinga.music.data.Location {
     state = location.getState();
     zip = location.getZip();
     web = location.getWeb();
+  }
+  
+  private Location(final JSONObject json) throws JSONException {
+    street = json.optString(STREET, null);
+    city = json.optString(CITY, null);
+    state = json.optString(STATE, null);
+    zip = json.optInt(ZIP);
+    web = json.optString(WEB, null);
   }
   
   public String getStreet() {

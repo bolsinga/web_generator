@@ -8,7 +8,7 @@ public class Album implements com.bolsinga.music.data.Album {
   private static final String ID = "id";
   private static final String TITLE = "title";
   private static final String PERFORMER = "performer";
-  private static final String COMPLIATION = "compilation";
+  private static final String COMPILATION = "compilation";
   private static final String FORMATS = "formats";
   private static final String RELEASE = "release";
   private static final String PURCHASE = "purchase";
@@ -18,16 +18,22 @@ public class Album implements com.bolsinga.music.data.Album {
 
   private String id;
   private String title;
-  private Artist performer;
-  private boolean compilation = false;
+  private Artist performer; // optional
+  private boolean compilation; // optional
   private List<String> formats;
-  private Date release = null;
-  private Date purchase = null;
-  private Label label = null;
-  private String comment = null;
+  private Date release; // optional
+  private Date purchase; // optional
+  private Label label; // optional
+  private String comment; // optional
   private List<Song> songs;
 
   private static final Map<String, Album> sMap = new HashMap<String, Album>();
+  
+  static Album get(final String id) throws JSONException {
+    synchronized (sMap) {
+      return sMap.get(id);
+    }
+  }
 
   static Album get(final com.bolsinga.music.data.Album src) {
     synchronized (sMap) {
@@ -46,6 +52,28 @@ public class Album implements com.bolsinga.music.data.Album {
     }
   }
 
+  static Album createOrGet(final String id, final JSONObject json) throws JSONException {
+    synchronized (sMap) {
+      Album result = sMap.get(id);
+      if (result == null) {
+        result = new Album(json);
+        Artist performer = result.getPerformer();
+        if (performer != null) {
+          // There is a single Artist for the Album
+          performer.addAlbum(result);
+        } else {
+          // There is a different Artist for each Song, but each Artist is on the Album
+          for (Song song : result.getSongs()) {
+            performer = song.getPerformer();
+            performer.addAlbum(result);
+          }
+        }
+        sMap.put(id, result);
+      }
+      return result;
+    }
+  }
+
   static JSONObject createJSON(final com.bolsinga.music.data.Album album) throws JSONException {
     JSONObject json = new JSONObject();
     
@@ -56,12 +84,9 @@ public class Album implements com.bolsinga.music.data.Album {
       json.put(PERFORMER, a.getID());
     }
     if (album.isCompilation()) {
-      json.put(COMPLIATION, true);
+      json.put(COMPILATION, true);
     }
-    List<String> formats = album.getFormats();
-    if (formats != null && formats.size() > 0) {
-      json.put(FORMATS, formats);
-    }
+    json.put(FORMATS, album.getFormats());
     com.bolsinga.music.data.Date d = album.getReleaseDate();
     if (d != null) {
       json.put(RELEASE, Date.createJSON(d));
@@ -79,13 +104,11 @@ public class Album implements com.bolsinga.music.data.Album {
       json.put(COMMENT, comment);
     }
     List<? extends com.bolsinga.music.data.Song> songs = album.getSongs();
-    if (songs != null && songs.size() > 0) {
-      List<String> songIDs = new ArrayList<String>(songs.size());
-      for (final com.bolsinga.music.data.Song song : songs) {
-        songIDs.add(song.getID());
-      }
-      json.put(SONGS, songIDs);
+    List<String> songIDs = new ArrayList<String>(songs.size());
+    for (final com.bolsinga.music.data.Song song : songs) {
+      songIDs.add(song.getID());
     }
+    json.put(SONGS, songIDs);
     
     return json;
   }
@@ -109,6 +132,44 @@ public class Album implements com.bolsinga.music.data.Album {
     songs = new ArrayList<Song>(srcSongs.size());
     for (com.bolsinga.music.data.Song song : srcSongs) {
       songs.add(Song.createOrGet(song));
+    }
+  }
+
+  private Album(final JSONObject json) throws JSONException {
+    id = json.getString(ID);
+    title = json.getString(TITLE);
+    String jsonID = json.optString(PERFORMER, null);
+    if (jsonID != null) {
+      performer = Artist.get(jsonID);
+      assert performer != null : "Can't get Artist: " + jsonID;
+    }
+    compilation = json.optBoolean(COMPILATION, false);
+    JSONArray jsonArray = json.getJSONArray(FORMATS);
+    formats = new ArrayList<String>(jsonArray.length());
+    for (int i = 0; i < jsonArray.length(); i++) {
+      formats.add(jsonArray.getString(i));
+    }
+    JSONObject optJSON = json.optJSONObject(RELEASE);
+    if (optJSON != null) {
+      release = Date.create(optJSON);
+    }
+    optJSON = json.optJSONObject(PURCHASE);
+    if (optJSON != null) {
+      purchase = Date.create(optJSON);
+    }
+    jsonID = json.optString(LABEL, null);
+    if (jsonID != null) {
+      label = Label.get(jsonID);
+      assert label != null : "Can't get Label: " + jsonID;
+    }
+    comment = json.optString(COMMENT, null);
+    jsonArray = json.getJSONArray(SONGS);
+    songs = new ArrayList<Song>(jsonArray.length());
+    for (int i = 0; i < jsonArray.length(); i++) {
+      jsonID = jsonArray.getString(i);
+      Song song = Song.get(jsonID);
+      assert song != null : "Can't get Song: " + jsonID;
+      songs.add(song);
     }
   }
 

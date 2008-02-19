@@ -46,6 +46,8 @@ public class Main implements Backgroundable {
         main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output, cssFile);
       } else if (command.equals("json")) {
         main.generateJSON(diaryFile, musicFile, itunes, shows, venue, sort, relations, comments, statics);
+      } else if (command.equals("json-site")) {
+        main.generateJSONSite(diaryFile, musicFile, output, cssFile);
       } else {
         Main.usage(args, "Invalid action");
       }
@@ -98,6 +100,13 @@ public class Main implements Backgroundable {
     com.bolsinga.diary.data.json.Diary.export(diary, diaryFile);
   }
 
+  private void generateJSONSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws Exception {
+    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.json.Diary.create(diaryFile);
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.json.Music.create(musicFile);
+    
+    generateSite(music, diary, output, cssFile);
+  }
+
   private void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
     String s;
     HashSet<String> bands = new HashSet<String>();
@@ -144,7 +153,7 @@ public class Main implements Backgroundable {
   }
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.xml] [layout.css] [diary input/output file] [music input/output file] [output.dir] <xml|xml-site|json|site>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.xml] [layout.css] [diary input/output file] [music input/output file] [output.dir] <xml|xml-site|json|json-site|site>");
     System.out.println(reason);
     System.out.println("Arguments:");
     for (int i = 0; i < badargs.length; i++) {

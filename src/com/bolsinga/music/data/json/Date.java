@@ -17,6 +17,10 @@ public class Date implements com.bolsinga.music.data.Date {
     return new Date(date);
   }
   
+  static Date create(final JSONObject json) throws JSONException {
+    return new Date(json);
+  }
+  
   static JSONObject createJSON(com.bolsinga.music.data.Date date) throws JSONException {
     JSONObject json = new JSONObject();
     
@@ -49,6 +53,13 @@ public class Date implements com.bolsinga.music.data.Date {
     year = date.getYear();
     month = date.getMonth();
     day = date.getDay();
+  }
+  
+  private Date(final JSONObject json) throws JSONException {
+    unknown = json.optBoolean(UNKNOWN, false);
+    year = json.optInt(YEAR, com.bolsinga.music.data.Date.UNKNOWN);
+    month = json.optInt(MONTH, com.bolsinga.music.data.Date.UNKNOWN);
+    day = json.optInt(DAY, com.bolsinga.music.data.Date.UNKNOWN);
   }
   
   public boolean isUnknown() {

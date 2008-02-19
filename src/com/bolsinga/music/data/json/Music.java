@@ -28,7 +28,7 @@ public class Music implements com.bolsinga.music.data.Music {
     JSONObject json = com.bolsinga.web.Util.createJSON(sourceFile);
     try {
       return new Music(json);
-    } catch (JSONException e) {
+    } catch (Exception e) {
       StringBuilder sb = new StringBuilder();
       sb.append("Cannot create Music from JSON: ");
       sb.append(sourceFile);
@@ -146,8 +146,72 @@ public class Music implements com.bolsinga.music.data.Music {
     }
   }
   
-  private Music(final JSONObject json) throws JSONException {
+  private Music(final JSONObject json) throws Exception {
+    setTimestamp(com.bolsinga.web.Util.fromJSONCalendar(json.getString(TIMESTAMP)));
+    
+    JSONObject jsonMap = json.getJSONObject(VENUES);
+    venues = new ArrayList<Venue>(jsonMap.length());
+    Iterator i = jsonMap.keys();
+    while (i.hasNext()) {
+      String key = (String)i.next();
+      JSONObject jsonItem = jsonMap.getJSONObject(key);
+      venues.add(Venue.createOrGet(key, jsonItem));
+    }
+
+    jsonMap = json.getJSONObject(LABELS);
+    labels = new ArrayList<Label>(jsonMap.length());
+    i = jsonMap.keys();
+    while (i.hasNext()) {
+      String key = (String)i.next();
+      JSONObject jsonItem = jsonMap.getJSONObject(key);
+      labels.add(Label.createOrGet(key, jsonItem));
+    }
   
+    // Create all the Artists before Relations, Songs, Albums, Shows
+    jsonMap = json.getJSONObject(ARTISTS);
+    artists = new ArrayList<Artist>(jsonMap.length());
+    i = jsonMap.keys();
+    while (i.hasNext()) {
+      String key = (String)i.next();
+      JSONObject jsonItem = jsonMap.getJSONObject(key);
+      artists.add(Artist.createOrGet(key, jsonItem));
+    }
+
+    jsonMap = json.getJSONObject(RELATIONS);
+    relations = new ArrayList<Relation>(jsonMap.length());
+    i = jsonMap.keys();
+    while (i.hasNext()) {
+      String key = (String)i.next();
+      JSONObject jsonItem = jsonMap.getJSONObject(key);
+      relations.add(Relation.create(jsonItem));
+    }
+
+    jsonMap = json.getJSONObject(SONGS);
+    songs = new ArrayList<Song>(jsonMap.length());
+    i = jsonMap.keys();
+    while (i.hasNext()) {
+      String key = (String)i.next();
+      JSONObject jsonItem = jsonMap.getJSONObject(key);
+      songs.add(Song.createOrGet(key, jsonItem));
+    }
+
+    jsonMap = json.getJSONObject(ALBUMS);
+    albums = new ArrayList<Album>(jsonMap.length());
+    i = jsonMap.keys();
+    while (i.hasNext()) {
+      String key = (String)i.next();
+      JSONObject jsonItem = jsonMap.getJSONObject(key);
+      albums.add(Album.createOrGet(key, jsonItem));
+    }
+
+    jsonMap = json.getJSONObject(SHOWS);
+    shows = new ArrayList<Show>(jsonMap.length());
+    i = jsonMap.keys();
+    while (i.hasNext()) {
+      String key = (String)i.next();
+      JSONObject jsonItem = jsonMap.getJSONObject(key);
+      shows.add(Show.create(jsonItem));
+    }
   }
   
   public GregorianCalendar getTimestamp() {

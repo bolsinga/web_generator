@@ -16,11 +16,15 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private String comment = null;
   
   private static final Map<String, Venue> sMap = new HashMap<String, Venue>();
+  
+  static Venue get(final String id) {
+    synchronized (sMap) {
+      return sMap.get(id);
+    }
+  }
 
   static Venue get(final com.bolsinga.music.data.Venue src) {
-    synchronized (sMap) {
-      return sMap.get(src.getID());
-    }
+    return Venue.get(src.getID());
   }
   
   static Venue createOrGet(final com.bolsinga.music.data.Venue src) {
@@ -29,6 +33,17 @@ public class Venue implements com.bolsinga.music.data.Venue {
       if (result == null) {
         result = new Venue(src);
         sMap.put(src.getID(), result);
+      }
+      return result;
+    }
+  }
+  
+  static Venue createOrGet(final String id, final JSONObject json) throws JSONException {
+    synchronized (sMap) {
+      Venue result = sMap.get(id);
+      if (result == null) {
+        result = new Venue(json);
+        sMap.put(id, result);
       }
       return result;
     }
@@ -60,6 +75,16 @@ public class Venue implements com.bolsinga.music.data.Venue {
     this.name = venue.getName();
     this.location = Location.create(venue.getLocation());
     this.comment = venue.getComment();
+  }
+  
+  private Venue(final JSONObject json) throws JSONException {
+    id = json.getString(ID);
+    name = json.getString(NAME);
+    JSONObject optJSON = json.optJSONObject(LOCATION);
+    if (optJSON != null) {
+      location = Location.create(optJSON);
+    }
+    comment = json.optString(COMMENT, null);
   }
   
   public String getID() {

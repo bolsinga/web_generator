@@ -28,11 +28,15 @@ public class Song implements com.bolsinga.music.data.Song {
   private boolean live = false;
 
   private static final Map<String, Song> sMap = new HashMap<String, Song>();
+  
+  static Song get(final String id) {
+    synchronized (sMap) {
+      return sMap.get(id);
+    }
+  }
 
   static Song get(final com.bolsinga.music.data.Song src) {
-    synchronized (sMap) {
-      return sMap.get(src.getID());
-    }
+    return Song.get(src.getID());
   }
   
   static Song createOrGet(final com.bolsinga.music.data.Song src) {
@@ -41,6 +45,17 @@ public class Song implements com.bolsinga.music.data.Song {
       if (result == null) {
         result = new Song(src);
         sMap.put(src.getID(), result);
+      }
+      return result;
+    }
+  }
+
+  static Song createOrGet(final String id, final JSONObject json) throws JSONException {
+    synchronized (sMap) {
+      Song result = sMap.get(id);
+      if (result == null) {
+        result = new Song(json);
+        sMap.put(id, result);
       }
       return result;
     }
@@ -67,7 +82,10 @@ public class Song implements com.bolsinga.music.data.Song {
     if (s != null) {
       json.put(GENRE, s);
     }
-    json.put(PLAYCOUNT, song.getPlayCount());
+    int playCount = song.getPlayCount();
+    if (playCount != 0) {
+      json.put(PLAYCOUNT, playCount);
+    }
     if (song.isDigitized()) {
       json.put(DIGITIZED, true);
     }
@@ -89,6 +107,24 @@ public class Song implements com.bolsinga.music.data.Song {
     playCount = song.getPlayCount();
     digitized = song.isDigitized();
     live = song.isLive();
+  }
+  
+  private Song(final JSONObject json) throws JSONException {
+    id = json.getString(ID);
+    String artistID = json.getString(ARTIST);
+    artist = Artist.get(artistID);
+    assert artist != null : "Song has no artist!";
+    title = json.getString(TITLE);
+    JSONObject optJSON = json.optJSONObject(RELEASE);
+    if (optJSON != null) {
+      release = Date.create(optJSON);
+    }
+    lastPlayed = json.optString(LASTPLAYED, null);
+    track = json.optInt(TRACK);
+    genre = json.optString(GENRE, null);
+    playCount = json.optInt(PLAYCOUNT);
+    digitized = json.optBoolean(DIGITIZED);
+    live = json.optBoolean(LIVE);
   }
   
   public String getID() {

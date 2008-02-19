@@ -16,11 +16,15 @@ public class Label implements com.bolsinga.music.data.Label {
   private String comment = null;
 
   private static final Map<String, Label> sMap = new HashMap<String, Label>();
+  
+  static Label get(final String id) {
+    synchronized (sMap) {
+      return sMap.get(id);
+    }
+  }
 
   static Label get(final com.bolsinga.music.data.Label src) {
-    synchronized (sMap) {
-      return sMap.get(src.getID());
-    }
+    return Label.get(src.getID());
   }
   
   static Label createOrGet(final com.bolsinga.music.data.Label src) {
@@ -29,6 +33,17 @@ public class Label implements com.bolsinga.music.data.Label {
       if (result == null) {
         result = new Label(src);
         sMap.put(src.getID(), result);
+      }
+      return result;
+    }
+  }
+
+  static Label createOrGet(final String id, final JSONObject json) throws JSONException {
+    synchronized (sMap) {
+      Label result = sMap.get(id);
+      if (result == null) {
+        result = new Label(json);
+        sMap.put(id, result);
       }
       return result;
     }
@@ -60,6 +75,16 @@ public class Label implements com.bolsinga.music.data.Label {
     name = label.getName();
     location = Location.create(label.getLocation());
     comment = label.getComment();
+  }
+  
+  private Label(final JSONObject json) throws JSONException {
+    id = json.getString(ID);
+    name = json.getString(NAME);
+    JSONObject optJSON = json.optJSONObject(LOCATION);
+    if (optJSON != null) {
+      location = Location.create(optJSON);
+    }
+    comment = json.optString(COMMENT, null);
   }
   
   public String getID() {

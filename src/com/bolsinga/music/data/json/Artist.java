@@ -14,12 +14,21 @@ public class Artist implements com.bolsinga.music.data.Artist {
 
   private String id;
   private String name;
-  private String sortname = null;
-  private Location location = null;
-  private String comment = null;
-  private List<Album> albums = null;
+  private String sortname; // optional
+  private Location location; // optional
+  private String comment; // optional
+  private List<Album> albums; // optional
+  
+  // This is for getting Albums lazily due to circular references
+  private Map<String, Album> albumMap;
   
   private static final Map<String, Artist> sMap = new HashMap<String, Artist>();
+  
+  static Artist get(final String id) throws JSONException {
+    synchronized (sMap) {
+      return sMap.get(id);
+    }
+  }
 
   static Artist get(final com.bolsinga.music.data.Artist src) {
     synchronized (sMap) {
@@ -33,6 +42,17 @@ public class Artist implements com.bolsinga.music.data.Artist {
       if (result == null) {
         result = new Artist(src);
         sMap.put(src.getID(), result);
+      }
+      return result;
+    }
+  }
+
+  static Artist createOrGet(final String id, final JSONObject json) throws JSONException {
+    synchronized (sMap) {
+      Artist result = sMap.get(id);
+      if (result == null) {
+        result = new Artist(json);
+        sMap.put(id, result);
       }
       return result;
     }
@@ -85,6 +105,20 @@ public class Artist implements com.bolsinga.music.data.Artist {
     }
   }
   
+  private Artist(final JSONObject json) throws JSONException {
+    id = json.getString(ID);
+    name = json.getString(NAME);
+    sortname = json.optString(SORTNAME, null);
+    JSONObject optJSON = json.optJSONObject(LOCATION);
+    if (optJSON != null) {
+      location = Location.create(optJSON);
+    }
+    comment = json.optString(COMMENT, null);
+
+    // Circular reference for Album, so Album are created lazily.
+    //  see addAlbum(), getAlbumsInternal() below.
+  }
+  
   public String getID() {
     return id;
   }
@@ -121,11 +155,34 @@ public class Artist implements com.bolsinga.music.data.Artist {
     this.comment = comment;
   }
   
+  private List<Album> getAlbumsInternal() {
+    if (albums == null) {
+      // This lazily builds the Album list
+      if (albumMap != null) {
+        albums = new ArrayList<Album>(albumMap.values());
+        albumMap = null;
+      } else {
+        albums = new ArrayList<Album>();
+      }
+    }
+    return albums;
+  }
+  
   public List<Album> getAlbums() {
-    return Collections.unmodifiableList(albums);
+    return Collections.unmodifiableList(getAlbumsInternal());
   }
   
   public List<Album> getAlbumsCopy() {
-    return new ArrayList<Album>(albums);
+    return new ArrayList<Album>(getAlbumsInternal());
+  }
+
+  void addAlbum(final Album album) {
+    if (albumMap == null) {
+        albumMap = new HashMap<String, Album>();
+    }
+    String id = album.getID();
+    if (!albumMap.containsKey(id)) {
+      albumMap.put(id, album);
+    }
   }
 }
