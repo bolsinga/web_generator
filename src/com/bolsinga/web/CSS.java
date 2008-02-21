@@ -1,7 +1,6 @@
 package com.bolsinga.web;
 
 import java.io.*;
-import java.nio.channels.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -111,7 +110,7 @@ public class CSS {
     TABLE_FOOTER     = sCSSMapping.get(LONG_TABLE_FOOTER);
     RECORD_SECTION   = sCSSMapping.get(LONG_RECORD_SECTION);
     RECORD_ITEM_LIST = sCSSMapping.get(LONG_RECORD_ITEM_LIST);
-    EXTERNAL = sCSSMapping.get(LONG_EXTERNAL);
+    EXTERNAL         = sCSSMapping.get(LONG_EXTERNAL);
   }
   
   public static void install(final String srcFileName, final String outputDir) throws WebException {
@@ -122,104 +121,6 @@ public class CSS {
     sb.append(Links.STYLES_DIR);
     File dstFile = new File(sb.toString(), Util.getSettings().getCssFile());
     
-    CSS.install(srcFile, dstFile);
-  }
-    
-  private static void install(final File srcFile, final File dstFile) throws WebException {
-    // Make sure the path the the dstFile exists
-    File dstParent = new File(dstFile.getParent());
-    if (!dstParent.mkdirs()) {
-      if (!dstParent.exists()) {
-        System.err.println("CSS cannot mkdirs: " + dstParent.getAbsolutePath());
-      }
-    }
-
-    CSS.filterFile(srcFile, dstFile);
-  }
-  
-  private static void filterFile(final File src, final File dst) throws WebException {
-    // Copy source file, line by line. If a line has a "@@" delimiter, map
-    //  the contents to the proper CSS class name with sCSSMapping.    
-    StringBuilder sb = CSS.readFile(src);
-    CSS.writeFile(dst, sb);
-  }
-  
-  private static StringBuilder readFile(final File src) throws WebException {
-    StringBuilder result = new StringBuilder();
-    
-    BufferedReader in = null;
-    try {
-      try {
-        in = new BufferedReader(new FileReader(src));
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(src);
-        throw new WebException(sb.toString());
-      }
-      
-      String s = null;
-      try {
-        while ((s = in.readLine()) != null) {
-          Matcher m = sDelimitedPattern.matcher(s);
-          if (m.find()) {
-            int offset = 0;
-            do {
-              result.append(s.substring(offset, m.start()));
-              result.append(sCSSMapping.get(m.group(1)));
-              offset = m.end();
-            } while (m.find());
-            result.append(s.substring(offset, m.regionEnd()));
-          } else {
-            result.append(s);
-          }
-          Util.appendPretty(result);
-        }
-      } catch (IOException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Error reading: ");
-        sb.append(src);
-        throw new WebException(sb.toString(), e);
-      }
-    } finally {
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(src);
-          throw new WebException(sb.toString(), e);
-        }
-      }
-    }
-    
-    return result;
-  }
-  
-  private static void writeFile(final File dst, final StringBuilder data) throws WebException {
-    Writer out = null;
-    try {
-      try {
-        out = new FileWriter(dst);
-        out.append(data);
-      } catch (IOException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Error writing: ");
-        sb.append(dst);
-        throw new WebException(sb.toString(), e);
-      }
-    } finally {
-      if (out != null) {
-        try {
-          out.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(dst);
-          throw new WebException(sb.toString(), e);
-        }
-      }
-    }
+    MapFileFilter.install(srcFile, dstFile, sCSSMapping);
   }
 }
