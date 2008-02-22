@@ -213,23 +213,16 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Record getVenueRelations(final Venue venue) {
-    Vector<Element> e = new Vector<Element>();
+    Vector<String> labels = new Vector<String>();
+    Vector<String> values = new Vector<String>();
     
-    org.apache.ecs.Element curElement = null;
     for (Venue v : fLookup.getRelations(venue)) {
-      String htmlName = fLookup.getHTMLName(v);
-      if (v.equals(venue)) {
-        curElement = new StringElement(htmlName);
-        e.add(curElement);
-      } else {
-        String t = Util.createTitle("moreinfovenue", v.getName());
-        e.add(Util.createInternalA(fLinks.getLinkTo(v), htmlName, t));
+      if (!v.equals(venue)) {
+        labels.add(fLookup.getHTMLName(v));
+        values.add(fLinks.getLinkTo(v));
       }
     }
-
-    return Record.createRecordList(
-      new StringElement(Util.getResourceString("seealso")),
-      e, 
-      curElement);
+    
+    return Record.createRecordPopup(Util.getResourceString("seealso"), labels, values);
   }
 }

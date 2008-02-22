@@ -24,6 +24,7 @@ public class Links {
   public  static final String TRACKS_DIR   = "tracks";
   public  static final String STYLES_DIR   = "styles";
   public  static final String ARCHIVES_DIR = "archives";
+  public  static final String SCRIPTS_DIR  = "scripts";
 
   private static final String OTHER        = "other";
   public  static final String STATS        = "stats";
@@ -363,6 +364,23 @@ public class Links {
     result.setRel("stylesheet");
     result.setType("text/css");
     result.setHref(getStyleSheetLink());
+    return result;
+  }
+
+  public String getScriptLink() {
+    StringBuilder url = new StringBuilder();
+    url.append(getLevel());
+    url.append(SCRIPTS_DIR);
+    url.append(File.separator);
+    url.append(Util.getSettings().getJavaScriptFile());
+    return url.toString();
+  }
+
+  public Script getLinkToScript() {
+    Script result = new Script();
+    result.setType("text/javascript");
+    result.setSrc(getScriptLink());
+    result.removeAttribute("language");
     return result;
   }
 

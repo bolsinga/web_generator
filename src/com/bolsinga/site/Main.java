@@ -11,28 +11,31 @@ public class Main implements Backgroundable {
   private final Backgrounder fBackgrounder;
   
   public static void main(String[] args) {
-    if (args.length != 13) {
+    if (args.length != 14) {
       Main.usage(args, "Wrong number of arguments");
     }
 
-    String itunes = args[0];
-    String shows = args[1];
-    String venue = args[2];
-    String sort = args[3];
-    String relations = args[4];
-    String comments = args[5];
-    String statics = args[6];
+    int i = 0;
+    String itunes = args[i++];
+    String shows = args[i++];
+    String venue = args[i++];
+    String sort = args[i++];
+    String relations = args[i++];
+    String comments = args[i++];
+    String statics = args[i++];
     
-    String settingsFile = args[7];
+    String settingsFile = args[i++];
     
-    String cssFile = args[8];
+    String cssFile = args[i++];
 
-    String diaryFile = args[9];
-    String musicFile = args[10];
+    String javaScriptFile = args[i++];
+    
+    String diaryFile = args[i++];
+    String musicFile = args[i++];
 
-    String output = args[11];
+    String output = args[i++];
 
-    String command = args[12];
+    String command = args[i++];
 
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     
@@ -41,13 +44,13 @@ public class Main implements Backgroundable {
       if (command.equals("xml")) {
         main.generateXML(diaryFile, musicFile, itunes, shows, venue, sort, relations, comments, statics);
       } else if (command.equals("xml-site")) {
-        main.generateSite(diaryFile, musicFile, output, cssFile);
+        main.generateSite(diaryFile, musicFile, output, cssFile, javaScriptFile);
       } else if (command.equals("site")) {
-        main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output, cssFile);
+        main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output, cssFile, javaScriptFile);
       } else if (command.equals("json")) {
         main.generateJSON(diaryFile, musicFile, itunes, shows, venue, sort, relations, comments, statics);
       } else if (command.equals("json-site")) {
-        main.generateJSONSite(diaryFile, musicFile, output, cssFile);
+        main.generateJSONSite(diaryFile, musicFile, output, cssFile, javaScriptFile);
       } else {
         Main.usage(args, "Invalid action");
       }
@@ -78,18 +81,18 @@ public class Main implements Backgroundable {
     com.bolsinga.diary.data.xml.Diary.export(diary, diaryFile);
   }
   
-  private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws Exception {
+  private void generateSite(final String diaryFile, final String musicFile, final String output, final String cssFile, final String javaScriptFile) throws Exception {
     final com.bolsinga.music.data.Music music = com.bolsinga.music.data.xml.Music.create(musicFile);
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.xml.Diary.create(diaryFile);
     
-    generateSite(music, diary, output, cssFile);
+    generateSite(music, diary, output, cssFile, javaScriptFile);
   }
 
-  private void generateDirect(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String output, final String cssFile) throws Exception {
+  private void generateDirect(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String output, final String cssFile, final String javaScriptFile) throws Exception {
     final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
 
-    generateSite(music, diary, output, cssFile);
+    generateSite(music, diary, output, cssFile, javaScriptFile);
   }
   
   private void generateJSON(final String diaryFile, final String musicFile, final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics) throws Exception {
@@ -100,11 +103,11 @@ public class Main implements Backgroundable {
     com.bolsinga.diary.data.json.Diary.export(diary, diaryFile);
   }
 
-  private void generateJSONSite(final String diaryFile, final String musicFile, final String output, final String cssFile) throws Exception {
+  private void generateJSONSite(final String diaryFile, final String musicFile, final String output, final String cssFile, final String javaScriptFile) throws Exception {
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.json.Diary.create(diaryFile);
     final com.bolsinga.music.data.Music music = com.bolsinga.music.data.json.Music.create(musicFile);
     
-    generateSite(music, diary, output, cssFile);
+    generateSite(music, diary, output, cssFile, javaScriptFile);
   }
 
   private void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
@@ -127,9 +130,9 @@ public class Main implements Backgroundable {
     }
   }
   
-  private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output, final String cssFile) throws Exception {
-  
+  private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output, final String cssFile, final String javaScriptFile) throws Exception {
     CSS.install(cssFile, output);
+    JavaScript.install(javaScriptFile, output);
 
     dumpSimilarArtists(music);
     
@@ -153,7 +156,7 @@ public class Main implements Backgroundable {
   }
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.xml] [layout.css] [diary input/output file] [music input/output file] [output.dir] <xml|xml-site|json|json-site|site>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.xml] [layout.css] [site.js] [diary input/output file] [music input/output file] [output.dir] <xml|xml-site|json|json-site|site>");
     System.out.println(reason);
     System.out.println("Arguments:");
     for (int i = 0; i < badargs.length; i++) {

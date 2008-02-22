@@ -2,7 +2,6 @@ package com.bolsinga.web;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 
 public class CSS {
 
@@ -24,6 +23,7 @@ public class CSS {
   private static final String LONG_RECORD_SECTION   = "record_section";
   private static final String LONG_RECORD_ITEM_LIST = "record_item_list";
   private static final String LONG_EXTERNAL         = "external";
+  private static final String LONG_RECORD_POPUP     = "record_popup";
 
   private static final String SHORT_ENTRY_INDEX      = "a";
   private static final String SHORT_ENTRY_INDEX_SUB  = "b";
@@ -43,6 +43,7 @@ public class CSS {
   private static final String SHORT_RECORD_SECTION   = "p";
   private static final String SHORT_RECORD_ITEM_LIST = "q";
   private static final String SHORT_EXTERNAL         = "r";
+  private static final String SHORT_RECORD_POPUP     = "s";
 
   public static String ENTRY_INDEX;
   public static String ENTRY_INDEX_SUB;
@@ -62,11 +63,10 @@ public class CSS {
   public static String RECORD_SECTION;
   public static String RECORD_ITEM_LIST;
   public static String EXTERNAL;
+  public static String RECORD_POPUP;
   
   private static final HashMap<String, String> sCSSMapping = new HashMap<String, String>();
 
-  private static final Pattern sDelimitedPattern = Pattern.compile("@@(\\w+)@@");
-  
   static {
     boolean debug = Util.getDebugOutput();
     
@@ -92,6 +92,7 @@ public class CSS {
     sCSSMapping.put(LONG_RECORD_SECTION,   debug ? LONG_RECORD_SECTION   : SHORT_RECORD_SECTION);
     sCSSMapping.put(LONG_RECORD_ITEM_LIST, debug ? LONG_RECORD_ITEM_LIST : SHORT_RECORD_ITEM_LIST);
     sCSSMapping.put(LONG_EXTERNAL,         debug ? LONG_EXTERNAL         : SHORT_EXTERNAL);
+    sCSSMapping.put(LONG_RECORD_POPUP,     debug ? LONG_RECORD_POPUP     : SHORT_RECORD_POPUP);
 
     ENTRY_INDEX      = sCSSMapping.get(LONG_ENTRY_INDEX);
     ENTRY_INDEX_SUB  = sCSSMapping.get(LONG_ENTRY_INDEX_SUB);
@@ -111,6 +112,7 @@ public class CSS {
     RECORD_SECTION   = sCSSMapping.get(LONG_RECORD_SECTION);
     RECORD_ITEM_LIST = sCSSMapping.get(LONG_RECORD_ITEM_LIST);
     EXTERNAL         = sCSSMapping.get(LONG_EXTERNAL);
+    RECORD_POPUP     = sCSSMapping.get(LONG_RECORD_POPUP);
   }
   
   public static void install(final String srcFileName, final String outputDir) throws WebException {
