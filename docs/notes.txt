@@ -321,3 +321,13 @@ music {
     "<id+1>" : ...
   }
 }
+
+
+-----------
+
+Shows on this day.
+
+Get current month-day combo as string. 
+
+use that as key to array of objects with that combo and those objects have:
+    link to show and 'high level' show description
