@@ -47,6 +47,14 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     com.bolsinga.web.Util.writeJSON(json, outputFile);
   }
 
+  public static JSONObject createEntriesJSON(final List<? extends com.bolsinga.diary.data.Entry> items) throws JSONException {
+    JSONObject json = new JSONObject();
+    for (final com.bolsinga.diary.data.Entry item : items) {
+      json.put(item.getID(), Entry.createJSON(item));
+    }
+    return json;
+  }
+  
   static JSONObject createJSON(final com.bolsinga.diary.data.Diary diary) throws JSONException {
     JSONObject json = new JSONObject();
     
@@ -57,11 +65,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     json.put(FRIENDS, diary.getFriends());
     json.put(COLOPHON, diary.getColophon());
     
-    JSONObject entries = new JSONObject();
-    for (final com.bolsinga.diary.data.Entry e : diary.getEntries()) {
-      entries.put(e.getID(), Entry.createJSON(e));
-    }
-    json.put(ENTRIES, entries);
+    json.put(ENTRIES, Diary.createEntriesJSON(diary.getEntries()));
     
     return json;
   }

@@ -46,52 +46,74 @@ public class Music implements com.bolsinga.music.data.Music {
     com.bolsinga.web.Util.writeJSON(json, outputFile);
   }
 
+  public static JSONObject createVenuesJSON(final List<? extends com.bolsinga.music.data.Venue> items) throws JSONException {
+    JSONObject json = new JSONObject();
+    for (final com.bolsinga.music.data.Venue i : items) {
+      json.put(i.getID(), Venue.createJSON(i));
+    }
+    return json;
+  }
+
+  public static JSONObject createArtistsJSON(final List<? extends com.bolsinga.music.data.Artist> items) throws JSONException {
+    JSONObject json = new JSONObject();
+    for (final com.bolsinga.music.data.Artist i : items) {
+      json.put(i.getID(), Artist.createJSON(i));
+    }
+    return json;
+  }
+
+  public static JSONObject createLabelsJSON(final List<? extends com.bolsinga.music.data.Label> items) throws JSONException {
+    JSONObject json = new JSONObject();
+    for (final com.bolsinga.music.data.Label i : items) {
+      json.put(i.getID(), Label.createJSON(i));
+    }
+    return json;
+  }
+
+  public static JSONObject createRelationsJSON(final List<? extends com.bolsinga.music.data.Relation> items) throws JSONException {
+    JSONObject json = new JSONObject();
+    for (final com.bolsinga.music.data.Relation i : items) {
+      json.put(i.getID(), Relation.createJSON(i));
+    }
+    return json;
+  }
+
+  public static JSONObject createSongsJSON(final List<? extends com.bolsinga.music.data.Song> items) throws JSONException {
+    JSONObject json = new JSONObject();
+    for (final com.bolsinga.music.data.Song i : items) {
+      json.put(i.getID(), Song.createJSON(i));
+    }
+    return json;
+  }
+
+  public static JSONObject createAlbumsJSON(final List<? extends com.bolsinga.music.data.Album> items) throws JSONException {
+    JSONObject json = new JSONObject();
+    for (final com.bolsinga.music.data.Album i : items) {
+      json.put(i.getID(), Album.createJSON(i));
+    }
+    return json;
+  }
+
+  public static JSONObject createShowsJSON(final List<? extends com.bolsinga.music.data.Show> items) throws JSONException {
+    JSONObject json = new JSONObject();
+    for (final com.bolsinga.music.data.Show i : items) {
+      json.put(i.getID(), Show.createJSON(i));
+    }
+    return json;
+  }
+  
   static JSONObject createJSON(final com.bolsinga.music.data.Music music) throws JSONException {
     JSONObject json = new JSONObject();
-    
+
     json.put(TIMESTAMP, com.bolsinga.web.Util.toJSONCalendar(music.getTimestamp()));
     
-    JSONObject sub = new JSONObject();
-    for (final com.bolsinga.music.data.Venue v : music.getVenues()) {
-      sub.put(v.getID(), Venue.createJSON(v));
-    }
-    json.put(VENUES, sub);
-    
-    sub = new JSONObject();
-    for (final com.bolsinga.music.data.Artist a : music.getArtists()) {
-      sub.put(a.getID(), Artist.createJSON(a));
-    }
-    json.put(ARTISTS, sub);
-
-    sub = new JSONObject();
-    for (final com.bolsinga.music.data.Label l : music.getLabels()) {
-      sub.put(l.getID(), Label.createJSON(l));
-    }
-    json.put(LABELS, sub);
-
-    sub = new JSONObject();
-    for (final com.bolsinga.music.data.Relation r : music.getRelations()) {
-      sub.put(r.getID(), Relation.createJSON(r));
-    }
-    json.put(RELATIONS, sub);
-
-    sub = new JSONObject();
-    for (final com.bolsinga.music.data.Song s : music.getSongs()) {
-      sub.put(s.getID(), Song.createJSON(s));
-    }
-    json.put(SONGS, sub);
-    
-    sub = new JSONObject();
-    for (final com.bolsinga.music.data.Album a : music.getAlbums()) {
-      sub.put(a.getID(), Album.createJSON(a));
-    }
-    json.put(ALBUMS, sub);
-    
-    sub = new JSONObject();
-    for (final com.bolsinga.music.data.Show s : music.getShows()) {
-      sub.put(s.getID(), Show.createJSON(s));
-    }
-    json.put(SHOWS, sub);
+    json.put(VENUES, Music.createVenuesJSON(music.getVenues()));
+    json.put(ARTISTS, Music.createArtistsJSON(music.getArtists()));
+    json.put(LABELS, Music.createLabelsJSON(music.getLabels()));
+    json.put(RELATIONS, Music.createRelationsJSON(music.getRelations()));
+    json.put(SONGS, Music.createSongsJSON(music.getSongs()));
+    json.put(ALBUMS, Music.createAlbumsJSON(music.getAlbums()));
+    json.put(SHOWS, Music.createShowsJSON(music.getShows()));
     
     return json;
   }
