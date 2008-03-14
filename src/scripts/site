@@ -108,6 +108,8 @@ elif [ $ACTION = "xml-site" ] ; then
   done
 elif [ $ACTION = "site" ] ; then
   DATA_FILES="$DATA_FILES dummy_diary dummy_music"
+else
+  DATA_FILES="$DATA_FILES ${DATA_HOME} dummy"
 fi
 
 COMMAND="exec \"$JAVA_CMD\" -Xms96m -Xmx96m -ea:com.bolsinga..."

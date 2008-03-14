@@ -279,6 +279,7 @@
 
 <path id="music_classpath">
         <path refid="jaxb_binder_classpath" />
+        <pathelement path="${lib.dir}/json.jar" />
         <pathelement path="${build.lib}/${ant.project.name}.jar" />
 </path>
 
