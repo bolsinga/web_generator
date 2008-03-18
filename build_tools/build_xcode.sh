@@ -43,7 +43,7 @@ fi
 # Notes:
 #  Only builds the very first Target in the Xcode target list!
 
-ARGS="-configuration Deployment install SYMROOT=$SYM_DIR OBJROOT=$OBJ_DIR DSTROOT=$DST_DIR INSTALL_PATH=/$BUILD_ID BUILD_ID=$BUILD_ID DEPLOYMENT_LOCATION=YES"
+ARGS="-configuration Deployment install SYMROOT=$SYM_DIR OBJROOT=$OBJ_DIR DSTROOT=$DST_DIR BUILD_ID=$BUILD_ID DEPLOYMENT_LOCATION=YES"
 echo "xcodebuild $ARGS" 1>&2
 
 cd $SRC_DIR ; xcodebuild $ARGS 1>&2
