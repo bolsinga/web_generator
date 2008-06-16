@@ -250,16 +250,37 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Record getArtistRelations(final Artist artist) {
-    Vector<String> labels = new Vector<String>();
-    Vector<String> values = new Vector<String>();
-    
-    for (Artist art : fLookup.getRelations(artist)) {
-      if (!art.equals(artist)) {
-        labels.add(fLookup.getHTMLName(art));
-        values.add(fLinks.getLinkTo(art));
-      }
+    if (Util.getSettings().isRelatedUsesPopup()) {
+        Vector<String> labels = new Vector<String>();
+        Vector<String> values = new Vector<String>();
+        
+        for (Artist art : fLookup.getRelations(artist)) {
+          if (!art.equals(artist)) {
+            labels.add(fLookup.getHTMLName(art));
+            values.add(fLinks.getLinkTo(art));
+          }
+        }
+        
+        return Record.createRecordPopup(Util.getResourceString("seealso"), labels, values);
+    } else {
+        Vector<Element> e = new Vector<Element>();
+        
+        org.apache.ecs.Element curElement = null;
+        for (Artist art : fLookup.getRelations(artist)) {
+          String htmlName = fLookup.getHTMLName(art);
+          if (art.equals(artist)) {
+            curElement = new StringElement(htmlName);
+            e.add(curElement);
+          } else {
+            String t = Util.createTitle("moreinfoartist", art.getName());
+            e.add(Util.createInternalA(fLinks.getLinkTo(art), htmlName, t));
+          }
+        }
+
+        return Record.createRecordList(
+          new StringElement(Util.getResourceString("seealso")),
+          e,
+          curElement);
     }
-    
-    return Record.createRecordPopup(Util.getResourceString("seealso"), labels, values);
   }
 }
