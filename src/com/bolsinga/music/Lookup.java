@@ -149,6 +149,10 @@ public class Lookup {
   public Collection<Show> getShows(final Artist artist) {
     return fArtistMap.get(artist.getID());
   }
+  
+  public int getLiveCount() {
+    return fArtistMap.size();
+  }
         
   public Collection<Show> getShows(final Venue venue) {
     return fVenueMap.get(venue.getID());

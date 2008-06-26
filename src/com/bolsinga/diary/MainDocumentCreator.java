@@ -75,8 +75,25 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
               }
 
               public Element getArtistNavigator() {
-                return fLinks.getArtistLink(createPreviewLine(fMusic.getArtists().size(),
-                                                              Util.getResourceString("bands")));
+                ElementContainer ec = new ElementContainer();
+                ec.addElement(fLinks.getArtistLink(Util.getResourceString("bands")));
+
+                Vector<org.apache.ecs.Element> e = new Vector<org.apache.ecs.Element>();
+                
+                Div d = Util.createDiv(CSS.ENTRY_INDEX_SUB_INFO);
+                d.addElement(new StringElement(createPreviewLine(fMusic.getArtists().size(), Util.getResourceString("archivestotal"))));
+                e.add(d);
+
+                d = Util.createDiv(CSS.ENTRY_INDEX_SUB_INFO);
+                d.addElement(new StringElement(createPreviewLine(fLookup.getLiveCount(), Util.getResourceString("live"))));
+                e.add(d);
+
+                d = Util.createDiv(CSS.ENTRY_INDEX_SUB);
+                d.addElement(Util.createUnorderedList(e, null));
+                
+                ec.addElement(d);
+                
+                return ec;
               }
 
               public Element getTrackNavigator() {
