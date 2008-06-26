@@ -72,6 +72,8 @@ margin: 0 0 3px 0;
 .@@entry_index@@ a, .@@entry_index@@ a:visited {
 display: block;
 padding: 2px 2px 2px 2px;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
 border: 1px solid black;
 width: 80px;
 background-color: #BBBBBB;
@@ -79,6 +81,8 @@ text-decoration: none;
 }
 
 .@@entry_index@@ a:hover {
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
 border: 1px solid black;
 background-color: #DDDDDD;
 color: black;
@@ -105,6 +109,8 @@ margin: 0 0 3px 0;
 .@@entry_index_sub@@ a, .@@entry_index_sub@@ a:visited, .@@entry_index_sub@@ .@@entry_index_sub_info@@ {
 display: block;
 padding: 2px 2px 2px 2px;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
 border: 1px solid black;
 width: 80px;
 background-color: #CCCCCC;
@@ -113,6 +119,8 @@ text-align: right;
 }
 
 .@@entry_index_sub@@ a:hover {
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
 border: 1px solid black;
 background-color: #DDDDDD;
 color: black;
@@ -137,6 +145,8 @@ list-style-type: none;
 margin: 0 0 3px 0;
 display: block;
 padding: 2px 2px 2px 2px;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
 border: 1px solid white;
 width: 200px;
 background-color: #DDDDDD;
