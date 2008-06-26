@@ -161,6 +161,9 @@ margin: 0;
 padding: 10px 0 5px 0;
 list-style-type: none;
 background-color: #DDDDDD;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-box-shadow: 3px 2px 5px #888;
 }
 
 .@@colophon@@ li {
