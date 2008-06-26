@@ -37,7 +37,7 @@ width: 200px;
 position: absolute;
 top: 50px;
 right: 10px;
-width: 200px;
+width: 205px;
 }
 
 .@@statics_header@@ h4 {
@@ -46,7 +46,7 @@ text-align: center;
 
 .@@doc_3_col_body@@ {
 margin-left: 200px;
-margin-right: 200px;
+margin-right: 205px;
 padding-left: 10px;
 padding-right: 10px;
 }
@@ -72,6 +72,7 @@ margin: 0 0 3px 0;
 .@@entry_index@@ a, .@@entry_index@@ a:visited {
 display: block;
 padding: 2px 2px 2px 2px;
+-webkit-box-shadow: 3px 2px 5px #888;
 -webkit-border-radius: 3px;
 -moz-border-radius: 3px;
 border: 1px solid black;
@@ -109,6 +110,7 @@ margin: 0 0 3px 0;
 .@@entry_index_sub@@ a, .@@entry_index_sub@@ a:visited, .@@entry_index_sub@@ .@@entry_index_sub_info@@ {
 display: block;
 padding: 2px 2px 2px 2px;
+-webkit-box-shadow: 3px 2px 5px #888;
 -webkit-border-radius: 3px;
 -moz-border-radius: 3px;
 border: 1px solid black;
@@ -145,6 +147,7 @@ list-style-type: none;
 margin: 0 0 3px 0;
 display: block;
 padding: 2px 2px 2px 2px;
+-webkit-box-shadow: 3px 2px 5px #888;
 -webkit-border-radius: 3px;
 -moz-border-radius: 3px;
 border: 1px solid white;
