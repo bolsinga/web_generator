@@ -153,7 +153,16 @@ public class Lookup {
   public int getLiveCount() {
     return fArtistMap.size();
   }
-        
+  
+  public int getSetCount() {
+    int total = 0;
+    
+    for (String id : fArtistMap.keySet())
+        total += fArtistMap.get(id).size();
+    
+    return total;
+  }
+  
   public Collection<Show> getShows(final Venue venue) {
     return fVenueMap.get(venue.getID());
   }

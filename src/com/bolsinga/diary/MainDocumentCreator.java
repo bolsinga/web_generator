@@ -107,8 +107,25 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
               }
               
               public Element getShowNavigator() {
-                return fLinks.getShowLink(createPreviewLine(fMusic.getShows().size(),
-                                                            Util.getResourceString("dates")));
+                ElementContainer ec = new ElementContainer();
+                ec.addElement(fLinks.getShowLink(Util.getResourceString("dates")));
+                
+                Vector<org.apache.ecs.Element> e = new Vector<org.apache.ecs.Element>();
+                
+                Div d = Util.createDiv(CSS.ENTRY_INDEX_SUB_INFO);
+                d.addElement(new StringElement(createPreviewLine(fMusic.getShows().size(), Util.getResourceString("dates"))));
+                e.add(d);
+
+                d = Util.createDiv(CSS.ENTRY_INDEX_SUB_INFO);
+                d.addElement(new StringElement(createPreviewLine(fLookup.getSetCount(), Util.getResourceString("sets"))));
+                e.add(d);
+
+                d = Util.createDiv(CSS.ENTRY_INDEX_SUB);
+                d.addElement(Util.createUnorderedList(e, null));
+                
+                ec.addElement(d);
+                
+                return ec;
               }
               
               public Element getVenueNavigator() {
