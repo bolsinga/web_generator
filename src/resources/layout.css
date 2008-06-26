@@ -102,7 +102,7 @@ list-style-type: none;
 margin: 0 0 3px 0;
 }
 
-.@@entry_index_sub@@ a, .@@entry_index_sub@@ a:visited {
+.@@entry_index_sub@@ a, .@@entry_index_sub@@ a:visited, .@@entry_index_sub@@ .@@entry_index_sub_info@@ {
 display: block;
 padding: 2px 2px 2px 2px;
 border: 1px solid black;
