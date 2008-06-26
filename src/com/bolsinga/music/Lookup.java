@@ -4,6 +4,7 @@ import com.bolsinga.music.data.*;
 
 import com.bolsinga.web.*;
 
+import java.text.*;
 import java.util.*;
 
 public class Lookup {
@@ -63,8 +64,10 @@ public class Lookup {
         showCollection.add(show);
         fVenueMap.put(id, showCollection);
       }
-                        
-      id = ((Location)((Venue)show.getVenue()).getLocation()).getCity();
+
+      Location loc = (Location)((Venue)show.getVenue()).getLocation();
+      Object typeArgs[] = { loc.getCity(), loc.getState() };
+      id = MessageFormat.format(Util.getResourceString("cityformat"), typeArgs);
       if (fCityMap.containsKey(id)) {
         showCollection = fCityMap.get(id);
         showCollection.add(show);
