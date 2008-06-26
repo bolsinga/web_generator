@@ -23,6 +23,7 @@ public class Lookup {
     new HashMap<String, Collection<Show>>();
   private final HashMap<String, Collection<Show>> fCityMap =
     new HashMap<String, Collection<Show>>();
+  private final HashMap<String, Integer> fStateMap = new HashMap<String, Integer>();
   private final HashMap<String, Collection<Artist>> fArtistRelationMap =
     new HashMap<String, Collection<Artist>>();
   private final HashMap<String, Collection<Venue>> fVenueRelationMap =
@@ -76,6 +77,13 @@ public class Lookup {
         showCollection.add(show);
         fCityMap.put(id, showCollection);
       }
+      
+      int count = 1;
+      id = loc.getState();
+      if (fStateMap.containsKey(id)) {
+        count = fStateMap.get(id) + 1;
+      }
+      fStateMap.put(id, count);
 
       List<? extends Artist> artists = show.getArtists();
       for (Artist artist : artists) {
@@ -188,5 +196,9 @@ public class Lookup {
         
   public Collection<String> getCities() {
     return fCityMap.keySet();
+  }
+  
+  public int getStateCount() {
+    return fStateMap.size();
   }
 }

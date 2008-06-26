@@ -134,8 +134,25 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
               }
               
               public Element getCityNavigator() {
-                return fLinks.getCityLink(createPreviewLine(fLookup.getCities().size(),
-                                                            Util.getResourceString("cities")));
+                ElementContainer ec = new ElementContainer();
+                ec.addElement(fLinks.getCityLink(Util.getResourceString("cities")));
+                
+                Vector<org.apache.ecs.Element> e = new Vector<org.apache.ecs.Element>();
+                
+                Div d = Util.createDiv(CSS.ENTRY_INDEX_SUB_INFO);
+                d.addElement(new StringElement(createPreviewLine(fLookup.getCities().size(), Util.getResourceString("cities"))));
+                e.add(d);
+
+                d = Util.createDiv(CSS.ENTRY_INDEX_SUB_INFO);
+                d.addElement(new StringElement(createPreviewLine(fLookup.getStateCount(), Util.getResourceString("states"))));
+                e.add(d);
+
+                d = Util.createDiv(CSS.ENTRY_INDEX_SUB);
+                d.addElement(Util.createUnorderedList(e, null));
+                
+                ec.addElement(d);
+                
+                return ec;
               }
               
               public Element getCurrentNavigator() {
