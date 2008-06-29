@@ -11,6 +11,7 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="comment" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1" />
 			<xs:element name="timestamp" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attribute name="id" type="entryID" />

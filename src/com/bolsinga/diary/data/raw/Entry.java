@@ -11,11 +11,13 @@ public class Entry implements com.bolsinga.diary.data.Entry {
 
   private GregorianCalendar fDate;
   private String fComment;
+  private String fTitle;
   private String fID;
 
   // The *? construct is a reluctant quantifier. This means it is not greedy, and matches the first it can.
   private static final Pattern sCommentPattern = Pattern.compile("<comment>(.*?)</comment>", Pattern.DOTALL);
   private static final Pattern sDatePattern    = Pattern.compile("<date>(.*?)</date>", Pattern.DOTALL);
+  private static final Pattern sTitlePattern   = Pattern.compile("<title>(.*?)</title>", Pattern.DOTALL);
 
   private static GregorianCalendar toCalendarUTC(final String date) {
     Calendar localTime = Calendar.getInstance(); // LocalTime OK
@@ -45,7 +47,8 @@ public class Entry implements com.bolsinga.diary.data.Entry {
 
   static List<Entry> create(final String filename) throws com.bolsinga.web.WebException {
     TreeMap<GregorianCalendar, String> comments = new TreeMap<GregorianCalendar, String>();
-
+    TreeMap<GregorianCalendar, String> titles = new TreeMap<GregorianCalendar, String>();
+    
     FileChannel fc = null;
     try {
       try {
@@ -83,9 +86,14 @@ public class Entry implements com.bolsinga.diary.data.Entry {
           String entry = commentMatcher.group(1);
           Matcher dateMatcher = sDatePattern.matcher(entry);
           if (dateMatcher.find()) {
+            GregorianCalendar date = Entry.toCalendarUTC(dateMatcher.group(1));
+            Matcher titleMatcher = sTitlePattern.matcher(entry);
+            if (titleMatcher.find()) {
+              titles.put(date, titleMatcher.group(1));
+            }
             Matcher dataMatcher = Diary.sDataPattern.matcher(entry);
             if (dataMatcher.find()) {
-              comments.put(Entry.toCalendarUTC(dateMatcher.group(1)), dataMatcher.group(1));
+              comments.put(date, dataMatcher.group(1));
             } else {
               throw new com.bolsinga.web.WebException("ConvertError: No diary data: " + entry);
             }
@@ -113,7 +121,8 @@ public class Entry implements com.bolsinga.diary.data.Entry {
 
     int index = 0;
     for (Map.Entry<GregorianCalendar, String> entry : comments.entrySet()) {
-      entries.add(new Entry(entry.getKey(), entry.getValue(), "e" + index++));
+      GregorianCalendar date = entry.getKey();
+      entries.add(new Entry(date, entry.getValue(), titles.get(date), "e" + index++));
     }
 
     java.util.Collections.sort(entries, com.bolsinga.web.Util.ENTRY_COMPARATOR);
@@ -121,9 +130,10 @@ public class Entry implements com.bolsinga.diary.data.Entry {
     return entries;
   }
   
-  private Entry(final GregorianCalendar date, final String comment, final String id) {
+  private Entry(final GregorianCalendar date, final String comment, final String title, final String id) {
     fDate = date;
     fComment = comment;
+    fTitle = title;
     fID = id;
   }
   
@@ -141,6 +151,14 @@ public class Entry implements com.bolsinga.diary.data.Entry {
   
   public void setTimestamp(final GregorianCalendar timestamp) {
     fDate = timestamp;
+  }
+
+  public String getTitle() {
+    return fTitle;
+  }
+  
+  public void setTitle(final String title) {
+    fTitle = title;
   }
   
   public String getID() {

@@ -28,6 +28,14 @@ public class Entry implements com.bolsinga.diary.data.Entry {
   public void setTimestamp(final GregorianCalendar timestamp) {
     fEntry.setTimestamp(com.bolsinga.web.Util.toXMLGregorianCalendar(timestamp));
   }
+
+  public String getTitle() {
+    return fEntry.getTitle();
+  }
+  
+  public void setTitle(final String title) {
+    fEntry.setTitle(title);
+  }
   
   public String getID() {
     return fEntry.getId();
