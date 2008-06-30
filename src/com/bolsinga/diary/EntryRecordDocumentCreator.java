@@ -101,10 +101,17 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     return EntryRecordDocumentCreator.createEntryRecord(entry, fLinks, fEncoder, true);
   }
   
-  // This is used for the main page.
+  // This is used for the main page and entry pages, which is why it is public static
   public static Record createEntryRecord(final Entry entry, final Links links, final Encode encoder, final boolean upOneLevel) {
+    String title = entry.getTitle();
+    if (title == null) {
+        title = Util.getDisplayTitle(entry);
+    } else {
+        Object[] args = { title, Util.getTimestamp(entry) };
+        title = MessageFormat.format(Util.getResourceString("entrytitle"), args);
+    }
     return Record.createRecordPermalink(
-      Util.createNamedTarget(entry.getID(), Util.getTitle(entry)), 
+      Util.createNamedTarget(entry.getID(), title), 
       encoder.embedLinks(entry, upOneLevel),
       Util.createPermaLink(links.getLinkTo(entry)));
   }

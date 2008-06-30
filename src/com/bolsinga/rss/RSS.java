@@ -79,7 +79,7 @@ public class RSS {
   }
 
   private static void add(final Entry entry, final com.bolsinga.web.Links links, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {
-    add(com.bolsinga.web.Util.getTitle(entry), entry.getTimestamp(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
+    add(com.bolsinga.web.Util.getDisplayTitle(entry), entry.getTimestamp(), links.getLinkTo(entry), entry.getComment(), objFactory, channel);
   }
 
   private static void add(final String title, final Calendar cal, final String link, final String description, final com.bolsinga.rss.data.ObjectFactory objFactory, final TRssChannel channel) {

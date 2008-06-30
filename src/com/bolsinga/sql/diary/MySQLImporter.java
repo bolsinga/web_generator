@@ -108,7 +108,7 @@ public class MySQLImporter {
     
     rowItems[0] = null;
     rowItems[1] = entry.getComment();
-    rowItems[2] = Util.getTitle(entry);
+    rowItems[2] = Util.getTimestamp(entry);
     rowItems[3] = com.bolsinga.sql.Util.toDATETIME(entry.getTimestamp());
     
     com.bolsinga.sql.Util.insert(stmt, "entry", rowItems);
@@ -123,7 +123,7 @@ public class MySQLImporter {
       try {
         importEntry(stmt, item);
       } catch (SQLException e) {
-        System.err.println("SQLException importing: " + Util.getTitle(item));
+        System.err.println("SQLException importing: " + Util.getTimestamp(item));
         throw e;
       }
     }

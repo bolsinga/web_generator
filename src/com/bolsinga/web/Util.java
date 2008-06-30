@@ -477,8 +477,16 @@ public class Util {
     return sResource.getString(key); 
   }
 
-  public static String getTitle(final Entry entry) {
+  public static String getTimestamp(final Entry entry) {
     return sWebFormat.get().format(entry.getTimestamp().getTime());
+  }
+  
+  public static String getDisplayTitle(final Entry entry) {
+    String title = entry.getTitle();
+    if (title == null) {
+        title = Util.getTimestamp(entry);
+    }
+    return title;
   }
   
   public static String getMonth(final Calendar month) {
