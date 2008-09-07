@@ -67,6 +67,8 @@ public class Parser {
   private static final String TK_PURCHASED            = "Purchased";
   private static final String TK_VIDEO_HEIGHT         = "Video Height";
   private static final String TK_VIDEO_WIDTH          = "Video Width";
+  private static final String TK_EID                  = "EID";
+  private static final String TK_HD                   = "HD";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
@@ -319,6 +321,8 @@ public class Parser {
     sITunesKeys.add(TK_PURCHASED);
     sITunesKeys.add(TK_VIDEO_HEIGHT);
     sITunesKeys.add(TK_VIDEO_WIDTH);
+    sITunesKeys.add(TK_EID);
+    sITunesKeys.add(TK_HD);
   }
 
   static {
