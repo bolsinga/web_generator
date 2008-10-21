@@ -259,11 +259,11 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Record getShowRecord(final Show show) {
-    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, true);
+    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, false, true);
   }
   
   // This is used for the main page.
-  public static Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean upOneLevel) {
+  public static Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean titleIsLink, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<? extends Artist> bi = show.getArtists().iterator();
@@ -290,7 +290,14 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
       comment = encoder.embedLinks(show, upOneLevel);
     }
     
-    return Record.createRecordListWithComment(Util.createNamedTarget(show.getID(), Util.toString(show.getDate())), e, comment);
+    String dateString = Util.toString(show.getDate());
+    Element title = null;
+    if (titleIsLink) {
+        title = Util.createInternalA(links.getLinkTo(show), dateString, dateString);
+    } else {
+        title = Util.createNamedTarget(show.getID(), dateString);
+    }
+    return Record.createRecordListWithComment(title, e, comment);
   }
 
   private Record getShowMonthRecordSection(final Vector<Show> shows) {
