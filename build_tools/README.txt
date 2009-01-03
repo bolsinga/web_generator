@@ -84,6 +84,19 @@ dir_build.sh
   is used.
 
 ----------
+git_build.sh
+
+- Use this script to build from a git directory. The project_name is the src_dir. The
+  revision is obtained from the git log long commit hash. It uses a selection of
+  the above tools to determine if the given revision can be automatically built with one
+  of the supported tools, exporting a fresh directory to build, building the directory with
+  the proper tool, and creating a compressed tar file of the result. All of the work it does
+  is logged into a text file. It will create all of this into the environment variable
+  BUILD_DIR. If it is not set, it will set BUILD_DIR to "/tmp/git-build/<process_id>".
+ <src_dir> - An optional directory to build. If nothing is supplied, the current directory
+  is used.
+
+----------
 svn_package.sh
 
 - This script is intended to be called via the svn post-commit hook. It uses a selection of
