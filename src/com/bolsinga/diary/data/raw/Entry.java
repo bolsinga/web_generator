@@ -46,9 +46,6 @@ public class Entry implements com.bolsinga.diary.data.Entry {
   }
 
   static List<Entry> create(final String filename) throws com.bolsinga.web.WebException {
-    TreeMap<GregorianCalendar, String> comments = new TreeMap<GregorianCalendar, String>();
-    TreeMap<GregorianCalendar, String> titles = new TreeMap<GregorianCalendar, String>();
-    
     FileChannel fc = null;
     try {
       try {
@@ -80,6 +77,8 @@ public class Entry implements com.bolsinga.diary.data.Entry {
         throw new com.bolsinga.web.WebException(sb.toString(), e);
       }
       
+      TreeMap<GregorianCalendar, Entry> entries = new TreeMap<GregorianCalendar, Entry>();
+      
       Matcher commentMatcher = sCommentPattern.matcher(cb);
       if (commentMatcher.find()) {
         do {
@@ -88,12 +87,17 @@ public class Entry implements com.bolsinga.diary.data.Entry {
           if (dateMatcher.find()) {
             GregorianCalendar date = Entry.toCalendarUTC(dateMatcher.group(1));
             Matcher titleMatcher = sTitlePattern.matcher(entry);
+            String title = null;
             if (titleMatcher.find()) {
-              titles.put(date, titleMatcher.group(1));
+              title = titleMatcher.group(1);
             }
             Matcher dataMatcher = Diary.sDataPattern.matcher(entry);
             if (dataMatcher.find()) {
-              comments.put(date, dataMatcher.group(1));
+              while (entries.containsKey(date)) {
+                // Decrementing minute for same date entry
+                date.add(Calendar.MINUTE, -1);
+              }
+              entries.put(date, new Entry(date, dataMatcher.group(1), title, null));
             } else {
               throw new com.bolsinga.web.WebException("ConvertError: No diary data: " + entry);
             }
@@ -104,6 +108,15 @@ public class Entry implements com.bolsinga.diary.data.Entry {
       } else {
         throw new com.bolsinga.web.WebException("ConvertError: No comment: " + cb);
       }
+      
+      ArrayList<Entry> entryList = new ArrayList<Entry>(entries.values());
+      
+      int index = 0;
+      for (Entry e: entryList) {
+        e.setID("e" + index++);
+      }
+      
+      return entryList;
     } finally {
       if (fc != null) {
         try {
@@ -116,18 +129,6 @@ public class Entry implements com.bolsinga.diary.data.Entry {
         }
       }
     }
-
-    ArrayList<Entry> entries = new ArrayList<Entry>(comments.keySet().size());
-
-    int index = 0;
-    for (Map.Entry<GregorianCalendar, String> entry : comments.entrySet()) {
-      GregorianCalendar date = entry.getKey();
-      entries.add(new Entry(date, entry.getValue(), titles.get(date), "e" + index++));
-    }
-
-    java.util.Collections.sort(entries, com.bolsinga.web.Util.ENTRY_COMPARATOR);
-    
-    return entries;
   }
   
   private Entry(final GregorianCalendar date, final String comment, final String title, final String id) {
