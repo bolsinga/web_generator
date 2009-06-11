@@ -461,7 +461,7 @@ public class Parser {
       albumTitle = songTitle + " - Single";
     }
 
-    if (!isVideo && !isPodcast) {
+    if (!isVideo && !isPodcast && (artist != null)) {
       createTrack(artist, sortArtist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
