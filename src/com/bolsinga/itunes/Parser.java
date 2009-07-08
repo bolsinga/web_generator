@@ -10,65 +10,68 @@ import javax.xml.datatype.*;
 import com.bolsinga.plist.*;
 
 public class Parser {
-  private static final String TK_ALBUM                = "Album";
-  private static final String TK_ARTIST               = "Artist";
-  private static final String TK_ARTWORK_COUNT        = "Artwork Count";
-  private static final String TK_BIT_RATE             = "Bit Rate";
-  private static final String TK_COMMENTS             = "Comments";
-  private static final String TK_COMPILATION          = "Compilation";
-  private static final String TK_COMPOSER             = "Composer";
-  private static final String TK_DATE_ADDED           = "Date Added";
-  private static final String TK_DATE_MODIFIED        = "Date Modified";
-  private static final String TK_DISC_COUNT           = "Disc Count";
-  private static final String TK_DISC_NUMBER          = "Disc Number";
-  private static final String TK_FILE_CREATOR         = "File Creator";
-  private static final String TK_FILE_FOLDER_COUNT    = "File Folder Count";
-  private static final String TK_FILE_TYPE            = "File Type";
-  private static final String TK_GENRE                = "Genre";
-  private static final String TK_KIND                 = "Kind";
-  private static final String TK_LIBRARY_FOLDER_COUNT = "Library Folder Count";
-  private static final String TK_LOCATION             = "Location";
-  private static final String TK_NAME                 = "Name";
-  private static final String TK_PLAY_COUNT           = "Play Count";
-  private static final String TK_PLAY_DATE            = "Play Date";
-  private static final String TK_PLAY_DATE_UTC        = "Play Date UTC";
-  private static final String TK_SAMPLE_RATE          = "Sample Rate";
-  private static final String TK_SIZE                 = "Size";
-  private static final String TK_TOTAL_TIME           = "Total Time";
-  private static final String TK_TRACK_COUNT          = "Track Count";
-  private static final String TK_TRACK_ID             = "Track ID";
-  private static final String TK_TRACK_NUMBER         = "Track Number";
-  private static final String TK_TRACK_TYPE           = "Track Type";
-  private static final String TK_YEAR                 = "Year";
-  private static final String TK_SEASON               = "Season";
-  private static final String TK_PERSISTENT_ID        = "Persistent ID";
-  private static final String TK_SERIES               = "Series";
-  private static final String TK_EPISODE              = "Episode";
-  private static final String TK_EPISODE_ORDER        = "Episode Order";
-  private static final String TK_HAS_VIDEO            = "Has Video";
-  private static final String TK_TV_SHOW              = "TV Show";
-  private static final String TK_PROTECTED            = "Protected";
-  private static final String TK_BPM                  = "BPM";
-  private static final String TK_ALBUM_ARTIST         = "Album Artist";
-  private static final String TK_EXPLICIT             = "Explicit";
-  private static final String TK_SKIP_COUNT           = "Skip Count";
-  private static final String TK_SKIP_DATE            = "Skip Date";
-  private static final String TK_RELEASE_DATE         = "Release Date";
-  private static final String TK_PODCAST              = "Podcast";
-  private static final String TK_MOVIE                = "Movie";
-  private static final String TK_UNPLAYED             = "Unplayed";
-  private static final String TK_SORT_ALBUM           = "Sort Album";
-  private static final String TK_SORT_ALBUM_ARTITST   = "Sort Album Artist";
-  private static final String TK_SORT_ARTIST          = "Sort Artist";
-  private static final String TK_SORT_COMPOSER        = "Sort Composer";
-  private static final String TK_SORT_NAME            = "Sort Name";
-  private static final String TK_CONTENT_RATING       = "Content Rating";
-  private static final String TK_DISABLED             = "Disabled";
-  private static final String TK_PURCHASED            = "Purchased";
-  private static final String TK_VIDEO_HEIGHT         = "Video Height";
-  private static final String TK_VIDEO_WIDTH          = "Video Width";
-  private static final String TK_EID                  = "EID";
-  private static final String TK_HD                   = "HD";
+  private static final String TK_ALBUM                 = "Album";
+  private static final String TK_ARTIST                = "Artist";
+  private static final String TK_ARTWORK_COUNT         = "Artwork Count";
+  private static final String TK_BIT_RATE              = "Bit Rate";
+  private static final String TK_COMMENTS              = "Comments";
+  private static final String TK_COMPILATION           = "Compilation";
+  private static final String TK_COMPOSER              = "Composer";
+  private static final String TK_DATE_ADDED            = "Date Added";
+  private static final String TK_DATE_MODIFIED         = "Date Modified";
+  private static final String TK_DISC_COUNT            = "Disc Count";
+  private static final String TK_DISC_NUMBER           = "Disc Number";
+  private static final String TK_FILE_CREATOR          = "File Creator";
+  private static final String TK_FILE_FOLDER_COUNT     = "File Folder Count";
+  private static final String TK_FILE_TYPE             = "File Type";
+  private static final String TK_GENRE                 = "Genre";
+  private static final String TK_KIND                  = "Kind";
+  private static final String TK_LIBRARY_FOLDER_COUNT  = "Library Folder Count";
+  private static final String TK_LOCATION              = "Location";
+  private static final String TK_NAME                  = "Name";
+  private static final String TK_PLAY_COUNT            = "Play Count";
+  private static final String TK_PLAY_DATE             = "Play Date";
+  private static final String TK_PLAY_DATE_UTC         = "Play Date UTC";
+  private static final String TK_SAMPLE_RATE           = "Sample Rate";
+  private static final String TK_SIZE                  = "Size";
+  private static final String TK_TOTAL_TIME            = "Total Time";
+  private static final String TK_TRACK_COUNT           = "Track Count";
+  private static final String TK_TRACK_ID              = "Track ID";
+  private static final String TK_TRACK_NUMBER          = "Track Number";
+  private static final String TK_TRACK_TYPE            = "Track Type";
+  private static final String TK_YEAR                  = "Year";
+  private static final String TK_SEASON                = "Season";
+  private static final String TK_PERSISTENT_ID         = "Persistent ID";
+  private static final String TK_SERIES                = "Series";
+  private static final String TK_EPISODE               = "Episode";
+  private static final String TK_EPISODE_ORDER         = "Episode Order";
+  private static final String TK_HAS_VIDEO             = "Has Video";
+  private static final String TK_TV_SHOW               = "TV Show";
+  private static final String TK_PROTECTED             = "Protected";
+  private static final String TK_BPM                   = "BPM";
+  private static final String TK_ALBUM_ARTIST          = "Album Artist";
+  private static final String TK_EXPLICIT              = "Explicit";
+  private static final String TK_SKIP_COUNT            = "Skip Count";
+  private static final String TK_SKIP_DATE             = "Skip Date";
+  private static final String TK_RELEASE_DATE          = "Release Date";
+  private static final String TK_PODCAST               = "Podcast";
+  private static final String TK_MOVIE                 = "Movie";
+  private static final String TK_UNPLAYED              = "Unplayed";
+  private static final String TK_SORT_ALBUM            = "Sort Album";
+  private static final String TK_SORT_ALBUM_ARTITST    = "Sort Album Artist";
+  private static final String TK_SORT_ARTIST           = "Sort Artist";
+  private static final String TK_SORT_COMPOSER         = "Sort Composer";
+  private static final String TK_SORT_NAME             = "Sort Name";
+  private static final String TK_CONTENT_RATING        = "Content Rating";
+  private static final String TK_DISABLED              = "Disabled";
+  private static final String TK_PURCHASED             = "Purchased";
+  private static final String TK_VIDEO_HEIGHT          = "Video Height";
+  private static final String TK_VIDEO_WIDTH           = "Video Width";
+  private static final String TK_EID                   = "EID";
+  private static final String TK_HD                    = "HD";
+  private static final String TK_ALBUM_RATING          = "Album Rating";
+  private static final String TK_ALBUM_RATING_COMPUTED = "Album Rating Computed";
+  private static final String TK_RATING                = "Rating";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
@@ -323,6 +326,9 @@ public class Parser {
     sITunesKeys.add(TK_VIDEO_WIDTH);
     sITunesKeys.add(TK_EID);
     sITunesKeys.add(TK_HD);
+    sITunesKeys.add(TK_ALBUM_RATING);
+    sITunesKeys.add(TK_ALBUM_RATING_COMPUTED);
+    sITunesKeys.add(TK_RATING);
   }
 
   static {
@@ -361,8 +367,11 @@ public class Parser {
 
     sortAlbumsSongOrder();
     
-    for (String key : sNewITunesKeys) {
-        System.out.println("iTunes added a new key: " + key);
+    if (sNewITunesKeys.size() > 0) {
+        System.out.println("iTunes added new keys:");
+        for (String key : sNewITunesKeys) {
+            System.out.println("private static final String TK_VAR = \"" + key + "\";");
+        }
     }
     
     return Collections.unmodifiableList(new ArrayList<Album>(fAlbumMap.values()));
