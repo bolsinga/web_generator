@@ -482,6 +482,9 @@ public class Parser {
       fArtistMap.put(artistName, artist);
     }
     Artist artist = fArtistMap.get(artistName);
+    if (artist.getSortname() != null && sortArtist == null) {
+        System.out.println("Song: " + songTitle + " for: " + artistName + " is not sorted in iTunes.");
+    }
                 
     // Get or create the album.
     Album album = addAlbum(albumTitle, compilation ? null : artist);
