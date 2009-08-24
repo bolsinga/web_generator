@@ -8,6 +8,7 @@
 package com.bolsinga.plist;
 
 public class PlistException extends Exception {
+  static final long serialVersionUID = 9153730970041499829L;
   public PlistException(String reason) {
     super(reason);
   }

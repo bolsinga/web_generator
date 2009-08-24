@@ -8,6 +8,7 @@
 package com.bolsinga.rss;
 
 public class RSSException extends Exception {
+  static final long serialVersionUID = 995772941382329618L;
   public RSSException(String reason) {
     super(reason);
   }
