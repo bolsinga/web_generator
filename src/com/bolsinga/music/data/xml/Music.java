@@ -140,12 +140,12 @@ public class Music implements com.bolsinga.music.data.Music {
     int item;
     item = date.getMonth();
     if (item != com.bolsinga.music.data.Date.UNKNOWN) {
-      xmlDate.setMonth(java.math.BigInteger.valueOf(item));
+      xmlDate.setMonth(Integer.valueOf(item));
     }
     
     item = date.getDay();
     if (item != com.bolsinga.music.data.Date.UNKNOWN) {
-      xmlDate.setDay(java.math.BigInteger.valueOf(item));
+      xmlDate.setDay(Integer.valueOf(item));
     }
     
     item = date.getYear();
@@ -324,7 +324,7 @@ public class Music implements com.bolsinga.music.data.Music {
         }
         
         for (String format : item.getFormats()) {
-          xmlAlbum.getFormat().add(objFactory.createAlbumFormat(format));
+          xmlAlbum.getFormat().add(format);
         }
         
         for (com.bolsinga.music.data.Song song : item.getSongs()) {

@@ -97,11 +97,11 @@ public class MySQLCreator {
     }
     
     if (month != 0) {
-      result.setMonth(BigInteger.valueOf(month));
+      result.setMonth(Integer.valueOf(month));
     }
     
     if (day != 0) {
-      result.setDay(BigInteger.valueOf(day));
+      result.setDay(Integer.valueOf(day));
     }
     
     if (year != 1900) {
@@ -218,7 +218,7 @@ public class MySQLCreator {
           String formatSQLenum = rset.getString("format");
           String[] formats = formatSQLenum.split(",");
           for (int i = 0; i < formats.length; i++) {
-            item.getFormat().add(objFactory.createAlbumFormat(formats[0]));
+            item.getFormat().add(formats[0]);
           }
         }
       }

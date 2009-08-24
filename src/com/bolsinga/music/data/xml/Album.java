@@ -32,9 +32,9 @@ public class Album implements com.bolsinga.music.data.Album {
     }
 
     fFormats = new ArrayList<String>(fAlbum.getFormat().size());
-    for (JAXBElement<String> jformat : fAlbum.getFormat()) {
-      String format = (String)jformat.getValue();
-      fFormats.add(format);
+    for (String jformat : fAlbum.getFormat()) {
+      // FIXME: Just copy the string.
+      fFormats.add(jformat);
     }
   }
   

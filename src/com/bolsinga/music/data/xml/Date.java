@@ -36,27 +36,27 @@ public class Date implements com.bolsinga.music.data.Date {
   }
 
   public int getMonth() {
-    BigInteger i = fDate.getMonth();
+    Integer i = fDate.getMonth();
     return (i != null) ? i.intValue() : com.bolsinga.music.data.Date.UNKNOWN;
   }
   
   public void setMonth(final int month) {
-    BigInteger i = null;
+    Integer i = null;
     if (month != com.bolsinga.music.data.Date.UNKNOWN) {
-      i = BigInteger.valueOf(month);
+      i = Integer.valueOf(month);
     }
     fDate.setMonth(i);
   }
 
   public int getDay() {
-    BigInteger i = fDate.getDay();
+    Integer i = fDate.getDay();
     return (i != null) ? i.intValue() : com.bolsinga.music.data.Date.UNKNOWN;
   }
   
   public void setDay(final int day) {
-    BigInteger i = null;
+    Integer i = null;
     if (day != com.bolsinga.music.data.Date.UNKNOWN) {
-      i = BigInteger.valueOf(day);
+      i = Integer.valueOf(day);
     }
     fDate.setDay(i);
   }
