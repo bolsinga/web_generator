@@ -349,7 +349,7 @@ public class Parser {
 
     Iterator<Object> i = plist.getDict().getKeyAndArrayOrData().iterator();
     while (i.hasNext()) {
-      JAXBElement<Object> jo = (JAXBElement<Object>)i.next();
+      JAXBElement<? extends Object> jo = (JAXBElement<? extends Object>)i.next();
       String key = (String)jo.getValue();
       if (key.equals("Tracks")) {
         com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
@@ -403,11 +403,11 @@ public class Parser {
     boolean isPodcast = false;
             
     while (i.hasNext()) {
-      JAXBElement<Object> jokey = (JAXBElement<Object>)i.next();
+      JAXBElement<? extends Object> jokey = (JAXBElement<? extends Object>)i.next();
       String key = (String)jokey.getValue();
 
       // always pull off the value, it may be unused.
-      JAXBElement<Object> jovalue = (JAXBElement<Object>)i.next();
+      JAXBElement<? extends Object> jovalue = (JAXBElement<? extends Object>)i.next();
 
       if (key.equals(TK_NAME)) {
         songTitle = (String)jovalue.getValue();
