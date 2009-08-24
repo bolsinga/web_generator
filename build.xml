@@ -23,16 +23,7 @@
 <property name="dst.dir" value="${build.dir}/dst" />
 <property name="dst.lib" value="${dst.dir}/lib" />
 
-<property name="jwsdp.home" value="${lib.dir}/jwsdp-2.0" />
-
 <property name="build.id" value="${user.name}-internal" />
-
-<path id="jaxb_binder_classpath">
-        <pathelement path="." />
-        <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-api.jar" />
-        <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-impl.jar" />
-        <pathelement path="${jwsdp.home}/sjsxp/lib/jsr173_api.jar" />
-</path>
 
 <property name="javac.debug" value="no" />
 <property name="javac.lint" value="-Xlint:none" />
@@ -59,7 +50,6 @@
                         deprecation="on">
                 <src path="${build.gensrc}" />
                 <include name="com/bolsinga/music/data/xml/impl/**" />
-                <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
                 <fileset dir="${build.gensrc}" >
@@ -77,7 +67,6 @@
                         deprecation="on">
                 <src path="${build.gensrc}" />
                 <include name="com/bolsinga/diary/data/xml/impl/**" />
-                <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
                 <fileset dir="${build.gensrc}" >
@@ -95,7 +84,6 @@
                         deprecation="on">
                 <src path="${build.gensrc}" />
                 <include name="com/bolsinga/rss/data/**" />
-                <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
                 <fileset dir="${build.gensrc}" >
@@ -113,7 +101,6 @@
                         deprecation="on">
                 <src path="${build.gensrc}" />
                 <include name="com/bolsinga/plist/data/**" />
-                <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
                 <fileset dir="${build.gensrc}" >
@@ -131,7 +118,6 @@
                         deprecation="on">
                 <src path="${build.gensrc}" />
                 <include name="com/bolsinga/settings/data/**" />
-                <classpath refid="jaxb_binder_classpath" />
         </javac>
         <copy todir="${build.classes}">
                 <fileset dir="${build.gensrc}" >
@@ -141,7 +127,6 @@
 </target>
 
 <path id="web_classpath">
-  <path refid="jaxb_binder_classpath" />
   <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
   <pathelement path="${lib.dir}/json.jar" />
 </path>
@@ -153,7 +138,6 @@
           <compilerarg value="${javac.lint}" compiler="javac1.5" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/plist/*.java" />
-          <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
 
@@ -199,7 +183,6 @@
           <compilerarg value="${javac.lint}" compiler="javac1.5" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/itunes/*.java" />
-          <classpath refid="jaxb_binder_classpath" />
         </javac>
 </target>
 
@@ -264,7 +247,6 @@
 </target>
 
 <path id="music_classpath">
-        <path refid="jaxb_binder_classpath" />
         <pathelement path="${lib.dir}/json.jar" />
         <pathelement path="${build.lib}/${ant.project.name}.jar" />
 </path>
@@ -292,8 +274,7 @@
 </target>
 
 <path id="test_classpath">
-  <path refid="jaxb_binder_classpath" />
-  <pathelement path="${jwsdp.home}/jwsdp-shared/lib/activation.jar" />
+    <pathelement path="${lib.dir}/json.jar" />
   <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
   <pathelement path="${build.classes}" />
 </path>
@@ -402,15 +383,6 @@ The package target below used to also install the sql jar:
   <copy file="${build.lib}/${ant.project.name}.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/json.jar" todir="${dst.lib}" />
-  
-  <copy todir="${dst.lib}/jwsdp-2.0">
-    <fileset dir="${jwsdp.home}">
-      <include name="jaxb/lib/jaxb-api.jar" />
-      <include name="jaxb/lib/jaxb-impl.jar" />
-      <include name="sjsxp/lib/jsr173_api.jar" />
-      <include name="jwsdp-shared/lib/activation.jar" />
-    </fileset>
-  </copy>
 </target>
 
 </project>
