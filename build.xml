@@ -27,21 +27,12 @@
 
 <property name="build.id" value="${user.name}-internal" />
 
-<path id="jaxb_xjc_classpath">
-        <pathelement path="." />
-        <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-xjc.jar" />
-</path>
-
 <path id="jaxb_binder_classpath">
         <pathelement path="." />
         <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-api.jar" />
         <pathelement path="${jwsdp.home}/jaxb/lib/jaxb-impl.jar" />
         <pathelement path="${jwsdp.home}/sjsxp/lib/jsr173_api.jar" />
 </path>
-
-<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-        <classpath refid="jaxb_xjc_classpath" />
-</taskdef>
 
 <property name="javac.debug" value="no" />
 <property name="javac.lint" value="-Xlint:none" />
@@ -60,10 +51,9 @@
 </target>
 
 <target name="music_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/music.xsd" target="${build.gensrc}" package="com.bolsinga.music.data.xml.impl" removeOldOutput="yes">
-                <depends dir="${basedir}/xml" includes="music.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/music/data/xml/impl" />
-        </xjc>
+    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+        <arg line="-p com.bolsinga.music.data.xml.impl -d ${build.gensrc} ${basedir}/xml/music.xsd" />
+    </exec>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -79,10 +69,9 @@
 </target>
 
 <target name="diary_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/diary.xsd" target="${build.gensrc}" package="com.bolsinga.diary.data.xml.impl" removeOldOutput="yes">
-                <depends dir="${basedir}/xml" includes="diary.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/diary/data/xml/impl" />
-        </xjc>
+    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+        <arg line="-p com.bolsinga.diary.data.xml.impl -d ${build.gensrc} ${basedir}/xml/diary.xsd" />
+    </exec>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -98,10 +87,9 @@
 </target>
 
 <target name="rss_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/rss-2_0.xsd" target="${build.gensrc}" package="com.bolsinga.rss.data" removeOldOutput="yes" extension="true">
-                <depends dir="${basedir}/xml" includes="rss-2_0.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/rss/data" />
-        </xjc>
+    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+        <arg line="-p com.bolsinga.rss.data -d ${build.gensrc} ${basedir}/xml/rss-2_0.xsd" />
+    </exec>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -117,10 +105,9 @@
 </target>
 
 <target name="plist_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/PropertyList-1.0.xsd" target="${build.gensrc}" package="com.bolsinga.plist.data" removeOldOutput="yes" extension="true">
-                <depends dir="${basedir}/xml" includes="PropertyList-1.0.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/plist/data" />
-        </xjc>
+    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+        <arg line="-p com.bolsinga.plist.data -d ${build.gensrc} ${basedir}/xml/PropertyList-1.0.xsd" />
+    </exec>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
@@ -136,10 +123,9 @@
 </target>
 
 <target name="settings_binding" depends="prepare">
-        <xjc schema="${basedir}/xml/settings.xsd" target="${build.gensrc}" package="com.bolsinga.settings.data" removeOldOutput="yes" extension="true">
-                <depends dir="${basedir}/xml" includes="settings.xsd" />
-                <produces dir="${build.gensrc}/com/bolsinga/settings/data" />
-        </xjc>
+    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+        <arg line="-p com.bolsinga.settings.data -d ${build.gensrc} ${basedir}/xml/settings.xsd" />
+    </exec>
         <javac  destdir="${build.classes}"
                         debug="${javac.debug}"
                         deprecation="on">
