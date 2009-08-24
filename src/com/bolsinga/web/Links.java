@@ -342,8 +342,8 @@ public class Links {
     com.bolsinga.settings.data.Image image = Util.getSettings().getIcalImage();
 
     IMG i = new IMG(image.getLocation());
-    i.setHeight(image.getHeight().intValue());
-    i.setWidth(image.getWidth().intValue());
+    i.setHeight(image.getHeight());
+    i.setWidth(image.getWidth());
     i.setAlt(image.getAlt());
     i.setTitle(image.getAlt());
                 
@@ -454,8 +454,8 @@ public class Links {
     com.bolsinga.settings.data.Image image = Util.getSettings().getRssImage();
 
     IMG i = new IMG(image.getLocation());
-    i.setHeight(image.getHeight().intValue());
-    i.setWidth(image.getWidth().intValue());
+    i.setHeight(image.getHeight());
+    i.setWidth(image.getWidth());
     i.setAlt(image.getAlt());
     i.setTitle(image.getAlt());
                 

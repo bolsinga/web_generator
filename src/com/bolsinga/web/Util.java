@@ -142,8 +142,8 @@ public class Util {
     com.bolsinga.settings.data.Image image = Util.getSettings().getLogoImage();
 
     IMG i = new IMG(image.getLocation());
-    i.setHeight(image.getHeight().intValue());
-    i.setWidth(image.getWidth().intValue());
+    i.setHeight(image.getHeight());
+    i.setWidth(image.getWidth());
     i.setAlt(image.getAlt());
     i.setTitle(image.getAlt());
         

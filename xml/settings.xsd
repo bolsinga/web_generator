@@ -2,11 +2,17 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 <!-- Define Image -->
+<xs:simpleType name="imageDimension">
+	<xs:restriction base="xs:positiveInteger" >
+        <xs:maxInclusive value="10000"/>
+	</xs:restriction>
+</xs:simpleType>
+
 <xs:complexType name="image">
     <xs:sequence>
         <xs:element name="location" type="xs:anyURI" />
-        <xs:element name="width" type="xs:positiveInteger" />
-        <xs:element name="height" type="xs:positiveInteger" />
+        <xs:element name="width" type="imageDimension" />
+        <xs:element name="height" type="imageDimension" />
         <xs:element name="alt" type="xs:string" />
     </xs:sequence>
 </xs:complexType>
