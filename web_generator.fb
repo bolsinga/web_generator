@@ -6,9 +6,5 @@
 [Aux classpath entries]
 ./output/dst/lib/ecs-1.4.2.jar
 ./output/dst/lib/mysql-connector-java-3.1.12-bin.jar
-./output/dst/lib/jwsdp-2.0/jaxb/lib/jaxb-api.jar
-./output/dst/lib/jwsdp-2.0/jaxb/lib/jaxb-impl.jar
-./output/dst/lib/jwsdp-2.0/jwsdp-shared/lib/activation.jar
-./output/dst/lib/jwsdp-2.0/sjsxp/lib/jsr173_api.jar
 [Options]
 relative_paths=true
