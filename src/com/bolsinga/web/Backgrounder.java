@@ -72,7 +72,7 @@ public class Backgrounder {
   
   private final ExecutorService fExec = new BackgrounderThreadPoolExecutor(Backgrounder.sPoolThreadCount);
   
-  private final Set fClientSet = new HashSet<Backgroundable>();
+  private final Set<Backgroundable> fClientSet = new HashSet<Backgroundable>();
   private final Object fClientSetLock = new Object();
   
   public static Backgrounder getBackgrounder() {
