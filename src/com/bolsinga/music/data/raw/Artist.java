@@ -22,8 +22,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
     
     String nameToBeStripped = (sortName != null) ? sortName : name;
 
-    // The following is JDK 1.5 only. It was moved to java.text.Normalizer in JDK 1.6 with a different API.
-    String stripped = sun.text.Normalizer.normalize(nameToBeStripped, sun.text.Normalizer.DECOMP, 0);
+    String stripped = java.text.Normalizer.normalize(nameToBeStripped, java.text.Normalizer.Form.NFD);
     
     if (!stripped.equals(nameToBeStripped)) {
       result = stripped;
