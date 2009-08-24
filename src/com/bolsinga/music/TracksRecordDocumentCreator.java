@@ -228,7 +228,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     for (Song song : songs) {
       sb = new StringBuilder();
       if (isCompilation) {
-        Artist artist = (Artist)song.getPerformer();
+        Artist artist = song.getPerformer();
         String t = Util.createTitle("moreinfoartist", artist.getName());
         sb.append(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t));
         sb.append(" - ");
@@ -254,7 +254,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     StringBuilder sb = new StringBuilder();
     sb.append(Util.createNamedTarget(album.getID(), fLookup.getHTMLName(album)));
     if (!album.isCompilation()) {
-      Artist artist = (Artist)album.getPerformer();
+      Artist artist = album.getPerformer();
       sb.append(" - ");
       String t = Util.createTitle("moreinfoartist", artist.getName());
       sb.append(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t));

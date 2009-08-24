@@ -279,10 +279,10 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
     e.add(new StringElement(sb.toString()));
                 
-    Venue venue = (Venue)show.getVenue();
+    Venue venue = show.getVenue();
     String t = Util.createTitle("moreinfovenue", venue.getName());
     A venueA = Util.createInternalA(links.getLinkTo(venue), lookup.getHTMLName(venue), t);
-    Location l = (Location)venue.getLocation();
+    Location l = venue.getLocation();
     e.add(new StringElement(venueA.toString() + ", " + l.getCity() + ", " + l.getState()));
 
     String comment = show.getComment();

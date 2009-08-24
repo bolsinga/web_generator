@@ -156,7 +156,7 @@ public class MySQLImporter {
   }
 
   private static void importLabel(final Statement stmt, final Label label) throws SQLException {
-    Location location = (Location)label.getLocation();
+    Location location = label.getLocation();
     long locationID = -1;
     if (location != null) {
       try {
@@ -215,9 +215,9 @@ public class MySQLImporter {
 
     rowItems[index++] = MySQLImporter.toSQLID(song);
     rowItems[index++] = song.getTitle();
-    Artist performer = (Artist)song.getPerformer();
+    Artist performer = song.getPerformer();
     if (performer == null) {
-      performer = (Artist)album.getPerformer();
+      performer = album.getPerformer();
     }
     rowItems[index++] = MySQLImporter.toSQLID(performer);
     //     Artist composer = (Artist)song.getComposer();
@@ -282,7 +282,7 @@ public class MySQLImporter {
     
     rowItems[0] = MySQLImporter.toSQLID(album);
     rowItems[1] = album.getTitle();
-    Label label = (Label)album.getLabel();
+    Label label = album.getLabel();
     rowItems[2] = (label != null) ? MySQLImporter.toSQLID(label) : null;
     rowItems[3] = album.getComment();
     boolean isCompilation = album.isCompilation();
@@ -311,7 +311,7 @@ public class MySQLImporter {
   }
 
   private static void importArtist(final Statement stmt, final Artist artist) throws SQLException {
-    Location location = (Location)artist.getLocation();
+    Location location = artist.getLocation();
     long locationID = -1;
     if (location != null) {
       try {
@@ -355,7 +355,7 @@ public class MySQLImporter {
   }
 
   private static void importVenue(final Statement stmt, final Venue venue) throws SQLException {
-    Location location = (Location)venue.getLocation();
+    Location location = venue.getLocation();
     long locationID = -1;
     if (location != null) {
       try {
@@ -442,7 +442,7 @@ public class MySQLImporter {
     rowItems[index++] = (showDate != null) ? MySQLImporter.toSQLString(showDate) : null;
     boolean unknown = (showDate != null) ? showDate.isUnknown() : true;
     rowItems[index++] = Integer.toString(unknown ? 1 : 0);
-    rowItems[index++] = MySQLImporter.toSQLID((Venue)show.getVenue());
+    rowItems[index++] = MySQLImporter.toSQLID(show.getVenue());
     rowItems[index++] = show.getComment();
     rowItems[index++] = Long.toString(performanceID);
     

@@ -107,7 +107,7 @@ public class ICal {
                 
     summary.append(" @ ");
                 
-    summary.append(((Venue)show.getVenue()).getName());
+    summary.append(show.getVenue().getName());
                 
     summary.append(" (");
     summary.append(d.getYear());

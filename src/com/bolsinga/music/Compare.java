@@ -208,7 +208,7 @@ public class Compare {
       public int compare(final Album r1, final Album r2) {
         int result = LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
         if (result == 0) {
-          result = ARTIST_COMPARATOR.compare((Artist)r1.getPerformer(), (Artist)r2.getPerformer());
+          result = ARTIST_COMPARATOR.compare(r1.getPerformer(), r2.getPerformer());
         }
         return result;
       }
@@ -281,7 +281,7 @@ public class Compare {
       public int compare(final Show r1, final Show r2) {
         int result = DATE_COMPARATOR.compare(r1.getDate(), r2.getDate());
         if (result == 0) {
-          result = VENUE_COMPARATOR.compare((Venue)r1.getVenue(), (Venue)r2.getVenue());
+          result = VENUE_COMPARATOR.compare(r1.getVenue(), r2.getVenue());
           if (result == 0) {
             Artist a1 = (Artist)r1.getArtists().get(0);
             Artist a2 = (Artist)r2.getArtists().get(0);

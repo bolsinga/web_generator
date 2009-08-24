@@ -56,7 +56,7 @@ public class Lookup {
 
     List<? extends Show> shows = music.getShows();
     for (Show show : shows) {
-      id = ((Venue)show.getVenue()).getID();
+      id = show.getVenue().getID();
       if (fVenueMap.containsKey(id)) {
         showCollection = fVenueMap.get(id);
         showCollection.add(show);
@@ -66,7 +66,7 @@ public class Lookup {
         fVenueMap.put(id, showCollection);
       }
 
-      Location loc = (Location)((Venue)show.getVenue()).getLocation();
+      Location loc = show.getVenue().getLocation();
       Object typeArgs[] = { loc.getCity(), loc.getState() };
       id = MessageFormat.format(Util.getResourceString("cityformat"), typeArgs);
       if (fCityMap.containsKey(id)) {

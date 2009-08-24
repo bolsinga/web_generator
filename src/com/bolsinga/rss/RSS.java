@@ -73,7 +73,7 @@ public class RSS {
     }
                 
     sb.append(" @ ");
-    sb.append(((Venue)show.getVenue()).getName());
+    sb.append(show.getVenue().getName());
                         
     return sb.toString();
   }

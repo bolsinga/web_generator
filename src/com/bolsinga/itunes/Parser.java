@@ -241,7 +241,7 @@ public class Parser {
     public int compare(final Album r1, final Album r2) {
       int result = com.bolsinga.music.Compare.LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
       if (result == 0) {
-        result = ARTIST_COMPARATOR.compare((Artist)r1.getArtist(), (Artist)r2.getArtist());
+        result = ARTIST_COMPARATOR.compare(r1.getArtist(), r2.getArtist());
       }
       return result;
     }

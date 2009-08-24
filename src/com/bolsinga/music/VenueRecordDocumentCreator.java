@@ -187,7 +187,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   private Record getVenueRecordSection(final Venue venue) {
     Vector<Record> items = new Vector<Record>();
 
-    Location l = (Location)venue.getLocation();
+    Location l = venue.getLocation();
     items.add(Record.createRecordSimple(Util.createExternalA(Util.getGoogleMapsURL(l), Util.getCannonicalAddress(l))));
     
     if (fLookup.getRelations(venue) != null) {
