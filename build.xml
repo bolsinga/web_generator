@@ -135,7 +135,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/plist/*.java" />
         </javac>
@@ -145,7 +145,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/web/*.java" />
           <classpath refid="web_classpath" />
@@ -167,7 +167,7 @@
   <javac destdir="${build.classes}"
          debug="${javac.debug}"
          deprecation="on">
-    <compilerarg value="${javac.lint}" compiler="javac1.5" />
+    <compilerarg value="${javac.lint}" />
     <src path="${src.dir}" />
     <include name="com/bolsinga/sql/*.java" />
     <include name="com/bolsinga/sql/diary/*.java" />
@@ -180,7 +180,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/itunes/*.java" />
         </javac>
@@ -190,7 +190,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/music/*.java" />
           <include name="com/bolsinga/music/data/*.java" />
@@ -205,7 +205,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/diary/*.java" />
           <include name="com/bolsinga/diary/data/*.java" />
@@ -220,7 +220,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/rss/*.java" />
           <classpath refid="web_classpath" />
@@ -231,7 +231,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/ical/*.java" />
         </javac>
@@ -255,7 +255,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/test/*.java" />
           <classpath refid="web_classpath" />
@@ -266,7 +266,7 @@
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on">
-          <compilerarg value="${javac.lint}" compiler="javac1.5" />
+          <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/site/*.java" />
           <classpath refid="music_classpath" />
