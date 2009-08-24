@@ -174,7 +174,7 @@ public class Music implements com.bolsinga.music.data.Music {
   public static void export(final com.bolsinga.music.data.Music music, final String outputFile) throws com.bolsinga.web.WebException {
     com.bolsinga.music.data.xml.impl.Music xmlMusic = null;
     if (music instanceof com.bolsinga.music.data.xml.impl.Music) {
-      xmlMusic = (com.bolsinga.music.data.xml.impl.Music)xmlMusic;
+      xmlMusic = (com.bolsinga.music.data.xml.impl.Music)music;
     } else {
       com.bolsinga.music.data.xml.impl.ObjectFactory objFactory = new com.bolsinga.music.data.xml.impl.ObjectFactory();
       
