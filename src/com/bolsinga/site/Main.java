@@ -156,7 +156,7 @@ public class Main implements Backgroundable {
     
     List<? extends com.bolsinga.music.data.Artist> artists = music.getArtists();
     for (com.bolsinga.music.data.Artist artist : artists) {
-      s = artist.getName().toLowerCase();
+      s = com.bolsinga.music.Compare.simplify(artist.getName());
       if (bands.contains(s)) {
         if (!displayed) {
           System.out.println("--Similar Artist Names--");
