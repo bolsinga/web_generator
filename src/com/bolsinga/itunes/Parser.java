@@ -72,6 +72,8 @@ public class Parser {
   private static final String TK_ALBUM_RATING          = "Album Rating";
   private static final String TK_ALBUM_RATING_COMPUTED = "Album Rating Computed";
   private static final String TK_RATING                = "Rating";
+  private static final String TK_GROUPING              = "Grouping";
+  private static final String TK_GAPLESS_ALBUM         = "Part Of Gapless Album";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
@@ -329,6 +331,8 @@ public class Parser {
     sITunesKeys.add(TK_ALBUM_RATING);
     sITunesKeys.add(TK_ALBUM_RATING_COMPUTED);
     sITunesKeys.add(TK_RATING);
+    sITunesKeys.add(TK_GROUPING);
+    sITunesKeys.add(TK_GAPLESS_ALBUM);
   }
 
   static {
