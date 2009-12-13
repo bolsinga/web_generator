@@ -177,16 +177,13 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     List<? extends Artist> artists = fMusic.getArtistsCopy();
     Collections.sort(artists, Compare.ARTIST_TRACKS_COMPARATOR);
 
-    int index = 0;
-    String[] names = new String[artists.size()];
-    int[] values = new int[artists.size()];
+    ArrayList<String> names = new ArrayList<String>(artists.size());
+    ArrayList<Integer> values = new ArrayList<Integer>(artists.size());
     
     for (Artist artist : artists) {
       String t = Util.createTitle("moreinfoartist", artist.getName());
-      names[index] = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
-      values[index] = Util.trackCount(artist);
-                        
-      index++;
+      names.add(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString());
+      values.add(Util.trackCount(artist));
     }
 
     String typeString = Util.getResourceString("artist");
@@ -199,17 +196,14 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     List<? extends Artist> artists = fMusic.getArtistsCopy();
     Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
 
-    String[] names = new String[artists.size()];
-    int[] values = new int[artists.size()];
-    int index = 0;
+    ArrayList<String> names = new ArrayList<String>(artists.size());
+    ArrayList<Integer> values = new ArrayList<Integer>(artists.size());
     
     for (Artist artist : artists) {
       String t = Util.createTitle("moreinfoartist", artist.getName());
-      names[index] = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString();
+      names.add(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString());
       List<? extends Album> albums = artist.getAlbums();
-      values[index] = (albums != null) ? albums.size() : 0;
-                        
-      index++;
+      values.add((albums != null) ? albums.size() : 0);
     }
 
     String typeString = Util.getResourceString("artist");

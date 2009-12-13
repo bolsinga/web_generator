@@ -76,18 +76,16 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
     Collections.sort(keys);
     Collections.reverse(keys);
 
-    String[] names = new String[items.size()];
-    int[] values = new int[items.size()];
-    int index = 0;
+    ArrayList<String> names = new ArrayList<String>(items.size());
+    ArrayList<Integer> values = new ArrayList<Integer>(items.size());
 
     for (int value : keys) {
       List<String> k = new Vector<String>(cityCount.get(value));
       Collections.sort(k);
 
       for (String j : k) {
-        names[index] = j;
-        values[index] = value;
-        index++;
+        names.add(j);
+        values.add(value);
       }
     }
                 

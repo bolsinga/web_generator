@@ -133,16 +133,13 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     List<? extends Venue> items = fMusic.getVenuesCopy();
     Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
 
-    int index = 0;
-    String[] names = new String[items.size()];
-    int[] values = new int[items.size()];
+    ArrayList<String> names = new ArrayList<String>(items.size());
+    ArrayList<Integer> values = new ArrayList<Integer>(items.size());
     for (Venue item : items) {
       String t = Util.createTitle("moreinfovenue", item.getName());
-      names[index] = Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString();
+      names.add(Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString());
       Collection<Show> shows = fLookup.getShows(item);
-      values[index] = (shows != null) ? shows.size() : 0;
-                        
-      index++;
+      values.add((shows != null) ? shows.size() : 0);
     }
                 
     String typeString = Util.getResourceString("venue");

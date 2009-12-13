@@ -31,11 +31,11 @@ public abstract class StatsRecordFactory implements RecordFactory {
   protected abstract String getDirectory();
   protected abstract Table getTable();
 
-  public static Table makeTable(final String[] names, final int[] values, final String caption, final String header, final String summary) {
+  public static Table makeTable(final List<String> names, final List<Integer> values, final String caption, final String header, final String summary) {
     int runningTotal = 0;
     int i;
-    for (i = 0; i < values.length; i++) {
-      runningTotal += values[i];
+    for (i = 0; i < values.size(); i++) {
+      runningTotal += values.get(i);
     }
     final int total = runningTotal;
     
@@ -45,22 +45,23 @@ public abstract class StatsRecordFactory implements RecordFactory {
       }
 
       public int getRowCount() {
-        return values.length;
+        return values.size();
       }
       
       public TR getRow(final int row) {
         TR trow = new TR();
-        TH thh = new TH(names[row]);
+        TH thh = new TH(names.get(row));
         thh.setPrettyPrint(Util.getPrettyOutput());
         trow.addElement(thh);
-        trow.addElement(new TD(Integer.toString(values[row])).setPrettyPrint(Util.getPrettyOutput()));
-        trow.addElement(new TD(Util.toString((double)values[row] / total * 100.0)).setPrettyPrint(Util.getPrettyOutput()));
+        int value = values.get(row);
+        trow.addElement(new TD(Integer.toString(value)).setPrettyPrint(Util.getPrettyOutput()));
+        trow.addElement(new TD(Util.toString((double)value / total * 100.0)).setPrettyPrint(Util.getPrettyOutput()));
         return trow;
       }
       
       public TR getFooterRow() {
         TR trow = new TR();
-        trow.addElement(new TH(Integer.toString(names.length)));
+        trow.addElement(new TH(Integer.toString(names.size())));
         trow.addElement(new TH(Integer.toString(total)));
         trow.addElement(new TH());
         return trow;
