@@ -204,10 +204,13 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     ArrayList<Integer> values = new ArrayList<Integer>(artists.size());
     
     for (Artist artist : artists) {
+      List<? extends Album> albums = artist.getAlbums();
+      if (albums == null || albums.size() == 0)
+        continue;
+
       String t = Util.createTitle("moreinfoartist", artist.getName());
       names.add(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString());
-      List<? extends Album> albums = artist.getAlbums();
-      values.add((albums != null) ? albums.size() : 0);
+      values.add(albums.size());
     }
 
     String typeString = Util.getResourceString("artist");
