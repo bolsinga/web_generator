@@ -50,6 +50,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     }
     
     if (Encode.requiresTransitional(main.toString())) {
+      System.out.println("Requires HTML410Transitional: " + getSitePageTitle(factory.getTitle()));
       d.setDoctype(new org.apache.ecs.Doctype.Html401Transitional());
     }
     d.getBody().addElement(main);
