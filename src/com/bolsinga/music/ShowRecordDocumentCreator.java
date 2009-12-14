@@ -67,7 +67,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
   }
 
-  protected void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
+  private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new StatsRecordFactory() {

@@ -20,7 +20,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
     super(music, outputDir);
   }
 
-  protected void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
+  private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new StatsRecordFactory() {
