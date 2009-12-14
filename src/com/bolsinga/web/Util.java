@@ -296,9 +296,11 @@ public class Util {
     }
     
     trow = handler.getFooterRow();
-    trow.setPrettyPrint(Util.getPrettyOutput());
-    trow.setClass(CSS.TABLE_FOOTER);
-    t.addElement(trow);
+    if (trow != null) {
+        trow.setPrettyPrint(Util.getPrettyOutput());
+        trow.setClass(CSS.TABLE_FOOTER);
+        t.addElement(trow);
+    }
                 
     return t;
   }
