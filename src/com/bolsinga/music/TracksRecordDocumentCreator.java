@@ -181,9 +181,13 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     ArrayList<Integer> values = new ArrayList<Integer>(artists.size());
     
     for (Artist artist : artists) {
+      int trackCount = Util.trackCount(artist);
+      if (trackCount == 0)
+        continue;
+
       String t = Util.createTitle("moreinfoartist", artist.getName());
       names.add(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString());
-      values.add(Util.trackCount(artist));
+      values.add(trackCount);
     }
 
     String typeString = Util.getResourceString("artist");
