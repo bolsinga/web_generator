@@ -35,8 +35,15 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   }
   
   protected void create(final RecordFactory factory) {
-    Document d = populate(factory);
-    writeDocument(factory, d);
+    try {
+        Document d = populate(factory);
+        writeDocument(factory, d);
+    } catch (Exception e) {
+        // Catch this here, since this is typically called by Runnable.run().
+        System.err.println(e);
+        e.printStackTrace();
+        System.exit(1);
+    }
   }
   
   protected Document populate(final RecordFactory factory) {
@@ -134,7 +141,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
         
-  private void writeDocument(final RecordFactory factory, final Document d) {
+  private void writeDocument(final RecordFactory factory, final Document d) throws com.bolsinga.web.WebException {
     d.getBody().addElement(Util.getSettings().getPageFooter());
     
     File f = new File(fOutputDir, factory.getFilePath());
@@ -156,13 +163,10 @@ public abstract class RecordDocumentCreator implements Backgroundable {
         }
       }
     } catch (IOException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("The RecordDocument: ");
-      sb.append(f);
-      sb.append(" could not be written.");
-      System.err.println(sb.toString());
-      System.err.println(e);
-      e.printStackTrace();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't write RecordDocument file: ");
+        sb.append(f);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
   }
 }
