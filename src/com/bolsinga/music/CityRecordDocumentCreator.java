@@ -12,6 +12,10 @@ import org.apache.ecs.html.*;
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   final String fTypeString = Util.getResourceString("city");
   
+  interface CityStatsTracker {
+    public void track(String name, int value);
+  }
+  
   class CityStatsRecordFactory extends StatsRecordFactory {
       protected Table getTable() {
         return getStats();
@@ -56,8 +60,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
   
-  private Table getStats() {
-    Collection<String> items = fLookup.getCities();
+  private void trackStats(final Collection<String> items, final CityStatsTracker tracker) {
     HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
     int val;
@@ -79,19 +82,29 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
     Collections.sort(keys);
     Collections.reverse(keys);
 
-    ArrayList<String> names = new ArrayList<String>(items.size());
-    ArrayList<Integer> values = new ArrayList<Integer>(items.size());
-
     for (int value : keys) {
       List<String> k = new Vector<String>(cityCount.get(value));
       Collections.sort(k);
 
       for (String j : k) {
-        names.add(j);
-        values.add(value);
+        tracker.track(j, value);
       }
     }
-                
+  }
+
+  private Table getStats() {
+    final Collection<String> items = fLookup.getCities();
+
+    final ArrayList<String> names = new ArrayList<String>(items.size());
+    final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
+
+    trackStats(items, new CityStatsTracker() {
+        public void track(String name, int value) {
+            names.add(name);
+            values.add(value);
+        }
+    });
+    
     Object typeArgs[] = { fTypeString };
     String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
 
