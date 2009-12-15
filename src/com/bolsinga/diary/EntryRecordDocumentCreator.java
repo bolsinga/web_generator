@@ -35,7 +35,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
           final Entry first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
           create(new RecordFactory() {
-            public Vector<Record> getRecords() {
+            public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
               Vector<Record> records = new Vector<Record>();
               
               for (Vector<Entry> item : getMonthlies(group)) {
@@ -120,7 +120,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new RecordFactory() {
-          public Vector<Record> getRecords() {
+          public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
             Vector<Record> items = new Vector<Record>(1);
             items.add(Record.createRecordSimple(getStats()));
             return items;

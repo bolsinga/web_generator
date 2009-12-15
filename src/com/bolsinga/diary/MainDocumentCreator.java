@@ -33,7 +33,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     return CSS.DOC_3_COL_BODY;
   }
 
-  protected Document populate(final RecordFactory factory) {
+  protected Document populate(final RecordFactory factory) throws com.bolsinga.web.WebException {
     Document d = super.populate(factory);
     
     d.getBody().addElement(getStaticHeader());
@@ -54,7 +54,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new RecordFactory() {
-          public Vector<Record> getRecords() {
+          public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
             Vector<Record> items = new Vector<Record>(1);
             items.add(Record.createRecordSimple(getMain()));
             return items;

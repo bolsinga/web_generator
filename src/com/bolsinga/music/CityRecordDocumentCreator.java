@@ -57,7 +57,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   class DynamicCityStatsRecordFactory extends CityStatsRecordFactory {
-      public Vector<Record> getRecords() {
+      public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
         Vector<Record> records = super.getRecords();
 
         Script script = new Script();

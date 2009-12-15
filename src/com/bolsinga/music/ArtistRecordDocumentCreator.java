@@ -32,7 +32,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
           final Artist first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
           create(new RecordFactory() {
-            public Vector<Record> getRecords() {
+            public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
               Vector<Record> records = new Vector<Record>();
               
               for (Artist item : group) {
