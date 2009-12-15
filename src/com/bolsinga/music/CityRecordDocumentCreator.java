@@ -10,7 +10,8 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
-
+  final String fTypeString = Util.getResourceString("city");
+  
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     CityRecordDocumentCreator creator = new CityRecordDocumentCreator(music, outputDir);
     creator.createStats(backgrounder, backgroundable);
@@ -33,7 +34,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
 
           public String getTitle() {
-            Object typeArgs[] = { Util.getResourceString("city") };
+            Object typeArgs[] = { fTypeString };
             return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
           }
 
@@ -89,10 +90,9 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
     }
                 
-    String typeString = Util.getResourceString("city");
-    Object typeArgs[] = { typeString };
+    Object typeArgs[] = { fTypeString };
     String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
 
-    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("citystatsummary"));
+    return StatsRecordFactory.makeTable(names, values, tableTitle, fTypeString, Util.getResourceString("citystatsummary"));
   }
 }
