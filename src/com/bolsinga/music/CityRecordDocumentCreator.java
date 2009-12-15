@@ -83,7 +83,12 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         });
 
         StringBuilder sb = new StringBuilder();
-        sb.append("var values=");
+        sb.append("createStats(\"");
+        sb.append(CSS.TABLE_ROW_ALT);
+        sb.append("\",\"");
+        sb.append(CSS.TABLE_FOOTER);
+        sb.append("\",");
+
         org.json.JSONArray jarray = new org.json.JSONArray(values);
         try {
         if (com.bolsinga.web.Util.getPrettyOutput()) {
@@ -95,13 +100,8 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
 //              throw new com.bolsinga.web.WebException("Can't create city stats json", e);
         System.err.println("bad json");
         }
-        sb.append(";");
         
-        sb.append("createStats(\"");
-        sb.append(CSS.TABLE_ROW_ALT);
-        sb.append("\",\"");
-        sb.append(CSS.TABLE_FOOTER);
-        sb.append("\");");
+        sb.append(");");
         script.setTagText(sb.toString());
         
         records.add(Record.createRecordSimple(script));
