@@ -11,6 +11,8 @@ import org.apache.ecs.html.*;
 
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   final String fTypeString = Util.getResourceString("city");
+  final Object fTypeArgs[] = { fTypeString };
+  final String fTableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
   
   interface CityStatsTracker {
     public void track(String name, int value);
@@ -26,8 +28,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
 
       public String getTitle() {
-        Object typeArgs[] = { fTypeString };
-        return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
+        return MessageFormat.format(Util.getResourceString("statistics"), fTypeArgs);
       }
 
       public Navigator getNavigator() {
@@ -105,9 +106,6 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         }
     });
     
-    Object typeArgs[] = { fTypeString };
-    String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
-
-    return StatsRecordFactory.makeTable(names, values, tableTitle, fTypeString, Util.getResourceString("citystatsummary"));
+    return StatsRecordFactory.makeTable(names, values, fTableTitle, fTypeString, Util.getResourceString("citystatsummary"));
   }
 }
