@@ -5,3 +5,44 @@ function recordPopup(e) {
     location.href=value;
   }
 }
+function createStats(altClass, footerClass, vals) {
+    var table = document.getElementById("stats");
+    var total = 0;
+    for (var v in vals) {
+        total += vals[v].v;
+    }
+    for (var v in vals) {
+        var tr = table.insertRow(table.rows.length);
+        
+        var th = document.createElement("th");
+        th.appendChild(document.createTextNode(vals[v].k));
+        tr.appendChild(th);
+        
+        var td = document.createElement("td");
+        td.appendChild(document.createTextNode(vals[v].v));
+        tr.appendChild(td);
+        
+        td = document.createElement("td");
+        var p = vals[v].v / total * 100.0;
+        td.appendChild(document.createTextNode(p.toFixed(2)));
+        tr.appendChild(td);
+        
+        if (v % 2 != 0)
+            tr.className = altClass;
+    }
+    var tr = table.insertRow(table.rows.length);
+    
+    var th = document.createElement("th");
+    th.appendChild(document.createTextNode(vals.length));
+    tr.appendChild(th);
+    
+    var td = document.createElement("th");
+    td.appendChild(document.createTextNode(total));
+    tr.appendChild(td);
+    
+    td = document.createElement("th");
+    td.appendChild(document.createTextNode(""));
+    tr.appendChild(td);
+    
+    tr.className = footerClass;
+}
