@@ -12,6 +12,33 @@ import org.apache.ecs.html.*;
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   final String fTypeString = Util.getResourceString("city");
   
+  class CityStatsRecordFactory extends StatsRecordFactory {
+      protected Table getTable() {
+        return getStats();
+      }
+      
+      public String getDirectory() {
+        return Links.CITIES_DIR;
+      }
+
+      public String getTitle() {
+        Object typeArgs[] = { fTypeString };
+        return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
+      }
+
+      public Navigator getNavigator() {
+        return new Navigator(fLinks) {
+          public Element getCityNavigator() {
+            return getCurrentNavigator();
+          }
+          
+          public Element getCurrentNavigator() {
+            return new StringElement(Util.getResourceString("cities"));
+          }
+        };
+      }
+  }
+  
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     CityRecordDocumentCreator creator = new CityRecordDocumentCreator(music, outputDir);
     creator.createStats(backgrounder, backgroundable);
@@ -24,32 +51,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        create(new StatsRecordFactory() {
-          protected Table getTable() {
-            return getStats();
-          }
-          
-          public String getDirectory() {
-            return Links.CITIES_DIR;
-          }
-
-          public String getTitle() {
-            Object typeArgs[] = { fTypeString };
-            return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
-          }
-
-          public Navigator getNavigator() {
-            return new Navigator(fLinks) {
-              public Element getCityNavigator() {
-                return getCurrentNavigator();
-              }
-              
-              public Element getCurrentNavigator() {
-                return new StringElement(Util.getResourceString("cities"));
-              }
-            };
-          }
-        });
+        create(new CityStatsRecordFactory());
       }
     });
   }
