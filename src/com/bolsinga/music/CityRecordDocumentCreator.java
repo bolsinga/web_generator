@@ -20,7 +20,19 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   
   class CityStatsRecordFactory extends StatsRecordFactory {
       protected Table getTable() {
-        return getStats();
+        final Collection<String> items = fLookup.getCities();
+
+        final ArrayList<String> names = new ArrayList<String>(items.size());
+        final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
+
+        trackStats(items, new CityStatsTracker() {
+            public void track(String name, int value) {
+                names.add(name);
+                values.add(value);
+            }
+        });
+        
+        return StatsRecordFactory.makeTable(names, values, fTableTitle, fTypeString, Util.getResourceString("citystatsummary"));
       }
       
       public String getDirectory() {
@@ -91,21 +103,5 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         tracker.track(j, value);
       }
     }
-  }
-
-  private Table getStats() {
-    final Collection<String> items = fLookup.getCities();
-
-    final ArrayList<String> names = new ArrayList<String>(items.size());
-    final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
-
-    trackStats(items, new CityStatsTracker() {
-        public void track(String name, int value) {
-            names.add(name);
-            values.add(value);
-        }
-    });
-    
-    return StatsRecordFactory.makeTable(names, values, fTableTitle, fTypeString, Util.getResourceString("citystatsummary"));
   }
 }
