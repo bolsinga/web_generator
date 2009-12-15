@@ -56,6 +56,89 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
   }
   
+  class DynamicCityStatsRecordFactory extends CityStatsRecordFactory {
+      public Vector<Record> getRecords() {
+        Vector<Record> records = super.getRecords();
+
+        Script script = new Script();
+        script.setType("text/javascript");
+        script.removeAttribute("language");
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("var tableRowAltClass=\"");
+        sb.append(CSS.TABLE_ROW_ALT);
+        sb.append("\";");
+        sb.append("var tableFooterClass=\"");
+        sb.append(CSS.TABLE_FOOTER);
+        sb.append("\";");
+
+        final Collection<String> items = fLookup.getCities();
+
+        final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
+
+        trackStats(items, new CityStatsTracker() {
+            public void track(String name, int value) {
+                org.json.JSONObject json = new org.json.JSONObject();
+                try {
+                    json.put("k", name);
+                    json.put("v", value);
+                } catch (org.json.JSONException e) {
+//              throw new com.bolsinga.web.WebException("Can't create city stats json", e);
+                    System.err.println("bad json");
+                }
+                values.add(json);
+            }
+        });
+
+        sb.append("var values=");
+        org.json.JSONArray jarray = new org.json.JSONArray(values);
+        try {
+        if (com.bolsinga.web.Util.getPrettyOutput()) {
+          sb.append(jarray.toString(2));
+        } else {
+          sb.append(jarray.toString());
+        }
+        } catch (org.json.JSONException e) {
+//              throw new com.bolsinga.web.WebException("Can't create city stats json", e);
+        System.err.println("bad json");
+        }
+        sb.append(";");
+        
+        sb.append("createStats();");
+        script.setTagText(sb.toString());
+        
+        records.add(Record.createRecordSimple(script));
+
+        return records;
+      }
+
+      protected Table getTable() {
+        Table table = Util.makeTable(fTableTitle, Util.getResourceString("citystatsummary"), new TableHandler() {
+          public TR getHeaderRow() {
+            return new TR().addElement(new TH(fTypeString)).addElement(new TH("#")).addElement(new TH("%"));
+          }
+
+          public int getRowCount() {
+            return 0;
+          }
+          
+          public TR getRow(final int row) {
+            return null;
+          }
+          
+          public TR getFooterRow() {
+            return null;
+          }
+        });
+        table.setID("stats");
+        return table;
+      }
+
+      public String getFilename() {
+        return "dyn-stats";
+      }
+  }
+  
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     CityRecordDocumentCreator creator = new CityRecordDocumentCreator(music, outputDir);
     creator.createStats(backgrounder, backgroundable);
@@ -71,6 +154,12 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         create(new CityStatsRecordFactory());
       }
     });
+
+//    backgrounder.execute(backgroundable, new Runnable() {
+//      public void run() {
+//        create(new DynamicCityStatsRecordFactory());
+//      }
+//    });
   }
   
   private void trackStats(final Collection<String> items, final CityStatsTracker tracker) {
