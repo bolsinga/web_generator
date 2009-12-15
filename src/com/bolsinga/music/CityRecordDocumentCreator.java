@@ -63,9 +63,15 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         Script script = new Script();
         script.setType("text/javascript");
         script.removeAttribute("language");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("createStats(\"");
+        sb.append(CSS.TABLE_ROW_ALT);
+        sb.append("\",\"");
+        sb.append(CSS.TABLE_FOOTER);
+        sb.append("\",");
         
         final Collection<String> items = fLookup.getCities();
-
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
 
         trackStats(items, new CityStatsTracker() {
@@ -75,30 +81,20 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
                     json.put("k", name);
                     json.put("v", value);
                 } catch (org.json.JSONException e) {
-//              throw new com.bolsinga.web.WebException("Can't create city stats json", e);
-                    System.err.println("bad json");
+//                    throw new com.bolsinga.web.WebException("Can't create city stats json", e);
                 }
                 values.add(json);
             }
         });
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("createStats(\"");
-        sb.append(CSS.TABLE_ROW_ALT);
-        sb.append("\",\"");
-        sb.append(CSS.TABLE_FOOTER);
-        sb.append("\",");
-
         org.json.JSONArray jarray = new org.json.JSONArray(values);
         try {
-        if (com.bolsinga.web.Util.getPrettyOutput()) {
-          sb.append(jarray.toString(2));
-        } else {
-          sb.append(jarray.toString());
-        }
+            if (com.bolsinga.web.Util.getPrettyOutput()) {
+              sb.append(jarray.toString(2));
+            } else {
+              sb.append(jarray.toString());
+            }
         } catch (org.json.JSONException e) {
-//              throw new com.bolsinga.web.WebException("Can't create city stats json", e);
-        System.err.println("bad json");
+//            throw new com.bolsinga.web.WebException("Can't write city stats json array", e);
         }
         
         sb.append(");");
