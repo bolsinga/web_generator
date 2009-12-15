@@ -15,18 +15,18 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   final String fTableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
   
   interface CityStatsTracker {
-    public void track(String name, int value);
+    public void track(String name, int value) throws com.bolsinga.web.WebException;
   }
   
   class CityStatsRecordFactory extends StatsRecordFactory {
-      protected Table getTable() {
+      protected Table getTable() throws com.bolsinga.web.WebException {
         final Collection<String> items = fLookup.getCities();
 
         final ArrayList<String> names = new ArrayList<String>(items.size());
         final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
 
         trackStats(items, new CityStatsTracker() {
-            public void track(String name, int value) {
+            public void track(String name, int value) throws com.bolsinga.web.WebException {
                 names.add(name);
                 values.add(value);
             }
@@ -75,13 +75,13 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
 
         trackStats(items, new CityStatsTracker() {
-            public void track(String name, int value) {
+            public void track(String name, int value) throws com.bolsinga.web.WebException {
                 org.json.JSONObject json = new org.json.JSONObject();
                 try {
                     json.put("k", name);
                     json.put("v", value);
                 } catch (org.json.JSONException e) {
-//                    throw new com.bolsinga.web.WebException("Can't create city stats json", e);
+                    throw new com.bolsinga.web.WebException("Can't create city stats json", e);
                 }
                 values.add(json);
             }
@@ -94,7 +94,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
               sb.append(jarray.toString());
             }
         } catch (org.json.JSONException e) {
-//            throw new com.bolsinga.web.WebException("Can't write city stats json array", e);
+            throw new com.bolsinga.web.WebException("Can't write city stats json array", e);
         }
         
         sb.append(");");
@@ -155,7 +155,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
 //    });
   }
   
-  private void trackStats(final Collection<String> items, final CityStatsTracker tracker) {
+  private void trackStats(final Collection<String> items, final CityStatsTracker tracker) throws com.bolsinga.web.WebException {
     HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
     int val;

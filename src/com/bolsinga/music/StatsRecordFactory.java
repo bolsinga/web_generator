@@ -29,7 +29,7 @@ public abstract class StatsRecordFactory implements RecordFactory {
   }
   
   protected abstract String getDirectory();
-  protected abstract Table getTable();
+  protected abstract Table getTable() throws com.bolsinga.web.WebException;
 
   public static Table makeTable(final List<String> names, final List<Integer> values, final String caption, final String header, final String summary) {
     int runningTotal = 0;
