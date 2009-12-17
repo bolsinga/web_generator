@@ -66,7 +66,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new StatsRecordFactory() {
-          protected Table getTable() {
+          protected Table getTable() throws com.bolsinga.web.WebException {
             return getStats();
           }
 
@@ -129,24 +129,35 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
   
-  private Table getStats() {
-    List<? extends Venue> items = fMusic.getVenuesCopy();
-    Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
+  private Table getStats() throws com.bolsinga.web.WebException {
+    final List<? extends Venue> items = fMusic.getVenuesCopy();
 
-    ArrayList<String> names = new ArrayList<String>(items.size());
-    ArrayList<Integer> values = new ArrayList<Integer>(items.size());
-    for (Venue item : items) {
-      String t = Util.createTitle("moreinfovenue", item.getName());
-      names.add(Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString());
-      Collection<Show> shows = fLookup.getShows(item);
-      values.add((shows != null) ? shows.size() : 0);
-    }
-                
+    final ArrayList<String> names = new ArrayList<String>(items.size());
+    final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
+
+    trackStats(items, new StatsRecordFactory.StatsTracker() {
+        public void track(String name, int value) {
+            names.add(name);
+            values.add(value);
+        }
+    });
+
     String typeString = Util.getResourceString("venue");
     Object typeArgs[] = { typeString };
     String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
 
     return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("venuestatsummary"));
+  }
+
+  private void trackStats(final List<? extends Venue> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+    Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
+
+    for (Venue item : items) {
+      String t = Util.createTitle("moreinfovenue", item.getName());
+      String name = Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString();
+      Collection<Show> shows = fLookup.getShows(item);
+      tracker.track(name, (shows != null) ? shows.size() : 0);
+    }
   }
   
   private Vector<Element> getVenueShowListing(final Venue venue, final Show show) {
