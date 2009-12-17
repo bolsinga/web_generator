@@ -126,10 +126,6 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         table.setID("stats");
         return table;
       }
-
-      public String getFilename() {
-        return "dyn-stats";
-      }
   }
   
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
@@ -142,17 +138,17 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
-    backgrounder.execute(backgroundable, new Runnable() {
-      public void run() {
-        create(new CityStatsRecordFactory());
-      }
-    });
-
 //    backgrounder.execute(backgroundable, new Runnable() {
 //      public void run() {
-//        create(new DynamicCityStatsRecordFactory());
+//        create(new CityStatsRecordFactory());
 //      }
 //    });
+
+    backgrounder.execute(backgroundable, new Runnable() {
+      public void run() {
+        create(new DynamicCityStatsRecordFactory());
+      }
+    });
   }
   
   private void trackStats(final Collection<String> items, final CityStatsTracker tracker) throws com.bolsinga.web.WebException {
