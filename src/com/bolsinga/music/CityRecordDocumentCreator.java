@@ -19,22 +19,6 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   class CityStatsRecordFactory extends StatsRecordFactory {
-      protected Table getTable() throws com.bolsinga.web.WebException {
-        final Collection<String> items = fLookup.getCities();
-
-        final ArrayList<String> names = new ArrayList<String>(items.size());
-        final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
-
-        trackStats(items, new CityStatsTracker() {
-            public void track(String name, int value) throws com.bolsinga.web.WebException {
-                names.add(name);
-                values.add(value);
-            }
-        });
-        
-        return StatsRecordFactory.makeTable(names, values, fTableTitle, fTypeString, Util.getResourceString("citystatsummary"));
-      }
-      
       public String getDirectory() {
         return Links.CITIES_DIR;
       }
@@ -54,9 +38,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
         };
       }
-  }
-  
-  class DynamicCityStatsRecordFactory extends CityStatsRecordFactory {
+
       public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
         Vector<Record> records = super.getRecords();
 
@@ -138,15 +120,9 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
-//    backgrounder.execute(backgroundable, new Runnable() {
-//      public void run() {
-//        create(new CityStatsRecordFactory());
-//      }
-//    });
-
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        create(new DynamicCityStatsRecordFactory());
+        create(new CityStatsRecordFactory());
       }
     });
   }
