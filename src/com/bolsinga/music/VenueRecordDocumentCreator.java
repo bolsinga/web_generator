@@ -136,7 +136,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
 
     trackStats(items, new StatsRecordFactory.StatsTracker() {
-        public void track(String name, int value) {
+        public void track(final String name, final int value) {
             names.add(name);
             values.add(value);
         }

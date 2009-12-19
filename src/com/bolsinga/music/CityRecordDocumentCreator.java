@@ -52,7 +52,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
 
         trackStats(items, new StatsRecordFactory.StatsTracker() {
-            public void track(String name, int value) throws com.bolsinga.web.WebException {
+            public void track(final String name, final int value) throws com.bolsinga.web.WebException {
                 org.json.JSONObject json = new org.json.JSONObject();
                 try {
                     json.put("k", name);
