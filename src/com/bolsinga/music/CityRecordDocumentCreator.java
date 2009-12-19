@@ -52,7 +52,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         final Collection<String> items = fLookup.getCities();
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
 
-        trackStats(items, new StatsRecordFactory.StatsTracker() {
+        int total = trackStats(items, new StatsRecordFactory.StatsTracker() {
             public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
                 org.json.JSONObject json = new org.json.JSONObject();
                 try {
@@ -75,6 +75,8 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
             throw new com.bolsinga.web.WebException("Can't write city stats json array", e);
         }
         
+        sb.append(",");
+        sb.append(total);
         sb.append(");");
 
         sb.append("},false);");
@@ -126,7 +128,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
   
-  private void trackStats(final Collection<String> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+  private int trackStats(final Collection<String> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
     HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
     int val;
@@ -148,13 +150,16 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
     Collections.sort(keys);
     Collections.reverse(keys);
 
+    int total = 0;
     for (int value : keys) {
       List<String> k = new Vector<String>(cityCount.get(value));
       Collections.sort(k);
 
       for (String j : k) {
         tracker.track(j, null, value);
+        total += value;
       }
     }
+    return total;
   }
 }
