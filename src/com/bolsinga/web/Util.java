@@ -209,7 +209,9 @@ public class Util {
   
   private static A createA(final String url, final String value, final String title, final String cssClass) {
     A an = new A(url, value);
-    an.setClass(cssClass);
+    if (cssClass != null) {
+      an.setClass(cssClass);
+    }
     if (title != null) {
       an.setTitle(title);
     }
