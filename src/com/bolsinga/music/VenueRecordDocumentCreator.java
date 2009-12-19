@@ -136,7 +136,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
 
     trackStats(items, new StatsRecordFactory.StatsTracker() {
-        public void track(final String name, final int value) {
+        public void track(final String name, final String link, final int value) {
             names.add(name);
             values.add(value);
         }
@@ -154,7 +154,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       String t = Util.createTitle("moreinfovenue", item.getName());
       String name = Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString();
       Collection<Show> shows = fLookup.getShows(item);
-      tracker.track(name, (shows != null) ? shows.size() : 0);
+      tracker.track(name, null, (shows != null) ? shows.size() : 0);
     }
   }
   
