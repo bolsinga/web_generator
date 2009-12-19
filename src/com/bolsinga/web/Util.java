@@ -200,7 +200,7 @@ public class Util {
   }
   
   public static A createExternalA(final String url, final String value) {
-    return Util.createA(url, value, Util.getResourceString("externallink"), CSS.EXTERNAL);
+    return Util.createA(url, value, Util.getResourceString("externallink"), null);
   }
   
   public static A createPermaLink(final String url) {
