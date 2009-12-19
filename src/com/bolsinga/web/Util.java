@@ -190,7 +190,7 @@ public class Util {
   }
         
   public static A createInternalA(final String url, final String value, final String title) {
-    return Util.createA(url, value, title, CSS.INTERNAL);
+    return Util.createA(url, value, title, null);
   }
   
   public static A createExternalAWithName(final String url, final String value, final String name) {

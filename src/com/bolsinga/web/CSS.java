@@ -7,7 +7,6 @@ public class CSS {
 
   private static final String LONG_ENTRY_INDEX          = "entry_index";
   private static final String LONG_ENTRY_INDEX_SUB      = "entry_index_sub";
-  private static final String LONG_INTERNAL             = "internal";
   private static final String LONG_PERMANENT            = "permanent";
   private static final String LONG_ACTIVE               = "active";
   private static final String LONG_DOC_2_COL_BODY       = "doc_2_col_body";
@@ -28,7 +27,6 @@ public class CSS {
 
   private static final String SHORT_ENTRY_INDEX          = "a";
   private static final String SHORT_ENTRY_INDEX_SUB      = "b";
-  private static final String SHORT_INTERNAL             = "c";
   private static final String SHORT_PERMANENT            = "d";
   private static final String SHORT_ACTIVE               = "e";
   private static final String SHORT_DOC_2_COL_BODY       = "f";
@@ -49,7 +47,6 @@ public class CSS {
 
   public static String ENTRY_INDEX;
   public static String ENTRY_INDEX_SUB;
-  public static String INTERNAL;
   public static String PERMANENT;
   public static String ACTIVE;
   public static String DOC_2_COL_BODY;
@@ -79,7 +76,6 @@ public class CSS {
 
     sCSSMapping.put(LONG_ENTRY_INDEX,          debug ? LONG_ENTRY_INDEX          : SHORT_ENTRY_INDEX);
     sCSSMapping.put(LONG_ENTRY_INDEX_SUB,      debug ? LONG_ENTRY_INDEX_SUB      : SHORT_ENTRY_INDEX_SUB);
-    sCSSMapping.put(LONG_INTERNAL,             debug ? LONG_INTERNAL             : SHORT_INTERNAL);
     sCSSMapping.put(LONG_PERMANENT,            debug ? LONG_PERMANENT            : SHORT_PERMANENT);
     sCSSMapping.put(LONG_ACTIVE,               debug ? LONG_ACTIVE               : SHORT_ACTIVE);
     sCSSMapping.put(LONG_DOC_2_COL_BODY,       debug ? LONG_DOC_2_COL_BODY       : SHORT_DOC_2_COL_BODY);
@@ -100,7 +96,6 @@ public class CSS {
 
     ENTRY_INDEX          = sCSSMapping.get(LONG_ENTRY_INDEX);
     ENTRY_INDEX_SUB      = sCSSMapping.get(LONG_ENTRY_INDEX_SUB);
-    INTERNAL             = sCSSMapping.get(LONG_INTERNAL);
     PERMANENT            = sCSSMapping.get(LONG_PERMANENT);
     ACTIVE               = sCSSMapping.get(LONG_ACTIVE);
     DOC_2_COL_BODY       = sCSSMapping.get(LONG_DOC_2_COL_BODY);
