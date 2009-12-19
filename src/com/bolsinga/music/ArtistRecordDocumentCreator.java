@@ -130,11 +130,11 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Table getStats() {
-    List<? extends Artist> items = fMusic.getArtistsCopy();
+    final List<? extends Artist> items = fMusic.getArtistsCopy();
     Collections.sort(items, Compare.getCompare(fMusic).ARTIST_STATS_COMPARATOR);
 
-    ArrayList<String> names = new ArrayList<String>(items.size());
-    ArrayList<Integer> values = new ArrayList<Integer>(items.size());
+    final ArrayList<String> names = new ArrayList<String>(items.size());
+    final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
     for (Artist item : items) {
       String t = Util.createTitle("moreinfoartist", item.getName());
       names.add(Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString());
