@@ -78,36 +78,14 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private void createTracksStats() {
-    create(new StatsRecordFactory() {
-      protected Table getTable() {
-          List<? extends Artist> artists = fMusic.getArtistsCopy();
-          Collections.sort(artists, Compare.ARTIST_TRACKS_COMPARATOR);
-          
-          ArrayList<String> names = new ArrayList<String>(artists.size());
-          ArrayList<Integer> values = new ArrayList<Integer>(artists.size());
-          
-          for (Artist artist : artists) {
-              int trackCount = Util.trackCount(artist);
-              if (trackCount == 0)
-                  continue;
-              
-              String t = Util.createTitle("moreinfoartist", artist.getName());
-              names.add(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString());
-              values.add(trackCount);
-          }
-          
-          String typeString = Util.getResourceString("artist");
-          String tableTitle = Util.getResourceString("tracksby");
-          
-          return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("trackstatsummary"));
-      }
-      
+    final Object typeArgs[] = { Util.getResourceString("track") };
+    final List<? extends Artist> artists = fMusic.getArtistsCopy();
+    create(new DynamicStatsRecordFactory() {
       public String getDirectory() {
         return Links.TRACKS_DIR;
       }
 
       public String getTitle() {
-        Object typeArgs[] = { Util.getResourceString("track") };
         return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
       }
 
@@ -122,6 +100,42 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
         };
       }
+        
+        protected String getTableTitle() {
+            return MessageFormat.format(Util.getResourceString("tracksby"), typeArgs);
+        }
+        
+        protected String getTableSummary() {
+            return Util.getResourceString("trackstatsummary");
+        }
+        
+        protected String getTableType() {
+            return Util.getResourceString("artist");
+        }
+        
+        protected int getStatsSize() {
+            return artists.size();
+        }
+        
+        protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+            Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
+            
+            int total = 0;
+            for (Artist artist : artists) {
+                int trackCount = Util.trackCount(artist);
+                if (trackCount == 0)
+                    continue;
+                
+                int value = trackCount;
+                tracker.track(artist.getName(), fLinks.getLinkTo(artist), value);
+                total += value;
+            }
+            return total;
+        }
+        
+        protected String getStatsLinkPrefix() {
+            return Util.getResourceString("artistprefix");
+        }
     });
   }
   
