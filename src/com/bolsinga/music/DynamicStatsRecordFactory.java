@@ -14,8 +14,7 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
     protected abstract String getTableType();
     
     protected abstract int getStatsSize();
-    protected abstract void generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException;
-    protected abstract int getStatsTotal();
+    protected abstract int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException;
     protected abstract String getStatsLinkPrefix();
 
     public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
@@ -35,7 +34,7 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
         
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(getStatsSize());
         
-        generateStats(new StatsRecordFactory.StatsTracker() {
+        int total = generateStats(new StatsRecordFactory.StatsTracker() {
             public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
                 org.json.JSONObject json = new org.json.JSONObject();
                 try {
@@ -62,7 +61,7 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
         }
         
         sb.append(",");
-        sb.append(getStatsTotal());
+        sb.append(total);
 
         String linkPrefix = getStatsLinkPrefix();
         if (linkPrefix != null) {
