@@ -126,30 +126,9 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
   
   private void createAlbumsStats() {
-    create(new StatsRecordFactory() {
-      protected Table getTable() {
-          List<? extends Artist> artists = fMusic.getArtistsCopy();
-          Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
-          
-          ArrayList<String> names = new ArrayList<String>(artists.size());
-          ArrayList<Integer> values = new ArrayList<Integer>(artists.size());
-          
-          for (Artist artist : artists) {
-              List<? extends Album> albums = artist.getAlbums();
-              if (albums == null || albums.size() == 0)
-                  continue;
-              
-              String t = Util.createTitle("moreinfoartist", artist.getName());
-              names.add(Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), t).toString());
-              values.add(albums.size());
-          }
-          
-          String typeString = Util.getResourceString("artist");
-          String tableTitle = Util.getResourceString("albumsby");
-          
-          return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("albumstatsummary"));
-      }
-      
+    final Object typeArgs[] = { Util.getResourceString("album") };
+    final List<? extends Artist> artists = fMusic.getArtistsCopy();
+    create(new DynamicStatsRecordFactory() {      
       public String getDirectory() {
         return Links.TRACKS_DIR;
       }
@@ -159,7 +138,6 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
 
       public String getTitle() {
-        Object typeArgs[] = { Util.getResourceString("album") };
         return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
       }
 
@@ -174,6 +152,42 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
         };
       }
+
+        protected String getTableTitle() {
+            return MessageFormat.format(Util.getResourceString("albumsby"), typeArgs);
+        }
+        
+        protected String getTableSummary() {
+            return Util.getResourceString("albumstatsummary");
+        }
+        
+        protected String getTableType() {
+            return Util.getResourceString("artist");
+        }
+        
+        protected int getStatsSize() {
+            return artists.size();
+        }
+
+        protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+            Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
+            
+            int total = 0;
+            for (Artist artist : artists) {
+                List<? extends Album> albums = artist.getAlbums();
+                if (albums == null || albums.size() == 0)
+                    continue;
+
+                int value = albums.size();
+                tracker.track(artist.getName(), fLinks.getLinkTo(artist), value);
+                total += value;
+            }
+            return total;
+        }
+        
+        protected String getStatsLinkPrefix() {
+            return Util.getResourceString("artistprefix");
+        }
     });
   }
 
