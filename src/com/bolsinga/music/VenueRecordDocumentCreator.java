@@ -14,6 +14,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final String fTypeString = Util.getResourceString("venue");
   private Object fTypeArgs[] = { fTypeString };
   private final java.util.Map<String, IndexPair> fIndex;
+  private int fTotal;
 
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(music, outputDir);
@@ -66,7 +67,8 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        create(new StatsRecordFactory() {
+        final List<? extends Venue> items = fMusic.getVenuesCopy();
+        create(new DynamicStatsRecordFactory() {
           public String getDirectory() {
             return Links.VENUE_DIR;
           }
@@ -87,87 +89,41 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
             };
           }
 
-          public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
-            Vector<Record> records = super.getRecords();
-
-            Script script = new Script();
-            script.setType("text/javascript");
-            script.removeAttribute("language");
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("window.addEventListener(\"load\",function(){");
-            sb.append("createStats(\"");
-            sb.append(CSS.TABLE_ROW_ALT);
-            sb.append("\",\"");
-            sb.append(CSS.TABLE_FOOTER);
-            sb.append("\",");
+            protected String getTableTitle() {
+                return MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
+            }
             
-            final List<? extends Venue> items = fMusic.getVenuesCopy();
-            final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
-
-            int total = trackStats(items, new StatsRecordFactory.StatsTracker() {
-                public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
-                    org.json.JSONObject json = new org.json.JSONObject();
-                    try {
-                        json.put("k", name);
-                        json.put("l", link);
-                        json.put("v", value);
-                    } catch (org.json.JSONException e) {
-                        throw new com.bolsinga.web.WebException("Can't create venue stats json", e);
-                    }
-                    values.add(json);
-                }
-            });
-            org.json.JSONArray jarray = new org.json.JSONArray(values);
-            try {
-                if (com.bolsinga.web.Util.getPrettyOutput()) {
-                  sb.append(jarray.toString(2));
-                } else {
-                  sb.append(jarray.toString());
-                }
-            } catch (org.json.JSONException e) {
-                throw new com.bolsinga.web.WebException("Can't write city venue json array", e);
+            protected String getTableSummary() {
+                return Util.getResourceString("venuestatsummary");
+            }
+            
+            protected String getTableType() {
+                return fTypeString;
+            }
+            
+            protected int getStatsSize() {
+                return items.size();
             }
 
-            sb.append(",");
-            sb.append(total);
-
-            sb.append(",\"");
-            sb.append(Util.getResourceString("venueprefix"));
-            sb.append("\"");
+            protected void generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+                Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
+                
+                fTotal = 0;
+                for (Venue item : items) {
+                    Collection<Show> shows = fLookup.getShows(item);
+                    int value = (shows != null) ? shows.size() : 0;
+                    tracker.track(item.getName(), fLinks.getLinkTo(item), value);
+                    fTotal += value;
+                }
+            }
             
-            sb.append(");");
-
-            sb.append("},false);");
-            script.setTagText(sb.toString());
+            protected int getStatsTotal() {
+                return fTotal;
+            }
             
-            records.add(Record.createRecordSimple(script));
-
-            return records;
-          }
-
-          protected Table getTable() {
-            String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
-            Table table = Util.makeTable(tableTitle, Util.getResourceString("venuestatsummary"), new TableHandler() {
-              public TR getHeaderRow() {
-                return new TR().addElement(new TH(fTypeString)).addElement(new TH("#")).addElement(new TH("%"));
-              }
-
-              public int getRowCount() {
-                return 0;
-              }
-              
-              public TR getRow(final int row) {
-                return null;
-              }
-              
-              public TR getFooterRow() {
-                return null;
-              }
-            });
-            table.setID("stats");
-            return table;
-          }
+            protected String getStatsLinkPrefix() {
+                return Util.getResourceString("venueprefix");
+            }
         });
       }
     });
