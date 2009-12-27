@@ -1,6 +1,7 @@
 package com.bolsinga.web;
 
 import java.io.*;
+import java.net.*;
 import java.nio.channels.*;
 import java.util.*;
 import java.util.regex.*;
@@ -9,7 +10,7 @@ public class MapFileFilter {
 
   private static final Pattern sDelimitedPattern = Pattern.compile("@@(\\w+)@@");
   
-  static void install(final File srcFile, final File dstFile, final HashMap<String, String> mapping) throws WebException {
+  static void install(final String resourceID, final File dstFile, final HashMap<String, String> mapping) throws WebException {
     // Make sure the path the the dstFile exists
     File dstParent = new File(dstFile.getParent());
     if (!dstParent.mkdirs()) {
@@ -18,27 +19,29 @@ public class MapFileFilter {
       }
     }
 
-    MapFileFilter.filterFile(srcFile, dstFile, mapping);
+    MapFileFilter.filterFile(resourceID, dstFile, mapping);
   }
   
-  private static void filterFile(final File src, final File dst, final HashMap<String, String> mapping) throws WebException {
+  private static void filterFile(final String resourceID, final File dst, final HashMap<String, String> mapping) throws WebException {
     // Copy source file, line by line. If a line has a "@@" delimiter, map
     //  the contents to via mapping.    
-    StringBuilder sb = MapFileFilter.readFile(src, mapping);
+    StringBuilder sb = MapFileFilter.readFile(resourceID, mapping);
     MapFileFilter.writeFile(dst, sb);
   }
   
-  private static StringBuilder readFile(final File src, final HashMap<String, String> mapping) throws WebException {
-    StringBuilder result = new StringBuilder();
-    
+  private static StringBuilder readFile(final String resourceID, final HashMap<String, String> mapping) throws WebException {
+      StringBuilder result = new StringBuilder();
+
+      URL data = MapFileFilter.class.getClassLoader().getResource(resourceID);
+      
     BufferedReader in = null;
     try {
       try {
-        in = new BufferedReader(new FileReader(src));
-      } catch (FileNotFoundException e) {
+        in = new BufferedReader(new InputStreamReader(data.openStream()));
+      } catch (IOException e) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(src);
+        sb.append("Can't find resource: ");
+        sb.append(resourceID);
         throw new WebException(sb.toString());
       }
       
@@ -62,7 +65,7 @@ public class MapFileFilter {
       } catch (IOException e) {
         StringBuilder sb = new StringBuilder();
         sb.append("Error reading: ");
-        sb.append(src);
+        sb.append(resourceID);
         throw new WebException(sb.toString(), e);
       }
     } finally {
@@ -72,7 +75,7 @@ public class MapFileFilter {
         } catch (IOException e) {
           StringBuilder sb = new StringBuilder();
           sb.append("Unable to close: ");
-          sb.append(src);
+          sb.append(resourceID);
           throw new WebException(sb.toString(), e);
         }
       }

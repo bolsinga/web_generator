@@ -9,6 +9,7 @@
 
 <property name="src.dir" value="${basedir}/src" />
 <property name="lib.dir" value="${basedir}/lib" />
+<property name="rsrc.dir" value="${src.dir}/resources" />
 
 <!-- This property is the root build dir property. -->
 <property name="build.dir" value="${basedir}/output" />
@@ -161,6 +162,9 @@
                         <filter token="copyright" value="Program Copyright (c) 2004 - ${web.buildyear} Greg Bolsinga" />
                 </filterset>
         </copy>
+        <copy todir="${build.classes}/com/bolsinga/web/" >
+            <fileset dir="${rsrc.dir}" />
+        </copy>
 </target>
 
 <target name="sql" depends="prepare">
@@ -296,7 +300,6 @@
 <target name="generateCSSTemplate" depends="web, prepare_output">
   <java classname="com.bolsinga.test.CSSTest" fork="true">
     <arg value="${data.dir}settings.xml" />
-    <arg value="${data.dir}layout.css" />
     <arg value="${output.dir}" />
     <classpath refid="test_classpath" />
     <sysproperty key="web.debug_output" value="false" />

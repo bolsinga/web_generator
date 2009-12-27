@@ -110,14 +110,13 @@ public class CSS {
     ENTRY_INDEX_SUB_INFO = sCSSMapping.get(LONG_ENTRY_INDEX_SUB_INFO);
   }
   
-  public static void install(final String srcFileName, final String outputDir) throws WebException {
-    File srcFile = new File(srcFileName);
+  public static void install(final String outputDir) throws WebException {
     StringBuilder sb = new StringBuilder();
     sb.append(outputDir);
     sb.append(File.separator);
     sb.append(Links.STYLES_DIR);
     File dstFile = new File(sb.toString(), Util.getSettings().getCssFile());
     
-    MapFileFilter.install(srcFile, dstFile, sCSSMapping);
+    MapFileFilter.install("com/bolsinga/web/layout.css", dstFile, sCSSMapping);
   }
 }

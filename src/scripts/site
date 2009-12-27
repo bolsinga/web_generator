@@ -71,9 +71,7 @@ for i in \
     "${DATA_HOME}/relations.txt" \
     "${DATA_HOME}/comments.txt" \
     "${DATA_HOME}/statics.txt" \
-    "${DATA_HOME}/settings.xml" \
-    "${DATA_HOME}/layout.css" \
-    "${DATA_HOME}/site.js" ; do
+    "${DATA_HOME}/settings.xml" ; do
   if [ ! -f "$i" ] ; then
       usage "Can't find $i"
   fi
