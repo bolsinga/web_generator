@@ -1,7 +1,6 @@
 package com.bolsinga.web;
 
 import java.io.*;
-import java.nio.channels.*;
 import java.util.*;
 
 public class JavaScript {
