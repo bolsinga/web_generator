@@ -104,7 +104,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
                 return items.size();
             }
 
-            protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+            protected int generateStats(DynamicStatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
                 Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
                 
                 int total = 0;

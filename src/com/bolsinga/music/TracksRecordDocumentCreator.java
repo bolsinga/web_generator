@@ -117,7 +117,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
             return artists.size();
         }
         
-        protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+        protected int generateStats(DynamicStatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
             Collections.sort(artists, Compare.ARTIST_TRACKS_COMPARATOR);
             
             int total = 0;
@@ -183,7 +183,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
             return artists.size();
         }
 
-        protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+        protected int generateStats(DynamicStatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
             Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
             
             int total = 0;

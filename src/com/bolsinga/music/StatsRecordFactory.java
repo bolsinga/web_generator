@@ -7,12 +7,7 @@ import java.util.*;
 
 import org.apache.ecs.html.*;
 
-public abstract class StatsRecordFactory implements RecordFactory {
-
-  public interface StatsTracker {
-    public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException;
-  }
-  
+public abstract class StatsRecordFactory implements RecordFactory { 
   public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
     Vector<Record> items = new Vector<Record>(1);
     items.add(Record.createRecordSimple(getTable()));
