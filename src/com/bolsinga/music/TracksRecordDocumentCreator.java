@@ -127,7 +127,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
                     continue;
                 
                 int value = trackCount;
-                tracker.track(artist.getName(), fLinks.getLinkTo(artist), value);
+                tracker.track(artist.getName(), artist.getID(), fLinks.getPageFileName(artist), value);
                 total += value;
             }
             return total;
@@ -135,6 +135,10 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
         
         protected String getStatsLinkPrefix() {
             return Util.getResourceString("artistprefix");
+        }
+        
+        protected String getStatsLinkDirectoryPath() {
+            return fLinks.getDirectoryPath(Links.ARTIST_DIR);
         }
     });
   }
@@ -193,7 +197,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
                     continue;
 
                 int value = albums.size();
-                tracker.track(artist.getName(), fLinks.getLinkTo(artist), value);
+                tracker.track(artist.getName(), artist.getID(), fLinks.getPageFileName(artist), value);
                 total += value;
             }
             return total;
@@ -201,6 +205,10 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
         
         protected String getStatsLinkPrefix() {
             return Util.getResourceString("artistprefix");
+        }
+
+        protected String getStatsLinkDirectoryPath() {
+            return fLinks.getDirectoryPath(Links.ARTIST_DIR);
         }
     });
   }

@@ -82,7 +82,7 @@ public class Links {
     return sb.toString();
   }
 
-    String getDirectoryPath(final String name) {
+    public String getDirectoryPath(final String name) {
         StringBuilder sb = new StringBuilder();
         sb.append(getLevel());
         sb.append(name);
