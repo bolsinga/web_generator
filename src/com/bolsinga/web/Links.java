@@ -81,6 +81,14 @@ public class Links {
     }
     return sb.toString();
   }
+
+    String getDirectoryPath(final String name) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getLevel());
+        sb.append(name);
+        sb.append(File.separator);
+        return sb.toString();
+    }
         
   public String getPageFileName(final String name) {
     String file = com.bolsinga.music.Compare.simplify(name).substring(0, 1).toUpperCase();
@@ -157,9 +165,7 @@ public class Links {
 
   public String getLinkToPage(final Artist artist) {
     StringBuilder sb = new StringBuilder();
-    sb.append(getLevel());
-    sb.append(ARTIST_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(ARTIST_DIR));
     sb.append(getPageFileName(artist));
     sb.append(HTML_EXT);
                 
@@ -169,9 +175,7 @@ public class Links {
   public String getLinkToPage(final Venue venue) {
     StringBuilder sb = new StringBuilder();
                 
-    sb.append(getLevel());
-    sb.append(VENUE_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(VENUE_DIR));
     sb.append(getPageFileName(venue));
     sb.append(HTML_EXT);
 
@@ -181,9 +185,7 @@ public class Links {
   public String getLinkToPage(final Show show) {
     StringBuilder sb = new StringBuilder();
                 
-    sb.append(getLevel());
-    sb.append(SHOW_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(SHOW_DIR));
     sb.append(getPageFileName(show));
     sb.append(HTML_EXT);
 
@@ -193,9 +195,7 @@ public class Links {
   public String getLinkToPage(final Album album) {
     StringBuilder sb = new StringBuilder();
                 
-    sb.append(getLevel());
-    sb.append(TRACKS_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(TRACKS_DIR));
     sb.append(getPageFileName(album));
     sb.append(HTML_EXT);
 
@@ -248,9 +248,7 @@ public class Links {
   
   public A getArtistLink(final String t) {
     StringBuilder sb = new StringBuilder();
-    sb.append(getLevel());
-    sb.append(ARTIST_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(ARTIST_DIR));
     sb.append(STATS);
     sb.append(HTML_EXT);
     return Util.createInternalA(sb.toString(), t, Util.getResourceString("artiststats"));
@@ -262,9 +260,7 @@ public class Links {
 
   public A getShowLink(final String t) {
     StringBuilder sb = new StringBuilder();
-    sb.append(getLevel());
-    sb.append(SHOW_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(SHOW_DIR));
     sb.append(STATS);
     sb.append(HTML_EXT);
     return Util.createInternalA(sb.toString(), t, Util.getResourceString("datestats"));
@@ -276,9 +272,7 @@ public class Links {
   
   public A getTracksLink(final String t) {
     StringBuilder sb = new StringBuilder();
-    sb.append(getLevel());
-    sb.append(TRACKS_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(TRACKS_DIR));
     sb.append(STATS);
     sb.append(HTML_EXT);
     return Util.createInternalA(sb.toString(), t, Util.getResourceString("trackstats"));
@@ -290,9 +284,7 @@ public class Links {
   
   public A getAlbumsLink(final String t) {
     StringBuilder sb = new StringBuilder();
-    sb.append(getLevel());
-    sb.append(TRACKS_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(TRACKS_DIR));
     sb.append(ALBUM_STATS);
     sb.append(HTML_EXT);
     return Util.createInternalA(sb.toString(), t, Util.getResourceString("albumstats"));
@@ -304,9 +296,7 @@ public class Links {
 
   public A getVenueLink(final String t) {
     StringBuilder sb = new StringBuilder();
-    sb.append(getLevel());
-    sb.append(VENUE_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(VENUE_DIR));
     sb.append(STATS);
     sb.append(HTML_EXT);
     return Util.createInternalA(sb.toString(), t, Util.getResourceString("venuestats"));
@@ -318,9 +308,7 @@ public class Links {
 
   public A getCityLink(final String t) {
     StringBuilder sb = new StringBuilder();
-    sb.append(getLevel());
-    sb.append(CITIES_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(CITIES_DIR));
     sb.append(STATS);
     sb.append(HTML_EXT);
     return Util.createInternalA(sb.toString(), t, Util.getResourceString("citystats"));
@@ -334,9 +322,7 @@ public class Links {
   public A getICalLink() {
     StringBuilder sb = new StringBuilder();
     sb.append("webcal:");
-    sb.append(getLevel());
-    sb.append(ALT_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(ALT_DIR));
     sb.append(Util.getSettings().getIcalName() + ".ics");
 
     com.bolsinga.settings.data.Image image = Util.getSettings().getIcalImage();
@@ -352,9 +338,7 @@ public class Links {
         
   public String getStyleSheetLink() {
     StringBuilder url = new StringBuilder();
-    url.append(getLevel());
-    url.append(STYLES_DIR);
-    url.append(File.separator);
+    url.append(getDirectoryPath(STYLES_DIR));
     url.append(Util.getSettings().getCssFile());
     return url.toString();
   }
@@ -369,9 +353,7 @@ public class Links {
 
   public String getScriptLink() {
     StringBuilder url = new StringBuilder();
-    url.append(getLevel());
-    url.append(SCRIPTS_DIR);
-    url.append(File.separator);
+    url.append(getDirectoryPath(SCRIPTS_DIR));
     url.append(Util.getSettings().getJavaScriptFile());
     return url.toString();
   }
@@ -395,9 +377,7 @@ public class Links {
   
   public A getLinkToColophon() {
     StringBuilder url = new StringBuilder();
-    url.append(getLevel());
-    url.append(Links.ALT_DIR);
-    url.append(File.separator);
+    url.append(getDirectoryPath(Links.ALT_DIR));
     url.append("index");
     url.append(Links.HTML_EXT);
     String h = Util.getResourceString("alttitle");
@@ -422,10 +402,7 @@ public class Links {
   public String getLinkToPage(final Entry entry) {
     StringBuilder sb = new StringBuilder();
     
-    sb.append(getLevel());
-                
-    sb.append(ARCHIVES_DIR);
-    sb.append(File.separator);
+    sb.append(getDirectoryPath(ARCHIVES_DIR));
     sb.append(getPageFileName(entry));
     sb.append(HTML_EXT);
                 
@@ -470,18 +447,14 @@ public class Links {
 
   public String getRSSURL() {
     StringBuilder url = new StringBuilder();
-    url.append(getLevel());
-    url.append(ALT_DIR);
-    url.append(File.separator);
+    url.append(getDirectoryPath(ALT_DIR));
     url.append(Util.getSettings().getRssFile());
     return url.toString();
   }
   
   public String getOverviewURL() {
     StringBuilder url = new StringBuilder();
-    url.append(getLevel());
-    url.append(ARCHIVES_DIR);
-    url.append(File.separator);
+    url.append(getDirectoryPath(ARCHIVES_DIR));
     url.append("overview");
     url.append(HTML_EXT);
     return url.toString();
