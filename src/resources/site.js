@@ -5,8 +5,20 @@ function recordPopup(e) {
     location.href=value;
   }
 }
+function removeToInsertLater(element) {
+    var parentNode = element.parentNode;
+    var nextSibling = element.nextSibling;
+    parentNode.removeChild(element);
+    return function () {
+        if (nextSibling)
+            parentNode.insertBefore(element, nextSibling);
+        else
+            parentNode.appendChild(element);
+    };
+}
 function createStats(altClass, footerClass, vals, total, title) {
     var table = document.getElementById("stats");
+    var insertFunction = removeToInsertLater(table);
     for (var v in vals) {
         var tr = table.insertRow(table.rows.length);
         
@@ -50,4 +62,5 @@ function createStats(altClass, footerClass, vals, total, title) {
     tr.appendChild(td);
     
     tr.className = footerClass;
+    insertFunction();
 }
