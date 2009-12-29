@@ -16,7 +16,7 @@ function removeToInsertLater(element) {
             parentNode.appendChild(element);
     };
 }
-function createStats(altClass, footerClass, vals, total, title) {
+function createStats(altClass, footerClass, title, total, vals) {
     var table = document.getElementById("stats");
     var insertFunction = removeToInsertLater(table);
     for (var v in vals) {

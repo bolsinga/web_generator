@@ -31,6 +31,14 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
         sb.append("\",\"");
         sb.append(CSS.TABLE_FOOTER);
         sb.append("\",");
+
+        String linkPrefix = getStatsLinkPrefix();
+        if (linkPrefix != null) {
+            sb.append("\"");
+            sb.append(linkPrefix);
+            sb.append("\"");
+        } else
+            sb.append("null");
         
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(getStatsSize());
         
@@ -49,6 +57,11 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
                 values.add(json);
             }
         });
+        
+        sb.append(",");
+        sb.append(total);
+        sb.append(",");
+        
         org.json.JSONArray jarray = new org.json.JSONArray(values);
         try {
             if (com.bolsinga.web.Util.getPrettyOutput()) {
@@ -58,16 +71,6 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
             }
         } catch (org.json.JSONException e) {
             throw new com.bolsinga.web.WebException("Can't write dynamic stats json array", e);
-        }
-        
-        sb.append(",");
-        sb.append(total);
-
-        String linkPrefix = getStatsLinkPrefix();
-        if (linkPrefix != null) {
-            sb.append(",\"");
-            sb.append(linkPrefix);
-            sb.append("\"");
         }
 
         sb.append(");");
