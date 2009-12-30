@@ -16,9 +16,10 @@ function removeToInsertLater(element) {
             parentNode.appendChild(element);
     };
 }
-function createStats(altClass, footerClass, title, directory, total, vals) {
+function createStats(altClass, footerClass, items) {
     var table = document.getElementById("stats");
     var insertFunction = removeToInsertLater(table);
+    var vals = items.vals;
     for (var v in vals) {
         var tr = table.insertRow(table.rows.length);
         
@@ -27,9 +28,9 @@ function createStats(altClass, footerClass, title, directory, total, vals) {
             th.appendChild(document.createTextNode(vals[v].k));
         else {
             var a = document.createElement("a");
-            a.setAttribute("href", directory + vals[v].f + ".html#" + vals[v].i);
-            if (title != null)
-                a.setAttribute("title", title + vals[v].k);
+            a.setAttribute("href", items.directory + vals[v].f + ".html#" + vals[v].i);
+            if (items.prefix != null)
+                a.setAttribute("title", items.prefix + vals[v].k);
             a.appendChild(document.createTextNode(vals[v].k));
             th.appendChild(a);
         }
@@ -40,7 +41,7 @@ function createStats(altClass, footerClass, title, directory, total, vals) {
         tr.appendChild(td);
         
         td = document.createElement("td");
-        var p = vals[v].v / total * 100.0;
+        var p = vals[v].v / items.total * 100.0;
         td.appendChild(document.createTextNode(p.toFixed(2)));
         tr.appendChild(td);
         
@@ -54,7 +55,7 @@ function createStats(altClass, footerClass, title, directory, total, vals) {
     tr.appendChild(th);
     
     var td = document.createElement("th");
-    td.appendChild(document.createTextNode(total));
+    td.appendChild(document.createTextNode(items.total));
     tr.appendChild(td);
     
     td = document.createElement("th");

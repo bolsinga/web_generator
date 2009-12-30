@@ -37,54 +37,49 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
         sb.append("\",\"");
         sb.append(CSS.TABLE_FOOTER);
         sb.append("\",");
-
-        String linkPrefix = getStatsLinkPrefix();
-        if (linkPrefix != null) {
-            sb.append("\"");
-            sb.append(linkPrefix);
-            sb.append("\"");
-        } else
-            sb.append("null");
-
-        sb.append(",");
-
-        String linkDirectoryPrefix = getStatsLinkDirectoryPath();
-        if (linkDirectoryPrefix != null) {
-            sb.append("\"");
-            sb.append(linkDirectoryPrefix);
-            sb.append("\"");
-        } else
-            sb.append("null");
         
-        final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(getStatsSize());
-        
-        int total = generateStats(new StatsTracker() {
-            public void track(final String name, final String id, final String file, final int value) throws com.bolsinga.web.WebException {
-                org.json.JSONObject json = new org.json.JSONObject();
-                try {
-                    json.put("k", name);
-                    json.put("i", id);
-                    if (file != null) {
-                        json.put("f", file);
+        org.json.JSONObject data = new org.json.JSONObject();
+
+        try {
+            String linkPrefix = getStatsLinkPrefix();
+            if (linkPrefix != null)
+                data.put("prefix", linkPrefix);
+
+            String linkDirectoryPrefix = getStatsLinkDirectoryPath();
+            if (linkDirectoryPrefix != null)
+                data.put("directory", linkDirectoryPrefix);
+            
+            final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(getStatsSize());
+            
+            int total = generateStats(new StatsTracker() {
+                public void track(final String name, final String id, final String file, final int value) throws com.bolsinga.web.WebException {
+                    org.json.JSONObject json = new org.json.JSONObject();
+                    try {
+                        json.put("k", name);
+                        json.put("i", id);
+                        if (file != null) {
+                            json.put("f", file);
+                        }
+                        json.put("v", value);
+                    } catch (org.json.JSONException e) {
+                        throw new com.bolsinga.web.WebException("Can't track dynamic stats json", e);
                     }
-                    json.put("v", value);
-                } catch (org.json.JSONException e) {
-                    throw new com.bolsinga.web.WebException("Can't create dynamic stats json", e);
+                    values.add(json);
                 }
-                values.add(json);
-            }
-        });
+            });
+            
+            data.put("total", total);
+            
+            data.put("vals", new org.json.JSONArray(values));
+        } catch (org.json.JSONException e) {
+            throw new com.bolsinga.web.WebException("Can't create dynamic stats json", e);
+        }
         
-        sb.append(",");
-        sb.append(total);
-        sb.append(",");
-        
-        org.json.JSONArray jarray = new org.json.JSONArray(values);
         try {
             if (com.bolsinga.web.Util.getPrettyOutput()) {
-                sb.append(jarray.toString(2));
+                sb.append(data.toString(2));
             } else {
-                sb.append(jarray.toString());
+                sb.append(data.toString());
             }
         } catch (org.json.JSONException e) {
             throw new com.bolsinga.web.WebException("Can't write dynamic stats json array", e);
