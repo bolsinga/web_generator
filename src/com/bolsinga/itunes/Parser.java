@@ -74,6 +74,9 @@ public class Parser {
   private static final String TK_RATING                = "Rating";
   private static final String TK_GROUPING              = "Grouping";
   private static final String TK_GAPLESS_ALBUM         = "Part Of Gapless Album";
+  private static final String TK_MUSIC_VIDEO           = "Music Video";
+  private static final String TK_MATCH_ID              = "MatchID";
+  private static final String TK_XID                   = "XID";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
@@ -333,6 +336,9 @@ public class Parser {
     sITunesKeys.add(TK_RATING);
     sITunesKeys.add(TK_GROUPING);
     sITunesKeys.add(TK_GAPLESS_ALBUM);
+    sITunesKeys.add(TK_MUSIC_VIDEO);
+    sITunesKeys.add(TK_MATCH_ID);
+    sITunesKeys.add(TK_XID);
   }
 
   static {
