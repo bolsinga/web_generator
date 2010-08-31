@@ -65,3 +65,54 @@ function createStats(altClass, footerClass, items) {
     tr.className = footerClass;
     insertFunction();
 }
+function createShowStats(altClass, footerClass, items) {
+    var table = document.getElementById("stats");
+    var insertFunction = removeToInsertLater(table);
+    
+    var rows = items.shows;
+    for (var r in rows) {
+        var row = rows[r];
+        
+        var tr = table.insertRow(table.rows.length);
+        
+        var td = document.createElement("td");
+        var a = document.createElement("a");
+        a.setAttribute("href", items.directory + row.y + ".html");
+        if (items.title != null)
+            a.setAttribute("title", "'" + row.y + "' " + items.title);
+        a.appendChild(document.createTextNode(row.y));
+        td.appendChild(a);
+        tr.appendChild(td);
+
+        for (var t in row.s) {
+            var c = row.s[t];
+            var td = document.createElement("td");
+            if (c == 0 || t > 12)
+                td.appendChild(document.createTextNode(c));
+            else {
+                var a = document.createElement("a");
+                a.setAttribute("href", items.directory + row.y + ".html#" + items.months[t].ms);
+                if (items.prefix != null)
+                    a.setAttribute("title", items.prefix + " " + items.months[t].m + ", " + row.y);
+                a.appendChild(document.createTextNode(c));
+                td.appendChild(a);
+            }
+            tr.appendChild(td);
+        }
+        
+        if (r % 2 != 0)
+            tr.className = altClass;
+    }
+    
+    var tr = table.insertRow(table.rows.length);
+    for (var t in items.totals) {
+        var total = items.totals[t];
+
+        var td = document.createElement("th");
+        td.appendChild(document.createTextNode(total));
+        tr.appendChild(td);
+    }
+    tr.className = footerClass;
+    
+    insertFunction();
+}
