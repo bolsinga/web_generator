@@ -13,7 +13,7 @@ public abstract class Encode {
   private static final Pattern sRootURLPattern = Pattern.compile("@@ROOT_URL@@");
   private static final Pattern sTransitionalPattern = Pattern.compile("<\\W*a[^>]*target[^=>]*=[^>]*>");
   
-  private static final Pattern sHTMLTagPattern = Pattern.compile("<([a-z][a-z0-9]*)[^>]*>[^<]*</\\1>", Pattern.DOTALL);
+  private static final Pattern sHTMLTagPattern = Pattern.compile("<(pre|code|a)[^>]*>[^<]*</\\1>", Pattern.DOTALL);
 
   // NOTE: With the current set of data (2006-08-02) there is a 210:1 ratio of up to std links!
 
