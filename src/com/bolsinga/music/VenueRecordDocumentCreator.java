@@ -33,10 +33,79 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
           create(new RecordFactory() {
             public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
               Vector<Record> records = new Vector<Record>();
-              
-              for (Venue item : group) {
-                records.add(getVenueRecordSection(item));
-              }
+
+                Script script = new Script();
+                script.setType("text/javascript");
+                script.removeAttribute("language");
+                
+                StringBuilder sb = new StringBuilder();
+                sb.append("window.addEventListener(\"load\",function(){");
+                sb.append("venueRecords(");
+                sb.append(");");
+                sb.append("},false);");
+
+                org.json.JSONObject data = new org.json.JSONObject();
+
+                Vector<Record> groups = new Vector<Record>();
+                final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(group.size());
+                try {
+                    for (Venue item : group) {
+                        org.json.JSONObject json = new org.json.JSONObject();
+                        json.put("v", item.getName());
+                        json.put("i", item.getID());
+
+                        Location l = item.getLocation();
+                        json.put("a", Util.getCannonicalAddress(l));
+                        json.put("g", Util.getGoogleMapsURL(l));
+                        String url = l.getWeb();
+                        if (url != null)
+                            json.put("u", url);
+                        
+                        Collection<Show> s = fLookup.getShows(item);
+                        if (s != null) {
+                            ArrayList<org.json.JSONObject> shows = new ArrayList<org.json.JSONObject>(s.size());
+                            for (Show show : s) {
+                                org.json.JSONObject jsonShow = new org.json.JSONObject();
+                                jsonShow.put("i", show.getID());
+                                
+                                String comment = show.getComment();
+                                if (comment != null)
+                                    jsonShow.put("c", Boolean.TRUE);
+
+                                Iterator<? extends Artist> bi = show.getArtists().iterator();
+                                while (bi.hasNext()) {
+                                    Artist performer = bi.next();
+                                    
+                                }
+                                
+                                shows.add(jsonShow);
+                            }
+                            json.put("s", new org.json.JSONArray(shows));
+                        }
+                        
+                        values.add(json);
+                        groups.add(getVenueRecordSection(item));
+                    }
+                    
+                    data.put("vals", new org.json.JSONArray(values));
+                } catch (org.json.JSONException e) {
+                    throw new com.bolsinga.web.WebException("Can't create venues json", e);
+                }
+                
+                try {
+                    if (com.bolsinga.web.Util.getPrettyOutput()) {
+                        sb.append(data.toString(2));
+                    } else {
+                        sb.append(data.toString());
+                    }
+                } catch (org.json.JSONException e) {
+                    throw new com.bolsinga.web.WebException("Can't write dynamic stats json array", e);
+                }
+                
+                script.setTagText(sb.toString());
+                records.add(Record.createRecordSimple(script));
+                
+                records.addAll(groups);
               
               return records;
             }
