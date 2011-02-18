@@ -64,6 +64,14 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         script.setType("text/javascript");
         script.removeAttribute("language");
         
+        StringBuilder sb = new StringBuilder();
+        sb.append("var tableRowAltClass=\"");
+        sb.append(CSS.TABLE_ROW_ALT);
+        sb.append("\";");
+        sb.append("var tableFooterClass=\"");
+        sb.append(CSS.TABLE_FOOTER);
+        sb.append("\";");
+
         final Collection<String> items = fLookup.getCities();
 
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
@@ -82,7 +90,6 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
             }
         });
 
-        StringBuilder sb = new StringBuilder();
         sb.append("var values=");
         org.json.JSONArray jarray = new org.json.JSONArray(values);
         try {
@@ -97,11 +104,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         }
         sb.append(";");
         
-        sb.append("createStats(\"");
-        sb.append(CSS.TABLE_ROW_ALT);
-        sb.append("\",\"");
-        sb.append(CSS.TABLE_FOOTER);
-        sb.append("\");");
+        sb.append("createStats();");
         script.setTagText(sb.toString());
         
         records.add(Record.createRecordSimple(script));
