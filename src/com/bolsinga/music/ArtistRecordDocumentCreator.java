@@ -206,7 +206,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
 
     for (Artist item : items) {
       Collection<Show> shows = fLookup.getShows(item);
-      tracker.track(item.getName(), fLinks.getLinkTo(item), (shows != null) ? shows.size() : 0);
+      tracker.track(fLookup.getHTMLName(item), fLinks.getLinkTo(item), (shows != null) ? shows.size() : 0);
     }
   }
   
