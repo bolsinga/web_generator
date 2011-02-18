@@ -12,6 +12,7 @@ import org.apache.ecs.html.*;
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final String fTypeString = Util.getResourceString("city");
   private final Object fTypeArgs[] = { fTypeString };
+  private int fTotal;
     
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     CityRecordDocumentCreator creator = new CityRecordDocumentCreator(music, outputDir);
@@ -63,7 +64,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
                 return items.size();
             }
             
-            protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+            protected void generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
                 HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
                 String city = null;
                 int val;
@@ -85,17 +86,20 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
                 Collections.sort(keys);
                 Collections.reverse(keys);
                 
-                int total = 0;
+                fTotal = 0;
                 for (int value : keys) {
                     List<String> k = new Vector<String>(cityCount.get(value));
                     Collections.sort(k);
                     
                     for (String j : k) {
                         tracker.track(j, null, value);
-                        total += value;
+                        fTotal += value;
                     }
                 }
-                return total;
+            }
+            
+            protected int getStatsTotal() {
+                return fTotal;
             }
             
             protected String getStatsLinkPrefix() {

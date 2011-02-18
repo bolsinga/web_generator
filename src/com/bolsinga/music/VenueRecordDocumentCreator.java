@@ -14,6 +14,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final String fTypeString = Util.getResourceString("venue");
   private Object fTypeArgs[] = { fTypeString };
   private final java.util.Map<String, IndexPair> fIndex;
+  private int fTotal;
 
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     VenueRecordDocumentCreator creator = new VenueRecordDocumentCreator(music, outputDir);
@@ -104,17 +105,20 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
                 return items.size();
             }
 
-            protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+            protected void generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
                 Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
                 
-                int total = 0;
+                fTotal = 0;
                 for (Venue item : items) {
                     Collection<Show> shows = fLookup.getShows(item);
                     int value = (shows != null) ? shows.size() : 0;
                     tracker.track(item.getName(), fLinks.getLinkTo(item), value);
-                    total += value;
+                    fTotal += value;
                 }
-                return total;
+            }
+            
+            protected int getStatsTotal() {
+                return fTotal;
             }
             
             protected String getStatsLinkPrefix() {
