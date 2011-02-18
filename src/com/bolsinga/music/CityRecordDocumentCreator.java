@@ -90,7 +90,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
                     Collections.sort(k);
                     
                     for (String j : k) {
-                        tracker.track(j, null, null, value);
+                        tracker.track(j, null, value);
                         total += value;
                     }
                 }
@@ -98,10 +98,6 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
             }
             
             protected String getStatsLinkPrefix() {
-                return null;
-            }
-            
-            protected String getStatsLinkDirectoryPath() {
                 return null;
             }
         });

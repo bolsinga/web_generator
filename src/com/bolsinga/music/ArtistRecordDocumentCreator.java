@@ -110,7 +110,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
                 for (Artist item : items) {
                     Collection<Show> shows = fLookup.getShows(item);
                     int value = (shows != null) ? shows.size() : 0;
-                    tracker.track(item.getName(), item.getID(), fLinks.getPageFileName(item), value);
+                    tracker.track(item.getName(), fLinks.getLinkTo(item), value);
                     total += value;
                 }
                 return total;
@@ -118,10 +118,6 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
             
             protected String getStatsLinkPrefix() {
                 return Util.getResourceString("artistprefix");
-            }
-
-            protected String getStatsLinkDirectoryPath() {
-                return fLinks.getDirectoryPath(Links.ARTIST_DIR);
             }
         });
       }

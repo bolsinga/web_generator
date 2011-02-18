@@ -16,18 +16,18 @@ function removeToInsertLater(element) {
             parentNode.appendChild(element);
     };
 }
-function createStats(altClass, footerClass, title, directory, total, vals) {
+function createStats(altClass, footerClass, title, total, vals) {
     var table = document.getElementById("stats");
     var insertFunction = removeToInsertLater(table);
     for (var v in vals) {
         var tr = table.insertRow(table.rows.length);
         
         var th = document.createElement("th");
-        if (vals[v].f == null)
+        if (vals[v].l == null)
             th.appendChild(document.createTextNode(vals[v].k));
         else {
             var a = document.createElement("a");
-            a.setAttribute("href", directory + vals[v].f + ".html#" + vals[v].i);
+            a.setAttribute("href", vals[v].l);
             if (title != null)
                 a.setAttribute("title", title + vals[v].k);
             a.appendChild(document.createTextNode(vals[v].k));

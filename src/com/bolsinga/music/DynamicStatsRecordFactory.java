@@ -10,7 +10,7 @@ import org.apache.ecs.html.*;
 public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
 
     public interface StatsTracker {
-        public void track(final String name, final String id, final String file, final int value) throws com.bolsinga.web.WebException;
+        public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException;
     }
     
     protected abstract String getTableTitle();
@@ -19,9 +19,7 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
     
     protected abstract int getStatsSize();
     protected abstract int generateStats(StatsTracker tracker) throws com.bolsinga.web.WebException;
-    
     protected abstract String getStatsLinkPrefix();
-    protected abstract String getStatsLinkDirectoryPath();
 
     public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
         Vector<Record> records = super.getRecords();
@@ -45,27 +43,16 @@ public abstract class DynamicStatsRecordFactory extends StatsRecordFactory {
             sb.append("\"");
         } else
             sb.append("null");
-
-        sb.append(",");
-
-        String linkDirectoryPrefix = getStatsLinkDirectoryPath();
-        if (linkDirectoryPrefix != null) {
-            sb.append("\"");
-            sb.append(linkDirectoryPrefix);
-            sb.append("\"");
-        } else
-            sb.append("null");
         
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(getStatsSize());
         
         int total = generateStats(new StatsTracker() {
-            public void track(final String name, final String id, final String file, final int value) throws com.bolsinga.web.WebException {
+            public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
                 org.json.JSONObject json = new org.json.JSONObject();
                 try {
                     json.put("k", name);
-                    json.put("i", id);
-                    if (file != null) {
-                        json.put("f", file);
+                    if (link != null) {
+                        json.put("l", link);
                     }
                     json.put("v", value);
                 } catch (org.json.JSONException e) {
