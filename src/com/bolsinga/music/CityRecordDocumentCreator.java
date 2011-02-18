@@ -42,7 +42,6 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         script.removeAttribute("language");
 
         StringBuilder sb = new StringBuilder();
-        sb.append("window.addEventListener(\"load\",function(){");
         sb.append("createStats(\"");
         sb.append(CSS.TABLE_ROW_ALT);
         sb.append("\",\"");
@@ -76,8 +75,6 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         }
         
         sb.append(");");
-
-        sb.append("},false);");
         script.setTagText(sb.toString());
         
         records.add(Record.createRecordSimple(script));
