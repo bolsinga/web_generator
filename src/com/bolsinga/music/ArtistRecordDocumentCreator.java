@@ -11,6 +11,8 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 
 public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
+  private final String fTypeString = Util.getResourceString("artist");
+  private Object fTypeArgs[] = { fTypeString };
   private final java.util.Map<String, IndexPair> fIndex;
   
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
@@ -64,8 +66,6 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        final String typeString = Util.getResourceString("artist");
-        final Object typeArgs[] = { typeString };
         final List<? extends Artist> items = fMusic.getArtistsCopy();
         create(new DynamicStatsRecordFactory() {
           public String getDirectory() {
@@ -73,7 +73,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
 
           public String getTitle() {
-            return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
+            return MessageFormat.format(Util.getResourceString("statistics"), fTypeArgs);
           }
 
           public Navigator getNavigator() {
@@ -89,7 +89,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
 
             protected String getTableTitle() {
-                return MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
+                return MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
             }
             
             protected String getTableSummary() {
@@ -97,7 +97,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
             }
             
             protected String getTableType() {
-                return typeString;
+                return fTypeString;
             }
             
             protected int getStatsSize() {

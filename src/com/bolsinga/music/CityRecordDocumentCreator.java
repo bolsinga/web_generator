@@ -10,6 +10,9 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
+  private final String fTypeString = Util.getResourceString("city");
+  private final Object fTypeArgs[] = { fTypeString };
+    
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     CityRecordDocumentCreator creator = new CityRecordDocumentCreator(music, outputDir);
     creator.createStats(backgrounder, backgroundable);
@@ -22,8 +25,6 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        final String typeString = Util.getResourceString("city");
-        final Object typeArgs[] = { typeString };
         final Collection<String> items = fLookup.getCities();
         create(new DynamicStatsRecordFactory() {
           public String getDirectory() {
@@ -31,7 +32,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
 
           public String getTitle() {
-            return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
+            return MessageFormat.format(Util.getResourceString("statistics"), fTypeArgs);
           }
 
           public Navigator getNavigator() {
@@ -47,7 +48,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
 
             protected String getTableTitle() {
-                return MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
+                return MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
             }
             
             protected String getTableSummary() {
@@ -55,7 +56,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
             }
             
             protected String getTableType() {
-                return typeString;
+                return fTypeString;
             }
             
             protected int getStatsSize() {
