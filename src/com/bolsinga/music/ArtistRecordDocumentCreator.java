@@ -161,6 +161,18 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     
     return Collections.unmodifiableCollection(result.values());
   }
+
+  private int trackStats(final List<? extends Artist> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+    Collections.sort(items, Compare.getCompare(fMusic).ARTIST_STATS_COMPARATOR);
+    int total = 0;
+    for (Artist item : items) {
+      Collection<Show> shows = fLookup.getShows(item);
+      int value = (shows != null) ? shows.size() : 0;
+      tracker.track(item.getName(), fLinks.getLinkTo(item), value);
+      total += value;
+    }
+    return total;
+  }
   
   private Record getArtistShowRecord(final Artist artist, final Show show) {
     String dateString = Util.toString(show.getDate());

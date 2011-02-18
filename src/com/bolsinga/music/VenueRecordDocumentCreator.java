@@ -163,6 +163,19 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
   
+  private int trackStats(final List<? extends Venue> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+    Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
+
+    int total = 0;
+    for (Venue item : items) {
+      Collection<Show> shows = fLookup.getShows(item);
+      int value = (shows != null) ? shows.size() : 0;
+      tracker.track(item.getName(), fLinks.getLinkTo(item), value);
+      total += value;
+    }
+    return total;
+  }
+  
   private Vector<Element> getVenueShowListing(final Venue venue, final Show show) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
