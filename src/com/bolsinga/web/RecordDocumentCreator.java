@@ -46,7 +46,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     }
   }
   
-  protected Document populate(final RecordFactory factory) throws com.bolsinga.web.WebException {
+  protected Document populate(final RecordFactory factory) {
     Document d = createDocument(factory);
     
     Div main = Util.createDiv(getMainDivClass());

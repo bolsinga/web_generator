@@ -9,7 +9,7 @@ import org.apache.ecs.html.*;
 
 public abstract class StatsRecordFactory implements RecordFactory {
 
-  public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
+  public Vector<Record> getRecords() {
     Vector<Record> items = new Vector<Record>(1);
     items.add(Record.createRecordSimple(getTable()));
     return items;

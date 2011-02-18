@@ -37,7 +37,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
           final Show first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
           create(new RecordFactory() {
-            public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
+            public Vector<Record> getRecords() {
               Vector<Record> records = new Vector<Record>();
               
               for (Vector<Show> item : getMonthlies(group)) {
