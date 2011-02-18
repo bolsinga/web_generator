@@ -10,8 +10,8 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
-  private final String fTypeString = Util.getResourceString("city");
-  private final Object fTypeArgs[] = { fTypeString };
+  final String fTypeString = Util.getResourceString("city");
+  final Object fTypeArgs[] = { fTypeString };
   
   class CityStatsRecordFactory extends StatsRecordFactory {
       public String getDirectory() {
