@@ -14,7 +14,6 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final String fTypeString = Util.getResourceString("artist");
   private Object fTypeArgs[] = { fTypeString };
   private final java.util.Map<String, IndexPair> fIndex;
-  private int fTotal;
   
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     ArtistRecordDocumentCreator creator = new ArtistRecordDocumentCreator(music, outputDir);
@@ -67,8 +66,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        final List<? extends Artist> items = fMusic.getArtistsCopy();
-        create(new DynamicStatsRecordFactory() {
+        create(new StatsRecordFactory() {
           public String getDirectory() {
             return Links.ARTIST_DIR;
           }
@@ -89,40 +87,87 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
             };
           }
 
-            protected String getTableTitle() {
-                return MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
-            }
+          public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
+            Vector<Record> records = super.getRecords();
+
+            Script script = new Script();
+            script.setType("text/javascript");
+            script.removeAttribute("language");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("window.addEventListener(\"load\",function(){");
+            sb.append("createStats(\"");
+            sb.append(CSS.TABLE_ROW_ALT);
+            sb.append("\",\"");
+            sb.append(CSS.TABLE_FOOTER);
+            sb.append("\",");
             
-            protected String getTableSummary() {
-                return Util.getResourceString("artiststatsummary");
-            }
-            
-            protected String getTableType() {
-                return fTypeString;
-            }
-            
-            protected int getStatsSize() {
-                return items.size();
+            final List<? extends Artist> items = fMusic.getArtistsCopy();
+            final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
+
+            int total = trackStats(items, new StatsRecordFactory.StatsTracker() {
+                public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
+                    org.json.JSONObject json = new org.json.JSONObject();
+                    try {
+                        json.put("k", name);
+                        json.put("l", link);
+                        json.put("v", value);
+                    } catch (org.json.JSONException e) {
+                        throw new com.bolsinga.web.WebException("Can't create artist stats json", e);
+                    }
+                    values.add(json);
+                }
+            });
+            org.json.JSONArray jarray = new org.json.JSONArray(values);
+            try {
+                if (com.bolsinga.web.Util.getPrettyOutput()) {
+                  sb.append(jarray.toString(2));
+                } else {
+                  sb.append(jarray.toString());
+                }
+            } catch (org.json.JSONException e) {
+                throw new com.bolsinga.web.WebException("Can't write artist json array", e);
             }
 
-            protected void generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
-                Collections.sort(items, Compare.getCompare(fMusic).ARTIST_STATS_COMPARATOR);
-                fTotal = 0;
-                for (Artist item : items) {
-                    Collection<Show> shows = fLookup.getShows(item);
-                    int value = (shows != null) ? shows.size() : 0;
-                    tracker.track(item.getName(), fLinks.getLinkTo(item), value);
-                    fTotal += value;
-                }
-            }
+            sb.append(",");
+            sb.append(total);
+
+            sb.append(",\"");
+            sb.append(Util.getResourceString("artistprefix"));
+            sb.append("\"");
             
-            protected int getStatsTotal() {
-                return fTotal;
-            }
+            sb.append(");");
             
-            protected String getStatsLinkPrefix() {
-                return Util.getResourceString("artistprefix");
-            }
+            sb.append("},false);");
+            script.setTagText(sb.toString());
+            
+            records.add(Record.createRecordSimple(script));
+
+            return records;
+          }
+
+          protected Table getTable() {
+            String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
+            Table table = Util.makeTable(tableTitle, Util.getResourceString("artiststatsummary"), new TableHandler() {
+              public TR getHeaderRow() {
+                return new TR().addElement(new TH(fTypeString)).addElement(new TH("#")).addElement(new TH("%"));
+              }
+
+              public int getRowCount() {
+                return 0;
+              }
+              
+              public TR getRow(final int row) {
+                return null;
+              }
+              
+              public TR getFooterRow() {
+                return null;
+              }
+            });
+            table.setID("stats");
+            return table;
+          }
         });
       }
     });
