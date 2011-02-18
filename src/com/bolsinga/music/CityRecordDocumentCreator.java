@@ -12,6 +12,7 @@ import org.apache.ecs.html.*;
 public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   final String fTypeString = Util.getResourceString("city");
   final Object fTypeArgs[] = { fTypeString };
+  final String fTableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
   
   class CityStatsRecordFactory extends StatsRecordFactory {
       public String getDirectory() {
@@ -83,8 +84,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
       }
 
       protected Table getTable() {
-        String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
-        Table table = Util.makeTable(tableTitle, Util.getResourceString("citystatsummary"), new TableHandler() {
+        Table table = Util.makeTable(fTableTitle, Util.getResourceString("citystatsummary"), new TableHandler() {
           public TR getHeaderRow() {
             return new TR().addElement(new TH(fTypeString)).addElement(new TH("#")).addElement(new TH("%"));
           }
