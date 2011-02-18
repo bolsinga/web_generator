@@ -5,7 +5,7 @@ function recordPopup(e) {
     location.href=value;
   }
 }
-function createStats(altClass, footerClass, vals, title) {
+function createStats(altClass, footerClass, vals) {
     var table = document.getElementById("stats");
     var total = 0;
     for (var v in vals) {
@@ -15,16 +15,7 @@ function createStats(altClass, footerClass, vals, title) {
         var tr = table.insertRow(table.rows.length);
         
         var th = document.createElement("th");
-        if (vals[v].l == null)
-            th.appendChild(document.createTextNode(vals[v].k));
-        else {
-            var a = document.createElement("a");
-            a.setAttribute("href", vals[v].l);
-            if (title != null)
-                a.setAttribute("title", title + vals[v].k);
-            a.appendChild(document.createTextNode(vals[v].k));
-            th.appendChild(a);
-        }
+        th.appendChild(document.createTextNode(vals[v].k));
         tr.appendChild(th);
         
         var td = document.createElement("td");
