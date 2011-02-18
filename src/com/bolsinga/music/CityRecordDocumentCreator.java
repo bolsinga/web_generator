@@ -14,6 +14,10 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   final Object fTypeArgs[] = { fTypeString };
   final String fTableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
   
+  interface CityStatsTracker {
+    public void track(String name, int value) throws com.bolsinga.web.WebException;
+  }
+  
   class CityStatsRecordFactory extends StatsRecordFactory {
       public String getDirectory() {
         return Links.CITIES_DIR;
@@ -52,7 +56,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
         final Collection<String> items = fLookup.getCities();
         final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
 
-        trackStats(items, new StatsRecordFactory.StatsTracker() {
+        trackStats(items, new CityStatsTracker() {
             public void track(String name, int value) throws com.bolsinga.web.WebException {
                 org.json.JSONObject json = new org.json.JSONObject();
                 try {
@@ -123,7 +127,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
   
-  private void trackStats(final Collection<String> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+  private void trackStats(final Collection<String> items, final CityStatsTracker tracker) throws com.bolsinga.web.WebException {
     HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
     String city = null;
     int val;
