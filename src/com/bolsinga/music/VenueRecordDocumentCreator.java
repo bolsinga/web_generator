@@ -11,8 +11,7 @@ import org.apache.ecs.*;
 import org.apache.ecs.html.*;
 
 public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
-  private final String fTypeString = Util.getResourceString("venue");
-  private Object fTypeArgs[] = { fTypeString };
+
   private final java.util.Map<String, IndexPair> fIndex;
 
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
@@ -76,7 +75,8 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
           
           public String getTitle() {
-            return MessageFormat.format(Util.getResourceString("statistics"), fTypeArgs);
+            Object typeArgs[] = { Util.getResourceString("venue") };
+            return MessageFormat.format(Util.getResourceString("statistics"), typeArgs);
           }
 
           public Navigator getNavigator() {
@@ -142,9 +142,11 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
         }
     });
 
-    String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
+    String typeString = Util.getResourceString("venue");
+    Object typeArgs[] = { typeString };
+    String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
 
-    return StatsRecordFactory.makeTable(names, values, tableTitle, fTypeString, Util.getResourceString("venuestatsummary"));
+    return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("venuestatsummary"));
   }
 
   private void trackStats(final List<? extends Venue> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
