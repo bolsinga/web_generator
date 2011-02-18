@@ -13,6 +13,104 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   private final String fTypeString = Util.getResourceString("city");
   private final Object fTypeArgs[] = { fTypeString };
   
+  class CityStatsRecordFactory extends StatsRecordFactory {
+      public String getDirectory() {
+        return Links.CITIES_DIR;
+      }
+
+      public String getTitle() {
+        return MessageFormat.format(Util.getResourceString("statistics"), fTypeArgs);
+      }
+
+      public Navigator getNavigator() {
+        return new Navigator(fLinks) {
+          public Element getCityNavigator() {
+            return getCurrentNavigator();
+          }
+          
+          public Element getCurrentNavigator() {
+            return new StringElement(Util.getResourceString("cities"));
+          }
+        };
+      }
+
+      public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
+        Vector<Record> records = super.getRecords();
+
+        Script script = new Script();
+        script.setType("text/javascript");
+        script.removeAttribute("language");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("window.addEventListener(\"load\",function(){");
+        sb.append("createStats(\"");
+        sb.append(CSS.TABLE_ROW_ALT);
+        sb.append("\",\"");
+        sb.append(CSS.TABLE_FOOTER);
+        sb.append("\",");
+        
+        final Collection<String> items = fLookup.getCities();
+        final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
+
+        int total = trackStats(items, new StatsRecordFactory.StatsTracker() {
+            public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
+                org.json.JSONObject json = new org.json.JSONObject();
+                try {
+                    json.put("k", name);
+                    json.put("v", value);
+                } catch (org.json.JSONException e) {
+                    throw new com.bolsinga.web.WebException("Can't create city stats json", e);
+                }
+                values.add(json);
+            }
+        });
+        org.json.JSONArray jarray = new org.json.JSONArray(values);
+        try {
+            if (com.bolsinga.web.Util.getPrettyOutput()) {
+              sb.append(jarray.toString(2));
+            } else {
+              sb.append(jarray.toString());
+            }
+        } catch (org.json.JSONException e) {
+            throw new com.bolsinga.web.WebException("Can't write city stats json array", e);
+        }
+        
+        sb.append(",");
+        sb.append(total);
+        sb.append(");");
+
+        sb.append("},false);");
+        script.setTagText(sb.toString());
+        
+        records.add(Record.createRecordSimple(script));
+
+        return records;
+      }
+
+      protected Table getTable() {
+        String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
+        Table table = Util.makeTable(tableTitle, Util.getResourceString("citystatsummary"), new TableHandler() {
+          public TR getHeaderRow() {
+            return new TR().addElement(new TH(fTypeString)).addElement(new TH("#")).addElement(new TH("%"));
+          }
+
+          public int getRowCount() {
+            return 0;
+          }
+          
+          public TR getRow(final int row) {
+            return null;
+          }
+          
+          public TR getFooterRow() {
+            return null;
+          }
+        });
+        table.setID("stats");
+        return table;
+      }
+  }
+  
   public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
     CityRecordDocumentCreator creator = new CityRecordDocumentCreator(music, outputDir);
     creator.createStats(backgrounder, backgroundable);
@@ -25,103 +123,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
-        create(new StatsRecordFactory() {
-          public String getDirectory() {
-            return Links.CITIES_DIR;
-          }
-
-          public String getTitle() {
-            return MessageFormat.format(Util.getResourceString("statistics"), fTypeArgs);
-          }
-
-          public Navigator getNavigator() {
-            return new Navigator(fLinks) {
-              public Element getCityNavigator() {
-                return getCurrentNavigator();
-              }
-              
-              public Element getCurrentNavigator() {
-                return new StringElement(Util.getResourceString("cities"));
-              }
-            };
-          }
-
-          public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
-            Vector<Record> records = super.getRecords();
-
-            Script script = new Script();
-            script.setType("text/javascript");
-            script.removeAttribute("language");
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("window.addEventListener(\"load\",function(){");
-            sb.append("createStats(\"");
-            sb.append(CSS.TABLE_ROW_ALT);
-            sb.append("\",\"");
-            sb.append(CSS.TABLE_FOOTER);
-            sb.append("\",");
-            
-            final Collection<String> items = fLookup.getCities();
-            final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
-
-            int total = trackStats(items, new StatsRecordFactory.StatsTracker() {
-                public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
-                    org.json.JSONObject json = new org.json.JSONObject();
-                    try {
-                        json.put("k", name);
-                        json.put("v", value);
-                    } catch (org.json.JSONException e) {
-                        throw new com.bolsinga.web.WebException("Can't create city stats json", e);
-                    }
-                    values.add(json);
-                }
-            });
-            org.json.JSONArray jarray = new org.json.JSONArray(values);
-            try {
-                if (com.bolsinga.web.Util.getPrettyOutput()) {
-                  sb.append(jarray.toString(2));
-                } else {
-                  sb.append(jarray.toString());
-                }
-            } catch (org.json.JSONException e) {
-                throw new com.bolsinga.web.WebException("Can't write city stats json array", e);
-            }
-            
-            sb.append(",");
-            sb.append(total);
-            sb.append(");");
-
-            sb.append("},false);");
-            script.setTagText(sb.toString());
-            
-            records.add(Record.createRecordSimple(script));
-
-            return records;
-          }
-
-          protected Table getTable() {
-            String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), fTypeArgs);
-            Table table = Util.makeTable(tableTitle, Util.getResourceString("citystatsummary"), new TableHandler() {
-              public TR getHeaderRow() {
-                return new TR().addElement(new TH(fTypeString)).addElement(new TH("#")).addElement(new TH("%"));
-              }
-
-              public int getRowCount() {
-                return 0;
-              }
-              
-              public TR getRow(final int row) {
-                return null;
-              }
-              
-              public TR getFooterRow() {
-                return null;
-              }
-            });
-            table.setID("stats");
-            return table;
-          }
-      });
+        create(new CityStatsRecordFactory());
       }
     });
   }
