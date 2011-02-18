@@ -105,7 +105,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
             final List<? extends Venue> items = fMusic.getVenuesCopy();
             final ArrayList<org.json.JSONObject> values = new ArrayList<org.json.JSONObject>(items.size());
 
-            int total = trackStats(items, new StatsRecordFactory.StatsTracker() {
+            trackStats(items, new StatsRecordFactory.StatsTracker() {
                 public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
                     org.json.JSONObject json = new org.json.JSONObject();
                     try {
@@ -128,9 +128,6 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
             } catch (org.json.JSONException e) {
                 throw new com.bolsinga.web.WebException("Can't write city venue json array", e);
             }
-
-            sb.append(",");
-            sb.append(total);
 
             sb.append(",\"");
             sb.append(Util.getResourceString("venueprefix"));
@@ -207,17 +204,13 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
   
-  private int trackStats(final List<? extends Venue> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+  private void trackStats(final List<? extends Venue> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
     Collections.sort(items, Compare.getCompare(fMusic).VENUE_STATS_COMPARATOR);
 
-    int total = 0;
     for (Venue item : items) {
       Collection<Show> shows = fLookup.getShows(item);
-      int value = (shows != null) ? shows.size() : 0;
-      tracker.track(item.getName(), fLinks.getLinkTo(item), value);
-      total += value;
+      tracker.track(item.getName(), fLinks.getLinkTo(item), (shows != null) ? shows.size() : 0);
     }
-    return total;
   }
   
   private Vector<Element> getVenueShowListing(final Venue venue, final Show show) {
