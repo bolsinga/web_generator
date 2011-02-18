@@ -5,8 +5,12 @@ function recordPopup(e) {
     location.href=value;
   }
 }
-function createStats(altClass, footerClass, vals, total, title) {
+function createStats(altClass, footerClass, vals, title) {
     var table = document.getElementById("stats");
+    var total = 0;
+    for (var v in vals) {
+        total += vals[v].v;
+    }
     for (var v in vals) {
         var tr = table.insertRow(table.rows.length);
         
