@@ -72,166 +72,9 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
       public void run() {
         create(new StatsRecordFactory() {
           protected Table getTable() {
-              Table table = Util.makeTable(Util.getResourceString("datestats"),
-                                    Util.getResourceString("datestatssummary"), 
-                                    new TableHandler() {
-                  public TR getHeaderRow() {
-                      TR trow = new TR().addElement(new TH());
-                      Calendar cal = Calendar.getInstance();
-                      for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {
-                          cal.set(Calendar.DAY_OF_MONTH, 1);
-                          cal.set(Calendar.MONTH, i);
-                          trow.addElement(new TH(Util.getShortMonthName(cal)));
-                      }
-                      trow.addElement(new TH(Util.getResourceString("unknownmonthshort")));
-                      trow.addElement(new TH(Util.getResourceString("archivestotal")));
-                      return trow;
-                  }
-                  
-                  public int getRowCount() {
-                      return 0;
-                  }
-                  
-                  public TR getRow(final int row) {
-                      return null;
-                  }
-                  
-                  public TR getFooterRow() {
-                      return null;
-                  }
-              });
-              table.setID("stats");
-              return table;
+            return getStats();
           }
           
-            public Vector<Record> getRecords() throws com.bolsinga.web.WebException {
-                Vector<Record> records = super.getRecords();
-
-                Script script = new Script();
-                script.setType("text/javascript");
-                script.removeAttribute("language");
-                
-                StringBuilder sb = new StringBuilder();
-                sb.append("window.addEventListener(\"load\",function(){");
-                sb.append("createShowStats(\"");
-                sb.append(CSS.TABLE_ROW_ALT);
-                sb.append("\",\"");
-                sb.append(CSS.TABLE_FOOTER);
-                sb.append("\",");
-
-                org.json.JSONObject data = new org.json.JSONObject();
-                
-                try {
-                    // ../dates directory
-                    data.put("directory", fLinks.getDirectoryPath(Links.SHOW_DIR));
-                    
-                    // Year prefix: "'y' Dates"
-                    data.put("title", Util.getResourceString("dates"));
-                    
-                    // prefix: "Dates from "
-                    data.put("prefix", Util.getResourceString("moreinfoshow"));
-                    
-                    // Month names (including unknown) in an array
-                    final ArrayList<org.json.JSONObject> months = new ArrayList<org.json.JSONObject>(Calendar.DECEMBER - Calendar.JANUARY + 1 + 1);
-                    for (int month = Calendar.JANUARY; month <= Calendar.DECEMBER + 1; month++) {
-                        org.json.JSONObject json = new org.json.JSONObject();
-                        if (month <= Calendar.DECEMBER) {
-                            Calendar cal = Calendar.getInstance();
-                            cal.set(Calendar.DAY_OF_MONTH, 1);
-                            cal.set(Calendar.MONTH, month);
-                            String monthStr = Util.getMonth(cal);
-                            json.put("m", monthStr);
-                            json.put("ms", monthStr);
-                        } else {
-                            json.put("m", Util.getResourceString("unknownmonth"));
-                            json.put("ms", Util.getResourceString("unknownmonthshort"));
-                        }
-                        months.add(json);
-                    }
-                    data.put("months", new org.json.JSONArray(months));
-                    
-                    // {
-                    // y: year (may be "other")
-                    // s: array of show counts (including unknown month)
-                    // }
-                    final ArrayList<org.json.JSONObject> shows = new ArrayList<org.json.JSONObject>(Calendar.DECEMBER - Calendar.JANUARY + 1 + 1);
-                    int[] monthTotals = new int[Calendar.DECEMBER - Calendar.JANUARY + 1 + 1];  // including unknown as index '12'
-                    
-                    // fGroups has as many items as the number of years (inc unknown).
-                    for (final Vector<Show> showGroup : fGroups) {
-                        org.json.JSONObject json = new org.json.JSONObject();
-                        
-                        String year = fLinks.getPageFileName(showGroup.firstElement());
-                        json.put("y", year);
-                        
-                        IndexPair p = fIndex.get(year);
-                        
-                        int[] groupMonthTotals = new int[Calendar.DECEMBER - Calendar.JANUARY + 1 + 1]; // including unknown as index '12'
-                        for (Show show : showGroup) {
-                            com.bolsinga.music.data.Date date = show.getDate();
-                            if (!date.isUnknown()) {
-                                Calendar cal = Util.toCalendarLocal(date); // don't want UTC...
-                                groupMonthTotals[cal.get(Calendar.MONTH) - Calendar.JANUARY]++;
-                            } else {
-                                // See if the month is known.
-                                int month = date.getMonth();
-                                if (month != com.bolsinga.music.data.Date.UNKNOWN) {
-                                    groupMonthTotals[month - 1]++;
-                                } else {
-                                    groupMonthTotals[12]++;
-                                }
-                            }
-                        }
-                        
-                        int yearTotal = 0;
-                        final org.json.JSONArray ms = new org.json.JSONArray();
-                        for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER + 1; i++) {
-                            int val = groupMonthTotals[i - Calendar.JANUARY];
-                            monthTotals[i - Calendar.JANUARY] += val;
-                            ms.put(val);
-                            yearTotal += val;
-                        }
-                        ms.put(yearTotal);
-                        json.put("s", ms);
-                        
-                        shows.add(json);
-                    }
-                    data.put("shows", new org.json.JSONArray(shows));
-                    
-                    // array of all totals
-                    org.json.JSONArray totalArray = new org.json.JSONArray();
-                    totalArray.put(Util.getResourceString("archivestotal"));
-                    int grandTotal = 0;
-                    for (int t : monthTotals) {
-                        totalArray.put(t);
-                        grandTotal += t;
-                    }
-                    totalArray.put(grandTotal);
-                    data.put("totals", totalArray);
-                } catch (org.json.JSONException e) {
-                    throw new com.bolsinga.web.WebException("Can't create show stats json", e);
-                }
-                
-                try {
-                    if (com.bolsinga.web.Util.getPrettyOutput()) {
-                        sb.append(data.toString(2));
-                    } else {
-                        sb.append(data.toString());
-                    }
-                } catch (org.json.JSONException e) {
-                    throw new com.bolsinga.web.WebException("Can't write show stats json array", e);
-                }
-                
-                sb.append(");");
-                
-                sb.append("},false);");
-                script.setTagText(sb.toString());
-                
-                records.add(Record.createRecordSimple(script));
-                
-                return records;
-            }
-            
           public String getDirectory() {
             return Links.SHOW_DIR;
           }
@@ -309,6 +152,112 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
 
+  private Table getStats() {    
+    // fGroups has as many items as the number of years (inc unknown). Add one for the final footer total row.
+    // There are 12 months in a year, Add three, one for the year, one for unknonwn month, and one for the total column.
+    // 12 months + 3 (year column, other, total)
+    String[][] runningTable = new String[fGroups.size() + 1][12 + 3];
+    int[] monthTotals = new int[13];  // including unknown as index '12'
+    String[] curRow;
+    
+    int row = 0;
+    for (final Vector<Show> showGroup : fGroups) {
+      curRow = runningTable[row];
+
+      String year = fLinks.getPageFileName(showGroup.firstElement());
+      
+      IndexPair p = fIndex.get(year);
+      curRow[0] = new TD(Util.createInternalA(p.getLink(), year, p.getTitle())).toString();
+      
+      int[] groupMonthTotals = new int[13]; // including unknown as index '12'
+      for (Show show : showGroup) {
+        com.bolsinga.music.data.Date date = show.getDate();
+        if (!date.isUnknown()) {
+          Calendar cal = Util.toCalendarLocal(date); // don't want UTC...
+          groupMonthTotals[cal.get(Calendar.MONTH) - Calendar.JANUARY]++;
+        } else {
+          // See if the month is known.
+          int month = date.getMonth();
+          if (month != com.bolsinga.music.data.Date.UNKNOWN) {
+            groupMonthTotals[month - 1]++;
+          } else {
+            groupMonthTotals[12]++;
+          }
+        }
+      }
+      
+      for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER + 1; i++) {
+        int val = groupMonthTotals[i - Calendar.JANUARY];
+        
+        String content = Integer.toString(val);
+        if (val != 0) {
+          content = getLinkToShowMonthYear(year, i, content).toString();
+        }
+        curRow[(i - Calendar.JANUARY) + 1] = new TD(content).toString();
+        
+        monthTotals[i - Calendar.JANUARY] += val;
+      }
+      
+      curRow[14] = new TD(Integer.toString(showGroup.size())).toString();
+      
+      row++;
+    }
+    
+    final String totalStr = Util.getResourceString("archivestotal");
+    curRow = runningTable[runningTable.length - 1];
+    curRow[0] = new TH(totalStr).toString();
+    
+    for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER + 1; i++) {
+      curRow[(i - Calendar.JANUARY) + 1] = new TH(Integer.toString(monthTotals[i - Calendar.JANUARY])).toString();
+    }
+    int totalEntries = 0;
+    for (int cnt : monthTotals) {
+      totalEntries += cnt;
+    }
+    curRow[14] = new TH(Integer.toString(totalEntries)).toString();
+    
+    final String[][] table = runningTable;
+    return Util.makeTable(Util.getResourceString("datestats"),
+                          Util.getResourceString("datestatssummary"), 
+                          new TableHandler() {
+      public TR getHeaderRow() {
+        TR trow = new TR().addElement(new TH());
+        Calendar cal = Calendar.getInstance();
+        for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {
+          cal.set(Calendar.DAY_OF_MONTH, 1);
+          cal.set(Calendar.MONTH, i);
+          trow.addElement(new TH(Util.getShortMonthName(cal)));
+        }
+        trow.addElement(new TH(Util.getResourceString("unknownmonthshort")));
+        trow.addElement(new TH(totalStr));
+        return trow;
+      }
+      
+      public int getRowCount() {
+        // Last 'row' in table is totals row.
+        return table.length - 1;
+      }
+      
+      private TR fillRow(final String[] rowData) {
+        TR trow = new TR();
+        for (int i = 0; i < rowData.length; i++) {
+          trow.addElement(rowData[i]);
+        }
+        return trow;
+      }
+      
+      public TR getRow(final int row) {
+        String[] curRow = table[row];
+        return fillRow(curRow);
+      }
+      
+      public TR getFooterRow() {
+        String[] curRow = table[getRowCount()];
+        return fillRow(curRow);
+      }
+    });
+  }
+
   private Record getShowRecord(final Show show) {
     return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, false, true);
   }
@@ -369,5 +318,34 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     }
 
     return Record.createRecordSection(title, items);
+  }
+  
+  private Element getLinkToShowMonthYear(final String year, final int month, final String value) {
+    String monthStr, monthStrHash;
+    if (month <= Calendar.DECEMBER) {
+      Calendar cal = Calendar.getInstance();
+      cal.set(Calendar.DAY_OF_MONTH, 1);
+      cal.set(Calendar.MONTH, month);
+      monthStr = Util.getMonth(cal);
+      monthStrHash = monthStr;
+    } else {
+      monthStr = Util.getResourceString("unknownmonth");
+      monthStrHash = Util.getResourceString("unknownmonthshort");
+    }
+    
+    StringBuilder url = new StringBuilder();
+    url.append(fIndex.get(year).getLink());
+    url.append(Links.HASH);
+    url.append(monthStrHash);
+    
+    StringBuilder tip = new StringBuilder();
+    tip.append(monthStr);
+    tip.append(", ");
+    tip.append(year);
+    
+    Object[] args = { tip.toString() };
+    String t = MessageFormat.format(Util.getResourceString("moreinfoshow"), args);
+    
+    return Util.createInternalA(url.toString(), value, t);
   }
 }
