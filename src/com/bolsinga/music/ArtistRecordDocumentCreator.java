@@ -66,7 +66,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new StatsRecordFactory() {
-          protected Table getTable() throws com.bolsinga.web.WebException  {
+          protected Table getTable() {
             return getStats();
           }
 
@@ -129,35 +129,24 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     return Collections.unmodifiableCollection(result.values());
   }
 
-  private Table getStats() throws com.bolsinga.web.WebException  {
+  private Table getStats() {
     final List<? extends Artist> items = fMusic.getArtistsCopy();
+    Collections.sort(items, Compare.getCompare(fMusic).ARTIST_STATS_COMPARATOR);
 
     final ArrayList<String> names = new ArrayList<String>(items.size());
     final ArrayList<Integer> values = new ArrayList<Integer>(items.size());
-
-    trackStats(items, new StatsRecordFactory.StatsTracker() {
-        public void track(final String name, final String link, final int value) throws com.bolsinga.web.WebException {
-            names.add(name);
-            values.add(value);
-        }
-    });
-    
+    for (Artist item : items) {
+      String t = Util.createTitle("moreinfoartist", item.getName());
+      names.add(Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString());
+      Collection<Show> shows = fLookup.getShows(item);
+      values.add((shows != null) ? shows.size() : 0);
+    }
+                
     String typeString = Util.getResourceString("artist");
     Object typeArgs[] = { typeString };
     String tableTitle = MessageFormat.format(Util.getResourceString("showsby"), typeArgs);
     
     return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("artiststatsummary"));
-  }
-
-  private void trackStats(final List<? extends Artist> items, final StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
-    Collections.sort(items, Compare.getCompare(fMusic).ARTIST_STATS_COMPARATOR);
-
-    for (Artist item : items) {
-      String t = Util.createTitle("moreinfoartist", item.getName());
-      String name = Util.createInternalA(fLinks.getLinkTo(item), fLookup.getHTMLName(item), t).toString();
-      Collection<Show> shows = fLookup.getShows(item);
-      tracker.track(name, null, (shows != null) ? shows.size() : 0);
-    }
   }
   
   private Record getArtistShowRecord(final Artist artist, final Show show) {
