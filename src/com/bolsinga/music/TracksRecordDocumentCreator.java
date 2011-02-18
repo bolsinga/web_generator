@@ -118,7 +118,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
         }
         
         protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
-            Collections.sort(artists, Compare.ARTIST_TRACKS_COMPARATOR);
+            Collections.sort(artists, Compare.ARTIST_ALBUMS_COMPARATOR);
             
             int total = 0;
             for (Artist artist : artists) {
