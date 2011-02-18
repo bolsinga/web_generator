@@ -62,7 +62,7 @@ public class CityRecordDocumentCreator extends MusicRecordDocumentCreator {
                 return items.size();
             }
             
-            protected int generateStats(DynamicStatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
+            protected int generateStats(StatsRecordFactory.StatsTracker tracker) throws com.bolsinga.web.WebException {
                 HashMap<Integer, Collection<String>> cityCount = new HashMap<Integer, Collection<String>>();
                 String city = null;
                 int val;
