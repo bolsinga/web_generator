@@ -203,6 +203,11 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   private Element getDiary() {
     Div diaryDiv = Util.createDiv(CSS.DOC_SUB);
 
+// FIXME: Add Last Played Element here. Make a new Record.createRecord* w/ title and items
+// last played "<song title>"
+// by <artist> from <album>
+// on <date>
+	
     int mainPageEntryCount = Util.getSettings().getDiaryCount().intValue();
     
     List<Object> items = Util.getRecentItems(mainPageEntryCount, fMusic, fDiary);
