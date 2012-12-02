@@ -480,7 +480,7 @@ public class Parser {
       albumTitle = songTitle + " - Single";
     }
 
-    if (!isVideo && !isPodcast && (artist != null)) {
+    if (!isVideo && !isPodcast && (artist != null) && !albumTitle.equals("Apple Financial Results")) {
       createTrack(artist, sortArtist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
