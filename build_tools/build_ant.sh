@@ -40,7 +40,7 @@ if [ -z "$BUILD_ID" ] ; then
   BUILD_ID=$USER-internal
 fi
 
-if [ -z "ANT_PATH" ] ; then
+if [ -z "$ANT_PATH" ] ; then
 	ANT_PATH=/Data/Applications/java_libs/apache-ant-1.9.3/bin/ant
 fi
 
