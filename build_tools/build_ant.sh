@@ -40,10 +40,14 @@ if [ -z "$BUILD_ID" ] ; then
   BUILD_ID=$USER-internal
 fi
 
-ARGS="-Dsym.dir=$SYM_DIR -Dobj.dir=$OBJ_DIR -Ddst.dir=$DST_DIR -Dbuild.id=$BUILD_ID"
-echo "/Data/Applications/java_libs/apache-ant-1.9.3/bin/ant build.xml $ARGS" 1>&2
+if [ -z "ANT_PATH" ] ; then
+	ANT_PATH=/Data/Applications/java_libs/apache-ant-1.9.3/bin/ant
+fi
 
-cd $SRC_DIR ; ant $ARGS 1>&2
+ARGS="-Dsym.dir=$SYM_DIR -Dobj.dir=$OBJ_DIR -Ddst.dir=$DST_DIR -Dbuild.id=$BUILD_ID"
+echo "$ANT_PATH build.xml $ARGS" 1>&2
+
+cd $SRC_DIR ; $ANT_PATH $ARGS 1>&2
 if_failure "Ant Build Failure!"
 
 exit 0
