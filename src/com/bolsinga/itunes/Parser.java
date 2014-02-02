@@ -77,6 +77,7 @@ public class Parser {
   private static final String TK_MUSIC_VIDEO           = "Music Video";
   private static final String TK_MATCH_ID              = "MatchID";
   private static final String TK_XID                   = "XID";
+  private static final String TK_VAR                   = "Rating Computed";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
@@ -339,6 +340,7 @@ public class Parser {
     sITunesKeys.add(TK_MUSIC_VIDEO);
     sITunesKeys.add(TK_MATCH_ID);
     sITunesKeys.add(TK_XID);
+	sITunesKeys.add(TK_VAR);
   }
 
   static {
