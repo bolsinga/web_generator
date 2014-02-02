@@ -43,7 +43,7 @@
 </target>
 
 <target name="music_binding" depends="prepare">
-    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+    <exec executable="xjc" >
         <arg line="-p com.bolsinga.music.data.xml.impl -d ${build.gensrc} ${basedir}/xml/music.xsd" />
     </exec>
         <javac  destdir="${build.classes}"
@@ -61,7 +61,7 @@
 </target>
 
 <target name="diary_binding" depends="prepare">
-    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+    <exec executable="xjc" >
         <arg line="-p com.bolsinga.diary.data.xml.impl -d ${build.gensrc} ${basedir}/xml/diary.xsd" />
     </exec>
         <javac  destdir="${build.classes}"
@@ -79,7 +79,7 @@
 </target>
 
 <target name="rss_binding" depends="prepare">
-    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+    <exec executable="xjc" >
         <arg line="-p com.bolsinga.rss.data -d ${build.gensrc} ${basedir}/xml/rss-2_0.xsd" />
     </exec>
         <javac  destdir="${build.classes}"
@@ -97,7 +97,7 @@
 </target>
 
 <target name="plist_binding" depends="prepare">
-    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+    <exec executable="xjc" >
         <arg line="-p com.bolsinga.plist.data -d ${build.gensrc} ${basedir}/xml/PropertyList-1.0.xsd" />
     </exec>
         <javac  destdir="${build.classes}"
@@ -115,7 +115,7 @@
 </target>
 
 <target name="settings_binding" depends="prepare">
-    <exec executable="/System/Library/Frameworks/JavaVM.framework/Commands/xjc" >
+    <exec executable="xjc" >
         <arg line="-p com.bolsinga.settings.data -d ${build.gensrc} ${basedir}/xml/settings.xsd" />
     </exec>
         <javac  destdir="${build.classes}"
