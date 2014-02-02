@@ -41,7 +41,7 @@ if [ -z "$BUILD_ID" ] ; then
 fi
 
 ARGS="-Dsym.dir=$SYM_DIR -Dobj.dir=$OBJ_DIR -Ddst.dir=$DST_DIR -Dbuild.id=$BUILD_ID"
-echo "ant build.xml $ARGS" 1>&2
+echo "/Data/Applications/java_libs/apache-ant-1.9.3/bin/ant build.xml $ARGS" 1>&2
 
 cd $SRC_DIR ; ant $ARGS 1>&2
 if_failure "Ant Build Failure!"
