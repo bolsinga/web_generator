@@ -72,43 +72,6 @@ public class Record {
     return new Record(CSS.RECORD_ITEM_LIST, eTitle, null, comment, permalink);
   }
   
-  public static Record createRecordPopup(final String heading, final Vector<String> labels, final Vector<String> values) {
-    assert labels.size() == values.size() : "Bad Popup values";
-
-    Select s = new Select();
-    s.setOnChange("recordPopup(this)");
-    s.setPrettyPrint(Util.getPrettyOutput());
-    
-    Option o = new Option(JavaScript.NA_VALUE);
-    o.addElement(heading);
-    o.setPrettyPrint(Util.getPrettyOutput());
-    s.addElement(o);
-
-    o = new Option(JavaScript.NA_VALUE);
-    o.addElement("&nbsp;");
-    o.setPrettyPrint(Util.getPrettyOutput());
-    s.addElement(o);
-    
-    int count = labels.size();
-    for (int i = 0; i < count; i++) {
-      o = new Option(values.get(i));
-      o.addElement(labels.get(i));
-      o.setPrettyPrint(Util.getPrettyOutput());
-      s.addElement(o);
-    }
-    
-    Form f = new Form();
-    // This is boiler plate that is unfortunately always there.
-    f.removeAttribute("accept-charset");
-    f.removeAttribute("enctype");
-    f.setAction(Attributes.NO_ATTRIBUTE_VALUE);
-    f.setPrettyPrint(Util.getPrettyOutput());
-    
-    f.addElement(s);
-    
-    return new Record(CSS.RECORD_POPUP, null, f, null, null);
-  }
-  
   private Record(final String divClass, final Element title, final Element items, final String comment, final A permaLink) {
     Div d = Util.createDiv(divClass);
     

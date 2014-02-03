@@ -50,8 +50,6 @@
       <xs:element name="diaryEntryTime" type="xs:positiveInteger" minOccurs="1" maxOccurs="1" />
       <xs:element name="pageFooter" type="xs:string" minOccurs="1" maxOccurs="1" />
       <xs:element name="googleMeta" type="GoogleMeta" minOccurs="1" maxOccurs="1" />
-      <xs:element name="javaScriptFile" type="xs:string" minOccurs="1" maxOccurs="1" />
-      <xs:element name="relatedUsesPopup" type="xs:boolean" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
   </xs:complexType>
 </xs:element>

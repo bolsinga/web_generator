@@ -21,7 +21,6 @@ public class CSS {
   private static final String LONG_TABLE_FOOTER         = "table_footer";
   private static final String LONG_RECORD_SECTION       = "record_section";
   private static final String LONG_RECORD_ITEM_LIST     = "record_item_list";
-  private static final String LONG_RECORD_POPUP         = "record_popup";
   private static final String LONG_ENTRY_INDEX_SUB_INFO = "entry_index_sub_info";
 
   private static final String SHORT_ENTRY_INDEX          = "a";
@@ -40,7 +39,6 @@ public class CSS {
   private static final String SHORT_TABLE_FOOTER         = "o";
   private static final String SHORT_RECORD_SECTION       = "p";
   private static final String SHORT_RECORD_ITEM_LIST     = "q";
-  private static final String SHORT_RECORD_POPUP         = "s";
   private static final String SHORT_ENTRY_INDEX_SUB_INFO = "t";
 
   public static String ENTRY_INDEX;
@@ -59,7 +57,6 @@ public class CSS {
   public static String TABLE_FOOTER;
   public static String RECORD_SECTION;
   public static String RECORD_ITEM_LIST;
-  public static String RECORD_POPUP;
   public static String ENTRY_INDEX_SUB_INFO;
   
   private static final HashMap<String, String> sCSSMapping = new HashMap<String, String>();
@@ -87,7 +84,6 @@ public class CSS {
     sCSSMapping.put(LONG_TABLE_FOOTER,         debug ? LONG_TABLE_FOOTER         : SHORT_TABLE_FOOTER);
     sCSSMapping.put(LONG_RECORD_SECTION,       debug ? LONG_RECORD_SECTION       : SHORT_RECORD_SECTION);
     sCSSMapping.put(LONG_RECORD_ITEM_LIST,     debug ? LONG_RECORD_ITEM_LIST     : SHORT_RECORD_ITEM_LIST);
-    sCSSMapping.put(LONG_RECORD_POPUP,         debug ? LONG_RECORD_POPUP         : SHORT_RECORD_POPUP);
     sCSSMapping.put(LONG_ENTRY_INDEX_SUB_INFO, debug ? LONG_ENTRY_INDEX_SUB_INFO : SHORT_ENTRY_INDEX_SUB_INFO);
 
     ENTRY_INDEX          = sCSSMapping.get(LONG_ENTRY_INDEX);
@@ -106,7 +102,6 @@ public class CSS {
     TABLE_FOOTER         = sCSSMapping.get(LONG_TABLE_FOOTER);
     RECORD_SECTION       = sCSSMapping.get(LONG_RECORD_SECTION);
     RECORD_ITEM_LIST     = sCSSMapping.get(LONG_RECORD_ITEM_LIST);
-    RECORD_POPUP         = sCSSMapping.get(LONG_RECORD_POPUP);
     ENTRY_INDEX_SUB_INFO = sCSSMapping.get(LONG_ENTRY_INDEX_SUB_INFO);
   }
   

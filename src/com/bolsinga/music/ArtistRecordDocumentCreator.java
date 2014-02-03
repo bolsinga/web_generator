@@ -247,19 +247,6 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Record getArtistRelations(final Artist artist) {
-    if (Util.getSettings().isRelatedUsesPopup()) {
-        Vector<String> labels = new Vector<String>();
-        Vector<String> values = new Vector<String>();
-        
-        for (Artist art : fLookup.getRelations(artist)) {
-          if (!art.equals(artist)) {
-            labels.add(fLookup.getHTMLName(art));
-            values.add(fLinks.getLinkTo(art));
-          }
-        }
-        
-        return Record.createRecordPopup(Util.getResourceString("seealso"), labels, values);
-    } else {
         Vector<Element> e = new Vector<Element>();
         
         org.apache.ecs.Element curElement = null;
@@ -278,6 +265,5 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
           new StringElement(Util.getResourceString("seealso")),
           e,
           curElement);
-    }
   }
 }

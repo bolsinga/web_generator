@@ -210,19 +210,6 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private Record getVenueRelations(final Venue venue) {
-    if (Util.getSettings().isRelatedUsesPopup()) {
-        Vector<String> labels = new Vector<String>();
-        Vector<String> values = new Vector<String>();
-        
-        for (Venue v : fLookup.getRelations(venue)) {
-          if (!v.equals(venue)) {
-            labels.add(fLookup.getHTMLName(v));
-            values.add(fLinks.getLinkTo(v));
-          }
-        }
-        
-        return Record.createRecordPopup(Util.getResourceString("seealso"), labels, values);
-    } else {
         Vector<Element> e = new Vector<Element>();
         
         org.apache.ecs.Element curElement = null;
@@ -241,6 +228,5 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
           new StringElement(Util.getResourceString("seealso")),
           e, 
           curElement);
-    }
   }
 }

@@ -167,7 +167,6 @@ public class Main implements Backgroundable {
   
   private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) throws Exception {
     CSS.install(output);
-    JavaScript.install(output);
 
     dumpSimilarArtists(music);
     
