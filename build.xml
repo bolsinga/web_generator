@@ -2,11 +2,6 @@
 
 <project name="web_generator" default="package" basedir=".">
 
-<property name="legacy_data.dir" value="../web_data/" />
-<property name="itunes.dir" value="../web_data/" />
-<property name="data.dir" value="../web_data/" />
-<property name="output.dir" value="/tmp/web" />
-
 <property name="src.dir" value="${basedir}/src" />
 <property name="lib.dir" value="${basedir}/lib" />
 <property name="rsrc.dir" value="${src.dir}/resources" />
@@ -292,100 +287,11 @@
         </javac>
 </target>
 
-<path id="test_classpath">
-    <pathelement path="${lib.dir}/json.jar" />
-  <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
-  <pathelement path="${build.classes}" />
-</path>
-
-<target name="generateDiaryXML" depends="music, itunes, diary_binding">
-        <java classname="com.bolsinga.test.ConvertDiaryTest" fork="true">
-                <arg value="${data.dir}settings.xml" />
-                <arg value="${legacy_data.dir}comments.txt" />
-                <arg value="${legacy_data.dir}statics.txt" />
-                <arg value="${data.dir}diary.xml" />
-                <classpath refid="test_classpath" />
-        </java>
-</target>
-
-<target name="prepare_output" >
-  <mkdir dir="${output.dir}" />
-</target>
-
-<target name="generateCSSTemplate" depends="web, prepare_output">
-  <java classname="com.bolsinga.test.CSSTest" fork="true">
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="test_classpath" />
-    <sysproperty key="web.debug_output" value="false" />
-  </java>
-</target>
-
-<target name="encoding" depends="music, diary">
-  <java classname="com.bolsinga.test.EncodeTest" fork="true">
-    <arg value="${data.dir}diary.xml" />
-    <arg value="${data.dir}music.xml" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="test_classpath" />
-  </java>
-</target>
-
 <!--    Add the following property to any web using code to have the output's
                 container tags be pretty printed. This can assist in debugging the output.
 
                 <sysproperty key="web.debug_output" value="true" />
 -->
-
-<target name="generateMusicWeb" depends="music, prepare_output">
-  <java classname="com.bolsinga.test.MusicTest" fork="true">
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="xml" />
-    <arg value="${data.dir}music.xml" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="test_classpath" />
-  </java>
-</target>
-
-<target name="generateDiaryWeb" depends="diary, prepare_output">
-  <java classname="com.bolsinga.test.DiaryTest" fork="true">
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="xml" />
-    <arg value="${data.dir}diary.xml" />
-    <arg value="${data.dir}music.xml" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="test_classpath" />
-  </java>
-</target>
-
-<target name="generateRSS" depends="rss, prepare_output" >
-  <java classname="com.bolsinga.test.RSSTest" fork="true" >
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="xml" />
-    <arg value="${data.dir}diary.xml" />
-    <arg value="${data.dir}music.xml" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="test_classpath" />
-  </java>
-</target>
-
-<target name="generateICal" depends="music, prepare_output">
-  <java classname="com.bolsinga.test.ICalTest" fork="true">
-    <jvmarg value="-Xms96m" />
-    <jvmarg value="-Xmx96m" />
-    <arg value="xml" />
-    <arg value="${data.dir}music.xml" />
-    <arg value="${data.dir}settings.xml" />
-    <arg value="${output.dir}" />
-    <classpath refid="test_classpath" />
-  </java>
-</target>
 
 <!--
 The package target below used to also install the sql jar:
