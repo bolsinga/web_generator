@@ -20,12 +20,24 @@ public class Util {
         sb.append(sourceFile);
         throw new PlistException(sb.toString(), e);
       }
-      
+
+      javax.xml.stream.XMLStreamReader xmlStreamReader = null;
+      try {
+	    javax.xml.stream.XMLInputFactory xmlInputFactory = javax.xml.stream.XMLInputFactory.newInstance();
+	    xmlInputFactory.setProperty(javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD, "http");
+        xmlStreamReader = xmlInputFactory.createXMLStreamReader(is);
+      } catch (javax.xml.stream.XMLStreamException e) {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("Can't create XML Reader: ");
+	    sb.append(is);
+	    throw new PlistException(sb.toString(), e);
+	  }
+
       try {
         JAXBContext jc = JAXBContext.newInstance("com.bolsinga.plist.data");
         Unmarshaller u = jc.createUnmarshaller();
               
-        plist = (com.bolsinga.plist.data.Plist)u.unmarshal(is);
+        plist = (com.bolsinga.plist.data.Plist)u.unmarshal(xmlStreamReader);
       } catch (JAXBException e) {
         StringBuilder sb = new StringBuilder();
         sb.append("Can't unmarshal plist file: ");
