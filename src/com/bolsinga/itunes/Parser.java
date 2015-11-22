@@ -478,8 +478,9 @@ public class Parser {
     String albumTitle = null;
     int index = -1, year = -1;
     boolean compilation = false;
-	
-	boolean isTrack = false;
+	boolean isVideo = false;
+	boolean isPodcast = false;
+	boolean isAudioFile = false;
             
     while (i.hasNext()) {
       JAXBElement<? extends Object> jokey = (JAXBElement<? extends Object>)i.next();
@@ -531,21 +532,21 @@ public class Parser {
       }
       if (key.equals(TK_HAS_VIDEO)) {
         // Ignore the value, but it needs to be pulled.
-        isTrack = !(jovalue != null);
+        isVideo = (jovalue != null);
         continue;
       }
       if (key.equals(TK_PODCAST)) {
         // Ignore the value, but it needs to be pulled.
-        isTrack = !(jovalue != null);
+        isPodcast = (jovalue != null);
         continue;
       }
 	  if (key.equals(TK_KIND)) {
 		  String kind = (String)jovalue.getValue();
 	      if (!sITunesKinds.contains(kind)) {
 	        sNewITunesKinds.add(kind);
-	      } else {
-			  isTrack = sITunesAudioKinds.contains(kind);
 	      }
+		  
+		  isAudioFile = sITunesAudioKinds.contains(kind);
 	  }
 
       if (!sITunesKeys.contains(key)) {
@@ -557,11 +558,12 @@ public class Parser {
       albumTitle = songTitle + " - Single";
     }
 
-	if (!isTrack) {
+	boolean isAlbum = !isVideo && !isPodcast && isAudioFile;
+	if (!isAlbum) {
 		sArtistNotAdded.add(artist);
 	}
 
-    if (isTrack && (artist != null) && !albumTitle.equals("Apple Financial Results")) {
+    if (isAlbum && (artist != null) && !albumTitle.equals("Apple Financial Results")) {
       createTrack(artist, sortArtist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
