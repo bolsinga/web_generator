@@ -235,6 +235,8 @@ public class Parser {
   private static final HashSet<String> sITunesKinds = new HashSet<String>();
   private static final Set<String> sNewITunesKinds = new TreeSet<String>();
   private static final HashSet<String> sITunesAudioKinds = new HashSet<String>();
+  
+  private static final HashSet<String> sArtistNotAdded = new HashSet<String>();
 
   private static final Pattern sLTPattern = Pattern.compile("<");
   private static final String sLTReplacement = "&lt;";
@@ -443,6 +445,13 @@ public class Parser {
             System.out.println("private static final String TKIND_" + varName + " = \"" + kind + "\";");
         }
     }
+	
+	if (sArtistNotAdded.size() > 0) {
+		System.out.println("Artist not Added:");
+		for (String artist : sArtistNotAdded) {
+			System.out.println(artist);
+		}
+	}
     
     return Collections.unmodifiableList(new ArrayList<Album>(fAlbumMap.values()));
   }
@@ -549,7 +558,7 @@ public class Parser {
     }
 
 	if (!isTrack) {
-		System.err.println("Not adding:" + artist + " " + songTitle + " " + albumTitle);
+		sArtistNotAdded.add(artist);
 	}
 
     if (isTrack && (artist != null) && !albumTitle.equals("Apple Financial Results")) {
