@@ -79,6 +79,23 @@ public class Parser {
   private static final String TK_XID                   = "XID";
   private static final String TK_RATING_COMPUTED       = "Rating Computed";
   private static final String TK_SORT_SERIES           = "Sort Series";
+
+  private static final String TKIND_AAC_AUDIO_FILE = "AAC audio file";
+  private static final String TKIND_BOOK = "Book";
+  private static final String TKIND_INTERNET_AUDIO_STREAM = "Internet audio stream";
+  private static final String TKIND_MPEG_AUDIO_FILE = "MPEG audio file";
+  private static final String TKIND_MPEG_4_VIDEO_FILE = "MPEG-4 video file";
+  private static final String TKIND_PDF_DOCUMENT = "PDF document";
+  private static final String TKIND_PROTECTED_AAC_AUDIO_FILE = "Protected AAC audio file";
+  private static final String TKIND_PROTECTED_MPEG_4_VIDEO_FILE = "Protected MPEG-4 video file";
+  private static final String TKIND_PROTECTED_BOOK = "Protected book";
+  private static final String TKIND_PURCHASED_AAC_AUDIO_FILE = "Purchased AAC audio file";
+  private static final String TKIND_PURCHASED_MPEG_4_VIDEO_FILE = "Purchased MPEG-4 video file";
+  private static final String TKIND_PURCHASED_BOOK = "Purchased book";
+  private static final String TKIND_IPAD_APP = "iPad app";
+  private static final String TKIND_IPHONE_IPOD_TOUCH_APP = "iPhone/iPod touch app";
+  private static final String TKIND_IPHONE_IPOD_TOUCH_IPAD_APP = "iPhone/iPod touch/iPad app";
+  private static final String TKIND_ITUNES_EXTRAS = "iTunes Extras";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
@@ -215,6 +232,10 @@ public class Parser {
   private static final HashSet<String> sITunesKeys = new HashSet<String>();
   private static final Set<String> sNewITunesKeys = new TreeSet<String>();
 
+  private static final HashSet<String> sITunesKinds = new HashSet<String>();
+  private static final Set<String> sNewITunesKinds = new TreeSet<String>();
+  private static final HashSet<String> sITunesAudioKinds = new HashSet<String>();
+
   private static final Pattern sLTPattern = Pattern.compile("<");
   private static final String sLTReplacement = "&lt;";
   private static final Pattern sGTPattern = Pattern.compile(">");
@@ -345,9 +366,36 @@ public class Parser {
 	sITunesKeys.add(TK_SORT_SERIES);
   }
 
+  private static void createKnownKinds() {
+	  sITunesKinds.add(TKIND_AAC_AUDIO_FILE);
+	  sITunesKinds.add(TKIND_BOOK);
+	  sITunesKinds.add(TKIND_INTERNET_AUDIO_STREAM);
+	  sITunesKinds.add(TKIND_MPEG_AUDIO_FILE);
+	  sITunesKinds.add(TKIND_MPEG_4_VIDEO_FILE);
+	  sITunesKinds.add(TKIND_PDF_DOCUMENT);
+	  sITunesKinds.add(TKIND_PROTECTED_AAC_AUDIO_FILE);
+	  sITunesKinds.add(TKIND_PROTECTED_MPEG_4_VIDEO_FILE);
+	  sITunesKinds.add(TKIND_PROTECTED_BOOK);
+	  sITunesKinds.add(TKIND_PURCHASED_AAC_AUDIO_FILE);
+	  sITunesKinds.add(TKIND_PURCHASED_MPEG_4_VIDEO_FILE);
+	  sITunesKinds.add(TKIND_PURCHASED_BOOK);
+	  sITunesKinds.add(TKIND_IPAD_APP);
+	  sITunesKinds.add(TKIND_IPHONE_IPOD_TOUCH_APP);
+	  sITunesKinds.add(TKIND_IPHONE_IPOD_TOUCH_IPAD_APP);
+	  sITunesKinds.add(TKIND_ITUNES_EXTRAS);
+	  
+	  sITunesAudioKinds.add(TKIND_AAC_AUDIO_FILE);
+	  sITunesAudioKinds.add(TKIND_MPEG_AUDIO_FILE);
+	  sITunesAudioKinds.add(TKIND_PROTECTED_AAC_AUDIO_FILE);
+	  sITunesAudioKinds.add(TKIND_PURCHASED_AAC_AUDIO_FILE);
+  }
+
   static {
     // Create a list of all known iTunes keys. This way if a new one shows up, the program will let us know.
     Parser.createKnownKeys();
+	
+	// Create a list of all known iTunes kinds. This way if a new one shows up, the program will let us know.
+	Parser.createKnownKinds();
   }
   
   public List<Album> parse(final String itunesFile) throws ParserException {
@@ -387,6 +435,14 @@ public class Parser {
             System.out.println("private static final String TK_VAR = \"" + key + "\";");
         }
     }
+	
+    if (sNewITunesKinds.size() > 0) {
+        System.out.println("iTunes added new kinds:");
+        for (String kind : sNewITunesKinds) {
+			String varName = kind.toUpperCase().replaceAll(" ", "_").replaceAll("/", "_").replaceAll("-", "_");
+            System.out.println("private static final String TKIND_" + varName + " = \"" + kind + "\";");
+        }
+    }
     
     return Collections.unmodifiableList(new ArrayList<Album>(fAlbumMap.values()));
   }
@@ -413,8 +469,8 @@ public class Parser {
     String albumTitle = null;
     int index = -1, year = -1;
     boolean compilation = false;
-    boolean isVideo = false;
-    boolean isPodcast = false;
+	
+	boolean isTrack = false;
             
     while (i.hasNext()) {
       JAXBElement<? extends Object> jokey = (JAXBElement<? extends Object>)i.next();
@@ -466,14 +522,22 @@ public class Parser {
       }
       if (key.equals(TK_HAS_VIDEO)) {
         // Ignore the value, but it needs to be pulled.
-        isVideo = (jovalue != null);
+        isTrack = !(jovalue != null);
         continue;
       }
       if (key.equals(TK_PODCAST)) {
         // Ignore the value, but it needs to be pulled.
-        isPodcast = (jovalue != null);
+        isTrack = !(jovalue != null);
         continue;
       }
+	  if (key.equals(TK_KIND)) {
+		  String kind = (String)jovalue.getValue();
+	      if (!sITunesKinds.contains(kind)) {
+	        sNewITunesKinds.add(kind);
+	      } else {
+			  isTrack = sITunesAudioKinds.contains(kind);
+	      }
+	  }
 
       if (!sITunesKeys.contains(key)) {
         sNewITunesKeys.add(key);
@@ -484,7 +548,11 @@ public class Parser {
       albumTitle = songTitle + " - Single";
     }
 
-    if (!isVideo && !isPodcast && (artist != null) && !albumTitle.equals("Apple Financial Results")) {
+	if (!isTrack) {
+		System.err.println("Not adding:" + artist + " " + songTitle + " " + albumTitle);
+	}
+
+    if (isTrack && (artist != null) && !albumTitle.equals("Apple Financial Results")) {
       createTrack(artist, sortArtist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
     }
   }
