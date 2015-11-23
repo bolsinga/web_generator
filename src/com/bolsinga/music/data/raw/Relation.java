@@ -15,7 +15,12 @@ public class Relation implements com.bolsinga.music.data.Relation {
     BufferedReader in = null;
     try {
       try {
-        in = new BufferedReader(new FileReader(filename));
+        in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"));
+  	  } catch (UnsupportedEncodingException e)  {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Unsupported Encoding: ");
+        sb.append(filename);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
       } catch (FileNotFoundException e) {
         StringBuilder sb = new StringBuilder();
         sb.append("Can't find file: ");
