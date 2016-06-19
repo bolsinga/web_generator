@@ -96,6 +96,7 @@ public class Parser {
   private static final String TKIND_IPHONE_IPOD_TOUCH_APP = "iPhone/iPod touch app";
   private static final String TKIND_IPHONE_IPOD_TOUCH_IPAD_APP = "iPhone/iPod touch/iPad app";
   private static final String TKIND_ITUNES_EXTRAS = "iTunes Extras";
+  private static final String TKIND_MPEG_AUDIO_STREAM = "MPEG audio stream";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
