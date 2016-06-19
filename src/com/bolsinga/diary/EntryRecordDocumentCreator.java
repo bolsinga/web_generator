@@ -30,6 +30,9 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
 
   protected void create(final Backgrounder backgrounder, final Backgroundable backgroundable) {
     for (final Vector<Entry> group : fGroups) {
+	  if (group.isEmpty()) {
+		continue;
+	  }
       backgrounder.execute(backgroundable, new Runnable() {
         public void run() {
           final Entry first = group.firstElement();
@@ -173,12 +176,19 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     
     // Each group is per page, so they are grouped by Entry who have the same starting sort letter.
     // They are sorted within each group, as they are placed onto the Vector<Entry> in order.
-    TreeMap<String, Vector<Entry>> result = new TreeMap<String, Vector<Entry>>();
+    TreeMap<Integer, Vector<Entry>> result = new TreeMap<Integer, Vector<Entry>>();
+	
+	HashSet<Integer> allValidYears = new HashSet<Integer>();
+	int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+	for (int year = fStartYear; year <= currentYear ; year++) {
+		allValidYears.add(Integer.valueOf(year));
+	}
     
     Collections.sort(entries, Util.ENTRY_COMPARATOR);
     
     for (Entry entry : entries) {
-      String key = fLinks.getPageFileName(entry);
+	  int year = entry.getTimestamp().get(Calendar.YEAR);
+      Integer key = Integer.valueOf(year);
       Vector<Entry> entryList;
       if (result.containsKey(key)) {
         entryList = result.get(key);
@@ -187,8 +197,17 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
         entryList = new Vector<Entry>();
         entryList.add(entry);
         result.put(key, entryList);
+		
+		allValidYears.remove(key);
       }
     }
+	
+	if (!allValidYears.isEmpty()) {
+		for (Integer missingYear : allValidYears) {
+			Vector<Entry> emptyEntryList = new Vector<Entry>();
+			result.put(missingYear, emptyEntryList);
+		}
+	}
     
     return Collections.unmodifiableCollection(result.values());
   }
@@ -209,7 +228,11 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
       String year = Integer.toString(fStartYear + row);
       
       IndexPair p = fIndex.get(year);
-      curRow[0] = new TD(Util.createInternalA(p.getLink(), year, p.getTitle())).toString();
+	  if (p != null) {
+	      curRow[0] = new TD(Util.createInternalA(p.getLink(), year, p.getTitle())).toString();
+	  } else {
+		  curRow[0] = new TD(year).toString();
+	  }
       
       int[] groupMonthTotals = new int[12];
       for (Entry entry : entryGroup) {
@@ -221,7 +244,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
         int val = groupMonthTotals[i - Calendar.JANUARY];
         
         String content = Integer.toString(val);
-        if (val != 0) {
+        if (val != 0 && (fIndex.get(year) != null)) {
           content = getLinkToEntryMonthYear(year, i, content).toString();
         }
         curRow[(i - Calendar.JANUARY) + 1] = new TD(content).toString();
