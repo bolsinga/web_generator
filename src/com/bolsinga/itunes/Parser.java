@@ -386,6 +386,7 @@ public class Parser {
 	  sITunesKinds.add(TKIND_IPHONE_IPOD_TOUCH_APP);
 	  sITunesKinds.add(TKIND_IPHONE_IPOD_TOUCH_IPAD_APP);
 	  sITunesKinds.add(TKIND_ITUNES_EXTRAS);
+	  sITunesKinds.add(TKIND_MPEG_AUDIO_STREAM);
 	  
 	  sITunesAudioKinds.add(TKIND_AAC_AUDIO_FILE);
 	  sITunesAudioKinds.add(TKIND_MPEG_AUDIO_FILE);
