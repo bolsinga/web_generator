@@ -185,6 +185,12 @@ public class Compare {
         
   public static final Comparator<Artist> ARTIST_COMPARATOR = new Comparator<Artist>() {
       public int compare(final Artist r1, final Artist r2) {
+        if (r1 == null) {
+          return 1;
+        } else if (r2 == null) {
+          return -1;
+        }
+
         String n1 = r1.getSortname();
         if (n1 == null) {
           n1 = r1.getName();
