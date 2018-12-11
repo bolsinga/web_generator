@@ -97,6 +97,8 @@ public class Parser {
   private static final String TKIND_IPHONE_IPOD_TOUCH_IPAD_APP = "iPhone/iPod touch/iPad app";
   private static final String TKIND_ITUNES_EXTRAS = "iTunes Extras";
   private static final String TKIND_MPEG_AUDIO_STREAM = "MPEG audio stream";
+
+  private static final String TK_GENRE_VOICE_MEMO = "Voice Memo";
     
   public class Album {
     public static final int UNKNOWN_YEAR = 0;
@@ -560,7 +562,9 @@ public class Parser {
       albumTitle = songTitle + " - Single";
     }
 
-	boolean isAlbum = !isVideo && !isPodcast && isAudioFile;
+    boolean isVoiceMemo = (genre != null) && genre.equals(TK_GENRE_VOICE_MEMO);
+
+    boolean isAlbum = !isVideo && !isPodcast && isAudioFile && !isVoiceMemo;;
 	if (!isAlbum) {
 		sArtistNotAdded.add(artist);
 	}
