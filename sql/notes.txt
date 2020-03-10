@@ -1,7 +1,0 @@
-mysqldump -u root -p --add-drop-database --add-drop-table --no-data --databases diary > ~/diary_tables.sql
-
-mysqldump -u root -p --no-create-db --no-create-info --databases diary > ~/diary_data.sql
-
-mysqldump -u root -p --add-drop-database --add-drop-table --no-data --databases music > sql/music_tables.sql
-
-mysqldump -u root -p --no-create-db --no-create-info --databases music > ~/diary_data.sql

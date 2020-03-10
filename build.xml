@@ -169,20 +169,6 @@
         </copy>
 </target>
 
-<target name="sql" depends="prepare">
-  <javac destdir="${build.classes}"
-         debug="${javac.debug}"
-         deprecation="on"
-         includeantruntime="false">
-    <compilerarg value="${javac.lint}" />
-    <src path="${src.dir}" />
-    <include name="com/bolsinga/sql/*.java" />
-    <include name="com/bolsinga/sql/diary/*.java" />
-    <include name="com/bolsinga/sql/music/*.java" />
-    <classpath refid="web_classpath" />
-  </javac>
-</target>
-
 <target name="itunes" depends="plist_utilities">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
@@ -194,7 +180,7 @@
         </javac>
 </target>
 
-<target name="music" depends="ical_gen, web, sql, itunes">
+<target name="music" depends="ical_gen, web, itunes">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on"
@@ -210,7 +196,7 @@
         </javac>
 </target>
 
-<target name="diary" depends="music, web, diary_binding, sql">
+<target name="diary" depends="music, web, diary_binding">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on"
@@ -252,7 +238,6 @@
 <target name="jar">
         <jar jarfile="${build.lib}/${ant.project.name}.jar"
                 basedir="${build.classes}" >
-                <exclude name="com/bolsinga/sql/**" />
                 <exclude name="com/bolsinga/test/**" />
                 <include name="com/bolsinga/**" />
         </jar>
@@ -291,11 +276,6 @@
                 container tags be pretty printed. This can assist in debugging the output.
 
                 <sysproperty key="web.debug_output" value="true" />
--->
-
-<!--
-The package target below used to also install the sql jar:
-  <copy file="${lib.dir}/mysql-connector-java-3.1.12-bin.jar" todir="${dst.lib}" />
 -->
 
 <target name="package" depends="site, jar" >

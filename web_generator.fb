@@ -5,6 +5,5 @@
 ./output/obj/gensrc
 [Aux classpath entries]
 ./output/dst/lib/ecs-1.4.2.jar
-./output/dst/lib/mysql-connector-java-3.1.12-bin.jar
 [Options]
 relative_paths=true
