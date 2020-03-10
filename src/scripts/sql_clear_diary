@@ -1,7 +1,0 @@
-use diary;
-TRUNCATE category;
-TRUNCATE entry;
-TRUNCATE friend;
-TRUNCATE header;
-TRUNCATE side;
-TRUNCATE title;
