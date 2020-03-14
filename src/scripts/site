@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "site data_dir output_dir <xml | xml-site | json | json-site | site>"
+    echo "site data_dir output_dir <json | json-site | site>"
     echo $1
     exit 1
 }
@@ -78,23 +78,12 @@ for i in \
   DATA_FILES="$DATA_FILES \"$i\""
 done
 
-if [ $ACTION = "xml" ] ; then
-  DATA_FILES="$DATA_FILES \"${DATA_HOME}/diary.xml\" \"${DATA_HOME}/music.xml\""
-elif [ $ACTION = "json" ] ; then
+if [ $ACTION = "json" ] ; then
   DATA_FILES="$DATA_FILES \"${DATA_HOME}/diary.json\" \"${DATA_HOME}/music.json\""
 elif [ $ACTION = "json-site" ] ; then
   for i in \
     "${DATA_HOME}/diary.json" \
     "${DATA_HOME}/music.json" ; do
-    if [ ! -f "$i" ] ; then
-      usage "Can't find $i"
-    fi
-  DATA_FILES="$DATA_FILES \"$i\""
-  done
-elif [ $ACTION = "xml-site" ] ; then
-  for i in \
-    "${DATA_HOME}/diary.xml" \
-    "${DATA_HOME}/music.xml" ; do
     if [ ! -f "$i" ] ; then
       usage "Can't find $i"
     fi

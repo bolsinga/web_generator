@@ -15,7 +15,7 @@ public class EncodeTest {
     
   public static void main(String[] args) {
     if (args.length != 4) {
-      System.out.println("Usage: Web [diary.xml] [music.xml] [settings.xml] [output.dir]>");
+      System.out.println("Usage: Web [diary.json] [music.json] [settings.xml] [output.dir]>");
       System.exit(0);
     }
 
@@ -35,8 +35,8 @@ public class EncodeTest {
   }
   
   void generate(final String diaryFile, final String musicFile, final String outputDir) throws WebException {
-    Diary diary = com.bolsinga.diary.data.xml.Diary.create(diaryFile);
-    Music music = com.bolsinga.music.data.xml.Music.create(musicFile);
+    Diary diary = com.bolsinga.diary.data.json.Diary.create(diaryFile);
+    Music music = com.bolsinga.music.data.json.Music.create(musicFile);
     
     Encode encoder = Encode.getEncode(music, diary);
 

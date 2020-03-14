@@ -21,12 +21,12 @@ public class RSSTest {
     Music music = null;
 
     try {
-      if (type.equals("xml")) {
+      if (type.equals("json")) {
         String diaryFile = args[1];
         String musicFile = args[2];
 
-        diary = com.bolsinga.diary.data.xml.Diary.create(diaryFile);
-        music = com.bolsinga.music.data.xml.Music.create(musicFile);
+        diary = com.bolsinga.diary.data.json.Diary.create(diaryFile);
+        music = com.bolsinga.music.data.json.Music.create(musicFile);
       } else {
         RSSTest.usage();
       }
@@ -48,7 +48,7 @@ public class RSSTest {
   }
 
   private static void usage() {
-    System.out.println("Usage: RSSTest xml [diary.xml] [music.xml] [settings.xml] [output.dir]");
+    System.out.println("Usage: RSSTest json [diary.json] [music.json] [settings.xml] [output.dir]");
     System.exit(0);
   }
 }

@@ -28,7 +28,7 @@ public class ICalTest {
     Music music = null;
 
     try {
-      if (type.equals("xml")) {
+      if (type.equals("json")) {
         if (args.length != 4) {
           ICalTest.usage();
         }
@@ -37,7 +37,7 @@ public class ICalTest {
         settings = args[2];
         output = args[3];
 
-        music = com.bolsinga.music.data.xml.Music.create(musicFile);
+        music = com.bolsinga.music.data.json.Music.create(musicFile);
       } else {
         ICalTest.usage();
       }
@@ -53,7 +53,7 @@ public class ICalTest {
   }
 
   private static void usage() {
-    System.out.println("Usage: ICalTest xml [source.xml] [settings.xml] [output.dir]");
+    System.out.println("Usage: ICalTest json [source.json] [settings.xml] [output.dir]");
     System.exit(0);
   }
 }
