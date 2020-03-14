@@ -37,42 +37,6 @@
   <mkdir dir="${dst.lib}" />
 </target>
 
-<target name="music_binding" depends="prepare">
-    <exec executable="xjc" >
-        <arg line="-p com.bolsinga.music.data.xml.impl -d ${build.gensrc} ${basedir}/xml/music.xsd" />
-    </exec>
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on"
-                        includeantruntime="false">
-                <src path="${build.gensrc}" />
-                <include name="com/bolsinga/music/data/xml/impl/**" />
-        </javac>
-        <copy todir="${build.classes}">
-                <fileset dir="${build.gensrc}" >
-                        <exclude name="**/*.java" />
-                </fileset>
-        </copy>
-</target>
-
-<target name="diary_binding" depends="prepare">
-    <exec executable="xjc" >
-        <arg line="-p com.bolsinga.diary.data.xml.impl -d ${build.gensrc} ${basedir}/xml/diary.xsd" />
-    </exec>
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on"
-                        includeantruntime="false">
-                <src path="${build.gensrc}" />
-                <include name="com/bolsinga/diary/data/xml/impl/**" />
-        </javac>
-        <copy todir="${build.classes}">
-                <fileset dir="${build.gensrc}" >
-                        <exclude name="**/*.java" />
-                </fileset>
-        </copy>
-</target>
-
 <target name="rss_binding" depends="prepare">
     <exec executable="xjc" >
         <arg line="-p com.bolsinga.rss.data -d ${build.gensrc} ${basedir}/xml/rss-2_0.xsd" />
@@ -143,7 +107,7 @@
         </javac>
 </target>
 
-<target name="web" depends="settings_binding, music_binding, diary_binding">
+<target name="web" depends="settings_binding">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on"
@@ -196,7 +160,7 @@
         </javac>
 </target>
 
-<target name="diary" depends="music, web, diary_binding">
+<target name="diary" depends="music, web">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on"
@@ -248,7 +212,7 @@
         <pathelement path="${build.lib}/${ant.project.name}.jar" />
 </path>
 
-<target name="test" depends="music, diary, rss, itunes, diary_binding">
+<target name="test" depends="music, diary, rss, itunes">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on"
