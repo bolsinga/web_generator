@@ -1,8 +1,6 @@
 package com.bolsinga.music;
 
 import com.bolsinga.music.data.*;
-import com.bolsinga.settings.data.*;
-
 import com.bolsinga.web.*;
 
 public abstract class MusicRecordDocumentCreator extends RecordDocumentCreator {
@@ -17,6 +15,6 @@ public abstract class MusicRecordDocumentCreator extends RecordDocumentCreator {
   }
   
   protected String getCopyright() {
-    return Util.getCopyright(Util.getSettings().getCopyrightStartYear().intValue());
+    return Util.getCopyright(Util.getSettings().getCopyrightStartYear());
   }
 }

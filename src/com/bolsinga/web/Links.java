@@ -314,7 +314,7 @@ public class Links {
   }
 
   public String getICalAlt() {
-    com.bolsinga.settings.data.Image image = Util.getSettings().getIcalImage();
+    com.bolsinga.web.Settings.Image image = Util.getSettings().getIcalImage();
     return image.getAlt();
   }
 
@@ -324,7 +324,7 @@ public class Links {
     sb.append(getDirectoryPath(ALT_DIR));
     sb.append(Util.getSettings().getIcalName() + ".ics");
 
-    com.bolsinga.settings.data.Image image = Util.getSettings().getIcalImage();
+    com.bolsinga.web.Settings.Image image = Util.getSettings().getIcalImage();
 
     IMG i = new IMG(image.getLocation());
     i.setHeight(image.getHeight());
@@ -407,12 +407,12 @@ public class Links {
   //  page, which will provide this link as well as the iCal link. Then ATOM can go onto this
   //  page in the future as well.
   public String getRSSAlt() {
-    com.bolsinga.settings.data.Image image = Util.getSettings().getRssImage();
+    com.bolsinga.web.Settings.Image image = Util.getSettings().getRssImage();
     return image.getAlt();
   }
   
   public A getRSSLink() {
-    com.bolsinga.settings.data.Image image = Util.getSettings().getRssImage();
+    com.bolsinga.web.Settings.Image image = Util.getSettings().getRssImage();
 
     IMG i = new IMG(image.getLocation());
     i.setHeight(image.getHeight());

@@ -35,7 +35,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
     day = Integer.parseInt(dayString);
     year = Integer.parseInt(yearString);
 
-    int diaryTime = com.bolsinga.web.Util.getSettings().getDiaryEntryTime().intValue();
+    int diaryTime = com.bolsinga.web.Util.getSettings().getDiaryEntryTime();
     localTime.clear();
     localTime.set(year, month - 1, day, diaryTime, 0);
 
