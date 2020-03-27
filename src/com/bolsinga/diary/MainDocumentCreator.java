@@ -5,7 +5,6 @@ import com.bolsinga.music.data.*;
 
 import com.bolsinga.music.*;
 import com.bolsinga.web.*;
-import com.bolsinga.settings.data.*;
 
 import java.text.*;
 import java.util.*;
@@ -42,7 +41,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   }
 
   protected Meta getAdditionalMeta() {
-    GoogleMeta gm = Util.getSettings().getGoogleMeta();
+    com.bolsinga.web.Settings.GoogleMeta gm = Util.getSettings().getGoogleMeta();
     return new Meta().setContent(gm.getContent()).setName(gm.getName());
   }
 
@@ -208,7 +207,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
 // by <artist> from <album>
 // on <date>
 	
-    int mainPageEntryCount = Util.getSettings().getDiaryCount().intValue();
+    int mainPageEntryCount = Util.getSettings().getDiaryCount();
     
     List<Object> items = Util.getRecentItems(mainPageEntryCount, fMusic, fDiary);
     for (Object o : items) {

@@ -2,7 +2,6 @@ package com.bolsinga.test;
 
 import com.bolsinga.ical.*;
 import com.bolsinga.music.data.*;
-import com.bolsinga.settings.data.*;
 
 import com.bolsinga.music.*;
 import com.bolsinga.web.*;

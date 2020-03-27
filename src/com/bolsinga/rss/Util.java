@@ -23,7 +23,7 @@ public class Util {
   public static com.bolsinga.rss.data.TImage createLogo(final com.bolsinga.rss.data.ObjectFactory objFactory) {
     com.bolsinga.rss.data.TImage logo = objFactory.createTImage();
 
-    com.bolsinga.settings.data.Image image = com.bolsinga.web.Util.getSettings().getLogoImage();
+    com.bolsinga.web.Settings.Image image = com.bolsinga.web.Util.getSettings().getLogoImage();
     logo.setHeight(image.getHeight());
     logo.setWidth(image.getWidth());
     logo.setUrl(image.getLocation());

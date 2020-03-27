@@ -127,7 +127,7 @@ public class RSS {
                       
     com.bolsinga.web.Links links = com.bolsinga.web.Links.getLinks(false);
 
-    int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount().intValue();
+    int entryCount = com.bolsinga.web.Util.getSettings().getRecentCount();
     
     for (Object o : com.bolsinga.web.Util.getRecentItems(entryCount, music, diary)) {
       if (o instanceof Show) {

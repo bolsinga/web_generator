@@ -15,9 +15,6 @@ import org.apache.ecs.filter.*;
 
 import org.json.*;
 
-import javax.xml.bind.*;
-import javax.xml.datatype.*;
-
 import com.bolsinga.music.data.*;
 import com.bolsinga.diary.data.*;
 
@@ -25,8 +22,7 @@ public class Util {
 
   private static final ResourceBundle sResource = ResourceBundle.getBundle("com.bolsinga.web.web");
 
-  private static DatatypeFactory sXMLDatatypeFactory = null;
-  private static com.bolsinga.settings.data.Settings sSettings = null;
+  private static com.bolsinga.web.Settings sSettings = null;
   private static final boolean sDebugOutput = Boolean.getBoolean("web.debug_output");
   private static final boolean sPrettyOutput = Boolean.parseBoolean(System.getProperty("web.pretty_output", Boolean.valueOf(sDebugOutput).toString()));
   private static final String sLineSeparator = System.getProperty("line.separator");
@@ -80,12 +76,6 @@ public class Util {
   };
   
   static {
-    try {
-      sXMLDatatypeFactory = DatatypeFactory.newInstance();
-    } catch (DatatypeConfigurationException e) {
-      throw new Error(e);
-    }
-    
     StringBuilder sb = new StringBuilder();
     Util.appendPretty(sb);
     sb.append(new P());
@@ -109,10 +99,6 @@ public class Util {
   
   public static boolean getDebugOutput() {
     return sDebugOutput;
-  }
-
-  public static XMLGregorianCalendar toXMLGregorianCalendar(final GregorianCalendar cal) {
-    return sXMLDatatypeFactory.newXMLGregorianCalendar(cal);
   }
 
   public static GregorianCalendar nowUTC() {
@@ -139,7 +125,7 @@ public class Util {
   }
         
   public static IMG getLogo() {
-    com.bolsinga.settings.data.Image image = Util.getSettings().getLogoImage();
+    com.bolsinga.web.Settings.Image image = Util.getSettings().getLogoImage();
 
     IMG i = new IMG(image.getLocation());
     i.setHeight(image.getHeight());
@@ -436,44 +422,11 @@ public class Util {
         
   public synchronized static void createSettings(final String sourceFile) throws WebException {
     if (sSettings == null) {
-      InputStream is = null;
-      try {
-        try {
-          is = new FileInputStream(sourceFile);
-        } catch (FileNotFoundException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Can't find settings file: ");
-          sb.append(sourceFile);
-          throw new WebException(sb.toString(), e);
-        }
-        
-        try {
-          JAXBContext jc = JAXBContext.newInstance("com.bolsinga.settings.data");
-          Unmarshaller u = jc.createUnmarshaller();
-                  
-          sSettings = (com.bolsinga.settings.data.Settings)u.unmarshal(is);
-        } catch (JAXBException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Can't unmarsal settings file: ");
-          sb.append(sourceFile);
-          throw new WebException(sb.toString(), e);
-        }
-      } finally {
-        if (is != null) {
-          try {
-            is.close();
-          } catch (IOException e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Unable to close settings file: ");
-            sb.append(sourceFile);
-            throw new WebException(sb.toString(), e);
-          }
-        }
-      }
+      sSettings = com.bolsinga.web.SettingsXML.create(sourceFile);
     }
   }
 
-  public synchronized static com.bolsinga.settings.data.Settings getSettings() {
+  public synchronized static com.bolsinga.web.Settings getSettings() {
     return sSettings;
   }
     
@@ -543,7 +496,7 @@ public class Util {
   public static GregorianCalendar toCalendarLocal(final com.bolsinga.music.data.Date date) {
     GregorianCalendar localTime = new GregorianCalendar(); // LocalTime OK
     if (!date.isUnknown()) {
-      int showTime = Util.getSettings().getShowTime().intValue();
+      int showTime = Util.getSettings().getShowTime();
       localTime.clear();
       localTime.set(date.getYear(), date.getMonth() - 1, date.getDay(), showTime, 0);
     } else {
