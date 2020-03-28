@@ -48,7 +48,7 @@ public class RSSTest {
   }
 
   private static void usage() {
-    System.out.println("Usage: RSSTest json [diary.json] [music.json] [settings.xml] [output.dir]");
+    System.out.println("Usage: RSSTest json [diary.json] [music.json] [settings.properties] [output.dir]");
     System.exit(0);
   }
 }

@@ -422,7 +422,7 @@ public class Util {
         
   public synchronized static void createSettings(final String sourceFile) throws WebException {
     if (sSettings == null) {
-      sSettings = com.bolsinga.web.SettingsXML.create(sourceFile);
+      sSettings = com.bolsinga.web.SettingsProperties.create(sourceFile);
     }
   }
 

@@ -73,24 +73,6 @@
         </copy>
 </target>
 
-<target name="settings_binding" depends="prepare">
-    <exec executable="xjc" >
-        <arg line="-p com.bolsinga.settings.data -d ${build.gensrc} ${basedir}/xml/settings.xsd" />
-    </exec>
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on"
-                        includeantruntime="false">
-                <src path="${build.gensrc}" />
-                <include name="com/bolsinga/settings/data/**" />
-        </javac>
-        <copy todir="${build.classes}">
-                <fileset dir="${build.gensrc}" >
-                        <exclude name="**/*.java" />
-               </fileset>
-        </copy>
-</target>
-
 <path id="web_classpath">
   <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
   <pathelement path="${lib.dir}/json.jar" />
@@ -107,7 +89,7 @@
         </javac>
 </target>
 
-<target name="web" depends="settings_binding">
+<target name="web">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on"
