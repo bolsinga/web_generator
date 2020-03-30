@@ -15,7 +15,7 @@ public class EncodeTest {
     
   public static void main(String[] args) {
     if (args.length != 4) {
-      System.out.println("Usage: Web [diary.json] [music.json] [settings.xml] [output.dir]>");
+      System.out.println("Usage: Web [diary.json] [music.json] [settings.properties] [output.dir]>");
       System.exit(0);
     }
 

@@ -6,7 +6,7 @@ public class CSSTest {
                                                        
   public static void main(String[] args) {
     if (args.length != 2) {
-      System.out.println("Usage: CSSTest [settings.xml] [output.dir]");
+      System.out.println("Usage: CSSTest [settings.properties] [output.dir]");
       System.exit(0);
     }
 

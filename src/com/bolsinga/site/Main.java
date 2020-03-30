@@ -171,7 +171,7 @@ public class Main implements Backgroundable {
   }
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.xml] [diary input/output file] [music input/output file] [output.dir] <json|json-site|site>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.properties] [diary input/output file] [music input/output file] [output.dir] <json|json-site|site>");
     System.out.println(reason);
     if (badargs != null) {
       System.out.println("Arguments:");
