@@ -37,24 +37,6 @@
   <mkdir dir="${dst.lib}" />
 </target>
 
-<target name="rss_binding" depends="prepare">
-    <exec executable="xjc" >
-        <arg line="-p com.bolsinga.rss.data -d ${build.gensrc} ${basedir}/xml/rss-2_0.xsd" />
-    </exec>
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on"
-                        includeantruntime="false">
-                <src path="${build.gensrc}" />
-                <include name="com/bolsinga/rss/data/**" />
-        </javac>
-        <copy todir="${build.classes}">
-                <fileset dir="${build.gensrc}" >
-                        <exclude name="**/*.java" />
-                </fileset>
-        </copy>
-</target>
-
 <target name="plist_binding" depends="prepare">
     <exec executable="xjc" >
         <arg line="-p com.bolsinga.plist.data -d ${build.gensrc} ${basedir}/xml/PropertyList-1.0.xsd" />
@@ -158,7 +140,7 @@
         </javac>
 </target>
 
-<target name="rss" depends="music, diary, rss_binding">
+<target name="rss" depends="music, diary">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on"
