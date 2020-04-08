@@ -21,7 +21,7 @@
 
 <property name="build.id" value="${user.name}-internal" />
 
-<property name="javac.debug" value="no" />
+<property name="javac.debug" value="yes" />
 <property name="javac.lint" value="-Xlint:none" />
 
 <target name="clean">
