@@ -56,7 +56,7 @@ public class Parser {
   private static final String TK_MOVIE                 = "Movie";
   private static final String TK_UNPLAYED              = "Unplayed";
   private static final String TK_SORT_ALBUM            = "Sort Album";
-  private static final String TK_SORT_ALBUM_ARTITST    = "Sort Album Artist";
+  private static final String TK_SORT_ALBUM_ARTIST     = "Sort Album Artist";
   private static final String TK_SORT_ARTIST           = "Sort Artist";
   private static final String TK_SORT_COMPOSER         = "Sort Composer";
   private static final String TK_SORT_NAME             = "Sort Name";
@@ -71,7 +71,7 @@ public class Parser {
   private static final String TK_ALBUM_RATING_COMPUTED = "Album Rating Computed";
   private static final String TK_RATING                = "Rating";
   private static final String TK_GROUPING              = "Grouping";
-  private static final String TK_GAPLESS_ALBUM         = "Part Of Gapless Album";
+  private static final String TK_PART_OF_GAPLESS_ALBUM = "Part Of Gapless Album";
   private static final String TK_MUSIC_VIDEO           = "Music Video";
   private static final String TK_MATCH_ID              = "MatchID";
   private static final String TK_XID                   = "XID";
@@ -171,7 +171,7 @@ public class Parser {
     sITunesKeys.add(TK_MOVIE);
     sITunesKeys.add(TK_UNPLAYED);
     sITunesKeys.add(TK_SORT_ALBUM);
-    sITunesKeys.add(TK_SORT_ALBUM_ARTITST);
+    sITunesKeys.add(TK_SORT_ALBUM_ARTIST);
     sITunesKeys.add(TK_SORT_ARTIST);
     sITunesKeys.add(TK_SORT_COMPOSER);
     sITunesKeys.add(TK_SORT_NAME);
@@ -186,7 +186,7 @@ public class Parser {
     sITunesKeys.add(TK_ALBUM_RATING_COMPUTED);
     sITunesKeys.add(TK_RATING);
     sITunesKeys.add(TK_GROUPING);
-    sITunesKeys.add(TK_GAPLESS_ALBUM);
+    sITunesKeys.add(TK_PART_OF_GAPLESS_ALBUM);
     sITunesKeys.add(TK_MUSIC_VIDEO);
     sITunesKeys.add(TK_MATCH_ID);
     sITunesKeys.add(TK_XID);
