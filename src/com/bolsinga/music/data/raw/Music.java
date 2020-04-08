@@ -17,7 +17,7 @@ public class Music implements com.bolsinga.music.data.Music {
     List<Venue> venues = Venue.create(venueFile);
     List<Show> shows = Show.create(showsFile);
 
-    List<com.bolsinga.itunes.Parser.Album> itAlbums = null;
+    List<com.bolsinga.itunes.Album> itAlbums = null;
     com.bolsinga.itunes.Parser parser = new com.bolsinga.itunes.Parser();
     try {
       itAlbums = parser.parse(iTunesFile);
@@ -31,11 +31,11 @@ public class Music implements com.bolsinga.music.data.Music {
     List<Album> albums = new ArrayList<Album>();
     List<Song> songs = new ArrayList<Song>();
 
-    for (com.bolsinga.itunes.Parser.Album itAlbum : itAlbums) {
+    for (com.bolsinga.itunes.Album itAlbum : itAlbums) {
       List<Artist> albumArtists = new ArrayList<Artist>();
       
       Artist albumArtist = null;
-      com.bolsinga.itunes.Parser.Artist itArtist = itAlbum.getArtist();
+      com.bolsinga.itunes.Artist itArtist = itAlbum.getArtist();
       if (itArtist != null) {
         albumArtist = Artist.createOrGet(itArtist.getName());
         String sortName = itArtist.getSortname();
@@ -46,16 +46,16 @@ public class Music implements com.bolsinga.music.data.Music {
       }
       
       com.bolsinga.music.data.Date albumReleaseYear = null;
-      if (itAlbum.getReleaseYear() != com.bolsinga.itunes.Parser.Album.UNKNOWN_YEAR) {
+      if (itAlbum.getReleaseYear() != com.bolsinga.itunes.Album.UNKNOWN_YEAR) {
         albumReleaseYear = Date.create(itAlbum.getReleaseYear());
       }
       
-      List<com.bolsinga.itunes.Parser.Song> itAlbumSongs = itAlbum.getSongs();
+      List<com.bolsinga.itunes.Song> itAlbumSongs = itAlbum.getSongs();
       List<Song> albumSongs = new ArrayList<Song>(itAlbumSongs.size());
       
-      for (com.bolsinga.itunes.Parser.Song itAlbumSong : itAlbumSongs) {
+      for (com.bolsinga.itunes.Song itAlbumSong : itAlbumSongs) {
           Artist songArtist = null;
-          com.bolsinga.itunes.Parser.Artist itSongArtist = itAlbumSong.getArtist();
+          com.bolsinga.itunes.Artist itSongArtist = itAlbumSong.getArtist();
           if (itSongArtist != null) {
             songArtist = Artist.createOrGet(itSongArtist.getName());
             String sortName = itSongArtist.getSortname();
@@ -66,7 +66,7 @@ public class Music implements com.bolsinga.music.data.Music {
           }
 
           com.bolsinga.music.data.Date songReleaseYear = null;
-          if (itAlbumSong.getReleaseYear() != com.bolsinga.itunes.Parser.Album.UNKNOWN_YEAR) {
+          if (itAlbumSong.getReleaseYear() != com.bolsinga.itunes.Album.UNKNOWN_YEAR) {
             songReleaseYear = Date.create(itAlbumSong.getReleaseYear());
           }
 
