@@ -37,39 +37,10 @@
   <mkdir dir="${dst.lib}" />
 </target>
 
-<target name="plist_binding" depends="prepare">
-    <exec executable="xjc" >
-        <arg line="-p com.bolsinga.plist.data -d ${build.gensrc} ${basedir}/xml/PropertyList-1.0.xsd" />
-    </exec>
-        <javac  destdir="${build.classes}"
-                        debug="${javac.debug}"
-                        deprecation="on"
-                        includeantruntime="false">
-                <src path="${build.gensrc}" />
-                <include name="com/bolsinga/plist/data/**" />
-        </javac>
-        <copy todir="${build.classes}">
-                <fileset dir="${build.gensrc}" >
-                        <exclude name="**/*.java" />
-                </fileset>
-        </copy>
-</target>
-
 <path id="web_classpath">
   <pathelement path="${lib.dir}/ecs-1.4.2.jar" />
   <pathelement path="${lib.dir}/json.jar" />
 </path>
-
-<target name="plist_utilities" depends="plist_binding">
-        <javac  destdir="${build.classes}"
-                debug="${javac.debug}"
-                deprecation="on"
-                includeantruntime="false">
-          <compilerarg value="${javac.lint}" />
-          <src path="${src.dir}" />
-          <include name="com/bolsinga/plist/*.java" />
-        </javac>
-</target>
 
 <target name="web">
         <javac  destdir="${build.classes}"
@@ -97,7 +68,7 @@
         </copy>
 </target>
 
-<target name="itunes" depends="plist_utilities">
+<target name="itunes" depends="prepare">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
                 deprecation="on"

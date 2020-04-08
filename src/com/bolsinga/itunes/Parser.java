@@ -3,9 +3,8 @@ package com.bolsinga.itunes;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
-
-import javax.xml.bind.*;
-import javax.xml.datatype.*;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
 
 public class Parser {
   private static final String TK_GENRE_VOICE_MEMO = "Voice Memo";
@@ -82,7 +81,8 @@ public class Parser {
       int year = (track.getYear() != null) ? Integer.parseInt(track.getYear()) : 0;
       int trackNumber = (track.getTrack_Number() != null) ? Integer.parseInt(track.getTrack_Number()) : 0;
       int playCount = (track.getPlay_Count() != null) ? Integer.parseInt(track.getPlay_Count()) : 0;
-      GregorianCalendar lastPlayed = (track.getPlay_Date_UTC() != null) ? com.bolsinga.web.Util.fromJSONCalendar(track.getPlay_Date_UTC()) : null;
+      java.time.ZonedDateTime lastPlayedZDT = (track.getPlay_Date_UTC() != null) ? java.time.ZonedDateTime.parse(track.getPlay_Date_UTC()) : null;
+      GregorianCalendar lastPlayed = (lastPlayedZDT != null) ? GregorianCalendar.from(lastPlayedZDT): null;
       createTrack(track.getArtist(), track.getSort_Artist(), track.getName(), track.getAlbum(), year, trackNumber, track.getGenre(), lastPlayed, playCount, compilation);
     }
   }
@@ -203,123 +203,72 @@ public class Parser {
     }
   }
 
-  private static com.bolsinga.plist.data.Plist createPlist(final String sourceFile) throws ParserException {
-    com.bolsinga.plist.data.Plist plist = null;
-
+  private static Map<String, Object> createPlist(final String sourceFile) throws ParserException {
     InputStream is = null;
     try {
-      try {
-        is = new FileInputStream(sourceFile);
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find plist file: ");
-        sb.append(sourceFile);
-        throw new ParserException(sb.toString(), e);
-      }
-
-      javax.xml.stream.XMLStreamReader xmlStreamReader = null;
-      try {
-	    javax.xml.stream.XMLInputFactory xmlInputFactory = javax.xml.stream.XMLInputFactory.newInstance();
-	    xmlInputFactory.setProperty(javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD, "http");
-        xmlStreamReader = xmlInputFactory.createXMLStreamReader(is);
-      } catch (javax.xml.stream.XMLStreamException e) {
-	    StringBuilder sb = new StringBuilder();
-	    sb.append("Can't create XML Reader: ");
-	    sb.append(is);
-	    throw new ParserException(sb.toString(), e);
-	  }
-
-      try {
-        JAXBContext jc = JAXBContext.newInstance("com.bolsinga.plist.data");
-        Unmarshaller u = jc.createUnmarshaller();
-
-        plist = (com.bolsinga.plist.data.Plist)u.unmarshal(xmlStreamReader);
-      } catch (JAXBException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't unmarshal plist file: ");
-        sb.append(sourceFile);
-        throw new ParserException(sb.toString(), e);
-      }
-    } finally {
-      if (is != null) {
-        try {
-          is.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close plist file: ");
-          sb.append(sourceFile);
-          throw new ParserException(sb.toString(), e);
-        }
-      }
+      is = new FileInputStream(sourceFile);
+    } catch (FileNotFoundException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find plist file: ");
+      sb.append(sourceFile);
+      throw new ParserException(sb.toString(), e);
     }
 
-    return plist;
-  }
-
-  private static List<Track> createTracks(final String sourceFile) throws ParserException {
-    com.bolsinga.plist.data.Dict dict = createTracksDict(sourceFile);
-
-    ArrayList<Track> tracks = new ArrayList<Track>();
-
-    Iterator<Object> i = dict.getKeyAndArrayOrData().iterator();
-    while (i.hasNext()) {
-      Object key = i.next(); // key not used
-
-      com.bolsinga.plist.data.Dict trackDict = (com.bolsinga.plist.data.Dict)i.next();
-      Track track = createTrack(trackDict);
-      tracks.add(track);
+    XMLReader parser = null;
+    try {
+      parser = XMLReaderFactory.createXMLReader();
+    } catch (SAXException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't create XMLReader");
+      throw new ParserException(sb.toString(), e);
     }
 
-    return tracks;
+    ParserHandler handler = new ParserHandler();
+    parser.setContentHandler(handler);
+
+    InputSource source = new InputSource(is);
+    try {
+      parser.parse(source);
+    } catch (IOException | SAXException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't parse InputSource");
+      throw new ParserException(sb.toString(), e);
+    }
+
+    return handler.plist;
   }
 
-  private static com.bolsinga.plist.data.Dict createTracksDict(final String sourceFile) throws ParserException {
-    com.bolsinga.plist.data.Plist plist = createPlist(sourceFile);
+  private static Map<String, Object> createTracksDict(final String sourceFile) throws ParserException {
+    Map<String, Object> plist = createPlist(sourceFile);
 
-    Iterator<Object> i = plist.getDict().getKeyAndArrayOrData().iterator();
-    while (i.hasNext()) {
-      JAXBElement<? extends Object> jo = (JAXBElement<? extends Object>)i.next();
-      String key = (String)jo.getValue();
-      if (key.equals("Tracks")) {
-        com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
+    for (Map.Entry<String, Object> entry : plist.entrySet()) {
+      if (entry.getKey().equals("Tracks")) {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> dict = (Map<String, Object>)entry.getValue();
         return dict;
-      } else {
-        Object o = i.next();
       }
     }
     throw new ParserException("No Tracks key in plist: " + plist.toString());
   }
 
-  private static Track createTrack(final com.bolsinga.plist.data.Dict trackDict) throws ParserException {
-    Iterator<Object> i = trackDict.getKeyAndArrayOrData().iterator();
+  private static List<Track> createTracks(final String sourceFile) throws ParserException {
+    Map<String, Object> tracksDict = createTracksDict(sourceFile);
 
-    Track t = new Track();
+    ArrayList<Track> tracks = new ArrayList<Track>();
 
-    while (i.hasNext()) {
-      JAXBElement<? extends Object> jokey = (JAXBElement<? extends Object>)i.next();
-      String key = (String)jokey.getValue();
+    for (Object o : tracksDict.values()) {
+      @SuppressWarnings("unchecked")
+      Map<String, Object> trackDict = (Map<String, Object>)o;
 
-      // always pull off the value, it may be unused.
-      JAXBElement<? extends Object> jovalue = (JAXBElement<? extends Object>)i.next();
+      Track track = new Track();
 
-      Object value = jovalue.getValue();
-      String stringValue = null;
-      if (value instanceof java.lang.String) {
-        stringValue = (String)value;
-      } else if (value instanceof java.lang.Number) {
-        stringValue = String.valueOf((Number)value);
-      } else if (value instanceof javax.xml.datatype.XMLGregorianCalendar) {
-        GregorianCalendar gc = ((XMLGregorianCalendar)value).toGregorianCalendar();
-        stringValue = com.bolsinga.web.Util.toJSONCalendar(gc);
-      } else if (value instanceof java.lang.Object && ("true".equals(jovalue.getName().getLocalPart()) || "false".equals(jovalue.getName().getLocalPart()))) {
-        stringValue = jovalue.getName().getLocalPart();
-      } else {
-        throw new ParserException("Unhandled JAXB Name: " + jovalue.getName() + " Value: " + value.toString() + " Type: " + jovalue.getDeclaredType().toString());
+      for (Map.Entry<String, Object> entry : trackDict.entrySet()) {
+        track.set(entry.getKey(), (String)entry.getValue());
       }
 
-      t.set(key, stringValue);
+      tracks.add(track);
     }
 
-    return t;
+    return tracks;
   }
 }
