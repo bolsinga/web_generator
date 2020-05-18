@@ -8,104 +8,8 @@ import javax.xml.bind.*;
 import javax.xml.datatype.*;
 
 public class Parser {
-  private static final String TK_ALBUM                 = "Album";
-  private static final String TK_ARTIST                = "Artist";
-  private static final String TK_ARTWORK_COUNT         = "Artwork Count";
-  private static final String TK_BIT_RATE              = "Bit Rate";
-  private static final String TK_COMMENTS              = "Comments";
-  private static final String TK_COMPILATION           = "Compilation";
-  private static final String TK_COMPOSER              = "Composer";
-  private static final String TK_DATE_ADDED            = "Date Added";
-  private static final String TK_DATE_MODIFIED         = "Date Modified";
-  private static final String TK_DISC_COUNT            = "Disc Count";
-  private static final String TK_DISC_NUMBER           = "Disc Number";
-  private static final String TK_FILE_CREATOR          = "File Creator";
-  private static final String TK_FILE_FOLDER_COUNT     = "File Folder Count";
-  private static final String TK_FILE_TYPE             = "File Type";
-  private static final String TK_GENRE                 = "Genre";
-  private static final String TK_KIND                  = "Kind";
-  private static final String TK_LIBRARY_FOLDER_COUNT  = "Library Folder Count";
-  private static final String TK_LOCATION              = "Location";
-  private static final String TK_NAME                  = "Name";
-  private static final String TK_PLAY_COUNT            = "Play Count";
-  private static final String TK_PLAY_DATE             = "Play Date";
-  private static final String TK_PLAY_DATE_UTC         = "Play Date UTC";
-  private static final String TK_SAMPLE_RATE           = "Sample Rate";
-  private static final String TK_SIZE                  = "Size";
-  private static final String TK_TOTAL_TIME            = "Total Time";
-  private static final String TK_TRACK_COUNT           = "Track Count";
-  private static final String TK_TRACK_ID              = "Track ID";
-  private static final String TK_TRACK_NUMBER          = "Track Number";
-  private static final String TK_TRACK_TYPE            = "Track Type";
-  private static final String TK_YEAR                  = "Year";
-  private static final String TK_SEASON                = "Season";
-  private static final String TK_PERSISTENT_ID         = "Persistent ID";
-  private static final String TK_SERIES                = "Series";
-  private static final String TK_EPISODE               = "Episode";
-  private static final String TK_EPISODE_ORDER         = "Episode Order";
-  private static final String TK_HAS_VIDEO             = "Has Video";
-  private static final String TK_TV_SHOW               = "TV Show";
-  private static final String TK_PROTECTED             = "Protected";
-  private static final String TK_BPM                   = "BPM";
-  private static final String TK_ALBUM_ARTIST          = "Album Artist";
-  private static final String TK_EXPLICIT              = "Explicit";
-  private static final String TK_SKIP_COUNT            = "Skip Count";
-  private static final String TK_SKIP_DATE             = "Skip Date";
-  private static final String TK_RELEASE_DATE          = "Release Date";
-  private static final String TK_PODCAST               = "Podcast";
-  private static final String TK_MOVIE                 = "Movie";
-  private static final String TK_UNPLAYED              = "Unplayed";
-  private static final String TK_SORT_ALBUM            = "Sort Album";
-  private static final String TK_SORT_ALBUM_ARTIST     = "Sort Album Artist";
-  private static final String TK_SORT_ARTIST           = "Sort Artist";
-  private static final String TK_SORT_COMPOSER         = "Sort Composer";
-  private static final String TK_SORT_NAME             = "Sort Name";
-  private static final String TK_CONTENT_RATING        = "Content Rating";
-  private static final String TK_DISABLED              = "Disabled";
-  private static final String TK_PURCHASED             = "Purchased";
-  private static final String TK_VIDEO_HEIGHT          = "Video Height";
-  private static final String TK_VIDEO_WIDTH           = "Video Width";
-  private static final String TK_EID                   = "EID";
-  private static final String TK_HD                    = "HD";
-  private static final String TK_ALBUM_RATING          = "Album Rating";
-  private static final String TK_ALBUM_RATING_COMPUTED = "Album Rating Computed";
-  private static final String TK_RATING                = "Rating";
-  private static final String TK_GROUPING              = "Grouping";
-  private static final String TK_PART_OF_GAPLESS_ALBUM = "Part Of Gapless Album";
-  private static final String TK_MUSIC_VIDEO           = "Music Video";
-  private static final String TK_MATCH_ID              = "MatchID";
-  private static final String TK_XID                   = "XID";
-  private static final String TK_RATING_COMPUTED       = "Rating Computed";
-  private static final String TK_SORT_SERIES           = "Sort Series";
-
-  private static final String TKIND_AAC_AUDIO_FILE = "AAC audio file";
-  private static final String TKIND_BOOK = "Book";
-  private static final String TKIND_INTERNET_AUDIO_STREAM = "Internet audio stream";
-  private static final String TKIND_MPEG_AUDIO_FILE = "MPEG audio file";
-  private static final String TKIND_MPEG_4_VIDEO_FILE = "MPEG-4 video file";
-  private static final String TKIND_PDF_DOCUMENT = "PDF document";
-  private static final String TKIND_PROTECTED_AAC_AUDIO_FILE = "Protected AAC audio file";
-  private static final String TKIND_PROTECTED_MPEG_4_VIDEO_FILE = "Protected MPEG-4 video file";
-  private static final String TKIND_PROTECTED_BOOK = "Protected book";
-  private static final String TKIND_PURCHASED_AAC_AUDIO_FILE = "Purchased AAC audio file";
-  private static final String TKIND_PURCHASED_MPEG_4_VIDEO_FILE = "Purchased MPEG-4 video file";
-  private static final String TKIND_PURCHASED_BOOK = "Purchased book";
-  private static final String TKIND_IPAD_APP = "iPad app";
-  private static final String TKIND_IPHONE_IPOD_TOUCH_APP = "iPhone/iPod touch app";
-  private static final String TKIND_IPHONE_IPOD_TOUCH_IPAD_APP = "iPhone/iPod touch/iPad app";
-  private static final String TKIND_ITUNES_EXTRAS = "iTunes Extras";
-  private static final String TKIND_MPEG_AUDIO_STREAM = "MPEG audio stream";
-
   private static final String TK_GENRE_VOICE_MEMO = "Voice Memo";
 
-
-  private static final HashSet<String> sITunesKeys = new HashSet<String>();
-  private static final Set<String> sNewITunesKeys = new TreeSet<String>();
-
-  private static final HashSet<String> sITunesKinds = new HashSet<String>();
-  private static final Set<String> sNewITunesKinds = new TreeSet<String>();
-  private static final HashSet<String> sITunesAudioKinds = new HashSet<String>();
-  
   private static final HashSet<String> sArtistNotAdded = new HashSet<String>();
 
   private static final Pattern sLTPattern = Pattern.compile("<");
@@ -122,111 +26,6 @@ public class Parser {
   // AlbumKey's
   private final HashSet<String> fArtistAlbumSet = new HashSet<String>();
 
-  private static void createKnownKeys() {
-    sITunesKeys.add(TK_ALBUM);
-    sITunesKeys.add(TK_ARTIST);
-    sITunesKeys.add(TK_ARTWORK_COUNT);
-    sITunesKeys.add(TK_BIT_RATE);
-    sITunesKeys.add(TK_COMMENTS);
-    sITunesKeys.add(TK_COMPILATION);
-    sITunesKeys.add(TK_COMPOSER);
-    sITunesKeys.add(TK_DATE_ADDED);
-    sITunesKeys.add(TK_DATE_MODIFIED);
-    sITunesKeys.add(TK_DISC_COUNT);
-    sITunesKeys.add(TK_DISC_NUMBER);
-    sITunesKeys.add(TK_FILE_CREATOR);
-    sITunesKeys.add(TK_FILE_FOLDER_COUNT);
-    sITunesKeys.add(TK_FILE_TYPE);
-    sITunesKeys.add(TK_GENRE);
-    sITunesKeys.add(TK_KIND);
-    sITunesKeys.add(TK_LIBRARY_FOLDER_COUNT);
-    sITunesKeys.add(TK_LOCATION);
-    sITunesKeys.add(TK_NAME);
-    sITunesKeys.add(TK_PLAY_COUNT);
-    sITunesKeys.add(TK_PLAY_DATE);
-    sITunesKeys.add(TK_PLAY_DATE_UTC);
-    sITunesKeys.add(TK_SAMPLE_RATE);
-    sITunesKeys.add(TK_SIZE);
-    sITunesKeys.add(TK_TOTAL_TIME);
-    sITunesKeys.add(TK_TRACK_COUNT);
-    sITunesKeys.add(TK_TRACK_ID);
-    sITunesKeys.add(TK_TRACK_NUMBER);
-    sITunesKeys.add(TK_TRACK_TYPE);
-    sITunesKeys.add(TK_YEAR);
-    sITunesKeys.add(TK_SEASON);
-    sITunesKeys.add(TK_PERSISTENT_ID);
-    sITunesKeys.add(TK_SERIES);
-    sITunesKeys.add(TK_EPISODE);
-    sITunesKeys.add(TK_EPISODE_ORDER);
-    sITunesKeys.add(TK_HAS_VIDEO);
-    sITunesKeys.add(TK_TV_SHOW);
-    sITunesKeys.add(TK_PROTECTED);
-    sITunesKeys.add(TK_BPM);
-    sITunesKeys.add(TK_ALBUM_ARTIST);
-    sITunesKeys.add(TK_EXPLICIT);
-    sITunesKeys.add(TK_SKIP_COUNT);
-    sITunesKeys.add(TK_SKIP_DATE);
-    sITunesKeys.add(TK_RELEASE_DATE);
-    sITunesKeys.add(TK_PODCAST);
-    sITunesKeys.add(TK_MOVIE);
-    sITunesKeys.add(TK_UNPLAYED);
-    sITunesKeys.add(TK_SORT_ALBUM);
-    sITunesKeys.add(TK_SORT_ALBUM_ARTIST);
-    sITunesKeys.add(TK_SORT_ARTIST);
-    sITunesKeys.add(TK_SORT_COMPOSER);
-    sITunesKeys.add(TK_SORT_NAME);
-    sITunesKeys.add(TK_CONTENT_RATING);
-    sITunesKeys.add(TK_DISABLED);
-    sITunesKeys.add(TK_PURCHASED);
-    sITunesKeys.add(TK_VIDEO_HEIGHT);
-    sITunesKeys.add(TK_VIDEO_WIDTH);
-    sITunesKeys.add(TK_EID);
-    sITunesKeys.add(TK_HD);
-    sITunesKeys.add(TK_ALBUM_RATING);
-    sITunesKeys.add(TK_ALBUM_RATING_COMPUTED);
-    sITunesKeys.add(TK_RATING);
-    sITunesKeys.add(TK_GROUPING);
-    sITunesKeys.add(TK_PART_OF_GAPLESS_ALBUM);
-    sITunesKeys.add(TK_MUSIC_VIDEO);
-    sITunesKeys.add(TK_MATCH_ID);
-    sITunesKeys.add(TK_XID);
-	sITunesKeys.add(TK_RATING_COMPUTED);
-	sITunesKeys.add(TK_SORT_SERIES);
-  }
-
-  private static void createKnownKinds() {
-	  sITunesKinds.add(TKIND_AAC_AUDIO_FILE);
-	  sITunesKinds.add(TKIND_BOOK);
-	  sITunesKinds.add(TKIND_INTERNET_AUDIO_STREAM);
-	  sITunesKinds.add(TKIND_MPEG_AUDIO_FILE);
-	  sITunesKinds.add(TKIND_MPEG_4_VIDEO_FILE);
-	  sITunesKinds.add(TKIND_PDF_DOCUMENT);
-	  sITunesKinds.add(TKIND_PROTECTED_AAC_AUDIO_FILE);
-	  sITunesKinds.add(TKIND_PROTECTED_MPEG_4_VIDEO_FILE);
-	  sITunesKinds.add(TKIND_PROTECTED_BOOK);
-	  sITunesKinds.add(TKIND_PURCHASED_AAC_AUDIO_FILE);
-	  sITunesKinds.add(TKIND_PURCHASED_MPEG_4_VIDEO_FILE);
-	  sITunesKinds.add(TKIND_PURCHASED_BOOK);
-	  sITunesKinds.add(TKIND_IPAD_APP);
-	  sITunesKinds.add(TKIND_IPHONE_IPOD_TOUCH_APP);
-	  sITunesKinds.add(TKIND_IPHONE_IPOD_TOUCH_IPAD_APP);
-	  sITunesKinds.add(TKIND_ITUNES_EXTRAS);
-	  sITunesKinds.add(TKIND_MPEG_AUDIO_STREAM);
-	  
-	  sITunesAudioKinds.add(TKIND_AAC_AUDIO_FILE);
-	  sITunesAudioKinds.add(TKIND_MPEG_AUDIO_FILE);
-	  sITunesAudioKinds.add(TKIND_PROTECTED_AAC_AUDIO_FILE);
-	  sITunesAudioKinds.add(TKIND_PURCHASED_AAC_AUDIO_FILE);
-  }
-
-  static {
-    // Create a list of all known iTunes keys. This way if a new one shows up, the program will let us know.
-    Parser.createKnownKeys();
-	
-	// Create a list of all known iTunes kinds. This way if a new one shows up, the program will let us know.
-	Parser.createKnownKinds();
-  }
-  
   public List<Album> parse(final String itunesFile) throws ParserException {
     com.bolsinga.plist.data.Plist plist = createPlist(itunesFile);
 
@@ -249,23 +48,10 @@ public class Parser {
     sortAlbumOrder();
 
     sortAlbumsSongOrder();
-    
-    if (sNewITunesKeys.size() > 0) {
-        System.out.println("iTunes added new keys:");
-        for (String key : sNewITunesKeys) {
-            System.out.println("private static final String TK_VAR = \"" + key + "\";");
-        }
-    }
-	
-    if (sNewITunesKinds.size() > 0) {
-        System.out.println("iTunes added new kinds:");
-        for (String kind : sNewITunesKinds) {
-			String varName = kind.toUpperCase().replaceAll(" ", "_").replaceAll("/", "_").replaceAll("-", "_");
-            System.out.println("private static final String TKIND_" + varName + " = \"" + kind + "\";");
-        }
-    }
-	
-	if (sArtistNotAdded.size() > 0) {
+
+    Track.report();
+
+    if (sArtistNotAdded.size() > 0) {
 		System.out.println("Artist not Added:");
 		for (String artist : sArtistNotAdded) {
 			System.out.println(artist);
@@ -287,20 +73,14 @@ public class Parser {
         
   private void addTrack(final com.bolsinga.plist.data.Dict track) throws ParserException {
     Iterator<Object> i = track.getKeyAndArrayOrData().iterator();
-            
-    String songTitle = null;
-    String artist = null;
-    String sortArtist = null;
-    GregorianCalendar lastPlayed = null;
-    int playCount = 0;
-    String genre = null;
-    String albumTitle = null;
-    int index = -1, year = -1;
+
+    Track t = new Track();
+
     boolean compilation = false;
-	boolean isVideo = false;
-	boolean isPodcast = false;
-	boolean isAudioFile = false;
-            
+    boolean isVideo = false;
+    boolean isPodcast = false;
+    boolean isAudioFile = false;
+
     while (i.hasNext()) {
       JAXBElement<? extends Object> jokey = (JAXBElement<? extends Object>)i.next();
       String key = (String)jokey.getValue();
@@ -308,84 +88,46 @@ public class Parser {
       // always pull off the value, it may be unused.
       JAXBElement<? extends Object> jovalue = (JAXBElement<? extends Object>)i.next();
 
-      if (key.equals(TK_NAME)) {
-        songTitle = (String)jovalue.getValue();
-        continue;
+      Object value = jovalue.getValue();
+      String stringValue = null;
+      if (value instanceof java.lang.String) {
+        stringValue = (String)value;
+      } else if (value instanceof java.lang.Number) {
+        stringValue = String.valueOf((Number)value);
+      } else if (value instanceof javax.xml.datatype.XMLGregorianCalendar) {
+        GregorianCalendar gc = ((XMLGregorianCalendar)value).toGregorianCalendar();
+        stringValue = com.bolsinga.web.Util.toJSONCalendar(gc);
+      } else if (value instanceof java.lang.Object && ("true".equals(jovalue.getName().getLocalPart()) || "false".equals(jovalue.getName().getLocalPart()))) {
+        stringValue = jovalue.getName().getLocalPart();
+      } else {
+        throw new ParserException("Unhandled JAXB Name: " + jovalue.getName() + " Value: " + value.toString() + " Type: " + jovalue.getDeclaredType().toString());
       }
-      if (key.equals(TK_ARTIST)) {
-        artist = (String)jovalue.getValue();
-        continue;
-      }
-      if (key.equals(TK_SORT_ARTIST)) {
-        sortArtist = (String)jovalue.getValue();
-        continue;
-      }
-      if (key.equals(TK_ALBUM)) {
-        albumTitle = (String)jovalue.getValue();
-        continue;
-      }
-      if (key.equals(TK_GENRE)) {
-        genre = (String)jovalue.getValue();
-        continue;
-      }
-      if (key.equals(TK_TRACK_NUMBER)) {
-        index = ((java.math.BigInteger)jovalue.getValue()).intValue();
-        continue;
-      }
-      if (key.equals(TK_YEAR)) {
-        year = ((java.math.BigInteger)jovalue.getValue()).intValue();
-        continue;
-      }
-      if (key.equals(TK_PLAY_DATE_UTC)) {
-        lastPlayed = ((XMLGregorianCalendar)jovalue.getValue()).toGregorianCalendar();
-        continue;
-      }
-      if (key.equals(TK_PLAY_COUNT)) {
-        playCount = ((java.math.BigInteger)jovalue.getValue()).intValue();
-        continue;
-      }
-      if (key.equals(TK_COMPILATION)) {
-        // Ignore the value, but it needs to be pulled.
-        compilation = (jovalue != null);
-        continue;
-      }
-      if (key.equals(TK_HAS_VIDEO)) {
-        // Ignore the value, but it needs to be pulled.
-        isVideo = (jovalue != null);
-        continue;
-      }
-      if (key.equals(TK_PODCAST)) {
-        // Ignore the value, but it needs to be pulled.
-        isPodcast = (jovalue != null);
-        continue;
-      }
-	  if (key.equals(TK_KIND)) {
-		  String kind = (String)jovalue.getValue();
-	      if (!sITunesKinds.contains(kind)) {
-	        sNewITunesKinds.add(kind);
-	      }
-		  
-		  isAudioFile = sITunesAudioKinds.contains(kind);
-	  }
 
-      if (!sITunesKeys.contains(key)) {
-        sNewITunesKeys.add(key);
-      }
+      t.set(key, stringValue);
     }
 
-    if (albumTitle == null) {
-      albumTitle = songTitle + " - Single";
+    compilation = t.getCompilation() != null && "true".equals(t.getCompilation());
+    isVideo = t.getHas_Video() != null && "true".equals(t.getHas_Video());
+    isPodcast = t.getPodcast() != null && "true".equals(t.getPodcast());
+    isAudioFile = t.isAudioKind();
+
+    if (t.getAlbum() == null) {
+      t.setAlbum(t.getName() + " - Single");
     }
 
-    boolean isVoiceMemo = (genre != null) && genre.equals(TK_GENRE_VOICE_MEMO);
+    boolean isVoiceMemo = (t.getGenre() != null) && t.getGenre().equals(TK_GENRE_VOICE_MEMO);
 
     boolean isAlbum = !isVideo && !isPodcast && isAudioFile && !isVoiceMemo;;
-	if (!isAlbum) {
-		sArtistNotAdded.add(artist);
-	}
+    if (!isAlbum) {
+      sArtistNotAdded.add(t.getArtist());
+    }
 
-    if (isAlbum && (artist != null) && !albumTitle.equals("Apple Financial Results")) {
-      createTrack(artist, sortArtist, songTitle, albumTitle, year, index, genre, lastPlayed, playCount, compilation);
+    if (isAlbum && (t.getArtist() != null) && !t.getAlbum().equals("Apple Financial Results")) {
+      int year = (t.getYear() != null) ? Integer.parseInt(t.getYear()) : 0;
+      int trackNumber = (t.getTrack_Number() != null) ? Integer.parseInt(t.getTrack_Number()) : 0;
+      int playCount = (t.getPlay_Count() != null) ? Integer.parseInt(t.getPlay_Count()) : 0;
+      GregorianCalendar lastPlayed = (t.getPlay_Date_UTC() != null) ? com.bolsinga.web.Util.fromJSONCalendar(t.getPlay_Date_UTC()) : null;
+      createTrack(t.getArtist(), t.getSort_Artist(), t.getName(), t.getAlbum(), year, trackNumber, t.getGenre(), lastPlayed, playCount, compilation);
     }
   }
         
