@@ -27,21 +27,9 @@ public class Parser {
   private final HashSet<String> fArtistAlbumSet = new HashSet<String>();
 
   public List<Album> parse(final String itunesFile) throws ParserException {
-    com.bolsinga.plist.data.Plist plist = createPlist(itunesFile);
+    List<Track> tracks = createTracks(itunesFile);
 
-    Iterator<Object> i = plist.getDict().getKeyAndArrayOrData().iterator();
-    while (i.hasNext()) {
-      JAXBElement<? extends Object> jo = (JAXBElement<? extends Object>)i.next();
-      String key = (String)jo.getValue();
-      if (key.equals("Tracks")) {
-        com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
-                                
-        List<Object> tracks = dict.getKeyAndArrayOrData();
-        addTracks(tracks);
-      } else {
-        Object o = i.next();
-      }
-    }
+    addTracks(tracks);
 
     setAlbumYears();
                 
@@ -60,78 +48,46 @@ public class Parser {
     
     return Collections.unmodifiableList(new ArrayList<Album>(fAlbumMap.values()));
   }
-        
-  private void addTracks(final java.util.List<Object> tracks) throws ParserException {
-    Iterator<Object> i = tracks.iterator();
-    while (i.hasNext()) {
-      Object key = i.next(); // key not used
 
-      com.bolsinga.plist.data.Dict track = (com.bolsinga.plist.data.Dict)i.next();
+  private void addTracks(final List<Track> tracks) {
+    for (Track track : tracks) {
       addTrack(track);
     }
   }
-        
-  private void addTrack(final com.bolsinga.plist.data.Dict track) throws ParserException {
-    Iterator<Object> i = track.getKeyAndArrayOrData().iterator();
 
-    Track t = new Track();
-
+  private void addTrack(final Track track) {
     boolean compilation = false;
     boolean isVideo = false;
     boolean isPodcast = false;
-    boolean isAudioFile = false;
+    boolean isAudioFile = track.isAudioKind();
 
-    while (i.hasNext()) {
-      JAXBElement<? extends Object> jokey = (JAXBElement<? extends Object>)i.next();
-      String key = (String)jokey.getValue();
+    compilation = track.getCompilation() != null && "true".equals(track.getCompilation());
 
-      // always pull off the value, it may be unused.
-      JAXBElement<? extends Object> jovalue = (JAXBElement<? extends Object>)i.next();
+    isVideo = track.getHas_Video() != null && "true".equals(track.getHas_Video());
 
-      Object value = jovalue.getValue();
-      String stringValue = null;
-      if (value instanceof java.lang.String) {
-        stringValue = (String)value;
-      } else if (value instanceof java.lang.Number) {
-        stringValue = String.valueOf((Number)value);
-      } else if (value instanceof javax.xml.datatype.XMLGregorianCalendar) {
-        GregorianCalendar gc = ((XMLGregorianCalendar)value).toGregorianCalendar();
-        stringValue = com.bolsinga.web.Util.toJSONCalendar(gc);
-      } else if (value instanceof java.lang.Object && ("true".equals(jovalue.getName().getLocalPart()) || "false".equals(jovalue.getName().getLocalPart()))) {
-        stringValue = jovalue.getName().getLocalPart();
-      } else {
-        throw new ParserException("Unhandled JAXB Name: " + jovalue.getName() + " Value: " + value.toString() + " Type: " + jovalue.getDeclaredType().toString());
-      }
+    isPodcast = track.getPodcast() != null && "true".equals(track.getPodcast());
 
-      t.set(key, stringValue);
+    if (track.getAlbum() == null) {
+      track.setAlbum(track.getName() + " - Single");
     }
 
-    compilation = t.getCompilation() != null && "true".equals(t.getCompilation());
-    isVideo = t.getHas_Video() != null && "true".equals(t.getHas_Video());
-    isPodcast = t.getPodcast() != null && "true".equals(t.getPodcast());
-    isAudioFile = t.isAudioKind();
+    boolean isVoiceMemo = (track.getGenre() != null) && track.getGenre().equals(TK_GENRE_VOICE_MEMO);
 
-    if (t.getAlbum() == null) {
-      t.setAlbum(t.getName() + " - Single");
-    }
-
-    boolean isVoiceMemo = (t.getGenre() != null) && t.getGenre().equals(TK_GENRE_VOICE_MEMO);
-
-    boolean isAlbum = !isVideo && !isPodcast && isAudioFile && !isVoiceMemo;;
+    boolean isAlbum = !isVideo && !isPodcast && isAudioFile && !isVoiceMemo;
     if (!isAlbum) {
-      sArtistNotAdded.add(t.getArtist());
+      sArtistNotAdded.add(track.getArtist());
     }
 
-    if (isAlbum && (t.getArtist() != null) && !t.getAlbum().equals("Apple Financial Results")) {
-      int year = (t.getYear() != null) ? Integer.parseInt(t.getYear()) : 0;
-      int trackNumber = (t.getTrack_Number() != null) ? Integer.parseInt(t.getTrack_Number()) : 0;
-      int playCount = (t.getPlay_Count() != null) ? Integer.parseInt(t.getPlay_Count()) : 0;
-      GregorianCalendar lastPlayed = (t.getPlay_Date_UTC() != null) ? com.bolsinga.web.Util.fromJSONCalendar(t.getPlay_Date_UTC()) : null;
-      createTrack(t.getArtist(), t.getSort_Artist(), t.getName(), t.getAlbum(), year, trackNumber, t.getGenre(), lastPlayed, playCount, compilation);
+    if (isAlbum && (track.getArtist() != null) && !track.getAlbum().equals("Apple Financial Results")) {
+      int year = (track.getYear() != null) ? Integer.parseInt(track.getYear()) : 0;
+      int trackNumber = (track.getTrack_Number() != null) ? Integer.parseInt(track.getTrack_Number()) : 0;
+      int playCount = (track.getPlay_Count() != null) ? Integer.parseInt(track.getPlay_Count()) : 0;
+      GregorianCalendar lastPlayed = (track.getPlay_Date_UTC() != null) ? com.bolsinga.web.Util.fromJSONCalendar(track.getPlay_Date_UTC()) : null;
+      createTrack(track.getArtist(), track.getSort_Artist(), track.getName(), track.getAlbum(), year, trackNumber, track.getGenre(), lastPlayed, playCount, compilation);
     }
   }
         
-  private void createTrack(final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final GregorianCalendar lastPlayed, final int playCount, final boolean compilation) throws ParserException {
+  private void createTrack(final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final GregorianCalendar lastPlayed, final int playCount, final boolean compilation) {
     // Get or create the artist
     if (!fArtistMap.containsKey(artistName)) {
       Artist artist = new Artist(artistName, sortArtist);
@@ -298,5 +254,72 @@ public class Parser {
     }
 
     return plist;
+  }
+
+  private static List<Track> createTracks(final String sourceFile) throws ParserException {
+    com.bolsinga.plist.data.Dict dict = createTracksDict(sourceFile);
+
+    ArrayList<Track> tracks = new ArrayList<Track>();
+
+    Iterator<Object> i = dict.getKeyAndArrayOrData().iterator();
+    while (i.hasNext()) {
+      Object key = i.next(); // key not used
+
+      com.bolsinga.plist.data.Dict trackDict = (com.bolsinga.plist.data.Dict)i.next();
+      Track track = createTrack(trackDict);
+      tracks.add(track);
+    }
+
+    return tracks;
+  }
+
+  private static com.bolsinga.plist.data.Dict createTracksDict(final String sourceFile) throws ParserException {
+    com.bolsinga.plist.data.Plist plist = createPlist(sourceFile);
+
+    Iterator<Object> i = plist.getDict().getKeyAndArrayOrData().iterator();
+    while (i.hasNext()) {
+      JAXBElement<? extends Object> jo = (JAXBElement<? extends Object>)i.next();
+      String key = (String)jo.getValue();
+      if (key.equals("Tracks")) {
+        com.bolsinga.plist.data.Dict dict = (com.bolsinga.plist.data.Dict)i.next();
+        return dict;
+      } else {
+        Object o = i.next();
+      }
+    }
+    throw new ParserException("No Tracks key in plist: " + plist.toString());
+  }
+
+  private static Track createTrack(final com.bolsinga.plist.data.Dict trackDict) throws ParserException {
+    Iterator<Object> i = trackDict.getKeyAndArrayOrData().iterator();
+
+    Track t = new Track();
+
+    while (i.hasNext()) {
+      JAXBElement<? extends Object> jokey = (JAXBElement<? extends Object>)i.next();
+      String key = (String)jokey.getValue();
+
+      // always pull off the value, it may be unused.
+      JAXBElement<? extends Object> jovalue = (JAXBElement<? extends Object>)i.next();
+
+      Object value = jovalue.getValue();
+      String stringValue = null;
+      if (value instanceof java.lang.String) {
+        stringValue = (String)value;
+      } else if (value instanceof java.lang.Number) {
+        stringValue = String.valueOf((Number)value);
+      } else if (value instanceof javax.xml.datatype.XMLGregorianCalendar) {
+        GregorianCalendar gc = ((XMLGregorianCalendar)value).toGregorianCalendar();
+        stringValue = com.bolsinga.web.Util.toJSONCalendar(gc);
+      } else if (value instanceof java.lang.Object && ("true".equals(jovalue.getName().getLocalPart()) || "false".equals(jovalue.getName().getLocalPart()))) {
+        stringValue = jovalue.getName().getLocalPart();
+      } else {
+        throw new ParserException("Unhandled JAXB Name: " + jovalue.getName() + " Value: " + value.toString() + " Type: " + jovalue.getDeclaredType().toString());
+      }
+
+      t.set(key, stringValue);
+    }
+
+    return t;
   }
 }
