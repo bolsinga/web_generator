@@ -3,8 +3,8 @@ package com.bolsinga.itunes;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
+import javax.xml.parsers.*;
 import org.xml.sax.*;
-import org.xml.sax.helpers.*;
 
 public class Parser {
   private static final String TK_GENRE_VOICE_MEMO = "Voice Memo";
@@ -214,9 +214,19 @@ public class Parser {
       throw new ParserException(sb.toString(), e);
     }
 
-    XMLReader parser = null;
+    SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+    SAXParser parser = null;
     try {
-      parser = XMLReaderFactory.createXMLReader();
+      parser = parserFactory.newSAXParser();
+    } catch (ParserConfigurationException | SAXException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't create SAXParser");
+      throw new ParserException(sb.toString(), e);
+    }
+
+    XMLReader reader = null;
+    try {
+      reader = parser.getXMLReader();
     } catch (SAXException e) {
       StringBuilder sb = new StringBuilder();
       sb.append("Can't create XMLReader");
@@ -224,11 +234,11 @@ public class Parser {
     }
 
     ParserHandler handler = new ParserHandler();
-    parser.setContentHandler(handler);
+    reader.setContentHandler(handler);
 
     InputSource source = new InputSource(is);
     try {
-      parser.parse(source);
+      reader.parse(source);
     } catch (IOException | SAXException e) {
       StringBuilder sb = new StringBuilder();
       sb.append("Can't parse InputSource");
