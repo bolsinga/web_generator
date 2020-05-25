@@ -32,8 +32,8 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
           final Venue first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
           create(new RecordFactory() {
-            public Vector<Record> getRecords() {
-              Vector<Record> records = new Vector<Record>();
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
               
               for (Venue item : group) {
                 records.add(getVenueRecordSection(item));
@@ -174,18 +174,18 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     return e;
   }
   
-  private Record getVenueShowRecord(final Venue venue, final Show show) {
+  private com.bolsinga.web.Record getVenueShowRecord(final Venue venue, final Show show) {
     String dateString = Util.toString(show.getDate());
-    return Record.createRecordList(
+    return com.bolsinga.web.Record.createRecordList(
       Util.createInternalA(fLinks.getLinkTo(show), dateString, dateString), 
       getVenueShowListing(venue, show));
   }
   
-  private Record getVenueRecordSection(final Venue venue) {
-    Vector<Record> items = new Vector<Record>();
+  private com.bolsinga.web.Record getVenueRecordSection(final Venue venue) {
+    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
 
     Location l = venue.getLocation();
-    items.add(Record.createRecordSimple(Util.createExternalA(Util.getGoogleMapsURL(l), Util.getCannonicalAddress(l))));
+    items.add(com.bolsinga.web.Record.createRecordSimple(Util.createExternalA(Util.getGoogleMapsURL(l), Util.getCannonicalAddress(l))));
     
     if (fLookup.getRelations(venue) != null) {
       items.add(getVenueRelations(venue));
@@ -206,10 +206,10 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       title = Util.createNamedTarget(venue.getID(), fLookup.getHTMLName(venue));
     }
     
-    return Record.createRecordSection(title, items);
+    return com.bolsinga.web.Record.createRecordSection(title, items);
   }
 
-  private Record getVenueRelations(final Venue venue) {
+  private com.bolsinga.web.Record getVenueRelations(final Venue venue) {
         Vector<Element> e = new Vector<Element>();
         
         org.apache.ecs.Element curElement = null;
@@ -224,7 +224,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
         }
 
-        return Record.createRecordList(
+        return com.bolsinga.web.Record.createRecordList(
           new StringElement(Util.getResourceString("seealso")),
           e, 
           curElement);

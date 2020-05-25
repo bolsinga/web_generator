@@ -37,8 +37,8 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
           final Show first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
           create(new RecordFactory() {
-            public Vector<Record> getRecords() {
-              Vector<Record> records = new Vector<Record>();
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
               
               for (Vector<Show> item : getMonthlies(group)) {
                 records.add(getShowMonthRecordSection(item));
@@ -258,12 +258,12 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     });
   }
 
-  private Record getShowRecord(final Show show) {
+  private com.bolsinga.web.Record getShowRecord(final Show show) {
     return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, false, true);
   }
   
   // This is used for the main page.
-  public static Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean titleIsLink, final boolean upOneLevel) {
+  public static com.bolsinga.web.Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean titleIsLink, final boolean upOneLevel) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<? extends Artist> bi = show.getArtists().iterator();
@@ -297,11 +297,11 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
     } else {
         title = Util.createNamedTarget(show.getID(), dateString);
     }
-    return Record.createRecordListWithComment(title, e, comment);
+    return com.bolsinga.web.Record.createRecordListWithComment(title, e, comment);
   }
 
-  private Record getShowMonthRecordSection(final Vector<Show> shows) {
-    Vector<Record> items = new Vector<Record>();
+  private com.bolsinga.web.Record getShowMonthRecordSection(final Vector<Show> shows) {
+    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
 
     // Note shows here is a Collection of Shows in a single month
     String name;
@@ -317,7 +317,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
       items.add(getShowRecord(show));
     }
 
-    return Record.createRecordSection(title, items);
+    return com.bolsinga.web.Record.createRecordSection(title, items);
   }
   
   private Element getLinkToShowMonthYear(final String year, final int month, final String value) {

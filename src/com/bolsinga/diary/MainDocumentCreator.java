@@ -53,9 +53,9 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new RecordFactory() {
-          public Vector<Record> getRecords() {
-            Vector<Record> items = new Vector<Record>(1);
-            items.add(Record.createRecordSimple(getMain()));
+          public Vector<com.bolsinga.web.Record> getRecords() {
+            Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>(1);
+            items.add(com.bolsinga.web.Record.createRecordSimple(getMain()));
             return items;
           }
           
@@ -202,7 +202,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   private Element getDiary() {
     Div diaryDiv = Util.createDiv(CSS.DOC_SUB);
 
-// FIXME: Add Last Played Element here. Make a new Record.createRecord* w/ title and items
+// FIXME: Add Last Played Element here. Make a new com.bolsinga.web.Record.createRecord* w/ title and items
 // last played "<song title>"
 // by <artist> from <album>
 // on <date>
