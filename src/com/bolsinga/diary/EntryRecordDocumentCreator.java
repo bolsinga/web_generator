@@ -38,8 +38,8 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
           final Entry first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
           create(new RecordFactory() {
-            public Vector<Record> getRecords() {
-              Vector<Record> records = new Vector<Record>();
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
               
               for (Vector<Entry> item : getMonthlies(group)) {
                 records.add(getEntryMonthRecordSection(item));
@@ -87,8 +87,8 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     return Collections.unmodifiableCollection(result.values());
   }
 
-  private Record getEntryMonthRecordSection(final Vector<Entry> entries) {
-    Vector<Record> items = new Vector<Record>();
+  private com.bolsinga.web.Record getEntryMonthRecordSection(final Vector<Entry> entries) {
+    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
     
     // Note entries here is a Collection of Entrys in a single month
     String m = Util.getMonth(entries.firstElement());
@@ -97,15 +97,15 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
       items.add(getEntryRecord(entry));
     }
 
-    return Record.createRecordSection(title, items);
+    return com.bolsinga.web.Record.createRecordSection(title, items);
   }
   
-  private Record getEntryRecord(final Entry entry) {
+  private com.bolsinga.web.Record getEntryRecord(final Entry entry) {
     return EntryRecordDocumentCreator.createEntryRecord(entry, fLinks, fEncoder, true);
   }
   
   // This is used for the main page and entry pages, which is why it is public static
-  public static Record createEntryRecord(final Entry entry, final Links links, final Encode encoder, final boolean upOneLevel) {
+  public static com.bolsinga.web.Record createEntryRecord(final Entry entry, final Links links, final Encode encoder, final boolean upOneLevel) {
     String title = entry.getTitle();
     if (title == null) {
         title = Util.getDisplayTitle(entry);
@@ -113,7 +113,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
         Object[] args = { title, Util.getTimestamp(entry) };
         title = MessageFormat.format(Util.getResourceString("entrytitle"), args);
     }
-    return Record.createRecordPermalink(
+    return com.bolsinga.web.Record.createRecordPermalink(
       Util.createNamedTarget(entry.getID(), title), 
       encoder.embedLinks(entry, upOneLevel),
       Util.createPermaLink(links.getLinkTo(entry)));
@@ -123,9 +123,9 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new RecordFactory() {
-          public Vector<Record> getRecords() {
-            Vector<Record> items = new Vector<Record>(1);
-            items.add(Record.createRecordSimple(getStats()));
+          public Vector<com.bolsinga.web.Record> getRecords() {
+            Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>(1);
+            items.add(com.bolsinga.web.Record.createRecordSimple(getStats()));
             return items;
           }
 

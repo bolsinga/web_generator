@@ -32,8 +32,8 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
           final Album first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
           create(new RecordFactory() {
-            public Vector<Record> getRecords() {
-              Vector<Record> records = new Vector<Record>();
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
               
               for (Album item : group) {
                 records.add(getAlbumRecordSection(item));
@@ -270,9 +270,9 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
     return new StringElement(sb.toString());
   }
   
-  private Record getAlbumRecordSection(final Album album) {
-    Vector<Record> items = new Vector<Record>(1);
-    items.add(Record.createRecordListOrdered(null, getAlbumListing(album)));
-    return Record.createRecordSection(getAlbumTitle(album), items);
+  private com.bolsinga.web.Record getAlbumRecordSection(final Album album) {
+    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>(1);
+    items.add(com.bolsinga.web.Record.createRecordListOrdered(null, getAlbumListing(album)));
+    return com.bolsinga.web.Record.createRecordSection(getAlbumTitle(album), items);
   }
 }

@@ -10,7 +10,7 @@ package com.bolsinga.web;
 import java.util.*;
 
 public interface RecordFactory {
-  public Vector<Record> getRecords();
+  public Vector<com.bolsinga.web.Record> getRecords();
   public String getTitle();
   public String getFilePath();
   public Navigator getNavigator();
