@@ -44,8 +44,8 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     
     Div main = Util.createDiv(getMainDivClass());
         
-    Vector<Record> records = factory.getRecords();
-    for (Record record : records) {
+    Vector<com.bolsinga.web.Record> records = factory.getRecords();
+    for (com.bolsinga.web.Record record : records) {
       main.addElement(record.getElement());
     }
     

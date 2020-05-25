@@ -32,8 +32,8 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
           final Artist first = group.firstElement();
           final String curName = fLinks.getPageFileName(first);
           create(new RecordFactory() {
-            public Vector<Record> getRecords() {
-              Vector<Record> records = new Vector<Record>();
+            public Vector<com.bolsinga.web.Record> getRecords() {
+              Vector<com.bolsinga.web.Record> records = new Vector<com.bolsinga.web.Record>();
               
               for (Artist item : group) {
                 records.add(getArtistRecordSection(item));
@@ -149,16 +149,16 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     return StatsRecordFactory.makeTable(names, values, tableTitle, typeString, Util.getResourceString("artiststatsummary"));
   }
   
-  private Record getArtistShowRecord(final Artist artist, final Show show) {
+  private com.bolsinga.web.Record getArtistShowRecord(final Artist artist, final Show show) {
     String dateString = Util.toString(show.getDate());
     
-    return Record.createRecordList(
+    return com.bolsinga.web.Record.createRecordList(
       Util.createInternalA(fLinks.getLinkTo(show), dateString, dateString), 
       getArtistShowListing(artist, show));
   }
   
-  private Record getArtistRecordSection(final Artist artist) {
-    Vector<Record> items = new Vector<Record>();
+  private com.bolsinga.web.Record getArtistRecordSection(final Artist artist) {
+    Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
 
     if (artist.getAlbums().size() > 0) {
       items.add(getAlbumRelations(artist));
@@ -177,7 +177,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     
     A title = Util.createNamedTarget(artist.getID(), fLookup.getHTMLName(artist));
     
-    return Record.createRecordSection(title, items);
+    return com.bolsinga.web.Record.createRecordSection(title, items);
   }
   
   private Vector<Element> getArtistShowListing(final Artist artist, final Show show) {
@@ -240,13 +240,13 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
     return e;
   }
   
-  private Record getAlbumRelations(final Artist artist) {
-    return Record.createRecordList(
+  private com.bolsinga.web.Record getAlbumRelations(final Artist artist) {
+    return com.bolsinga.web.Record.createRecordList(
       new StringElement(Util.getResourceString("albums")), 
       getTracks(artist));
   }
 
-  private Record getArtistRelations(final Artist artist) {
+  private com.bolsinga.web.Record getArtistRelations(final Artist artist) {
         Vector<Element> e = new Vector<Element>();
         
         org.apache.ecs.Element curElement = null;
@@ -261,7 +261,7 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
           }
         }
 
-        return Record.createRecordList(
+        return com.bolsinga.web.Record.createRecordList(
           new StringElement(Util.getResourceString("seealso")),
           e,
           curElement);

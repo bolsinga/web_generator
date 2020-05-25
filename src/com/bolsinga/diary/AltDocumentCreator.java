@@ -25,9 +25,9 @@ public class AltDocumentCreator extends DiaryRecordDocumentCreator {
     backgrounder.execute(backgroundable, new Runnable() {
       public void run() {
         create(new RecordFactory() {
-          public Vector<Record> getRecords() {
-            Vector<Record> items = new Vector<Record>(1);
-            items.add(Record.createRecordSimple(getAlt()));
+          public Vector<com.bolsinga.web.Record> getRecords() {
+            Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>(1);
+            items.add(com.bolsinga.web.Record.createRecordSimple(getAlt()));
             return items;
           }
           
