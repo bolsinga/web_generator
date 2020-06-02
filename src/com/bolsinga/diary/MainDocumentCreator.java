@@ -199,14 +199,47 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     return d;
   }
 
+  private Song getLastPlayedSong() {
+    List<? extends Song> songs = fMusic.getSongsCopy();
+    Collections.sort(songs, new Comparator<Song>() {
+      public int compare(final Song s1, final Song s2) {
+        Calendar c1 = s1.getLastPlayed();
+        Calendar c2 = s2.getLastPlayed();
+        if (c1 == null && c2 == null) {
+          return 0;
+        }
+        if (c1 == null) {
+          return -1;
+        }
+        if (c2 == null) {
+          return 1;
+        }
+        return c1.getTime().compareTo(c2.getTime());
+      }
+    });
+    Collections.reverse(songs);
+    return songs.iterator().next();
+  }
+
+  private com.bolsinga.web.Record getLastPlayedRecord() {
+    Song lastPlayedSong = getLastPlayedSong();
+    Artist artist = lastPlayedSong.getPerformer();
+
+    String linkToArtist = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), Util.createTitle("moreinfoartist", artist.getName())).toString();
+
+    Object[] args = { lastPlayedSong.getTitle(), linkToArtist, Integer.valueOf(lastPlayedSong.getPlayCount()) };
+
+    return com.bolsinga.web.Record.createRecordPermalink(
+      new StringElement(Util.getResourceString("lastplayed")),
+      MessageFormat.format(Util.getResourceString("lastplayedsong"), args),
+      null);
+  }
+
   private Element getDiary() {
     Div diaryDiv = Util.createDiv(CSS.DOC_SUB);
 
-// FIXME: Add Last Played Element here. Make a new com.bolsinga.web.Record.createRecord* w/ title and items
-// last played "<song title>"
-// by <artist> from <album>
-// on <date>
-	
+    diaryDiv.addElement(getLastPlayedRecord().getElement());
+
     int mainPageEntryCount = Util.getSettings().getDiaryCount();
     
     List<Object> items = Util.getRecentItems(mainPageEntryCount, fMusic, fDiary);
