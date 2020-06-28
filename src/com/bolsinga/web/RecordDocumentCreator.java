@@ -64,10 +64,6 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return CSS.DOC_2_COL_BODY;
   }
   
-  protected Meta getAdditionalMeta() {
-    return null;
-  }
-  
   protected String getSitePageTitle(final String factoryTitle) {
     Object[] args = { fSiteRoot, factoryTitle };
     return MessageFormat.format(Util.getResourceString("sitepagetitle"), args);
@@ -95,11 +91,6 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     }
     h.addElement(new Meta().setContent(Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
-    
-    Meta additional = getAdditionalMeta();
-    if (additional != null) {
-      h.addElement(additional);
-    }
     
     d.getBody().setPrettyPrint(Util.getPrettyOutput());
 
@@ -133,9 +124,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
         
-  private void writeDocument(final RecordFactory factory, final Document d) {
-    d.getBody().addElement(Util.getSettings().getPageFooter());
-    
+  private void writeDocument(final RecordFactory factory, final Document d) {  
     File f = new File(fOutputDir, factory.getFilePath());
     File parent = new File(f.getParent());
     if (!parent.mkdirs()) {

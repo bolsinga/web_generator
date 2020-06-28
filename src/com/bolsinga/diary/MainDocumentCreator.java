@@ -40,11 +40,6 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     return d;
   }
 
-  protected Meta getAdditionalMeta() {
-    com.bolsinga.web.Settings.GoogleMeta gm = Util.getSettings().getGoogleMeta();
-    return new Meta().setContent(gm.getContent()).setName(gm.getName());
-  }
-
   protected String getSitePageTitle(final String factoryTitle) {
     return factoryTitle;
   }

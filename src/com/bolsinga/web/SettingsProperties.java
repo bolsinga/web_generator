@@ -8,7 +8,6 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
   private final com.bolsinga.web.Settings.Image fLogoImage;
   private final com.bolsinga.web.Settings.Image fRssImage;
   private final com.bolsinga.web.Settings.Image fiCalImage;
-  private final com.bolsinga.web.Settings.GoogleMeta fGoogleMeta;
 
   public static com.bolsinga.web.Settings create(final String sourceFile) throws com.bolsinga.web.WebException {
     InputStream is = null;
@@ -62,7 +61,6 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
     fLogoImage = createImage(properties, "logoImage");
     fRssImage = createImage(properties, "rssImage");
     fiCalImage = createImage(properties, "icalImage");
-    fGoogleMeta = com.bolsinga.web.Settings.GoogleMeta.createGoogleMeta(properties.getProperty("googleMeta.name"), properties.getProperty("googleMeta.content"));
   }
 
   public String getContact() {
@@ -139,13 +137,5 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
 
   public int getDiaryEntryTime() {
     return Integer.parseInt(fProperties.getProperty("diaryEntryTime"));
-  }
-
-  public String getPageFooter() {
-    return fProperties.getProperty("pageFooter");
-  }
-
-  public GoogleMeta getGoogleMeta() {
-    return fGoogleMeta;
   }
 }
