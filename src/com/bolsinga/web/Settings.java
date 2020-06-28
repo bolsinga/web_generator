@@ -37,28 +37,6 @@ public interface Settings {
     }
   }
 
-  public class GoogleMeta {
-    private String fName;
-    private String fContent;
-
-    public static GoogleMeta createGoogleMeta(final String name, final String content) {
-      return new GoogleMeta(name, content);
-    }
-
-    private GoogleMeta(final String name, final String content) {
-      fName = name;
-      fContent = content;
-    }
-
-    public String getName() {
-      return fName;
-    }
-
-    public String getContent() {
-      return fContent;
-    }
-  }
-
   public String getContact();
   public String getIco();
   public String getWebClipIcon();
@@ -78,6 +56,4 @@ public interface Settings {
   public int getShowTime();
   public int getCopyrightStartYear();
   public int getDiaryEntryTime();
-  public String getPageFooter();
-  public GoogleMeta getGoogleMeta();
 }
