@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "site data_dir output_dir <json | json-site | site>"
+    echo "site data_dir output_dir <json | json-site | site | index>"
     echo $1
     exit 1
 }
@@ -90,6 +90,8 @@ elif [ $ACTION = "json-site" ] ; then
   DATA_FILES="$DATA_FILES \"$i\""
   done
 elif [ $ACTION = "site" ] ; then
+  DATA_FILES="$DATA_FILES dummy_diary dummy_music"
+elif [ $ACTION = "index" ] ; then
   DATA_FILES="$DATA_FILES dummy_diary dummy_music"
 else
   DATA_FILES="$DATA_FILES ${DATA_HOME} dummy"
