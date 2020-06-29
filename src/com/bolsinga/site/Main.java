@@ -50,6 +50,8 @@ public class Main implements Backgroundable {
         // In this case, diaryFile is the output directory.
         String outputDir = diaryFile;
         main.generateJSONFile(itunes, shows, venue, sort, relations, comments, statics, type, outputDir);
+      } else if (command.equals("index")) {
+        main.generateIndex(itunes, shows, venue, sort, relations, comments, statics, output);
       } else {
         Main.usage(args, "Invalid action");
       }
@@ -72,6 +74,13 @@ public class Main implements Backgroundable {
     fBackgrounder.removeInterest(this);
   }
   
+  private void generateIndex(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String output) throws Exception {
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
+    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
+
+    generateMainPage(music, diary, output);
+  }
+
   private void generateDirect(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String output) throws Exception {
     final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
@@ -146,6 +155,12 @@ public class Main implements Backgroundable {
     }
   }
   
+  private void generateMainPage(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) {
+    final Encode encoder = Encode.getEncode(music, diary);
+
+    MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, encoder, music);
+  }
+
   private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) throws Exception {
     CSS.install(output);
 
@@ -171,7 +186,7 @@ public class Main implements Backgroundable {
   }
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.properties] [diary input/output file] [music input/output file] [output.dir] <json|json-site|site>");
+    System.out.println("Usage: Main [iTunes Music.xml] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.properties] [diary input/output file] [music input/output file] [output.dir] <json|json-site|site|index>");
     System.out.println(reason);
     if (badargs != null) {
       System.out.println("Arguments:");
