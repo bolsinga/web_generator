@@ -23,8 +23,16 @@ public class Parser {
   private final HashSet<String> fArtistAlbumSet = new HashSet<String>();
 
   public List<Album> parse(final String itunesFile) throws ParserException {
-    XMLParser xmlParser = new XMLParser();
-    List<Track> tracks = xmlParser.createTracks(itunesFile);
+    List<Track> tracks = null;
+    if (itunesFile.endsWith("xml")) {
+      XMLParser parser = new XMLParser();
+      tracks = parser.createTracks(itunesFile);
+    } else if (itunesFile.endsWith("json")) {
+      JSONParser parser = new JSONParser();
+      tracks = parser.createTracks(itunesFile);
+    } else {
+      throw new ParserException("Unknown file extension: " + itunesFile);
+    }
 
     addTracks(tracks);
 

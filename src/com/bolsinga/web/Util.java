@@ -624,6 +624,19 @@ public class Util {
     return json;
   }
 
+  public static JSONArray createJSONArray(final String sourceFile) throws com.bolsinga.web.WebException {
+    JSONArray json = null;
+    try {
+      json = new JSONArray(createJSONTokener(sourceFile));
+    } catch (JSONException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Cannot instantiate JSONArray: ");
+      sb.append(sourceFile);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    }
+    return json;
+  }
+
   public static void writeJSON(final JSONObject json, final String outputFile) throws com.bolsinga.web.WebException {    
     FileOutputStream fos = null;
     try {
