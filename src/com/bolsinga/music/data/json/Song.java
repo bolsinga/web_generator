@@ -152,6 +152,9 @@ public class Song implements com.bolsinga.music.data.Song {
   }
   
   public GregorianCalendar getLastPlayed() {
+    if (lastPlayed == null) {
+      return null;
+    }
     return com.bolsinga.web.Util.fromJSONCalendar(lastPlayed);
   }
   
