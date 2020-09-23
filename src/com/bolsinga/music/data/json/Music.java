@@ -234,6 +234,7 @@ public class Music implements com.bolsinga.music.data.Music {
       JSONObject jsonItem = jsonMap.getJSONObject(key);
       shows.add(Show.create(jsonItem));
     }
+    java.util.Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
   }
   
   public GregorianCalendar getTimestamp() {
