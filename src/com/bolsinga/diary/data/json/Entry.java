@@ -48,7 +48,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
     id = json.getString(ID);
     setTimestamp(com.bolsinga.web.Util.fromJSONCalendar(json.getString(TIMESTAMP)));
     comment = json.getString(COMMENT);
-    title = json.optString(TITLE);
+    title = json.optString(TITLE, null);
   }
   
   public String getComment() {
