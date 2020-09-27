@@ -420,7 +420,7 @@ class Track {
     return sb.toString();
   }
 
-  public boolean isAudioKind() { return sKinds.contains(this.getKind()); }
+  public boolean isAudioKind() { return sAudioKinds.contains(this.getKind()); }
 
   public static void report() {
     if (sNewKeys.size() > 0) {
