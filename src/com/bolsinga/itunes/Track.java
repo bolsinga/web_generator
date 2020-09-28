@@ -211,7 +211,7 @@ class Track {
   public String getFile_Folder_Count() { return File_Folder_Count; } public void setFile_Folder_Count(String File_Folder_Count) { this.File_Folder_Count = File_Folder_Count; }
   public String getFile_Type() { return File_Type; } public void setFile_Type(String File_Type) { this.File_Type = File_Type; }
   public String getGenre() { return Genre; } public void setGenre(String Genre) { this.Genre = Genre; }
-  public String getKind() { return Kind; } public void setKind(String Kind) { this.Kind = Kind; }
+  public String getKind() { return Kind; } public void setKind(String Kind) { this.Kind = Kind; if (!sKinds.contains(Kind)) { sNewKinds.add(Kind); } }
   public String getLibrary_Folder_Count() { return Library_Folder_Count; } public void setLibrary_Folder_Count(String Library_Folder_Count) { this.Library_Folder_Count = Library_Folder_Count; }
   public String getLocation() { return Location; } public void setLocation(String Location) { this.Location = Location; }
   public String getName() { return Name; } public void setName(String Name) { this.Name = Name; }
@@ -282,11 +282,7 @@ class Track {
     else if (TK_FILE_FOLDER_COUNT.equals(elementName)) { this.setFile_Folder_Count(value); }
     else if (TK_FILE_TYPE.equals(elementName)) { this.setFile_Type(value); }
     else if (TK_GENRE.equals(elementName)) { this.setGenre(value); }
-    else if (TK_KIND.equals(elementName)) { this.setKind(value);
-      if (!sKinds.contains(value)) {
-        sNewKinds.add(value);
-      }
-    }
+    else if (TK_KIND.equals(elementName)) { this.setKind(value); }
     else if (TK_LIBRARY_FOLDER_COUNT.equals(elementName)) { this.setLibrary_Folder_Count(value); }
     else if (TK_LOCATION.equals(elementName)) { this.setLocation(value); }
     else if (TK_NAME.equals(elementName)) { this.setName(value); }
