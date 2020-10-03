@@ -69,6 +69,8 @@ class XMLParser {
 
     ArrayList<Track> tracks = new ArrayList<Track>();
 
+    Set<String> newKeys = new TreeSet<String>();
+
     for (Object o : tracksDict.values()) {
       @SuppressWarnings("unchecked")
       Map<String, Object> trackDict = (Map<String, Object>)o;
@@ -76,10 +78,22 @@ class XMLParser {
       Track track = new Track();
 
       for (Map.Entry<String, Object> entry : trackDict.entrySet()) {
-        track.set(entry.getKey(), (String)entry.getValue());
+        String key = entry.getKey();
+        boolean knownKey = track.set(key, (String)entry.getValue());
+        if (!knownKey) {
+          newKeys.add(key);
+        }
       }
 
       tracks.add(track);
+    }
+
+    if (newKeys.size() > 0) {
+      System.out.println("iTunes added new keys:");
+      for (String key : newKeys) {
+          String varName = key.toUpperCase().replaceAll(" ", "_").replaceAll("/", "_").replaceAll("-", "_");
+          System.out.println("private static final String TK_" + varName + " = \"" + key + "\";");
+      }
     }
 
     return tracks;

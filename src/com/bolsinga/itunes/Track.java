@@ -91,7 +91,6 @@ class Track {
   private static final String TKIND_ITUNES_EXTRAS = "iTunes Extras";
   private static final String TKIND_MPEG_AUDIO_STREAM = "MPEG audio stream";
 
-  private static final Set<String> sNewKeys = new TreeSet<String>();
   private static final HashSet<String> sKinds = new HashSet<String>();
   private static final Set<String> sNewKinds = new TreeSet<String>();
   private static final HashSet<String> sAudioKinds = new HashSet<String>();
@@ -266,7 +265,8 @@ class Track {
   public String getRating_Computed() { return Rating_Computed; } public void setRating_Computed(String Rating_Computed) { this.Rating_Computed = Rating_Computed; }
   public String getSort_Series() { return Sort_Series; } public void setSort_Series(String Sort_Series) { this.Sort_Series = Sort_Series; }
 
-  public void set(String elementName, String value) {
+  public boolean set(String elementName, String value) {
+    boolean knownKey = true;
     if (TK_ALBUM.equals(elementName)) { this.setAlbum(value); }
     else if (TK_ARTIST.equals(elementName)) { this.setArtist(value); }
     else if (TK_ARTWORK_COUNT.equals(elementName)) { this.setArtwork_Count(value); }
@@ -337,8 +337,9 @@ class Track {
     else if (TK_RATING_COMPUTED.equals(elementName)) { this.setRating_Computed(value); }
     else if (TK_SORT_SERIES.equals(elementName)) { this.setSort_Series(value); }
     else {
-      sNewKeys.add(elementName);
+      knownKey = false;
     }
+    return knownKey;
   }
 
   public String toString() {
@@ -419,14 +420,6 @@ class Track {
   public boolean isAudioKind() { return sAudioKinds.contains(this.getKind()); }
 
   public static void report() {
-    if (sNewKeys.size() > 0) {
-      System.out.println("iTunes added new keys:");
-      for (String key : sNewKeys) {
-          String varName = key.toUpperCase().replaceAll(" ", "_").replaceAll("/", "_").replaceAll("-", "_");
-          System.out.println("private static final String TK_" + varName + " = \"" + key + "\";");
-      }
-    }
-
     if (sNewKinds.size() > 0) {
       System.out.println("iTunes added new kinds:");
       for (String kind : sNewKinds) {
