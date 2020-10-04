@@ -68,6 +68,10 @@
         </copy>
 </target>
 
+<path id="itunes_classpath">
+  <pathelement path="${lib.dir}/json-20200518.jar" />
+</path>
+
 <target name="itunes" depends="prepare">
         <javac  destdir="${build.classes}"
                 debug="${javac.debug}"
@@ -76,6 +80,7 @@
           <compilerarg value="${javac.lint}" />
           <src path="${src.dir}" />
           <include name="com/bolsinga/itunes/*.java" />
+          <classpath refid="itunes_classpath" />
         </javac>
 </target>
 
