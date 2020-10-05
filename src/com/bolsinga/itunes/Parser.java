@@ -22,7 +22,7 @@ public class Parser {
   // AlbumKey's
   private final HashSet<String> fArtistAlbumSet = new HashSet<String>();
 
-  public List<Album> parse(final String itunesFile) throws ParserException {
+  List<Track> parseTracks(final String itunesFile) throws ParserException {
     List<Track> tracks = null;
     if (itunesFile.endsWith("xml")) {
       XMLParser parser = new XMLParser();
@@ -33,6 +33,11 @@ public class Parser {
     } else {
       throw new ParserException("Unknown file extension: " + itunesFile);
     }
+    return Collections.unmodifiableList(new ArrayList<Track>(tracks));
+  }
+
+  public List<Album> parse(final String itunesFile) throws ParserException {
+    List<Track> tracks = parseTracks(itunesFile);
 
     addTracks(tracks);
 
