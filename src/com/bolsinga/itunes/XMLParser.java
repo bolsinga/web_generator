@@ -202,7 +202,11 @@ class XMLParser {
     else if (TK_TRACK_TYPE.equals(elementName)) { track.setTrack_Type(value); }
     else if (TK_YEAR.equals(elementName)) { track.setYear(value); }
     else if (TK_SEASON.equals(elementName)) { track.setSeason(value); }
-    else if (TK_PERSISTENT_ID.equals(elementName)) { track.setPersistent_ID(value); }
+    else if (TK_PERSISTENT_ID.equals(elementName)) {
+      java.math.BigInteger pid = new java.math.BigInteger(value, 16);
+      String perid = pid.toString();
+      track.setPersistent_ID(perid);
+    }
     else if (TK_SERIES.equals(elementName)) { track.setSeries(value); }
     else if (TK_EPISODE.equals(elementName)) { track.setEpisode(value); }
     else if (TK_EPISODE_ORDER.equals(elementName)) { track.setEpisode_Order(value); }
