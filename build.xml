@@ -187,6 +187,9 @@
   <exec executable="cp" >
     <arg line="${src.dir}/scripts/check ${dst.dir}" />
   </exec>
+  <exec executable="cp" >
+    <arg line="${src.dir}/scripts/itunes ${dst.dir}" />
+  </exec>
   <copy file="${build.lib}/${ant.project.name}.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/json-20200518.jar" todir="${dst.lib}" />
