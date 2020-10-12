@@ -17,7 +17,7 @@ public class Parser {
   private final HashMap<String, Artist> fArtistMap = new HashMap<String, Artist>();
   
   // AlbumKey -> Album
-  private final HashMap<String, Album> fAlbumMap = new HashMap<String, Album>();
+  private final Map<String, Album> fAlbumMap = new TreeMap<String, Album>();
   
   // AlbumKey's
   private final HashSet<String> fArtistAlbumSet = new HashSet<String>();
