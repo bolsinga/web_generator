@@ -63,8 +63,14 @@ if [ -z "$ACTION" ] ; then
    usage "No action"
 fi
 
+ITUNES_DATA_FILE="$4"
+if [ -z "$ITUNES_DATA_FILE" ] ; then
+  DATA_FILES="\"${DATA_HOME}/iTunes Music Library.xml\""
+else
+  DATA_FILES=$ITUNES_DATA_FILE
+fi
+
 for i in \
-    "${DATA_HOME}/iTunes Music Library.xml" \
     "${DATA_HOME}/shows.txt" \
     "${DATA_HOME}/venuemap.txt" \
     "${DATA_HOME}/bandsort.txt" \
