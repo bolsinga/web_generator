@@ -77,7 +77,7 @@ public class Parser {
 
     isPodcast = track.getPodcast() != null && "true".equals(track.getPodcast());
 
-    if (track.getAlbum() == null) {
+    if (track.getAlbum() == null || track.getAlbum().length() == 0) {
       track.setAlbum(track.getName() + " - Single");
     }
 
