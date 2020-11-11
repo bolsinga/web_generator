@@ -1,9 +1,0 @@
-[Jar files]
-./output/dst/lib/web_generator.jar
-[Source dirs]
-./src
-./output/obj/gensrc
-[Aux classpath entries]
-./output/dst/lib/ecs-1.4.2.jar
-[Options]
-relative_paths=true
