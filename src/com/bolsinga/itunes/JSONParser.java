@@ -180,4 +180,71 @@ class JSONParser {
     }
     return knownKey;
   }
+
+  static JSONObject convert(final Track track) {
+    JSONObject json = new JSONObject();
+
+    if (track.getAlbum() != null && track.getAlbum().length() > 0) { json.put(ALBUM, track.getAlbum()); }
+    if (track.getArtist() != null && track.getArtist().length() > 0) { json.put(ARTIST, track.getArtist()); }
+    if (track.getArtwork_Count() != null && track.getArtwork_Count().length() > 0) { json.put(ARTWORKCOUNT, track.getArtwork_Count()); }
+    if (track.getBit_Rate() != null && track.getBit_Rate().length() > 0) { json.put(BITRATE, track.getBit_Rate()); }
+    if (track.getComments() != null && track.getComments().length() > 0) { json.put(COMMENTS, track.getComments()); }
+    if (track.getCompilation() != null && track.getCompilation().length() > 0) { json.put(COMPILATION, track.getCompilation()); }
+    if (track.getComposer() != null && track.getComposer().length() > 0) { json.put(COMPOSER, track.getComposer()); }
+    if (track.getDate_Added() != null && track.getDate_Added().length() > 0) { json.put(DATEADDED, track.getDate_Added()); }
+    if (track.getDate_Modified() != null && track.getDate_Modified().length() > 0) { json.put(DATEMODIFIED, track.getDate_Modified()); }
+    if (track.getDisc_Count() != null && track.getDisc_Count().length() > 0) { json.put(DISCCOUNT, track.getDisc_Count()); }
+    if (track.getDisc_Number() != null && track.getDisc_Number().length() > 0) { json.put(DISCNUMBER, track.getDisc_Number()); }
+    if (track.getGenre() != null && track.getGenre().length() > 0) { json.put(GENRE, track.getGenre()); }
+    if (track.getKind() != null && track.getKind().length() > 0) { json.put(KIND, track.getKind()); }
+    if (track.getLocation() != null && track.getLocation().length() > 0) { json.put(LOCATION, track.getLocation()); }
+    if (track.getName() != null && track.getName().length() > 0) { json.put(NAME, track.getName()); }
+    if (track.getPlay_Count() != null && track.getPlay_Count().length() > 0) { json.put(PLAYCOUNT, track.getPlay_Count()); }
+    if (track.getPlay_Date_UTC() != null && track.getPlay_Date_UTC().length() > 0) { json.put(PLAYDATEUTC, track.getPlay_Date_UTC()); }
+    if (track.getSample_Rate() != null && track.getSample_Rate().length() > 0) { json.put(SAMPLERATE, track.getSample_Rate()); }
+    if (track.getSize() != null && track.getSize().length() > 0) { json.put(SIZE, track.getSize()); }
+    if (track.getTotal_Time() != null && track.getTotal_Time().length() > 0) { json.put(TOTALTIME, track.getTotal_Time()); }
+    if (track.getTrack_Count() != null && track.getTrack_Count().length() > 0) { json.put(TRACKCOUNT, track.getTrack_Count()); }
+    if (track.getTrack_Number() != null && track.getTrack_Number().length() > 0) { json.put(TRACKNUMBER, track.getTrack_Number()); }
+    if (track.getTrack_Type() != null && track.getTrack_Type().length() > 0) { json.put(TRACKTYPE, track.getTrack_Type()); }
+    if (track.getYear() != null && track.getYear().length() > 0) { json.put(YEAR, track.getYear()); }
+    if (track.getSeason() != null && track.getSeason().length() > 0) { json.put(SEASON, track.getSeason()); }
+    if (track.getPersistent_ID() != null && track.getPersistent_ID().length() > 0) { json.put(PERSISTENTID, track.getPersistent_ID()); }
+    if (track.getSeries() != null && track.getSeries().length() > 0) { json.put(SERIES, track.getSeries()); }
+    if (track.getEpisode() != null && track.getEpisode().length() > 0) { json.put(EPISODE, track.getEpisode()); }
+    if (track.getEpisode_Order() != null && track.getEpisode_Order().length() > 0) { json.put(EPISODEORDER, track.getEpisode_Order()); }
+    if (track.getHas_Video() != null && track.getHas_Video().length() > 0) { json.put(HASVIDEO, track.getHas_Video()); }
+    if (track.getTV_Show() != null && track.getTV_Show().length() > 0) { json.put(TVSHOW, track.getTV_Show()); }
+    if (track.getProtected() != null && track.getProtected().length() > 0) { json.put(PROTECTED, track.getProtected()); }
+    if (track.getBPM() != null && track.getBPM().length() > 0) { json.put(BPM, track.getBPM()); }
+    if (track.getAlbum_Artist() != null && track.getAlbum_Artist().length() > 0) { json.put(ALBUMARTIST, track.getAlbum_Artist()); }
+    if (track.getExplicit() != null && track.getExplicit().length() > 0) { json.put(EXPLICIT, track.getExplicit()); }
+    if (track.getSkip_Count() != null && track.getSkip_Count().length() > 0) { json.put(SKIPCOUNT, track.getSkip_Count()); }
+    if (track.getSkip_Date() != null && track.getSkip_Date().length() > 0) { json.put(SKIPDATE, track.getSkip_Date()); }
+    if (track.getRelease_Date() != null && track.getRelease_Date().length() > 0) { json.put(RELEASEDATE, track.getRelease_Date()); }
+    if (track.getPodcast() != null && track.getPodcast().length() > 0) { json.put(PODCAST, track.getPodcast()); }
+    if (track.getMovie() != null && track.getMovie().length() > 0) { json.put(MOVIE, track.getMovie()); }
+    if (track.getUnplayed() != null && track.getUnplayed().length() > 0) { json.put(UNPLAYED, track.getUnplayed()); }
+    if (track.getSort_Album() != null && track.getSort_Album().length() > 0) { json.put(SORTALBUM, track.getSort_Album()); }
+    if (track.getSort_Album_Artist() != null && track.getSort_Album_Artist().length() > 0) { json.put(SORTALBUMARTIST, track.getSort_Album_Artist()); }
+    if (track.getSort_Artist() != null && track.getSort_Artist().length() > 0) { json.put(SORTARTIST, track.getSort_Artist()); }
+    if (track.getSort_Composer() != null && track.getSort_Composer().length() > 0) { json.put(SORTCOMPOSER, track.getSort_Composer()); }
+    if (track.getSort_Name() != null && track.getSort_Name().length() > 0) { json.put(SORTNAME, track.getSort_Name()); }
+    if (track.getContent_Rating() != null && track.getContent_Rating().length() > 0) { json.put(CONTENTRATING, track.getContent_Rating()); }
+    if (track.getDisabled() != null && track.getDisabled().length() > 0) { json.put(DISABLED, track.getDisabled()); }
+    if (track.getPurchased() != null && track.getPurchased().length() > 0) { json.put(PURCHASED, track.getPurchased()); }
+    if (track.getVideo_Height() != null && track.getVideo_Height().length() > 0) { json.put(VIDEOHEIGHT, track.getVideo_Height()); }
+    if (track.getVideo_Width() != null && track.getVideo_Width().length() > 0) { json.put(VIDEOWIDTH, track.getVideo_Width()); }
+    if (track.getHD() != null && track.getHD().length() > 0) { json.put(HD, track.getHD()); }
+    if (track.getAlbum_Rating() != null && track.getAlbum_Rating().length() > 0) { json.put(ALBUMRATING, track.getAlbum_Rating()); }
+    if (track.getAlbum_Rating_Computed() != null && track.getAlbum_Rating_Computed().length() > 0) { json.put(ALBUMRATINGCOMPUTED, track.getAlbum_Rating_Computed()); }
+    if (track.getRating() != null && track.getRating().length() > 0) { json.put(RATING, track.getRating()); }
+    if (track.getGrouping() != null && track.getGrouping().length() > 0) { json.put(GROUPING, track.getGrouping()); }
+    if (track.getPart_Of_Gapless_Album() != null && track.getPart_Of_Gapless_Album().length() > 0) { json.put(PARTOFGAPLESSALBUM, track.getPart_Of_Gapless_Album()); }
+    if (track.getMusic_Video() != null && track.getMusic_Video().length() > 0) { json.put(MUSICVIDEO, track.getMusic_Video()); }
+    if (track.getRating_Computed() != null && track.getRating_Computed().length() > 0) { json.put(RATINGCOMPUTED, track.getRating_Computed()); }
+    if (track.getSort_Series() != null && track.getSort_Series().length() > 0) { json.put(SORTSERIES, track.getSort_Series()); }
+
+    return json;
+  }
 }
