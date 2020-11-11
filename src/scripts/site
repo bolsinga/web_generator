@@ -65,9 +65,7 @@ fi
 
 ITUNES_DATA_FILE="$4"
 if [ -z "$ITUNES_DATA_FILE" ] ; then
-  DATA_FILES="\"${DATA_HOME}/iTunes Music Library.xml\""
-else
-  DATA_FILES=$ITUNES_DATA_FILE
+  usage "No itunes json file"
 fi
 
 for i in \
