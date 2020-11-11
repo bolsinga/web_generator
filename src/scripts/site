@@ -66,6 +66,8 @@ fi
 ITUNES_DATA_FILE="$4"
 if [ -z "$ITUNES_DATA_FILE" ] ; then
   usage "No itunes json file"
+else
+  DATA_FILES=$ITUNES_DATA_FILE
 fi
 
 for i in \
