@@ -185,9 +185,6 @@
     <arg line="${src.dir}/scripts/site ${dst.dir}" />
   </exec>
   <exec executable="cp" >
-    <arg line="${src.dir}/scripts/check ${dst.dir}" />
-  </exec>
-  <exec executable="cp" >
     <arg line="${src.dir}/scripts/itunes ${dst.dir}" />
   </exec>
   <exec executable="cp" >
