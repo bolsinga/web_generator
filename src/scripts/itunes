@@ -46,18 +46,6 @@ if [ ! -d "${DATA_HOME}" ] ; then
     usage "No $DATA_HOME"
 fi
 
-OUTPUT_DIR="$2"
-if [ -z "$OUTPUT_DIR" ] ; then
-    usage "No output_dir"
-fi
-if [ ! -d "$OUTPUT_DIR" ] ; then
-    mkdir -p "$OUTPUT_DIR"
-fi
-OUTPUT_HOME=`cd "$OUTPUT_DIR" && pwd`
-if [ ! -d "${OUTPUT_HOME}" ] ; then
-    usage "Can't find ${OUTPUT_HOME}"
-fi
-
 for i in "${DATA_HOME}/iTunes Music Library.xml"  "${DATA_HOME}/itunes-music-library.json" ; do
   if [ ! -f "$i" ] ; then
       usage "Can't find $i"
@@ -69,7 +57,7 @@ COMMAND="exec \"$JAVA_CMD\" -Xms256m -Xmx256m -ea:com.bolsinga..."
 if [ ! -z "$JAVA_OPTS" ] ; then
     COMMAND="$COMMAND $JAVA_OPTS"
 fi
-COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.itunes.Main $DATA_FILES $OUTPUT_HOME"
+COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.itunes.Main $DATA_FILES"
 
 if [ ! -z "$DUMP" ] ; then
     echo "$COMMAND"
