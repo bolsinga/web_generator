@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "itunes data_dir output_dir"
+    echo "itunes data_dir"
     echo $1
     exit 1
 }
