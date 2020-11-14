@@ -5,14 +5,13 @@ import java.util.*;
 public class Main {
 
   public static void main(String[] args) {
-    if (args.length != 3) {
+    if (args.length != 2) {
       Main.usage(args, "Wrong number of arguments");
     }
 
     int i = 0;
     String itunesXML = args[i++];
     String itunesJSON = args[i++];
-    String output = args[i++];
 
     Media xmlMedia = null;
     Media jsonMedia = null;
@@ -91,7 +90,7 @@ public class Main {
 
 
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [iTunes Music.xml] [itunes.json] [output.dir]");
+    System.out.println("Usage: Main [iTunes Music.xml] [itunes.json]");
     System.out.println(reason);
     if (badargs != null) {
       System.out.println("Arguments:");
