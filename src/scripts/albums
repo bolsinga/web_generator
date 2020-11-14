@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "albums data_dir"
+    echo "albums itunes.xml itunes.json"
     echo $1
     exit 1
 }
@@ -36,28 +36,21 @@ for i in "${SITE_LIB_DIR}" ; do
     done
 done
 
-DATA_DIR="$1"
-if [ -z "$DATA_DIR" ] ; then
-    usage "No data_dir"
+ITUNES_XML="$1"
+if [ -z "$ITUNES_XML" ] ; then
+    usage "No itunes.xml"
 fi
 
-DATA_HOME=`cd "$DATA_DIR" && pwd`
-if [ ! -d "${DATA_HOME}" ] ; then
-    usage "No $DATA_HOME"
+ITUNES_JSON="$1"
+if [ -z "$ITUNES_JSON" ] ; then
+    usage "No itunes.json"
 fi
-
-for i in "${DATA_HOME}/iTunes Music Library.xml"  "${DATA_HOME}/itunes-music-library.json" ; do
-  if [ ! -f "$i" ] ; then
-      usage "Can't find $i"
-  fi
-  DATA_FILES="$DATA_FILES \"$i\""
-done
 
 COMMAND="exec \"$JAVA_CMD\" -Xms256m -Xmx256m -ea:com.bolsinga..."
 if [ ! -z "$JAVA_OPTS" ] ; then
     COMMAND="$COMMAND $JAVA_OPTS"
 fi
-COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.music.data.raw.Main $DATA_FILES"
+COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.music.data.raw.Main $ITUNES_XML $ITUNES_JSON"
 
 if [ ! -z "$DUMP" ] ; then
     echo "$COMMAND"
