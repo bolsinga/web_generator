@@ -53,7 +53,7 @@ public class Relation implements com.bolsinga.music.data.Relation {
                   sb.append(reason);
                   sb.append(" -> ");
                   sb.append(member);
-                  throw new com.bolsinga.web.WebException(sb.toString());
+                  System.err.println(sb.toString());
                 }
               }
           } else if (type.equals("venue")) {
@@ -68,7 +68,7 @@ public class Relation implements com.bolsinga.music.data.Relation {
                   sb.append(reason);
                   sb.append(" -> ");
                   sb.append(member);
-                  throw new com.bolsinga.web.WebException(sb.toString());
+                  System.err.println(sb.toString());
                 }
               }
           } else {
