@@ -313,26 +313,13 @@ public class Links {
     return Util.createInternalA(sb.toString(), t, Util.getResourceString("citystats"));
   }
 
-  public String getICalAlt() {
-    com.bolsinga.web.Settings.Image image = Util.getSettings().getIcalImage();
-    return image.getAlt();
-  }
-
   public A getICalLink() {
     StringBuilder sb = new StringBuilder();
     sb.append("webcal:");
     sb.append(getDirectoryPath(ALT_DIR));
     sb.append(Util.getSettings().getIcalName() + ".ics");
-
-    com.bolsinga.web.Settings.Image image = Util.getSettings().getIcalImage();
-
-    IMG i = new IMG(image.getLocation());
-    i.setHeight(image.getHeight());
-    i.setWidth(image.getWidth());
-    i.setAlt(image.getAlt());
-    i.setTitle(image.getAlt());
                 
-    return new A(sb.toString(), i.toString()); // ical: URL
+    return new A(sb.toString(), Util.getResourceString("icalTitle")); // ical: URL
   }
         
   public String getStyleSheetLink() {
