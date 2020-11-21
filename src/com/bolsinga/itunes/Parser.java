@@ -24,10 +24,7 @@ public class Parser {
 
   List<Track> parseTracks(final String itunesFile) throws ParserException {
     List<Track> tracks = null;
-    if (itunesFile.endsWith("xml")) {
-      XMLParser parser = new XMLParser();
-      tracks = parser.createTracks(itunesFile);
-    } else if (itunesFile.endsWith("json")) {
+    if (itunesFile.endsWith("json")) {
       JSONParser parser = new JSONParser();
       tracks = parser.createTracks(itunesFile);
     } else {
