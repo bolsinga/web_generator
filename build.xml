@@ -11,7 +11,6 @@
 
 <property name="obj.dir" value="${build.dir}/obj" />
 <property name="build.classes" value="${obj.dir}/classes" />
-<property name="build.gensrc" value="${obj.dir}/gensrc" />
 
 <property name="sym.dir" value="${obj.dir}/sym" />
 <property name="build.lib" value="${sym.dir}/lib" />
@@ -33,7 +32,6 @@
   <mkdir dir="${build.dir}" />
   <mkdir dir="${build.classes}" />
   <mkdir dir="${build.lib}" />
-  <mkdir dir="${build.gensrc}" />
   <mkdir dir="${dst.lib}" />
 </target>
 
@@ -183,15 +181,6 @@
 <target name="package" depends="site, jar" >
   <exec executable="cp" >
     <arg line="${src.dir}/scripts/site ${dst.dir}" />
-  </exec>
-  <exec executable="cp" >
-    <arg line="${src.dir}/scripts/itunes ${dst.dir}" />
-  </exec>
-  <exec executable="cp" >
-    <arg line="${src.dir}/scripts/albums ${dst.dir}" />
-  </exec>
-  <exec executable="cp" >
-    <arg line="${src.dir}/scripts/convert ${dst.dir}" />
   </exec>
   <copy file="${build.lib}/${ant.project.name}.jar" todir="${dst.lib}" />
   <copy file="${lib.dir}/ecs-1.4.2.jar" todir="${dst.lib}" />
