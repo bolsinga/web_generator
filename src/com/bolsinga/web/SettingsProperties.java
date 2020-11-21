@@ -7,7 +7,6 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
   private final Properties fProperties;
   private final com.bolsinga.web.Settings.Image fLogoImage;
   private final com.bolsinga.web.Settings.Image fRssImage;
-  private final com.bolsinga.web.Settings.Image fiCalImage;
 
   public static com.bolsinga.web.Settings create(final String sourceFile) throws com.bolsinga.web.WebException {
     InputStream is = null;
@@ -60,7 +59,6 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
     fProperties = properties;
     fLogoImage = createImage(properties, "logoImage");
     fRssImage = createImage(properties, "rssImage");
-    fiCalImage = createImage(properties, "icalImage");
   }
 
   public String getContact() {
@@ -81,10 +79,6 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
 
   public Image getRssImage() {
     return fRssImage;
-  }
-
-  public Image getIcalImage() {
-    return fiCalImage;
   }
 
   public String getCssFile() {

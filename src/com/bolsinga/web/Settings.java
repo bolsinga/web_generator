@@ -42,7 +42,6 @@ public interface Settings {
   public String getWebClipIcon();
   public Image getLogoImage();
   public Image getRssImage();
-  public Image getIcalImage();
   public String getCssFile();
   public String getRssFile();
   public int getDiaryCount();

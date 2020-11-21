@@ -103,8 +103,7 @@ public class AltDocumentCreator extends DiaryRecordDocumentCreator {
     
     {
     // iCal
-    Object[] args = { fLinks.getICalLink().toString(), fLinks.getICalAlt() };
-    e.addElement(new StringElement(MessageFormat.format(Util.getResourceString("singlespace"), args)));
+    e.addElement(fLinks.getICalLink());
     }
 
     Div d = Util.createDiv(CSS.COLOPHON);
