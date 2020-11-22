@@ -97,8 +97,7 @@ public class AltDocumentCreator extends DiaryRecordDocumentCreator {
 
     {
     // RSS
-    Object[] args = { fLinks.getRSSLink().toString(), fLinks.getRSSAlt() };
-    e.addElement(new StringElement(MessageFormat.format(Util.getResourceString("singlespace"), args)));
+    e.addElement(fLinks.getRSSLink());
     }
     
     {

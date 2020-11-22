@@ -390,24 +390,8 @@ public class Links {
     return sb.toString();
   }
 
-  // Many tools automatically handle RSS links. Perhaps it is time to have a 'special' feeds
-  //  page, which will provide this link as well as the iCal link. Then ATOM can go onto this
-  //  page in the future as well.
-  public String getRSSAlt() {
-    com.bolsinga.web.Settings.Image image = Util.getSettings().getRssImage();
-    return image.getAlt();
-  }
-  
   public A getRSSLink() {
-    com.bolsinga.web.Settings.Image image = Util.getSettings().getRssImage();
-
-    IMG i = new IMG(image.getLocation());
-    i.setHeight(image.getHeight());
-    i.setWidth(image.getWidth());
-    i.setAlt(image.getAlt());
-    i.setTitle(image.getAlt());
-                
-    return new A(getRSSURL(), i.toString()); // rss feed URL
+    return new A(getRSSURL(), Util.getResourceString("rssTitle")); // rss feed URL
   }
   
   public A getOverviewLink() {

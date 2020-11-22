@@ -6,7 +6,6 @@ import java.util.*;
 public class SettingsProperties implements com.bolsinga.web.Settings {
   private final Properties fProperties;
   private final com.bolsinga.web.Settings.Image fLogoImage;
-  private final com.bolsinga.web.Settings.Image fRssImage;
 
   public static com.bolsinga.web.Settings create(final String sourceFile) throws com.bolsinga.web.WebException {
     InputStream is = null;
@@ -58,7 +57,6 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
   private SettingsProperties(final Properties properties) {
     fProperties = properties;
     fLogoImage = createImage(properties, "logoImage");
-    fRssImage = createImage(properties, "rssImage");
   }
 
   public String getContact() {
@@ -75,10 +73,6 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
 
   public Image getLogoImage() {
     return fLogoImage;
-  }
-
-  public Image getRssImage() {
-    return fRssImage;
   }
 
   public String getCssFile() {
