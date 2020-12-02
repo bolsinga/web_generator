@@ -213,27 +213,36 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
       }
     });
     Collections.reverse(songs);
-    return songs.iterator().next();
+    if (songs.size() > 0) {
+      return songs.iterator().next();
+    }
+    return null;
   }
 
   private com.bolsinga.web.Record getLastPlayedRecord() {
     Song lastPlayedSong = getLastPlayedSong();
-    Artist artist = lastPlayedSong.getPerformer();
+    if (lastPlayedSong != null) {
+      Artist artist = lastPlayedSong.getPerformer();
 
-    String linkToArtist = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), Util.createTitle("moreinfoartist", artist.getName())).toString();
+      String linkToArtist = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), Util.createTitle("moreinfoartist", artist.getName())).toString();
 
-    Object[] args = { lastPlayedSong.getTitle(), linkToArtist, Integer.valueOf(lastPlayedSong.getPlayCount()) };
+      Object[] args = { lastPlayedSong.getTitle(), linkToArtist, Integer.valueOf(lastPlayedSong.getPlayCount()) };
 
-    return com.bolsinga.web.Record.createRecordPermalink(
-      new StringElement(Util.getResourceString("lastplayed")),
-      MessageFormat.format(Util.getResourceString("lastplayedsong"), args),
-      null);
+      return com.bolsinga.web.Record.createRecordPermalink(
+        new StringElement(Util.getResourceString("lastplayed")),
+        MessageFormat.format(Util.getResourceString("lastplayedsong"), args),
+        null);
+    }
+    return null;
   }
 
   private Element getDiary() {
     Div diaryDiv = Util.createDiv(CSS.DOC_SUB);
 
-    diaryDiv.addElement(getLastPlayedRecord().getElement());
+    com.bolsinga.web.Record lastPlayedRecord = getLastPlayedRecord();
+    if (lastPlayedRecord != null) {
+      diaryDiv.addElement(lastPlayedRecord.getElement());
+    }
 
     int mainPageEntryCount = Util.getSettings().getDiaryCount();
     
