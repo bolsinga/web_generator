@@ -627,7 +627,10 @@ public class Util {
   public static JSONArray createJSONArray(final String sourceFile) throws com.bolsinga.web.WebException {
     JSONArray json = null;
     try {
-      json = new JSONArray(createJSONTokener(sourceFile));
+      JSONTokener tokener = createJSONTokener(sourceFile);
+      if (tokener.more()) {
+        json = new JSONArray(tokener);
+      }
     } catch (JSONException e) {
       StringBuilder sb = new StringBuilder();
       sb.append("Cannot instantiate JSONArray: ");
