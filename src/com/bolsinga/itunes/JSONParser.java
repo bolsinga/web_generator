@@ -79,34 +79,36 @@ class JSONParser {
 
     ArrayList<Track> tracks = new ArrayList<Track>();
 
-    Set<String> newKeys = new TreeSet<String>();
+    if (jsonArray != null) {
+      Set<String> newKeys = new TreeSet<String>();
 
-    Iterator<Object> i = jsonArray.iterator();
-    while (i.hasNext()) {
-      JSONObject json = (JSONObject)i.next();
+      Iterator<Object> i = jsonArray.iterator();
+      while (i.hasNext()) {
+        JSONObject json = (JSONObject)i.next();
 
-      Track track = new Track();
+        Track track = new Track();
 
-      Iterator<String> k = json.keys();
-      while (k.hasNext()) {
-        String key = k.next();
+        Iterator<String> k = json.keys();
+        while (k.hasNext()) {
+          String key = k.next();
 
-        String value = json.optString(key, null);
+          String value = json.optString(key, null);
 
-        boolean knownKey = set(track, key, value);
-        if (!knownKey) {
-          newKeys.add(key);
+          boolean knownKey = set(track, key, value);
+          if (!knownKey) {
+            newKeys.add(key);
+          }
         }
+
+        tracks.add(track);
       }
 
-      tracks.add(track);
-    }
-
-    if (newKeys.size() > 0) {
-      System.out.println("iTunes added new keys:");
-      for (String key : newKeys) {
-          String varName = key.toUpperCase().replaceAll(" ", "_").replaceAll("/", "_").replaceAll("-", "_");
-          System.out.println("private static final String TK_" + varName + " = \"" + key + "\";");
+      if (newKeys.size() > 0) {
+        System.out.println("iTunes added new keys:");
+        for (String key : newKeys) {
+            String varName = key.toUpperCase().replaceAll(" ", "_").replaceAll("/", "_").replaceAll("-", "_");
+            System.out.println("private static final String TK_" + varName + " = \"" + key + "\";");
+        }
       }
     }
 
