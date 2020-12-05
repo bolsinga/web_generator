@@ -132,22 +132,21 @@ public class Util {
         
     return i;
   }
-        
-  public static UL convertToUnOrderedList(final String data) {
+
+  public static UL convertToUnOrderedList(final List<String> lines) {
     UL list = new UL();
     list.setPrettyPrint(Util.getPrettyOutput());
-                
+
     // Convert each line to a li tag.
-    String[] lines = data.split("\\n");
-    for (int i = 0; i < lines.length; i++) {
-      LI item = new LI(lines[i]);
+    for (String line : lines) {
+      LI item = new LI(line);
       item.setPrettyPrint(Util.getPrettyOutput());
       list.addElement(item);
     }
-                
+
     return list;
   }
-        
+
   public static org.apache.ecs.Element convertToParagraphs(final String data) {
     // Convert each line to <p> tags except when within a tag...
     ElementContainer ec = new ElementContainer();

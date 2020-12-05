@@ -178,7 +178,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     return ec;
   }
 
-  private static Div createStaticsOffsite(final String title, final String data) {
+  private static Div createStaticsOffsite(final String title, final List<String> data) {
     Div d = Util.createDiv(CSS.STATICS_OFFSITE);
     d.addElement(new H4(title));
     if (data != null) {

@@ -16,10 +16,10 @@ public class Diary implements com.bolsinga.diary.data.Diary {
 
   private String timestamp;
   private String title;
-  private String statics;
-  private String header;
-  private String friends;
-  private String colophon;
+  private List<String> statics;
+  private List<String> header;
+  private List<String> friends;
+  private List<String> colophon;
   private List<Entry> entries;
   
   public static Diary create(final String sourceFile) throws com.bolsinga.web.WebException {
@@ -93,11 +93,31 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   private Diary(final JSONObject json) throws JSONException {
     setTimestamp(com.bolsinga.web.Util.fromJSONCalendar(json.getString(TIMESTAMP)));
     title = json.getString(TITLE);
-    statics = json.getString(STATICS);
-    header = json.getString(HEADER);
-    friends = json.getString(FRIENDS);
-    colophon = json.getString(COLOPHON);
-    
+
+    JSONArray jsonArray = json.getJSONArray(STATICS);
+    statics = new ArrayList<String>(jsonArray.length());
+    for (int i = 0; i < jsonArray.length(); i++) {
+      statics.add(jsonArray.getString(i));
+    }
+
+    jsonArray = json.getJSONArray(HEADER);
+    header = new ArrayList<String>(jsonArray.length());
+    for (int i = 0; i < jsonArray.length(); i++) {
+      header.add(jsonArray.getString(i));
+    }
+
+    jsonArray = json.getJSONArray(FRIENDS);
+    friends = new ArrayList<String>(jsonArray.length());
+    for (int i = 0; i < jsonArray.length(); i++) {
+      friends.add(jsonArray.getString(i));
+    }
+
+    jsonArray = json.getJSONArray(COLOPHON);
+    colophon = new ArrayList<String>(jsonArray.length());
+    for (int i = 0; i < jsonArray.length(); i++) {
+      colophon.add(jsonArray.getString(i));
+    }
+
     JSONObject jsonEntries = json.getJSONObject(ENTRIES);
     entries = new ArrayList<Entry>(jsonEntries.length());
     Iterator i = jsonEntries.keys();
@@ -124,35 +144,35 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     this.title = title;
   }
   
-  public String getStatic() {
+  public List<String> getStatic() {
     return statics;
   }
   
-  public void setStatic(final String staticData) {
+  public void setStatic(final List<String> staticData) {
     this.statics = staticData;
   }
   
-  public String getHeader() {
+  public List<String> getHeader() {
     return header;
   }
   
-  public void setHeader(final String header) {
+  public void setHeader(final List<String> header) {
     this.header = header;
   }
   
-  public String getFriends() {
+  public List<String> getFriends() {
     return friends;
   }
   
-  public void setFriends(final String friends) {
+  public void setFriends(final List<String> friends) {
     this.friends = friends;
   }
   
-  public String getColophon() {
+  public List<String> getColophon() {
     return colophon;
   }
   
-  public void setColophon(final String colophon) {
+  public void setColophon(final List<String> colophon) {
     this.colophon = colophon;
   }
   
