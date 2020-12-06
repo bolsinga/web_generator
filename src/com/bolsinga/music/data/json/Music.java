@@ -70,10 +70,10 @@ public class Music implements com.bolsinga.music.data.Music {
     return json;
   }
 
-  public static JSONObject createRelationsJSON(final List<? extends com.bolsinga.music.data.Relation> items) throws JSONException {
-    JSONObject json = new JSONObject();
+  public static JSONArray createRelationsJSON(final List<? extends com.bolsinga.music.data.Relation> items) throws JSONException {
+    JSONArray json = new JSONArray();
     for (final com.bolsinga.music.data.Relation i : items) {
-      json.put(i.getID(), Relation.createJSON(i));
+      json.put(Relation.createJSON(i));
     }
     return json;
   }
@@ -199,12 +199,10 @@ public class Music implements com.bolsinga.music.data.Music {
       artists.add(Artist.createOrGet(key, jsonItem));
     }
 
-    jsonMap = json.getJSONObject(RELATIONS);
-    relations = new ArrayList<Relation>(jsonMap.length());
-    i = jsonMap.keys();
-    while (i.hasNext()) {
-      String key = (String)i.next();
-      JSONObject jsonItem = jsonMap.getJSONObject(key);
+    JSONArray jsonArray = json.getJSONArray(RELATIONS);
+    relations = new ArrayList<Relation>(jsonArray.length());
+    for (int j = 0; j < jsonArray.length(); j++) {
+      JSONObject jsonItem = jsonArray.getJSONObject(j);
       relations.add(Relation.create(jsonItem));
     }
 
