@@ -48,26 +48,23 @@ public class Album implements com.bolsinga.music.data.Album {
     }
   }
 
-  static Album createOrGet(final String id, final JSONObject json) throws JSONException {
-    synchronized (sMap) {
-      Album result = sMap.get(id);
-      if (result == null) {
-        result = new Album(json);
-        Artist performer = result.getPerformer();
-        if (performer != null) {
-          // There is a single Artist for the Album
-          performer.addAlbum(result);
-        } else {
-          // There is a different Artist for each Song, but each Artist is on the Album
-          for (Song song : result.getSongs()) {
-            performer = song.getPerformer();
-            performer.addAlbum(result);
-          }
-        }
-        sMap.put(id, result);
+  static Album createFromJSON(final JSONObject json) throws JSONException {
+    Album result = new Album(json);
+    Artist performer = result.getPerformer();
+    if (performer != null) {
+      // There is a single Artist for the Album
+      performer.addAlbum(result);
+    } else {
+      // There is a different Artist for each Song, but each Artist is on the Album
+      for (Song song : result.getSongs()) {
+        performer = song.getPerformer();
+        performer.addAlbum(result);
       }
-      return result;
     }
+    synchronized (sMap) {
+      sMap.put(result.getID(), result);
+    }
+    return result;
   }
 
   static JSONObject createJSON(final com.bolsinga.music.data.Album album) throws JSONException {

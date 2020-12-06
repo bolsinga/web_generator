@@ -160,7 +160,7 @@ public class Music implements com.bolsinga.music.data.Music {
     while (i.hasNext()) {
       String key = (String)i.next();
       JSONObject jsonItem = jsonMap.getJSONObject(key);
-      venues.add(Venue.createOrGet(key, jsonItem));
+      venues.add(Venue.createFromJSON(jsonItem));
     }
 
     // Create all the Artists before Relations, Songs, Albums, Shows
@@ -170,7 +170,7 @@ public class Music implements com.bolsinga.music.data.Music {
     while (i.hasNext()) {
       String key = (String)i.next();
       JSONObject jsonItem = jsonMap.getJSONObject(key);
-      artists.add(Artist.createOrGet(key, jsonItem));
+      artists.add(Artist.createFromJSON(jsonItem));
     }
 
     JSONArray jsonArray = json.getJSONArray(RELATIONS);
@@ -186,7 +186,7 @@ public class Music implements com.bolsinga.music.data.Music {
     while (i.hasNext()) {
       String key = (String)i.next();
       JSONObject jsonItem = jsonMap.getJSONObject(key);
-      songs.add(Song.createOrGet(key, jsonItem));
+      songs.add(Song.createFromJSON(jsonItem));
     }
 
     jsonMap = json.getJSONObject(ALBUMS);
@@ -195,7 +195,7 @@ public class Music implements com.bolsinga.music.data.Music {
     while (i.hasNext()) {
       String key = (String)i.next();
       JSONObject jsonItem = jsonMap.getJSONObject(key);
-      albums.add(Album.createOrGet(key, jsonItem));
+      albums.add(Album.createFromJSON(jsonItem));
     }
 
     jsonMap = json.getJSONObject(SHOWS);
