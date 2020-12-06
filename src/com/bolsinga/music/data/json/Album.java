@@ -9,7 +9,6 @@ public class Album implements com.bolsinga.music.data.Album {
   private static final String TITLE = "title";
   private static final String PERFORMER = "performer";
   private static final String COMPILATION = "compilation";
-  private static final String FORMATS = "formats";
   private static final String RELEASE = "release";
   private static final String PURCHASE = "purchase";
   private static final String COMMENT = "comment";
@@ -19,7 +18,6 @@ public class Album implements com.bolsinga.music.data.Album {
   private String title;
   private Artist performer; // optional
   private boolean compilation; // optional
-  private List<String> formats;
   private Date release; // optional
   private Date purchase; // optional
   private String comment; // optional
@@ -84,7 +82,6 @@ public class Album implements com.bolsinga.music.data.Album {
     if (album.isCompilation()) {
       json.put(COMPILATION, true);
     }
-    json.put(FORMATS, album.getFormats());
     com.bolsinga.music.data.Date d = album.getReleaseDate();
     if (d != null) {
       json.put(RELEASE, Date.createJSON(d));
@@ -116,7 +113,6 @@ public class Album implements com.bolsinga.music.data.Album {
     title = src.getTitle();
     performer = Artist.createOrGet(src.getPerformer());
     compilation = src.isCompilation();
-    formats = src.getFormats();
     release = Date.create(src.getReleaseDate());
     purchase = Date.create(src.getPurchaseDate());
     comment = src.getComment();
@@ -137,11 +133,6 @@ public class Album implements com.bolsinga.music.data.Album {
       assert performer != null : "Can't get Artist: " + jsonID;
     }
     compilation = json.optBoolean(COMPILATION, false);
-    JSONArray jsonArray = json.getJSONArray(FORMATS);
-    formats = new ArrayList<String>(jsonArray.length());
-    for (int i = 0; i < jsonArray.length(); i++) {
-      formats.add(jsonArray.getString(i));
-    }
     JSONObject optJSON = json.optJSONObject(RELEASE);
     if (optJSON != null) {
       release = Date.create(optJSON);
@@ -151,7 +142,7 @@ public class Album implements com.bolsinga.music.data.Album {
       purchase = Date.create(optJSON);
     }
     comment = json.optString(COMMENT, null);
-    jsonArray = json.getJSONArray(SONGS);
+    JSONArray jsonArray = json.getJSONArray(SONGS);
     songs = new ArrayList<Song>(jsonArray.length());
     for (int i = 0; i < jsonArray.length(); i++) {
       jsonID = jsonArray.getString(i);
@@ -195,10 +186,6 @@ public class Album implements com.bolsinga.music.data.Album {
   
   public void setIsCompilation(final boolean isCompilation) {
     this.compilation = isCompilation;
-  }
-  
-  public List<String> getFormats() {
-    return formats;
   }
 
   public String getComment() {
