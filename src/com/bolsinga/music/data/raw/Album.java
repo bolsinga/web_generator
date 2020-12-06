@@ -9,7 +9,6 @@ public class Album implements com.bolsinga.music.data.Album {
   private com.bolsinga.music.data.Date fReleaseDate;
   private com.bolsinga.music.data.Date fPurchaseDate;
   private boolean fIsCompilation;
-  private List<String> fFormats;
   private String fComment;
   private final List<Song> fSongs;
   
@@ -25,10 +24,7 @@ public class Album implements com.bolsinga.music.data.Album {
     fReleaseDate = releaseDate;
     
     fIsCompilation = (artist == null);
-    
-    fFormats = new ArrayList<String>();
-    fFormats.add(com.bolsinga.music.data.Album.FORMAT_DIGITAL_FILE);
-    
+
     fSongs = songs;
   }
   
@@ -67,10 +63,6 @@ public class Album implements com.bolsinga.music.data.Album {
   
   public void setIsCompilation(final boolean isCompilation) {
     fIsCompilation = isCompilation;
-  }
-  
-  public List<String> getFormats() {
-    return fFormats;
   }
 
   public String getComment() {
