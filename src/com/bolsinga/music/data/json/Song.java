@@ -50,15 +50,12 @@ public class Song implements com.bolsinga.music.data.Song {
     }
   }
 
-  static Song createOrGet(final String id, final JSONObject json) throws JSONException {
+  static Song createFromJSON(final JSONObject json) throws JSONException {
+    Song result = new Song(json);
     synchronized (sMap) {
-      Song result = sMap.get(id);
-      if (result == null) {
-        result = new Song(json);
-        sMap.put(id, result);
-      }
-      return result;
+      sMap.put(result.getID(), result);
     }
+    return result;
   }
 
   static JSONObject createJSON(final com.bolsinga.music.data.Song song) throws JSONException {

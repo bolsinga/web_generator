@@ -47,15 +47,12 @@ public class Artist implements com.bolsinga.music.data.Artist {
     }
   }
 
-  static Artist createOrGet(final String id, final JSONObject json) throws JSONException {
+  static Artist createFromJSON(final JSONObject json) throws JSONException {
+    Artist result = new Artist(json);
     synchronized (sMap) {
-      Artist result = sMap.get(id);
-      if (result == null) {
-        result = new Artist(json);
-        sMap.put(id, result);
-      }
-      return result;
+      sMap.put(result.getID(), result);
     }
+    return result;
   }
 
   static JSONObject createJSON(final com.bolsinga.music.data.Artist artist) throws JSONException {

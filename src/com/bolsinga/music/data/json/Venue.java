@@ -38,15 +38,12 @@ public class Venue implements com.bolsinga.music.data.Venue {
     }
   }
   
-  static Venue createOrGet(final String id, final JSONObject json) throws JSONException {
+  static Venue createFromJSON(final JSONObject json) throws JSONException {
+    Venue result = new Venue(json);
     synchronized (sMap) {
-      Venue result = sMap.get(id);
-      if (result == null) {
-        result = new Venue(json);
-        sMap.put(id, result);
-      }
-      return result;
+      sMap.put(result.getID(), result);
     }
+    return result;
   }
 
   static JSONObject createJSON(final com.bolsinga.music.data.Venue venue) throws JSONException {
