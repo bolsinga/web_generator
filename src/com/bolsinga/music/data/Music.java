@@ -9,8 +9,6 @@ public interface Music {
   public List<? extends Venue> getVenuesCopy();
   public List<? extends Artist> getArtists();
   public List<? extends Artist> getArtistsCopy();
-  public List<? extends Label> getLabels();
-  public List<? extends Label> getLabelsCopy();
   public List<? extends Relation> getRelations();
   public List<? extends Relation> getRelationsCopy();
   public List<? extends Song> getSongs();

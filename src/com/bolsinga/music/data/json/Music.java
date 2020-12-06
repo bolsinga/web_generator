@@ -9,7 +9,6 @@ public class Music implements com.bolsinga.music.data.Music {
   private static final String TIMESTAMP = "timestamp";
   private static final String VENUES = "venues";
   private static final String ARTISTS = "artists";
-  private static final String LABELS = "labels";
   private static final String RELATIONS = "relations";
   private static final String SONGS = "songs";
   private static final String ALBUMS = "albums";
@@ -18,7 +17,6 @@ public class Music implements com.bolsinga.music.data.Music {
   private String timestamp;
   private List<Venue> venues;
   private List<Artist> artists;
-  private List<Label> labels;
   private List<Relation> relations;
   private List<Song> songs;
   private List<Album> albums;
@@ -62,14 +60,6 @@ public class Music implements com.bolsinga.music.data.Music {
     return json;
   }
 
-  public static JSONObject createLabelsJSON(final List<? extends com.bolsinga.music.data.Label> items) throws JSONException {
-    JSONObject json = new JSONObject();
-    for (final com.bolsinga.music.data.Label i : items) {
-      json.put(i.getID(), Label.createJSON(i));
-    }
-    return json;
-  }
-
   public static JSONArray createRelationsJSON(final List<? extends com.bolsinga.music.data.Relation> items) throws JSONException {
     JSONArray json = new JSONArray();
     for (final com.bolsinga.music.data.Relation i : items) {
@@ -109,7 +99,6 @@ public class Music implements com.bolsinga.music.data.Music {
     
     json.put(VENUES, Music.createVenuesJSON(music.getVenues()));
     json.put(ARTISTS, Music.createArtistsJSON(music.getArtists()));
-    json.put(LABELS, Music.createLabelsJSON(music.getLabels()));
     json.put(RELATIONS, Music.createRelationsJSON(music.getRelations()));
     json.put(SONGS, Music.createSongsJSON(music.getSongs()));
     json.put(ALBUMS, Music.createAlbumsJSON(music.getAlbums()));
@@ -135,12 +124,6 @@ public class Music implements com.bolsinga.music.data.Music {
     artists = new ArrayList<Artist>(srcArtists.size());
     for (com.bolsinga.music.data.Artist a : srcArtists) {
       artists.add(Artist.createOrGet(a));
-    }
-
-    List<? extends com.bolsinga.music.data.Label> srcLabels = music.getLabels();
-    labels = new ArrayList<Label>(srcLabels.size());
-    for (com.bolsinga.music.data.Label a : srcLabels) {
-      labels.add(Label.createOrGet(a));
     }
 
     List<? extends com.bolsinga.music.data.Relation> srcRelations = music.getRelations();
@@ -180,15 +163,6 @@ public class Music implements com.bolsinga.music.data.Music {
       venues.add(Venue.createOrGet(key, jsonItem));
     }
 
-    jsonMap = json.getJSONObject(LABELS);
-    labels = new ArrayList<Label>(jsonMap.length());
-    i = jsonMap.keys();
-    while (i.hasNext()) {
-      String key = (String)i.next();
-      JSONObject jsonItem = jsonMap.getJSONObject(key);
-      labels.add(Label.createOrGet(key, jsonItem));
-    }
-  
     // Create all the Artists before Relations, Songs, Albums, Shows
     jsonMap = json.getJSONObject(ARTISTS);
     artists = new ArrayList<Artist>(jsonMap.length());
@@ -258,15 +232,7 @@ public class Music implements com.bolsinga.music.data.Music {
   public List<Artist> getArtistsCopy() {
     return new ArrayList<Artist>(artists);
   }
-  
-  public List<Label> getLabels() {
-    return Collections.unmodifiableList(labels);
-  }
-  
-  public List<Label> getLabelsCopy() {
-    return new ArrayList<Label>(labels);
-  }
-  
+
   public List<Relation> getRelations() {
     return Collections.unmodifiableList(relations);
   }

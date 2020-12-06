@@ -37,8 +37,6 @@ public class Relation implements com.bolsinga.music.data.Relation {
         IDs.add(((com.bolsinga.music.data.Artist)o).getID());
       } else if (o instanceof com.bolsinga.music.data.Venue) {
         IDs.add(((com.bolsinga.music.data.Venue)o).getID());
-      } else if (o instanceof com.bolsinga.music.data.Label) {
-        IDs.add(((com.bolsinga.music.data.Label)o).getID());
       } else {
         throw new Error("No Relation: " + o.toString());
       }
@@ -65,8 +63,6 @@ public class Relation implements com.bolsinga.music.data.Relation {
         member = Artist.get((com.bolsinga.music.data.Artist)o);
       } else if (o instanceof com.bolsinga.music.data.Venue) {
         member = Venue.get((com.bolsinga.music.data.Venue)o);
-      } else if (o instanceof com.bolsinga.music.data.Label) {
-        member = Label.get((com.bolsinga.music.data.Label)o);
       } else {
         throw new Error("No Relation: " + o.toString());
       }
@@ -89,11 +85,6 @@ public class Relation implements com.bolsinga.music.data.Relation {
       Venue venue = Venue.get(jsonID);
       if (venue != null) {
         members.add(venue);
-        continue;
-      }
-      Label label = Label.get(jsonID);
-      if (label != null) {
-        members.add(label);
         continue;
       }
       StringBuilder sb = new StringBuilder();

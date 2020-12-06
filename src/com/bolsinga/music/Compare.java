@@ -204,12 +204,6 @@ public class Compare {
       }
     };
 
-  public static final Comparator<Label> LABEL_COMPARATOR = new Comparator<Label>() {
-      public int compare(final Label r1, final Label r2) {
-        return LIBRARY_COMPARATOR.compare(r1.getName(), r2.getName());
-      }
-    };
-
   public static final Comparator<Album> ALBUM_COMPARATOR = new Comparator<Album>() {
       public int compare(final Album r1, final Album r2) {
         int result = LIBRARY_COMPARATOR.compare(r1.getTitle(), r2.getTitle());
