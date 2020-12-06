@@ -115,8 +115,6 @@ public class Main implements Backgroundable {
         json.put(type, com.bolsinga.music.data.json.Music.createVenuesJSON(music.getVenues()));
       } else if (type.equals("artists")) {
         json.put(type, com.bolsinga.music.data.json.Music.createArtistsJSON(music.getArtists()));
-      } else if (type.equals("labels")) {
-        json.put(type, com.bolsinga.music.data.json.Music.createLabelsJSON(music.getLabels()));
       } else if (type.equals("relations")) {
         json.put(type, com.bolsinga.music.data.json.Music.createRelationsJSON(music.getRelations()));
       } else if (type.equals("songs")) {

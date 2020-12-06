@@ -7,7 +7,6 @@ public class Music implements com.bolsinga.music.data.Music {
   private GregorianCalendar fDate = null;
   private List<Venue> fVenues;
   private List<Artist> fArtists;
-  private List<Label> fLabels;
   private List<Relation> fRelations;
   private List<Song> fSongs;
   private List<Album> fAlbums;
@@ -25,17 +24,13 @@ public class Music implements com.bolsinga.music.data.Music {
     // This needs to be read after all artists are created
     List<Relation> relations = Relation.create(relationFile);
 
-    // Not yet used.
-    List<Label> labels = new ArrayList<Label>();
-    
-    return new Music(venues, artists, labels, relations, media.fSongs, media.fAlbums, shows);
+    return new Music(venues, artists, relations, media.fSongs, media.fAlbums, shows);
   }
 
-  private Music(final List<Venue> venues, final List<Artist> artists, final List<Label> labels, final List<Relation> relations, final List<Song> songs, final List<Album> albums, final List<Show> shows) {
+  private Music(final List<Venue> venues, final List<Artist> artists, final List<Relation> relations, final List<Song> songs, final List<Album> albums, final List<Show> shows) {
     fDate = com.bolsinga.web.Util.nowUTC();
     fVenues = venues;
     fArtists = artists;
-    fLabels = labels;
     fRelations = relations;
     fSongs = songs;
     fAlbums = albums;
@@ -65,15 +60,7 @@ public class Music implements com.bolsinga.music.data.Music {
   public List<Artist> getArtistsCopy() {
     return new ArrayList<Artist>(fArtists);
   }
-  
-  public List<Label> getLabels() {
-    return Collections.unmodifiableList(fLabels);
-  }
-  
-  public List<Label> getLabelsCopy() {
-    return new ArrayList<Label>(fLabels);
-  }
-  
+
   public List<Relation> getRelations() {
     return Collections.unmodifiableList(fRelations);
   }

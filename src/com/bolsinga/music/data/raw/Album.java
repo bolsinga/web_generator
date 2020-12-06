@@ -10,7 +10,6 @@ public class Album implements com.bolsinga.music.data.Album {
   private com.bolsinga.music.data.Date fPurchaseDate;
   private boolean fIsCompilation;
   private List<String> fFormats;
-  private Label fLabel;
   private String fComment;
   private final List<Song> fSongs;
   
@@ -73,11 +72,7 @@ public class Album implements com.bolsinga.music.data.Album {
   public List<String> getFormats() {
     return fFormats;
   }
-  
-  public Label getLabel() {
-    return fLabel;
-  }
-  
+
   public String getComment() {
     return fComment;
   }

@@ -22,7 +22,6 @@ public interface Album {
   public boolean isCompilation();
   public void setIsCompilation(final boolean isCompilation);
   public List<String> getFormats();
-  public Label getLabel();
   public String getComment();
   public void setComment(final String comment);
   public List<? extends Song> getSongs();

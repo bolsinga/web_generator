@@ -28,8 +28,6 @@ public class Lookup {
     new HashMap<String, Collection<Artist>>();
   private final HashMap<String, Collection<Venue>> fVenueRelationMap =
     new HashMap<String, Collection<Venue>>();
-  private final HashMap<String, Collection<Label>> fLabelRelationMap =
-    new HashMap<String, Collection<Label>>();
         
   public synchronized static Lookup getLookup(final Music music) {
     if (sLookup == null) {
@@ -126,18 +124,6 @@ public class Lookup {
             rVenues = fVenueRelationMap.get(id);
             rVenues.add(venue);
           }
-        } else if (o instanceof Label) {
-          Collection<Label> rLabels;
-          id = ((Label)o).getID();
-          if (!fLabelRelationMap.containsKey(id)) {
-            rLabels = new TreeSet<Label>(Compare.LABEL_COMPARATOR);
-            fLabelRelationMap.put(id, rLabels);
-          }
-          for (Object jl : rel.getMembers()) {
-            Label label = (Label)jl;
-            rLabels = fLabelRelationMap.get(id);
-            rLabels.add(label);
-          }
         } else {
           throw new Error("No Relation: " + o.toString());
         }
@@ -189,11 +175,7 @@ public class Lookup {
   public Collection<Venue> getRelations(final Venue venue) {
     return fVenueRelationMap.get(venue.getID());
   }
-        
-  public Collection<Label> getRelations(final Label label) {
-    return fLabelRelationMap.get(label.getID());
-  }
-        
+
   public Collection<String> getCities() {
     return fCityMap.keySet();
   }

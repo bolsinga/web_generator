@@ -12,7 +12,6 @@ public class Album implements com.bolsinga.music.data.Album {
   private static final String FORMATS = "formats";
   private static final String RELEASE = "release";
   private static final String PURCHASE = "purchase";
-  private static final String LABEL = "label";
   private static final String COMMENT = "comment";
   private static final String SONGS = "songs";
 
@@ -23,7 +22,6 @@ public class Album implements com.bolsinga.music.data.Album {
   private List<String> formats;
   private Date release; // optional
   private Date purchase; // optional
-  private Label label; // optional
   private String comment; // optional
   private List<Song> songs;
 
@@ -95,10 +93,6 @@ public class Album implements com.bolsinga.music.data.Album {
     if (d != null) {
       json.put(PURCHASE, Date.createJSON(d));
     }
-    com.bolsinga.music.data.Label l = album.getLabel();
-    if (l != null) {
-      json.put(LABEL, l.getID());
-    }
     String comment = album.getComment();
     if (comment != null) {
       json.put(COMMENT, comment);
@@ -125,7 +119,6 @@ public class Album implements com.bolsinga.music.data.Album {
     formats = src.getFormats();
     release = Date.create(src.getReleaseDate());
     purchase = Date.create(src.getPurchaseDate());
-    label = Label.createOrGet(src.getLabel());
     comment = src.getComment();
 
     List<? extends com.bolsinga.music.data.Song> srcSongs = src.getSongs();
@@ -156,11 +149,6 @@ public class Album implements com.bolsinga.music.data.Album {
     optJSON = json.optJSONObject(PURCHASE);
     if (optJSON != null) {
       purchase = Date.create(optJSON);
-    }
-    jsonID = json.optString(LABEL, null);
-    if (jsonID != null) {
-      label = Label.get(jsonID);
-      assert label != null : "Can't get Label: " + jsonID;
     }
     comment = json.optString(COMMENT, null);
     jsonArray = json.getJSONArray(SONGS);
@@ -212,11 +200,7 @@ public class Album implements com.bolsinga.music.data.Album {
   public List<String> getFormats() {
     return formats;
   }
-  
-  public Label getLabel() {
-    return label;
-  }
-  
+
   public String getComment() {
     return comment;
   }
