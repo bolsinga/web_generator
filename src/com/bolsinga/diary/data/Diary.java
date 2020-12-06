@@ -7,14 +7,14 @@ public interface Diary {
   public void setTimestamp(final GregorianCalendar timestamp);
   public String getTitle();
   public void setTitle(final String title);
-  public String getStatic();
-  public void setStatic(final String staticData);
-  public String getHeader();
-  public void setHeader(final String header);
-  public String getFriends();
-  public void setFriends(final String friends);
-  public String getColophon();
-  public void setColophon(final String colophon);
+  public List<String> getStatic();
+  public void setStatic(final List<String> staticData);
+  public List<String> getHeader();
+  public void setHeader(final List<String> header);
+  public List<String> getFriends();
+  public void setFriends(final List<String> friends);
+  public List<String> getColophon();
+  public void setColophon(final List<String> colophon);
   public List<? extends Entry> getEntries();
   public List<? extends Entry> getEntriesCopy();
 }
