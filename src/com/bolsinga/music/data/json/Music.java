@@ -44,18 +44,18 @@ public class Music implements com.bolsinga.music.data.Music {
     com.bolsinga.web.Util.writeJSON(json, outputFile);
   }
 
-  public static JSONObject createVenuesJSON(final List<? extends com.bolsinga.music.data.Venue> items) throws JSONException {
-    JSONObject json = new JSONObject();
+  public static JSONArray createVenuesJSON(final List<? extends com.bolsinga.music.data.Venue> items) throws JSONException {
+    JSONArray json = new JSONArray();
     for (final com.bolsinga.music.data.Venue i : items) {
-      json.put(i.getID(), Venue.createJSON(i));
+      json.put(Venue.createJSON(i));
     }
     return json;
   }
 
-  public static JSONObject createArtistsJSON(final List<? extends com.bolsinga.music.data.Artist> items) throws JSONException {
-    JSONObject json = new JSONObject();
+  public static JSONArray createArtistsJSON(final List<? extends com.bolsinga.music.data.Artist> items) throws JSONException {
+    JSONArray json = new JSONArray();
     for (final com.bolsinga.music.data.Artist i : items) {
-      json.put(i.getID(), Artist.createJSON(i));
+      json.put(Artist.createJSON(i));
     }
     return json;
   }
@@ -68,26 +68,26 @@ public class Music implements com.bolsinga.music.data.Music {
     return json;
   }
 
-  public static JSONObject createSongsJSON(final List<? extends com.bolsinga.music.data.Song> items) throws JSONException {
-    JSONObject json = new JSONObject();
+  public static JSONArray createSongsJSON(final List<? extends com.bolsinga.music.data.Song> items) throws JSONException {
+    JSONArray json = new JSONArray();
     for (final com.bolsinga.music.data.Song i : items) {
-      json.put(i.getID(), Song.createJSON(i));
+      json.put(Song.createJSON(i));
     }
     return json;
   }
 
-  public static JSONObject createAlbumsJSON(final List<? extends com.bolsinga.music.data.Album> items) throws JSONException {
-    JSONObject json = new JSONObject();
+  public static JSONArray createAlbumsJSON(final List<? extends com.bolsinga.music.data.Album> items) throws JSONException {
+    JSONArray json = new JSONArray();
     for (final com.bolsinga.music.data.Album i : items) {
-      json.put(i.getID(), Album.createJSON(i));
+      json.put(Album.createJSON(i));
     }
     return json;
   }
 
-  public static JSONObject createShowsJSON(final List<? extends com.bolsinga.music.data.Show> items) throws JSONException {
-    JSONObject json = new JSONObject();
+  public static JSONArray createShowsJSON(final List<? extends com.bolsinga.music.data.Show> items) throws JSONException {
+    JSONArray json = new JSONArray();
     for (final com.bolsinga.music.data.Show i : items) {
-      json.put(i.getID(), Show.createJSON(i));
+      json.put(Show.createJSON(i));
     }
     return json;
   }
@@ -154,56 +154,46 @@ public class Music implements com.bolsinga.music.data.Music {
   private Music(final JSONObject json) throws Exception {
     setTimestamp(com.bolsinga.web.Util.fromJSONCalendar(json.getString(TIMESTAMP)));
     
-    JSONObject jsonMap = json.getJSONObject(VENUES);
-    venues = new ArrayList<Venue>(jsonMap.length());
-    Iterator i = jsonMap.keys();
-    while (i.hasNext()) {
-      String key = (String)i.next();
-      JSONObject jsonItem = jsonMap.getJSONObject(key);
+    JSONArray jsonArray = json.getJSONArray(VENUES);
+    venues = new ArrayList<Venue>(jsonArray.length());
+    for (int j = 0; j < jsonArray.length(); j++) {
+      JSONObject jsonItem = jsonArray.getJSONObject(j);
       venues.add(Venue.createFromJSON(jsonItem));
     }
 
     // Create all the Artists before Relations, Songs, Albums, Shows
-    jsonMap = json.getJSONObject(ARTISTS);
-    artists = new ArrayList<Artist>(jsonMap.length());
-    i = jsonMap.keys();
-    while (i.hasNext()) {
-      String key = (String)i.next();
-      JSONObject jsonItem = jsonMap.getJSONObject(key);
+    jsonArray = json.getJSONArray(ARTISTS);
+    artists = new ArrayList<Artist>(jsonArray.length());
+    for (int j = 0; j < jsonArray.length(); j++) {
+      JSONObject jsonItem = jsonArray.getJSONObject(j);
       artists.add(Artist.createFromJSON(jsonItem));
     }
 
-    JSONArray jsonArray = json.getJSONArray(RELATIONS);
+    jsonArray = json.getJSONArray(RELATIONS);
     relations = new ArrayList<Relation>(jsonArray.length());
     for (int j = 0; j < jsonArray.length(); j++) {
       JSONObject jsonItem = jsonArray.getJSONObject(j);
       relations.add(Relation.create(jsonItem));
     }
 
-    jsonMap = json.getJSONObject(SONGS);
-    songs = new ArrayList<Song>(jsonMap.length());
-    i = jsonMap.keys();
-    while (i.hasNext()) {
-      String key = (String)i.next();
-      JSONObject jsonItem = jsonMap.getJSONObject(key);
+    jsonArray = json.getJSONArray(SONGS);
+    songs = new ArrayList<Song>(jsonArray.length());
+    for (int j = 0; j < jsonArray.length(); j++) {
+      JSONObject jsonItem = jsonArray.getJSONObject(j);
       songs.add(Song.createFromJSON(jsonItem));
     }
 
-    jsonMap = json.getJSONObject(ALBUMS);
-    albums = new ArrayList<Album>(jsonMap.length());
-    i = jsonMap.keys();
-    while (i.hasNext()) {
-      String key = (String)i.next();
-      JSONObject jsonItem = jsonMap.getJSONObject(key);
+    jsonArray = json.getJSONArray(ALBUMS);
+    albums = new ArrayList<Album>(jsonArray.length());
+    for (int j = 0; j < jsonArray.length(); j++) {
+      JSONObject jsonItem = jsonArray.getJSONObject(j);
       albums.add(Album.createFromJSON(jsonItem));
     }
 
-    jsonMap = json.getJSONObject(SHOWS);
-    shows = new ArrayList<Show>(jsonMap.length());
-    i = jsonMap.keys();
-    while (i.hasNext()) {
-      String key = (String)i.next();
-      JSONObject jsonItem = jsonMap.getJSONObject(key);
+    jsonArray = json.getJSONArray(SHOWS);
+    shows = new ArrayList<Show>(jsonArray.length());
+    for (int j = 0; j < jsonArray.length(); j++) {
+      JSONObject jsonItem = jsonArray.getJSONObject(j);
       shows.add(Show.create(jsonItem));
     }
     java.util.Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
