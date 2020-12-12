@@ -1,10 +1,11 @@
 package com.bolsinga.music.data.raw;
 
+import java.time.*;
 import java.util.*;
 
 public class Music implements com.bolsinga.music.data.Music {
 
-  private GregorianCalendar fDate = null;
+  private ZonedDateTime fDate = null;
   private List<Venue> fVenues;
   private List<Artist> fArtists;
   private List<Relation> fRelations;
@@ -28,7 +29,7 @@ public class Music implements com.bolsinga.music.data.Music {
   }
 
   private Music(final List<Venue> venues, final List<Artist> artists, final List<Relation> relations, final List<Song> songs, final List<Album> albums, final List<Show> shows) {
-    fDate = com.bolsinga.web.Util.nowUTC();
+    fDate = ZonedDateTime.now();
     fVenues = venues;
     fArtists = artists;
     fRelations = relations;
@@ -37,11 +38,11 @@ public class Music implements com.bolsinga.music.data.Music {
     fShows = shows;
   }
   
-  public GregorianCalendar getTimestamp() {
+  public ZonedDateTime getTimestamp() {
       return fDate;
   }
   
-  public void setTimestamp(final GregorianCalendar timestamp) {
+  public void setTimestamp(final ZonedDateTime timestamp) {
     fDate = timestamp;
   }
   
