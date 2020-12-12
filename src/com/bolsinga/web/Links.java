@@ -5,7 +5,7 @@ import com.bolsinga.music.data.*;
 
 import java.io.*;
 import java.math.*;
-import java.text.*;
+import java.time.format.*;
 import java.util.*;
 
 import org.apache.ecs.*;
@@ -32,12 +32,6 @@ public class Links {
 
   private static final String CUR_DIR      = ".";
   private static final String PAR_DIR      = "..";
-    
-  private static final ThreadLocal<DateFormat> sArchivePageFormat = new ThreadLocal<DateFormat>() {
-    public DateFormat initialValue() {
-      return new SimpleDateFormat("yyyy");
-    }
-  };
 
   private final boolean fUpOneLevel;
   
@@ -356,7 +350,8 @@ public class Links {
   }
 
   public String getPageFileName(final Entry entry) {
-    return sArchivePageFormat.get().format(entry.getTimestamp().getTime());
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+    return entry.getTimestamp().format(formatter);
   }
 
   public String getPagePath(final Entry entry) {

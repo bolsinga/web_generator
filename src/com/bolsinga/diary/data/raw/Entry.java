@@ -4,12 +4,13 @@ import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
 import java.nio.charset.*;
+import java.time.*;
 import java.util.*;
 import java.util.regex.*;
 
 public class Entry implements com.bolsinga.diary.data.Entry {
 
-  private GregorianCalendar fDate;
+  private ZonedDateTime fDate;
   private String fComment;
   private String fTitle;
   private String fID;
@@ -19,9 +20,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
   private static final Pattern sDatePattern    = Pattern.compile("<date>(.*?)</date>", Pattern.DOTALL);
   private static final Pattern sTitlePattern   = Pattern.compile("<title>(.*?)</title>", Pattern.DOTALL);
 
-  private static GregorianCalendar toCalendarUTC(final String date) {
-    Calendar localTime = Calendar.getInstance(); // LocalTime OK
-                
+  private static ZonedDateTime toZDT(final String date) {
     String monthString, dayString, yearString = null;
     int month, day, year = 0;
                 
@@ -36,13 +35,8 @@ public class Entry implements com.bolsinga.diary.data.Entry {
     year = Integer.parseInt(yearString);
 
     int diaryTime = com.bolsinga.web.Util.getSettings().getDiaryEntryTime();
-    localTime.clear();
-    localTime.set(year, month - 1, day, diaryTime, 0);
 
-    // Convert to UTC.
-    GregorianCalendar result = com.bolsinga.web.Util.nowUTC();
-    result.setTimeInMillis(localTime.getTimeInMillis());
-    return result;
+    return ZonedDateTime.of(year, month, day, diaryTime, 0, 0, 0, ZoneId.systemDefault());
   }
 
   static List<Entry> create(final String filename) throws com.bolsinga.web.WebException {
@@ -77,7 +71,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
         throw new com.bolsinga.web.WebException(sb.toString(), e);
       }
       
-      TreeMap<GregorianCalendar, Entry> entries = new TreeMap<GregorianCalendar, Entry>();
+      TreeMap<ZonedDateTime, Entry> entries = new TreeMap<ZonedDateTime, Entry>();
       
       Matcher commentMatcher = sCommentPattern.matcher(cb);
       if (commentMatcher.find()) {
@@ -85,7 +79,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
           String entry = commentMatcher.group(1);
           Matcher dateMatcher = sDatePattern.matcher(entry);
           if (dateMatcher.find()) {
-            GregorianCalendar date = Entry.toCalendarUTC(dateMatcher.group(1));
+            ZonedDateTime date = Entry.toZDT(dateMatcher.group(1));
             Matcher titleMatcher = sTitlePattern.matcher(entry);
             String title = null;
             if (titleMatcher.find()) {
@@ -95,7 +89,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
             if (dataMatcher.find()) {
               while (entries.containsKey(date)) {
                 // Decrementing minute for same date entry
-                date.add(Calendar.MINUTE, -1);
+                date = date.minusMinutes(1);
               }
               entries.put(date, new Entry(date, dataMatcher.group(1), title, null));
             } else {
@@ -131,7 +125,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
     }
   }
   
-  private Entry(final GregorianCalendar date, final String comment, final String title, final String id) {
+  private Entry(final ZonedDateTime date, final String comment, final String title, final String id) {
     fDate = date;
     fComment = comment;
     fTitle = title;
@@ -146,11 +140,11 @@ public class Entry implements com.bolsinga.diary.data.Entry {
     fComment = comment;
   }
   
-  public GregorianCalendar getTimestamp() {
+  public ZonedDateTime getTimestamp() {
     return fDate;
   }
   
-  public void setTimestamp(final GregorianCalendar timestamp) {
+  public void setTimestamp(final ZonedDateTime timestamp) {
     fDate = timestamp;
   }
 

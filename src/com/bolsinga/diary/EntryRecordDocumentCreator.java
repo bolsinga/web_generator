@@ -6,6 +6,7 @@ import com.bolsinga.web.*;
 
 import java.io.*;
 import java.text.*;
+import java.time.*;
 import java.util.*;
 
 import org.apache.ecs.*;
@@ -69,10 +70,10 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   }
 
   private Collection<Vector<Entry>> getMonthlies(final Vector<Entry> items) {
-    TreeMap<Calendar, Vector<Entry>> result = new TreeMap<Calendar, Vector<Entry>>(Util.MONTH_COMPARATOR);
+    TreeMap<ZonedDateTime, Vector<Entry>> result = new TreeMap<ZonedDateTime, Vector<Entry>>(Util.ZDT_MONTH_COMPARATOR);
 
     for (Entry item : items) {
-      Calendar key = item.getTimestamp();
+      ZonedDateTime key = item.getTimestamp();
       Vector<Entry> list;
       if (result.containsKey(key)) {
         list = result.get(key);
@@ -187,7 +188,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     Collections.sort(entries, Util.ENTRY_COMPARATOR);
     
     for (Entry entry : entries) {
-	  int year = entry.getTimestamp().get(Calendar.YEAR);
+	  int year = entry.getTimestamp().getYear();
       Integer key = Integer.valueOf(year);
       Vector<Entry> entryList;
       if (result.containsKey(key)) {
@@ -236,8 +237,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
       
       int[] groupMonthTotals = new int[12];
       for (Entry entry : entryGroup) {
-        Calendar cal = entry.getTimestamp();
-        groupMonthTotals[cal.get(Calendar.MONTH) - Calendar.JANUARY]++;
+        groupMonthTotals[entry.getTimestamp().getMonthValue() - 1 /* Calendar.JANUARY */]++;
       }
       
       for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {
