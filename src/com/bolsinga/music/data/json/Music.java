@@ -1,6 +1,7 @@
 package com.bolsinga.music.data.json;
 
 import java.io.*;
+import java.time.*;
 import java.util.*;
 
 import org.json.*;
@@ -95,7 +96,7 @@ public class Music implements com.bolsinga.music.data.Music {
   static JSONObject createJSON(final com.bolsinga.music.data.Music music) throws JSONException {
     JSONObject json = new JSONObject();
 
-    json.put(TIMESTAMP, com.bolsinga.web.Util.toJSONCalendar(music.getTimestamp()));
+    json.put(TIMESTAMP, com.bolsinga.web.Util.zonedDateTimeWithSecondsPrecision(music.getTimestamp()));
     
     json.put(VENUES, Music.createVenuesJSON(music.getVenues()));
     json.put(ARTISTS, Music.createArtistsJSON(music.getArtists()));
@@ -152,7 +153,7 @@ public class Music implements com.bolsinga.music.data.Music {
   }
   
   private Music(final JSONObject json) throws Exception {
-    setTimestamp(com.bolsinga.web.Util.fromJSONCalendar(json.getString(TIMESTAMP)));
+    setTimestamp(ZonedDateTime.parse(json.getString(TIMESTAMP)));
     
     JSONArray jsonArray = json.getJSONArray(VENUES);
     venues = new ArrayList<Venue>(jsonArray.length());
@@ -199,12 +200,12 @@ public class Music implements com.bolsinga.music.data.Music {
     java.util.Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
   }
   
-  public GregorianCalendar getTimestamp() {
-    return com.bolsinga.web.Util.fromJSONCalendar(timestamp);
+  public ZonedDateTime getTimestamp() {
+    return ZonedDateTime.parse(this.timestamp);
   }
   
-  public void setTimestamp(final GregorianCalendar timestamp) {
-    this.timestamp = com.bolsinga.web.Util.toJSONCalendar(timestamp);
+  public void setTimestamp(final ZonedDateTime timestamp) {
+    this.timestamp = timestamp.toString();
   }
   
   public List<Venue> getVenues() {

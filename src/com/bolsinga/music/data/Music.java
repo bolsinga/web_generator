@@ -1,10 +1,11 @@
 package com.bolsinga.music.data;
 
+import java.time.*;
 import java.util.*;
 
 public interface Music {
-  public GregorianCalendar getTimestamp();
-  public void setTimestamp(final GregorianCalendar timestamp);
+  public ZonedDateTime getTimestamp();
+  public void setTimestamp(final ZonedDateTime timestamp);
   public List<? extends Venue> getVenues();
   public List<? extends Venue> getVenuesCopy();
   public List<? extends Artist> getArtists();
