@@ -3,6 +3,7 @@ package com.bolsinga.web;
 import java.io.*;
 import java.math.*;
 import java.text.*;
+import java.time.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -489,6 +490,10 @@ public class Util {
     return sJSONTimeFormat.get().format(cal.getTime());
   }
   
+  public static ZonedDateTime zonedDateTimeWithSecondsPrecision(final ZonedDateTime zdt) {
+    return ZonedDateTime.of(zdt.getYear(), zdt.getMonthValue(), zdt.getDayOfMonth(), zdt.getHour(), zdt.getMinute(), zdt.getSecond(), 0, zdt.getZone());
+  }
+
   public static GregorianCalendar toCalendarLocal(final com.bolsinga.music.data.Date date) {
     GregorianCalendar localTime = new GregorianCalendar(); // LocalTime OK
     if (!date.isUnknown()) {

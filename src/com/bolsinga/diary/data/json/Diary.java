@@ -1,6 +1,7 @@
 package com.bolsinga.diary.data.json;
 
 import java.text.*;
+import java.time.*;
 import java.util.*;
 
 import org.json.*;
@@ -58,7 +59,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   static JSONObject createJSON(final com.bolsinga.diary.data.Diary diary) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put(TIMESTAMP, com.bolsinga.web.Util.toJSONCalendar(diary.getTimestamp()));
+    json.put(TIMESTAMP, com.bolsinga.web.Util.zonedDateTimeWithSecondsPrecision(diary.getTimestamp()).toString());
     json.put(TITLE, diary.getTitle());
     json.put(STATICS, diary.getStatic());
     json.put(HEADER, diary.getHeader());
@@ -91,7 +92,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   }
   
   private Diary(final JSONObject json) throws JSONException {
-    setTimestamp(com.bolsinga.web.Util.fromJSONCalendar(json.getString(TIMESTAMP)));
+    setTimestamp(ZonedDateTime.parse(json.getString(TIMESTAMP)));
     title = json.getString(TITLE);
 
     JSONArray jsonArray = json.getJSONArray(STATICS);
@@ -126,12 +127,12 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     }
   }
 
-  public GregorianCalendar getTimestamp() {
-    return com.bolsinga.web.Util.fromJSONCalendar(timestamp);
+  public ZonedDateTime getTimestamp() {
+    return ZonedDateTime.parse(this.timestamp);
   }
   
-  public void setTimestamp(final GregorianCalendar timestamp) {
-    this.timestamp = com.bolsinga.web.Util.toJSONCalendar(timestamp);
+  public void setTimestamp(final ZonedDateTime timestamp) {
+    this.timestamp = timestamp.toString();
   }
   
   public String getTitle() {
