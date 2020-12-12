@@ -1,10 +1,11 @@
 package com.bolsinga.diary.data;
 
+import java.time.*;
 import java.util.*;
 
 public interface Diary {
-  public GregorianCalendar getTimestamp();
-  public void setTimestamp(final GregorianCalendar timestamp);
+  public ZonedDateTime getTimestamp();
+  public void setTimestamp(final ZonedDateTime timestamp);
   public String getTitle();
   public void setTitle(final String title);
   public List<String> getStatic();

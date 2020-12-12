@@ -4,13 +4,14 @@ import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
 import java.nio.charset.*;
+import java.time.*;
 import java.util.*;
 import java.util.regex.*;
 
 public class Diary implements com.bolsinga.diary.data.Diary {
 
   private List<Entry> fEntries = null;
-  private GregorianCalendar fDate = null;
+  private ZonedDateTime fDate = null;
   private String fTitle = null;
   private List<String> fStatic = null;
   private List<String> fHeader = null;
@@ -30,7 +31,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     
   private Diary(final List<Entry> entries) {
     fEntries = entries;
-    fDate = com.bolsinga.web.Util.nowUTC();
+    fDate = ZonedDateTime.now();
   }
 
   private void setStatic(final String location, final String data) throws com.bolsinga.web.WebException {
@@ -118,11 +119,11 @@ public class Diary implements com.bolsinga.diary.data.Diary {
     }
   }
   
-  public GregorianCalendar getTimestamp() {
+  public ZonedDateTime getTimestamp() {
     return fDate;
   }
   
-  public void setTimestamp(final GregorianCalendar timestamp) {
+  public void setTimestamp(final ZonedDateTime timestamp) {
     fDate = timestamp;
   }
   
