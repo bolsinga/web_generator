@@ -59,7 +59,7 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   static JSONObject createJSON(final com.bolsinga.diary.data.Diary diary) throws JSONException {
     JSONObject json = new JSONObject();
     
-    json.put(TIMESTAMP, com.bolsinga.web.Util.zonedDateTimeWithSecondsPrecision(diary.getTimestamp()).toString());
+    json.put(TIMESTAMP, com.bolsinga.web.Util.conformingISO8601String(diary.getTimestamp()));
     json.put(TITLE, diary.getTitle());
     json.put(STATICS, diary.getStatic());
     json.put(HEADER, diary.getHeader());

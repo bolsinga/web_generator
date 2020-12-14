@@ -500,9 +500,11 @@ public class Util {
   public static String toJSONCalendar(final GregorianCalendar cal) {
     return sJSONTimeFormat.get().format(cal.getTime());
   }
-  
-  public static ZonedDateTime zonedDateTimeWithSecondsPrecision(final ZonedDateTime zdt) {
-    return ZonedDateTime.of(zdt.getYear(), zdt.getMonthValue(), zdt.getDayOfMonth(), zdt.getHour(), zdt.getMinute(), zdt.getSecond(), 0, zdt.getZone());
+
+  public static String conformingISO8601String(final ZonedDateTime zdt) {
+    ZonedDateTime secondsPrecision = ZonedDateTime.of(zdt.getYear(), zdt.getMonthValue(), zdt.getDayOfMonth(), zdt.getHour(), zdt.getMinute(), zdt.getSecond(), 0, zdt.getZone());
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+    return secondsPrecision.format(formatter);
   }
 
   public static GregorianCalendar toCalendarLocal(final com.bolsinga.music.data.Date date) {

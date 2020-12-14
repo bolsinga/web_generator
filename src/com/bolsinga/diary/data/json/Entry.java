@@ -28,7 +28,7 @@ public class Entry implements com.bolsinga.diary.data.Entry {
     JSONObject json = new JSONObject();
     
     json.put(ID, entry.getID());
-    json.put(TIMESTAMP, com.bolsinga.web.Util.zonedDateTimeWithSecondsPrecision(entry.getTimestamp()));
+    json.put(TIMESTAMP, com.bolsinga.web.Util.conformingISO8601String(entry.getTimestamp()));
     json.put(COMMENT, entry.getComment());
     json.put(TITLE, entry.getTitle());
     
