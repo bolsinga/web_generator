@@ -4,6 +4,7 @@ import java.io.*;
 import java.math.*;
 import java.text.*;
 import java.time.*;
+import java.time.format.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -64,7 +65,15 @@ public class Util {
         return e1.getTimestamp().compareTo(e2.getTimestamp());
       }
     };
-  
+
+  public static final Comparator<ZonedDateTime> ZDT_MONTH_COMPARATOR = new Comparator<ZonedDateTime>() {
+    public int compare(final ZonedDateTime c1, final ZonedDateTime c2) {
+      int m1 = c1.getMonthValue();
+      int m2 = c2.getMonthValue();
+      return (m1 - m2);
+    }
+  };
+
   public static final Comparator<Calendar> MONTH_COMPARATOR = new Comparator<Calendar>() {
     public int compare(final Calendar c1, final Calendar c2) {
       int m1 = c1.get(Calendar.MONTH);
@@ -400,7 +409,7 @@ public class Util {
         if (o1 instanceof Show) {
           c1 = Util.toCalendarUTC(((Show)o1).getDate());
         } else if (o1 instanceof Entry) {
-          c1 = ((Entry)o1).getTimestamp();
+          c1 = GregorianCalendar.from(((Entry)o1).getTimestamp());
         } else {
           System.err.println("Unknown " + getClass().getName() + ": " + o1.getClass().getName());
         }
@@ -408,7 +417,7 @@ public class Util {
         if (o2 instanceof Show) {
           c2 = Util.toCalendarUTC(((Show)o2).getDate());
         } else if (o2 instanceof Entry) {
-          c2 = ((Entry)o2).getTimestamp();
+          c2 = GregorianCalendar.from(((Entry)o2).getTimestamp());
         } else {
           System.err.println("Unknown " + getClass().getName() + ": " + o2.getClass().getName());
         }
@@ -432,7 +441,8 @@ public class Util {
   }
 
   public static String getTimestamp(final Entry entry) {
-    return sWebFormat.get().format(entry.getTimestamp().getTime());
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+    return entry.getTimestamp().format(formatter);
   }
   
   public static String getDisplayTitle(final Entry entry) {
@@ -448,7 +458,8 @@ public class Util {
   }
   
   public static String getMonth(final Entry entry) {
-    return Util.getMonth(entry.getTimestamp());
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM");
+    return entry.getTimestamp().format(formatter);
   }
   
   public static String getShortMonthName(final Calendar month) {
@@ -465,7 +476,7 @@ public class Util {
 
         item = items.get(0);
 
-        sDiaryStartYear = item.getTimestamp().get(Calendar.YEAR);
+        sDiaryStartYear = item.getTimestamp().getYear();
       }
     }
     return sDiaryStartYear;

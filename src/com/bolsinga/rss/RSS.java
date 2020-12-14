@@ -80,7 +80,7 @@ public class RSS {
   }
 
   private static void add(final Entry entry, final com.bolsinga.web.Links links, final Document document, final Node channel) {
-    add(com.bolsinga.web.Util.getDisplayTitle(entry), entry.getTimestamp(), links.getLinkTo(entry), entry.getComment(), document, channel);
+    add(com.bolsinga.web.Util.getDisplayTitle(entry), GregorianCalendar.from(entry.getTimestamp()), links.getLinkTo(entry), entry.getComment(), document, channel);
   }
 
   private static void add(final String title, final Calendar cal, final String link, final String description, final Document document, final Node channel) {
