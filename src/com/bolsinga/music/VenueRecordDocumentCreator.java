@@ -191,7 +191,9 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
       items.add(getVenueRelations(venue));
     }
 
-    Collection<Show> shows = fLookup.getShows(venue);
+    List<Show> shows = new ArrayList<Show>(fLookup.getShows(venue));
+    Collections.sort(shows, Compare.SHOW_COMPARATOR);
+
     if (shows != null) {
       for (Show show : shows) {
         items.add(getVenueShowRecord(venue, show));
