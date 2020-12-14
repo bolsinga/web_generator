@@ -96,7 +96,7 @@ public class Music implements com.bolsinga.music.data.Music {
   static JSONObject createJSON(final com.bolsinga.music.data.Music music) throws JSONException {
     JSONObject json = new JSONObject();
 
-    json.put(TIMESTAMP, com.bolsinga.web.Util.zonedDateTimeWithSecondsPrecision(music.getTimestamp()));
+    json.put(TIMESTAMP, com.bolsinga.web.Util.conformingISO8601String(music.getTimestamp()));
     
     json.put(VENUES, Music.createVenuesJSON(music.getVenues()));
     json.put(ARTISTS, Music.createArtistsJSON(music.getArtists()));
