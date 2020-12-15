@@ -1,5 +1,6 @@
 package com.bolsinga.music.data;
 
+import java.time.*;
 import java.util.*;
 
 public interface Song {
@@ -9,8 +10,8 @@ public interface Song {
   public String getTitle();
   public void setTitle(final String title);
   public Date getReleaseDate();
-  public GregorianCalendar getLastPlayed();
-  public void setLastPlayed(final GregorianCalendar c);
+  public ZonedDateTime getLastPlayed();
+  public void setLastPlayed(final ZonedDateTime c);
   public int getTrack(); // return 0 if unknown
   public void setTrack(final int track);
   public String getGenre();

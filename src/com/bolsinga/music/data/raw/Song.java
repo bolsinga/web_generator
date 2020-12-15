@@ -1,5 +1,6 @@
 package com.bolsinga.music.data.raw;
 
+import java.time.*;
 import java.util.*;
 
 public class Song implements com.bolsinga.music.data.Song {
@@ -7,16 +8,16 @@ public class Song implements com.bolsinga.music.data.Song {
   private Artist fArtist;
   private String fTitle;
   private com.bolsinga.music.data.Date fReleaseDate;
-  private GregorianCalendar fLastPlayed;
+  private ZonedDateTime fLastPlayed;
   private int fTrack;
   private String fGenre;
   private int fPlayCount;
   
-  static Song create(final int id, final String title, final Artist artist, final GregorianCalendar lastPlayed, final int playCount, final String genre, final com.bolsinga.music.data.Date releaseDate, final int track) {
+  static Song create(final int id, final String title, final Artist artist, final ZonedDateTime lastPlayed, final int playCount, final String genre, final com.bolsinga.music.data.Date releaseDate, final int track) {
     return new Song("s" + id, title, artist, lastPlayed, playCount, genre, releaseDate, track);
   }
   
-  private Song(final String id, final String title, final Artist artist, final GregorianCalendar lastPlayed, final int playCount, final String genre, final com.bolsinga.music.data.Date releaseDate, final int track) {
+  private Song(final String id, final String title, final Artist artist, final ZonedDateTime lastPlayed, final int playCount, final String genre, final com.bolsinga.music.data.Date releaseDate, final int track) {
     fID = id;
     fTitle = title;
     fArtist = artist;
@@ -52,11 +53,11 @@ public class Song implements com.bolsinga.music.data.Song {
     return fReleaseDate;
   }
   
-  public GregorianCalendar getLastPlayed() {
+  public ZonedDateTime getLastPlayed() {
     return fLastPlayed;
   }
   
-  public void setLastPlayed(final GregorianCalendar c) {
+  public void setLastPlayed(final ZonedDateTime c) {
     fLastPlayed = c;
   }
   

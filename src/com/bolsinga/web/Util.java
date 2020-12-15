@@ -52,14 +52,6 @@ public class Util {
     }
   };
 
-  private static final ThreadLocal<DateFormat> sJSONTimeFormat = new ThreadLocal<DateFormat>() {
-    public DateFormat initialValue() {
-      DateFormat result = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-      result.setTimeZone(TimeZone.getTimeZone("GMT"));
-      return result;
-    }
-  };
-  
   public static final Comparator<Entry> ENTRY_COMPARATOR = new Comparator<Entry>() {
       public int compare(final Entry e1, final Entry e2) {
         return e1.getTimestamp().compareTo(e2.getTimestamp());
@@ -472,25 +464,6 @@ public class Util {
       }
     }
     return sDiaryStartYear;
-  }
-
-  public static GregorianCalendar fromJSONCalendar(final String value) {
-    java.util.Date d = null;
-    try {
-      d = sJSONTimeFormat.get().parse(value);
-    } catch (ParseException e) {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Can't convert JSON date to GregorianCalendar: ");
-      sb.append(value);
-      throw new Error(sb.toString());
-    }
-    GregorianCalendar c = new GregorianCalendar(sJSONTimeFormat.get().getTimeZone());
-    c.setTime(d);
-    return c;
-  }
-  
-  public static String toJSONCalendar(final GregorianCalendar cal) {
-    return sJSONTimeFormat.get().format(cal.getTime());
   }
 
   public static String conformingISO8601String(final ZonedDateTime zdt) {
