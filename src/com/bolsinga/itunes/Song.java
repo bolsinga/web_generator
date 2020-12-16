@@ -1,5 +1,6 @@
 package com.bolsinga.itunes;
 
+import java.time.*;
 import java.util.*;
 
 public class Song {
@@ -8,12 +9,12 @@ public class Song {
   private final Artist fArtist;
   private final String fTitle;
   private final int fReleaseYear;
-  private final GregorianCalendar fLastPlayed;
+  private final ZonedDateTime fLastPlayed;
   private final int fTrack;
   private final String fGenre;
   private final int fPlayCount;
 
-  Song(final Artist artist, final String title, final int year, final GregorianCalendar lastPlayed, final int track, final String genre, final int playCount) {
+  Song(final Artist artist, final String title, final int year, final ZonedDateTime lastPlayed, final int track, final String genre, final int playCount) {
     fArtist = artist;
     fTitle = title;
     fReleaseYear = year;
@@ -35,7 +36,7 @@ public class Song {
     return fReleaseYear;
   }
 
-  public GregorianCalendar getLastPlayed() {
+  public ZonedDateTime getLastPlayed() {
     return fLastPlayed;
   }
 
