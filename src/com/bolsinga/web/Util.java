@@ -74,14 +74,6 @@ public class Util {
     }
   };
 
-  public static final Comparator<Calendar> MONTH_COMPARATOR = new Comparator<Calendar>() {
-    public int compare(final Calendar c1, final Calendar c2) {
-      int m1 = c1.get(Calendar.MONTH);
-      int m2 = c2.get(Calendar.MONTH);
-      return (m1 - m2);
-    }
-  };
-  
   static {
     StringBuilder sb = new StringBuilder();
     Util.appendPretty(sb);
