@@ -1,5 +1,6 @@
 package com.bolsinga.itunes;
 
+import java.time.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -89,13 +90,12 @@ public class Parser {
       int year = (track.getYear() != null) ? Integer.parseInt(track.getYear()) : 0;
       int trackNumber = (track.getTrack_Number() != null) ? Integer.parseInt(track.getTrack_Number()) : 0;
       int playCount = (track.getPlay_Count() != null) ? Integer.parseInt(track.getPlay_Count()) : 0;
-      java.time.ZonedDateTime lastPlayedZDT = (track.getPlay_Date_UTC() != null) ? java.time.ZonedDateTime.parse(track.getPlay_Date_UTC()) : null;
-      GregorianCalendar lastPlayed = (lastPlayedZDT != null) ? GregorianCalendar.from(lastPlayedZDT): null;
+      ZonedDateTime lastPlayed = (track.getPlay_Date_UTC() != null) ? java.time.ZonedDateTime.parse(track.getPlay_Date_UTC()) : null;
       createTrack(track.getArtist(), track.getSort_Artist(), track.getName(), track.getAlbum(), year, trackNumber, track.getGenre(), lastPlayed, playCount, compilation);
     }
   }
         
-  private void createTrack(final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final GregorianCalendar lastPlayed, final int playCount, final boolean compilation) {
+  private void createTrack(final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount, final boolean compilation) {
     // Get or create the artist
     if (!fArtistMap.containsKey(artistName)) {
       Artist artist = new Artist(artistName, sortArtist);
@@ -135,7 +135,7 @@ public class Parser {
     return fAlbumMap.get(key);
   }
 
-  private void addAlbumTrack(final Artist artist, final Album album, final String songTitle, final int year, final int index, final String genre, final GregorianCalendar lastPlayed, final int playCount) {
+  private void addAlbumTrack(final Artist artist, final Album album, final String songTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount) {
     // Create the song
     Song song = createSong(artist, songTitle, year, index, genre, lastPlayed, playCount);
             
@@ -158,7 +158,7 @@ public class Parser {
     return sGTPattern.matcher(sLTPattern.matcher(s).replaceAll(sLTReplacement)).replaceAll(sGTReplacement);
   }
   
-  private Song createSong(final Artist artist, final String songTitle, final int year, final int index, final String genre, final GregorianCalendar lastPlayed, final int playCount) {
+  private Song createSong(final Artist artist, final String songTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount) {
     String cleanTitle = Parser.cleanHTML(songTitle);
     int releaseYear = Album.UNKNOWN_YEAR;
     if (year != -1) {
