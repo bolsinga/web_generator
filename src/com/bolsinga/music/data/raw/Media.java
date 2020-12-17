@@ -60,8 +60,7 @@ public class Media {
             songReleaseYear = Date.create(itAlbumSong.getReleaseYear());
           }
 
-          GregorianCalendar lastPlayed = (itAlbumSong.getLastPlayed() != null) ? GregorianCalendar.from(itAlbumSong.getLastPlayed()) : null;
-          Song song = Song.create(songs.size(), itAlbumSong.getTitle(), songArtist, lastPlayed, itAlbumSong.getPlayCount(), itAlbumSong.getGenre(), songReleaseYear, itAlbumSong.getTrack());
+          Song song = Song.create(songs.size(), itAlbumSong.getTitle(), songArtist, itAlbumSong.getLastPlayed(), itAlbumSong.getPlayCount(), itAlbumSong.getGenre(), songReleaseYear, itAlbumSong.getTrack());
           albumSongs.add(song);
           songs.add(song);
       }

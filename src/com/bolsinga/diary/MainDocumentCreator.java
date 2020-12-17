@@ -7,6 +7,7 @@ import com.bolsinga.music.*;
 import com.bolsinga.web.*;
 
 import java.text.*;
+import java.time.*;
 import java.util.*;
 
 import org.apache.ecs.*;
@@ -198,8 +199,8 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     List<? extends Song> songs = fMusic.getSongsCopy();
     Collections.sort(songs, new Comparator<Song>() {
       public int compare(final Song s1, final Song s2) {
-        Calendar c1 = s1.getLastPlayed();
-        Calendar c2 = s2.getLastPlayed();
+        ZonedDateTime c1 = s1.getLastPlayed();
+        ZonedDateTime c2 = s2.getLastPlayed();
         if (c1 == null && c2 == null) {
           return 0;
         }
@@ -209,7 +210,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
         if (c2 == null) {
           return 1;
         }
-        return c1.getTime().compareTo(c2.getTime());
+        return c1.compareTo(c2);
       }
     });
     Collections.reverse(songs);

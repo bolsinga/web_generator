@@ -1,5 +1,6 @@
 package com.bolsinga.music.data.json;
 
+import java.time.*;
 import java.util.*;
 
 import org.json.*;
@@ -20,7 +21,7 @@ public class Song implements com.bolsinga.music.data.Song {
   private Artist artist;
   private String title;
   private Date release = null;
-  private String lastPlayed = null;
+  private ZonedDateTime lastPlayed = null;
   private int track = 0;
   private String genre = null;
   private int playCount;
@@ -68,9 +69,9 @@ public class Song implements com.bolsinga.music.data.Song {
     if (date != null) {
       json.put(RELEASE, Date.createJSON(date));
     }
-    GregorianCalendar lastPlayed = song.getLastPlayed();
+    ZonedDateTime lastPlayed = song.getLastPlayed();
     if (lastPlayed != null) {
-      json.put(LASTPLAYED, com.bolsinga.web.Util.toJSONCalendar(lastPlayed));
+      json.put(LASTPLAYED, com.bolsinga.web.Util.conformingISO8601String(lastPlayed));
     }
     if (song.getTrack() != 0) {
       json.put(TRACK, song.getTrack());
@@ -98,7 +99,7 @@ public class Song implements com.bolsinga.music.data.Song {
     artist = Artist.createOrGet(song.getPerformer());
     title = song.getTitle();
     release = Date.create(song.getReleaseDate());
-    lastPlayed = com.bolsinga.web.Util.toJSONCalendar(song.getLastPlayed());
+    lastPlayed = song.getLastPlayed();
     track = song.getTrack();
     genre = song.getGenre();
     playCount = song.getPlayCount();
@@ -116,7 +117,10 @@ public class Song implements com.bolsinga.music.data.Song {
     if (optJSON != null) {
       release = Date.create(optJSON);
     }
-    lastPlayed = json.optString(LASTPLAYED, null);
+    String lastPlayedString = json.optString(LASTPLAYED, null);
+    if (lastPlayedString != null) {
+      lastPlayed = ZonedDateTime.parse(lastPlayedString);
+    }
     track = json.optInt(TRACK);
     genre = json.optString(GENRE, null);
     playCount = json.optInt(PLAYCOUNT);
@@ -148,15 +152,12 @@ public class Song implements com.bolsinga.music.data.Song {
     return release;
   }
   
-  public GregorianCalendar getLastPlayed() {
-    if (lastPlayed == null) {
-      return null;
-    }
-    return com.bolsinga.web.Util.fromJSONCalendar(lastPlayed);
+  public ZonedDateTime getLastPlayed() {
+    return lastPlayed;
   }
   
-  public void setLastPlayed(final GregorianCalendar c) {
-    lastPlayed = com.bolsinga.web.Util.toJSONCalendar(c);
+  public void setLastPlayed(final ZonedDateTime c) {
+    lastPlayed = c;
   }
   
   // return 0 if unknown
