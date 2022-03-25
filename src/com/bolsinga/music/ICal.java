@@ -28,16 +28,8 @@ public class ICal {
       }
     }
     
-    OutputStream os = null;
     try {
-      try {
-        os = new FileOutputStream(f);
-      } catch (FileNotFoundException e) {
-        sb = new StringBuilder();
-        sb.append("Can't find ical file: ");
-        sb.append(f);
-        throw new WebException(sb.toString(), e);
-      }
+      try (OutputStream os = new FileOutputStream(f)) {
 
       Writer w = null;
       try {
@@ -57,17 +49,12 @@ public class ICal {
         sb.append(f);
         throw new WebException(sb.toString(), e);
       }
-    } finally {
-      if (os != null) {
-        try {
-          os.close();
-        } catch (IOException e) {
-          sb = new StringBuilder();
-          sb.append("Unable to close ical file: ");
-          sb.append(f);
-          throw new WebException(sb.toString(), e);
-        }
-      }
+    }
+    } catch (IOException e) {
+      sb = new StringBuilder();
+      sb.append("ical file issue: ");
+      sb.append(f);
+      throw new WebException(sb.toString(), e);
     }
   }
         
