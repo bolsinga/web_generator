@@ -55,17 +55,8 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   }
   
   private void addStatics(final String filename) throws com.bolsinga.web.WebException {
-    FileChannel fc = null;
     try {
-      try {
-        fc = new FileInputStream(new File(filename)).getChannel();
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(filename);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
-
+    try (FileChannel fc = new FileInputStream(new File(filename)).getChannel()) {
       ByteBuffer bb = null;
       try {
         bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
@@ -105,17 +96,12 @@ public class Diary implements com.bolsinga.diary.data.Diary {
       } else {
         throw new com.bolsinga.web.WebException("Statics Error: No statics: " + cb);
       }
-    } finally {
-      if (fc != null) {
-        try {
-          fc.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(filename);
-          throw new com.bolsinga.web.WebException(sb.toString(), e);
-        }
-      }
+    }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
   }
   
