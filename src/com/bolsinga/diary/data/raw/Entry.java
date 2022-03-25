@@ -40,16 +40,8 @@ public class Entry implements com.bolsinga.diary.data.Entry {
   }
 
   static List<Entry> create(final String filename) throws com.bolsinga.web.WebException {
-    FileChannel fc = null;
     try {
-      try {
-        fc = new FileInputStream(new File(filename)).getChannel();
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(filename);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
+      try (FileChannel fc = new FileInputStream(new File(filename)).getChannel()) {
       
       ByteBuffer bb = null;
       try {
@@ -111,17 +103,12 @@ public class Entry implements com.bolsinga.diary.data.Entry {
       }
       
       return entryList;
-    } finally {
-      if (fc != null) {
-        try {
-          fc.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(filename);
-          throw new com.bolsinga.web.WebException(sb.toString(), e);
-        }
-      }
+    }
+    } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("file issues: ");
+        sb.append(filename);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
   }
   
