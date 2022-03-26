@@ -36,22 +36,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
   }
   
   private static void setSortNames(final String filename) throws com.bolsinga.web.WebException {
-    BufferedReader in = null;
-    try {
-        try {
-          in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"));
-	  	} catch (UnsupportedEncodingException e)  {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Unsupported Encoding: ");
-            sb.append(filename);
-            throw new com.bolsinga.web.WebException(sb.toString(), e);
-        } catch (FileNotFoundException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Can't find file: ");
-          sb.append(filename);
-          throw new com.bolsinga.web.WebException(sb.toString(), e);
-        }
-      
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
       String s = null;
       StringTokenizer st = null;
       try {
@@ -80,17 +65,16 @@ public class Artist implements com.bolsinga.music.data.Artist {
         sb.append(filename);
         throw new com.bolsinga.web.WebException(sb.toString(), e);
       }
-    } finally {
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(filename);
-          throw new com.bolsinga.web.WebException(sb.toString(), e);
-        }
-      }
+    } catch (UnsupportedEncodingException e)  {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Unsupported Encoding: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
   }
 
