@@ -16,22 +16,7 @@ public class Show implements com.bolsinga.music.data.Show {
   static List<Show> create(final String filename) throws com.bolsinga.web.WebException {
     List<Show> shows = new ArrayList<Show>();
 
-    BufferedReader in = null;
-    try {
-      try {
-        in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"));
-   	  } catch (UnsupportedEncodingException e)  {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Unsupported Encoding: ");
-        sb.append(filename);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(filename);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
-
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
       String l = null;
       StringTokenizer st = null, bt = null;
       try {
@@ -68,17 +53,16 @@ public class Show implements com.bolsinga.music.data.Show {
         sb.append(filename);
         throw new com.bolsinga.web.WebException(sb.toString(), e);
       }
-    } finally {
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(filename);
-          throw new com.bolsinga.web.WebException(sb.toString(), e);
-        }
-      }
+ 	  } catch (UnsupportedEncodingException e)  {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Unsupported Encoding: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
 
     java.util.Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
