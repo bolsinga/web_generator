@@ -13,22 +13,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private String fComment;
   
   static List<Venue> create(final String filename) throws com.bolsinga.web.WebException {
-    BufferedReader in = null;
-    try {
-      try {
-        in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"));
-  	  } catch (UnsupportedEncodingException e)  {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Unsupported Encoding: ");
-        sb.append(filename);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find file: ");
-        sb.append(filename);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
-
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
       String s = null;
       StringTokenizer st = null;
       String name, city, state, address, url;
@@ -62,17 +47,16 @@ public class Venue implements com.bolsinga.music.data.Venue {
         sb.append(filename);
         throw new com.bolsinga.web.WebException(sb.toString(), e);
       }
-    } finally {
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(filename);
-          throw new com.bolsinga.web.WebException(sb.toString(), e);
-        }
-      }
+	  } catch (UnsupportedEncodingException e)  {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Unsupported Encoding: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
 
     ArrayList<Venue> venues = new ArrayList<Venue>(sMap.values());
