@@ -104,7 +104,7 @@ else
   DATA_FILES="$DATA_FILES ${DATA_HOME} dummy"
 fi
 
-COMMAND="exec \"$JAVA_CMD\" -Xms256m -Xmx256m -ea:com.bolsinga..."
+COMMAND="exec \"$JAVA_CMD\" --finalization=disabled -Xms256m -Xmx256m -ea:com.bolsinga..."
 if [ ! -z "$JAVA_OPTS" ] ; then
     COMMAND="$COMMAND $JAVA_OPTS"
 fi
