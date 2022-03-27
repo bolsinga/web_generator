@@ -623,41 +623,17 @@ public class Util {
   }
 
   public static void writeJSON(final JSONObject json, final String outputFile) throws com.bolsinga.web.WebException {    
-    FileOutputStream fos = null;
-    try {
-      fos = new FileOutputStream(outputFile);
+    try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputFile), java.nio.charset.Charset.forName("UTF-8"))) {
+      if (com.bolsinga.web.Util.getPrettyOutput()) {
+        osw.write(json.toString(2));
+      } else {
+        json.write(osw);
+      }
     } catch (IOException e) {
       StringBuilder sb = new StringBuilder();
       sb.append("Can't find file: ");
       sb.append(outputFile);
       throw new com.bolsinga.web.WebException(sb.toString(), e);
-    }
-    
-    OutputStreamWriter osw = new OutputStreamWriter(fos, java.nio.charset.Charset.forName("UTF-8"));
-    try {
-      try {
-        if (com.bolsinga.web.Util.getPrettyOutput()) {
-          osw.write(json.toString(2));
-        } else {
-          json.write(osw);
-        }
-      } catch (Exception e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't write file: ");
-        sb.append(outputFile);
-        throw new com.bolsinga.web.WebException(sb.toString(), e);
-      }
-    } finally {
-      if (osw != null) {
-        try {
-          osw.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(outputFile);
-          throw new com.bolsinga.web.WebException(sb.toString(), e);
-        }
-      }
     }
   }
 }
