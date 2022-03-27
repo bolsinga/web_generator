@@ -133,16 +133,8 @@ public abstract class RecordDocumentCreator implements Backgroundable {
       }
     }
 
-    try {
-      OutputStream os = null;
-      try {
-        os = new FileOutputStream(f);
-        d.output(os);
-      } finally {
-        if (os != null) {
-          os.close();
-        }
-      }
+    try (OutputStream os = new FileOutputStream(f)) {
+      d.output(os);
     } catch (IOException e) {
       StringBuilder sb = new StringBuilder();
       sb.append("The RecordDocument: ");
