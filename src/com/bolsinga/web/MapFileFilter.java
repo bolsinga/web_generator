@@ -34,79 +34,48 @@ public class MapFileFilter {
 
       URL data = MapFileFilter.class.getClassLoader().getResource(resourceID);
       
-    BufferedReader in = null;
-    try {
-      try {
-        in = new BufferedReader(new InputStreamReader(data.openStream()));
-      } catch (IOException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find resource: ");
-        sb.append(resourceID);
-        throw new WebException(sb.toString());
-      }
-      
-      String s = null;
-      try {
-        while ((s = in.readLine()) != null) {
-          Matcher m = sDelimitedPattern.matcher(s);
-          if (m.find()) {
-            int offset = 0;
-            do {
-              result.append(s.substring(offset, m.start()));
-              result.append(mapping.get(m.group(1)));
-              offset = m.end();
-            } while (m.find());
-            result.append(s.substring(offset, m.regionEnd()));
-          } else {
-            result.append(s);
-          }
-          Util.appendPretty(result);
-        }
-      } catch (IOException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Error reading: ");
-        sb.append(resourceID);
-        throw new WebException(sb.toString(), e);
-      }
-    } finally {
-      if (in != null) {
+      try (BufferedReader in = new BufferedReader(new InputStreamReader(data.openStream()))) {
+        String s = null;
         try {
-          in.close();
+          while ((s = in.readLine()) != null) {
+            Matcher m = sDelimitedPattern.matcher(s);
+            if (m.find()) {
+              int offset = 0;
+              do {
+                result.append(s.substring(offset, m.start()));
+                result.append(mapping.get(m.group(1)));
+                offset = m.end();
+              } while (m.find());
+              result.append(s.substring(offset, m.regionEnd()));
+            } else {
+              result.append(s);
+            }
+            Util.appendPretty(result);
+          }
         } catch (IOException e) {
           StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
+          sb.append("Error reading: ");
           sb.append(resourceID);
           throw new WebException(sb.toString(), e);
         }
-      }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find resource: ");
+      sb.append(resourceID);
+      throw new WebException(sb.toString());
     }
-    
+
     return result;
   }
   
   private static void writeFile(final File dst, final StringBuilder data) throws WebException {
-    Writer out = null;
-    try {
-      try {
-        out = new FileWriter(dst);
-        out.append(data);
-      } catch (IOException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Error writing: ");
-        sb.append(dst);
-        throw new WebException(sb.toString(), e);
-      }
-    } finally {
-      if (out != null) {
-        try {
-          out.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close: ");
-          sb.append(dst);
-          throw new WebException(sb.toString(), e);
-        }
-      }
+    try (Writer out = new FileWriter(dst)) {
+      out.append(data);
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Error writing: ");
+      sb.append(dst);
+      throw new WebException(sb.toString(), e);
     }
   }
 }
