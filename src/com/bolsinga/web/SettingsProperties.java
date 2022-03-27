@@ -8,18 +8,8 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
   private final com.bolsinga.web.Settings.Image fLogoImage;
 
   public static com.bolsinga.web.Settings create(final String sourceFile) throws com.bolsinga.web.WebException {
-    InputStream is = null;
     Properties properties = null;
-    try {
-      try {
-        is = new FileInputStream(sourceFile);
-      } catch (FileNotFoundException e) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't find settings file: ");
-        sb.append(sourceFile);
-        throw new WebException(sb.toString(), e);
-      }
-        
+    try (InputStream is = new FileInputStream(sourceFile)) {
       try {
         properties = new Properties();
 
@@ -30,17 +20,11 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
         sb.append(sourceFile);
         throw new WebException(sb.toString(), e);
       }
-    } finally {
-      if (is != null) {
-        try {
-          is.close();
-        } catch (IOException e) {
-          StringBuilder sb = new StringBuilder();
-          sb.append("Unable to close settings file: ");
-          sb.append(sourceFile);
-          throw new WebException(sb.toString(), e);
-        }
-      }
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find settings file: ");
+      sb.append(sourceFile);
+      throw new WebException(sb.toString(), e);
     }
 
     return new SettingsProperties(properties);
