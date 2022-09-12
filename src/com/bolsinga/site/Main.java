@@ -135,20 +135,21 @@ public class Main implements Backgroundable {
 
   private void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
     String s;
-    HashSet<String> bands = new HashSet<String>();
+    HashMap<String, com.bolsinga.music.data.Artist> bands = new HashMap<String, com.bolsinga.music.data.Artist>();
     boolean displayed = false;
     
     List<? extends com.bolsinga.music.data.Artist> artists = music.getArtists();
     for (com.bolsinga.music.data.Artist artist : artists) {
       s = com.bolsinga.music.Compare.simplify(artist.getName());
-      if (bands.contains(s)) {
+      if (bands.containsKey(s)) {
         if (!displayed) {
           System.out.println("--Similar Artist Names--");
           displayed = true;
         }
-        System.out.println(s);
+        com.bolsinga.music.data.Artist existingArtist = bands.get(s);
+        System.out.println("Existing: " + existingArtist.getName() + " Duplicate: " + artist.getName() + " Simplified: " + s);
       } else {
-        bands.add(s);
+        bands.put(s, artist);
       }
     }
   }
