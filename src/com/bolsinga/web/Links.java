@@ -108,7 +108,11 @@ public class Links {
   }
         
   public String getPageFileName(final Venue venue) {
-    return getPageFileName(venue.getName());
+    String name = venue.getSortname();
+    if (name == null) {
+      name = venue.getName();
+    }
+    return getPageFileName(name);
   }
         
   public String getPageFileName(final Show show) {

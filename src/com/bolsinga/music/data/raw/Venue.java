@@ -11,12 +11,13 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private String fName;
   private Location fLocation;
   private String fComment;
+  private String fSortname;
   
   static List<Venue> create(final String filename) throws com.bolsinga.web.WebException {
     try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
       String s = null;
       StringTokenizer st = null;
-      String name, city, state, address, url;
+      String name, city, state, address, url, sortname;
       try {
         while ((s = in.readLine()) != null) {
           st = new StringTokenizer(s, "*");
@@ -37,7 +38,13 @@ public class Venue implements com.bolsinga.music.data.Venue {
             url = null;
           }
           
-          Venue v = new Venue(name, Location.create(address, city, state, url));
+          if (st.hasMoreElements()) {
+            sortname = st.nextToken();
+          } else {
+            sortname = null;
+          }
+
+          Venue v = new Venue(name, Location.create(address, city, state, url), sortname);
 
           sMap.put(name, v);
         }
@@ -84,9 +91,10 @@ public class Venue implements com.bolsinga.music.data.Venue {
     }
   }
   
-  private Venue(final String name, final Location location) {
+  private Venue(final String name, final Location location, final String sortname) {
     fName = name;
     fLocation = location;
+    fSortname = sortname;
   }
   
   public String getID() {
@@ -116,5 +124,13 @@ public class Venue implements com.bolsinga.music.data.Venue {
   
   public void setComment(final String comment) {
     fComment = comment;
+  }
+
+  public String getSortname() {
+    return fSortname;
+  }
+
+  public void setSortname(final String name) {
+    fSortname = name;
   }
 }
