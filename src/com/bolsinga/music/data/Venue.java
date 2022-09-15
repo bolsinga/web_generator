@@ -8,4 +8,6 @@ public interface Venue {
   public Location getLocation();
   public String getComment();
   public void setComment(final String comment);
+  public String getSortname();
+  public void setSortname(final String name);
 }

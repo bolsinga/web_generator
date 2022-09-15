@@ -11,7 +11,6 @@ import com.bolsinga.web.*;
 public class Compare {
 
   private static final String THE  = "the ";
-  private static final String THEE = "thee ";
   private static final String A    = "a ";
   private static final String AN   = "an ";
     
@@ -53,10 +52,7 @@ public class Compare {
     if (lower.startsWith(AN)) {
       lower = lower.substring(AN.length(), len);
     }
-    if (lower.startsWith(THEE)) {
-      lower = lower.substring(THEE.length(), len);
-    }
-                
+
     Matcher m = sChomp.matcher(lower);
     String result = m.replaceFirst("");
     if ((result != null) && (result.length() > 0)) {
@@ -86,7 +82,16 @@ public class Compare {
         
   public static final Comparator<Venue> VENUE_COMPARATOR = new Comparator<Venue>() {
       public int compare(final Venue r1, final Venue r2) {
-        return LIBRARY_COMPARATOR.compare(r1.getName(), r2.getName());
+        String n1 = r1.getSortname();
+        if (n1 == null) {
+          n1 = r1.getName();
+        }
+        String n2 = r2.getSortname();
+        if (n2 == null) {
+          n2 = r2.getName();
+        }
+
+        return LIBRARY_COMPARATOR.compare(n1, n2);
       }
     };
         
