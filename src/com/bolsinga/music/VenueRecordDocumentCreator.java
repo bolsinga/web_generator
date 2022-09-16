@@ -185,7 +185,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
     Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
 
     Location l = venue.getLocation();
-    items.add(com.bolsinga.web.Record.createRecordSimple(Util.createExternalA(Util.getGoogleMapsURL(l), Util.getCannonicalAddress(l))));
+    items.add(com.bolsinga.web.Record.createRecordSimple(Util.createExternalA(Util.getMapsURL(l), Util.getCannonicalAddress(l))));
     
     if (fLookup.getRelations(venue) != null) {
       items.add(getVenueRelations(venue));
