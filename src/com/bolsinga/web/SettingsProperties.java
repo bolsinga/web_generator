@@ -110,4 +110,12 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
   public int getDiaryEntryTime() {
     return Integer.parseInt(fProperties.getProperty("diaryEntryTime"));
   }
+
+  public String getDiaryJsonFile() {
+    return fProperties.getProperty("diaryJsonFile");
+  }
+
+  public String getMusicJsonFile() {
+    return fProperties.getProperty("musicJsonFile");
+  }
 }

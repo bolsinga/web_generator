@@ -54,4 +54,6 @@ public interface Settings {
   public int getShowTime();
   public int getCopyrightStartYear();
   public int getDiaryEntryTime();
+  public String getDiaryJsonFile();
+  public String getMusicJsonFile();
 }
