@@ -182,6 +182,20 @@ public class Main implements Backgroundable {
     com.bolsinga.music.ICal.generate(music, output);
     
     com.bolsinga.rss.RSS.generate(diary, music, output);
+
+    {
+      java.io.File jsonDirectory = com.bolsinga.web.Util.createJSONDirectory(output);
+
+      StringBuilder musicFile = new StringBuilder(com.bolsinga.web.Util.getSettings().getMusicJsonFile());
+      musicFile.append(com.bolsinga.web.Links.JSON_EXT);
+      java.io.File musicJSON = new java.io.File(jsonDirectory, musicFile.toString());
+      com.bolsinga.music.data.json.Music.export(music, musicJSON.getAbsolutePath());
+
+      StringBuilder diaryFile = new StringBuilder(com.bolsinga.web.Util.getSettings().getDiaryJsonFile());
+      diaryFile.append(com.bolsinga.web.Links.JSON_EXT);
+      java.io.File diaryJSON = new java.io.File(jsonDirectory, diaryFile.toString());
+      com.bolsinga.diary.data.json.Diary.export(diary, diaryJSON.getAbsolutePath());
+    }
   }
 
   private static void usage(final String[] badargs, final String reason) {

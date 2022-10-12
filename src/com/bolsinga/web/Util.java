@@ -636,4 +636,18 @@ public class Util {
       throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
   }
+
+  public static File createJSONDirectory(final String outputDir) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(outputDir);
+    sb.append(File.separator);
+    sb.append(com.bolsinga.web.Links.JSON_DIR);
+    File f = new File(sb.toString());
+    if (!f.mkdirs()) {
+      if (!f.exists()) {
+        System.err.println("JSON cannot mkdirs: " + f.getAbsolutePath());
+      }
+    }
+    return f;
+  }
 }

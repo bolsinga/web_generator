@@ -15,7 +15,8 @@ import org.apache.ecs.filter.*;
 public class Links {
 
   public  static final String HTML_EXT     = ".html";
-        
+  public  static final String JSON_EXT     = ".json";
+
   public  static final String ARTIST_DIR   = "bands";
   public  static final String VENUE_DIR    = "venues";
   public  static final String SHOW_DIR     = "dates";
@@ -24,6 +25,7 @@ public class Links {
   public  static final String TRACKS_DIR   = "tracks";
   public  static final String STYLES_DIR   = "styles";
   public  static final String ARCHIVES_DIR = "archives";
+  public  static final String JSON_DIR      = "json";
 
   private static final String OTHER        = "other";
   public  static final String STATS        = "stats";
