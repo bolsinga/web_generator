@@ -321,7 +321,11 @@ public class Links {
                 
     return new A(sb.toString(), Util.getResourceString("icalTitle")); // ical: URL
   }
-        
+
+  public A getGitHubLink() {
+    return Util.createExternalA(Util.getResourceString("github"), Util.getResourceString("githubtitle"));
+  }
+
   public String getStyleSheetLink() {
     StringBuilder url = new StringBuilder();
     url.append(getDirectoryPath(STYLES_DIR));
