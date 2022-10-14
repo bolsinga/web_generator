@@ -105,6 +105,10 @@ public class AltDocumentCreator extends DiaryRecordDocumentCreator {
     e.addElement(fLinks.getICalLink());
     }
 
+    if (!Util.getDebugOutput()) {
+      e.addElement(fLinks.getGitHubLink());
+    }
+
     Div d = Util.createDiv(CSS.COLOPHON);
     d.addElement(Util.appendToUnorderedList(list, e));
     return d;
