@@ -90,12 +90,13 @@ public class Parser {
       int year = (track.getYear() != null) ? Integer.parseInt(track.getYear()) : 0;
       int trackNumber = (track.getTrack_Number() != null) ? Integer.parseInt(track.getTrack_Number()) : 0;
       int playCount = (track.getPlay_Count() != null) ? Integer.parseInt(track.getPlay_Count()) : 0;
+      int discIndex = (track.getDisc_Number() != null) ? Integer.parseInt(track.getDisc_Number()) : 0;
       ZonedDateTime lastPlayed = (track.getPlay_Date_UTC() != null) ? java.time.ZonedDateTime.parse(track.getPlay_Date_UTC()) : null;
-      createTrack(track.getArtist(), track.getSort_Artist(), track.getName(), track.getAlbum(), year, trackNumber, track.getGenre(), lastPlayed, playCount, compilation);
+      createTrack(track.getArtist(), track.getSort_Artist(), track.getName(), track.getAlbum(), year, trackNumber, track.getGenre(), lastPlayed, playCount, compilation, discIndex);
     }
   }
         
-  private void createTrack(final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount, final boolean compilation) {
+  private void createTrack(final String artistName, final String sortArtist, final String songTitle, final String albumTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount, final boolean compilation, final int discIndex) {
     // Get or create the artist
     if (!fArtistMap.containsKey(artistName)) {
       Artist artist = new Artist(artistName, sortArtist);
@@ -110,7 +111,7 @@ public class Parser {
     Album album = addAlbum(albumTitle, compilation ? null : artist);
                 
     // The song is always the new item. The artist and album may already be known.
-    addAlbumTrack(artist, album, songTitle, year, index, genre, lastPlayed, playCount);
+    addAlbumTrack(artist, album, songTitle, year, index, genre, lastPlayed, playCount, discIndex);
   }
   
   private static String getAlbumKey(final String albumTitle, final Artist artist) {
@@ -135,9 +136,9 @@ public class Parser {
     return fAlbumMap.get(key);
   }
 
-  private void addAlbumTrack(final Artist artist, final Album album, final String songTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount) {
+  private void addAlbumTrack(final Artist artist, final Album album, final String songTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount, final int discIndex) {
     // Create the song
-    Song song = createSong(artist, songTitle, year, index, genre, lastPlayed, playCount);
+    Song song = createSong(artist, songTitle, year, index, genre, lastPlayed, playCount, discIndex);
             
     // Add the song to the album
     album.addSong(song);
@@ -158,7 +159,7 @@ public class Parser {
     return sGTPattern.matcher(sLTPattern.matcher(s).replaceAll(sLTReplacement)).replaceAll(sGTReplacement);
   }
   
-  private Song createSong(final Artist artist, final String songTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount) {
+  private Song createSong(final Artist artist, final String songTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount, final int discIndex) {
     String cleanTitle = Parser.cleanHTML(songTitle);
     int releaseYear = Album.UNKNOWN_YEAR;
     if (year != -1) {
@@ -168,7 +169,7 @@ public class Parser {
     if (index != -1) {
       track = index;
     }
-    return new Song(artist, cleanTitle, releaseYear, lastPlayed, track, genre, playCount);
+    return new Song(artist, cleanTitle, releaseYear, lastPlayed, track, genre, playCount, discIndex);
   }
 
   private void sortAlbumOrder() {

@@ -13,8 +13,9 @@ public class Song {
   private final int fTrack;
   private final String fGenre;
   private final int fPlayCount;
+  private final int fDiscIndex;
 
-  Song(final Artist artist, final String title, final int year, final ZonedDateTime lastPlayed, final int track, final String genre, final int playCount) {
+  Song(final Artist artist, final String title, final int year, final ZonedDateTime lastPlayed, final int track, final String genre, final int playCount, final int discIndex) {
     fArtist = artist;
     fTitle = title;
     fReleaseYear = year;
@@ -22,6 +23,7 @@ public class Song {
     fTrack = track;
     fGenre = genre;
     fPlayCount = playCount;
+    fDiscIndex = discIndex;
   }
 
   public Artist getArtist() {
@@ -42,6 +44,10 @@ public class Song {
 
   public int getTrack() {
     return fTrack;
+  }
+
+  public int getDiscIndex() {
+    return fDiscIndex;
   }
 
   public String getGenre() {

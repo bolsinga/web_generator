@@ -7,7 +7,12 @@ public class Album {
 
   private static final Comparator<Song> SONG_ORDER_COMPARATOR = new Comparator<Song>() {
     public int compare(final Song r1, final Song r2) {
-      return r1.getTrack() - r2.getTrack();
+      int discCompare = r1.getDiscIndex() - r2.getDiscIndex();
+      if (discCompare == 0) {
+        return r1.getTrack() - r2.getTrack();
+      } else {
+        return discCompare;
+      }
     }
   };
 
