@@ -8,9 +8,7 @@ import java.util.regex.*;
 
 public class MapFileFilter {
 
-  private static final Pattern sDelimitedPattern = Pattern.compile("@@(\\w+)@@");
-  
-  static void install(final String resourceID, final File dstFile, final HashMap<String, String> mapping) throws WebException {
+  static void install(final String resourceID, final File dstFile) throws WebException {
     // Make sure the path the the dstFile exists
     File dstParent = new File(dstFile.getParent());
     if (!dstParent.mkdirs()) {
@@ -19,17 +17,15 @@ public class MapFileFilter {
       }
     }
 
-    MapFileFilter.filterFile(resourceID, dstFile, mapping);
+    MapFileFilter.filterFile(resourceID, dstFile);
   }
   
-  private static void filterFile(final String resourceID, final File dst, final HashMap<String, String> mapping) throws WebException {
-    // Copy source file, line by line. If a line has a "@@" delimiter, map
-    //  the contents to via mapping.    
-    StringBuilder sb = MapFileFilter.readFile(resourceID, mapping);
+  private static void filterFile(final String resourceID, final File dst) throws WebException {
+    StringBuilder sb = MapFileFilter.readFile(resourceID);
     MapFileFilter.writeFile(dst, sb);
   }
   
-  private static StringBuilder readFile(final String resourceID, final HashMap<String, String> mapping) throws WebException {
+  private static StringBuilder readFile(final String resourceID) throws WebException {
       StringBuilder result = new StringBuilder();
 
       URL data = MapFileFilter.class.getClassLoader().getResource(resourceID);
@@ -38,19 +34,8 @@ public class MapFileFilter {
         String s = null;
         try {
           while ((s = in.readLine()) != null) {
-            Matcher m = sDelimitedPattern.matcher(s);
-            if (m.find()) {
-              int offset = 0;
-              do {
-                result.append(s.substring(offset, m.start()));
-                result.append(mapping.get(m.group(1)));
-                offset = m.end();
-              } while (m.find());
-              result.append(s.substring(offset, m.regionEnd()));
-            } else {
               result.append(s);
-            }
-            Util.appendPretty(result);
+              Util.appendPretty(result);
           }
         } catch (IOException e) {
           StringBuilder sb = new StringBuilder();
