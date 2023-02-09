@@ -18,13 +18,13 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
   private final Music fMusic;
   private final Lookup fLookup;
 
-  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Diary diary, final String outputDir, final Encode encoder, final Music music) {
-    MainDocumentCreator creator = new MainDocumentCreator(diary, outputDir, encoder, music);
+  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Diary diary, final String outputDir, final Music music) {
+    MainDocumentCreator creator = new MainDocumentCreator(diary, outputDir, music);
     creator.create(backgrounder, backgroundable);
   }
   
-  private MainDocumentCreator(final Diary diary, final String outputDir, final Encode encoder, final Music music) {
-    super(diary, outputDir, false, encoder);
+  private MainDocumentCreator(final Diary diary, final String outputDir, final Music music) {
+    super(diary, outputDir, false);
     fMusic = music;
     fLookup = Lookup.getLookup(fMusic);
   }
@@ -251,7 +251,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
     for (Object o : items) {
       if (o instanceof Entry) {
         // TODO: This shouldn't call getElement().
-        diaryDiv.addElement(EntryRecordDocumentCreator.createEntryRecord((Entry)o, fLinks, fEncoder, false).getElement());
+        diaryDiv.addElement(EntryRecordDocumentCreator.createEntryRecord((Entry)o, fLinks, false).getElement());
       } else if (o instanceof Show) {
         // This appears at the top level
         // TODO: This shouldn't call getElement().

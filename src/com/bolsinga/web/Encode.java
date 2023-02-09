@@ -14,17 +14,6 @@ public abstract class Encode {
   
   private static final Pattern sHTMLTagPattern = Pattern.compile("<(pre|code|a)[^>]*>[^<]*</\\1>", Pattern.DOTALL);
 
-  // NOTE: With the current set of data (2006-08-02) there is a 210:1 ratio of up to std links!
-
-  private static Encode sEncode = null;
-
-  public synchronized static Encode getEncode() {
-    if (sEncode == null) {
-      sEncode = new HashEncode();
-    }
-    return sEncode;
-  }
-  
   public static String encodeROOT_URL(final String s) {
     return Encode.encodeROOT_URL(s, Util.getSettings().getRoot());
   }
@@ -53,12 +42,7 @@ public abstract class Encode {
     return sb.toString();
   }
 
-  public abstract String embedLinks(Entry entry, boolean upOneLevel);
-}
-
-class HashEncode extends Encode {
-
-  public String embedLinks(final Entry entry, final boolean upOneLevel) {
+  public static String embedLinks(final Entry entry, final boolean upOneLevel) {
     String result = Util.toHTMLSafe(entry.getComment());
     return Encode.encodeROOT_URL(result, Links.getLinks(upOneLevel).getLevelOnly());
   }

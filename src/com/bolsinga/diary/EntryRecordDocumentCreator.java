@@ -17,14 +17,14 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   private final java.util.Map<String, IndexPair> fIndex;
   private final Collection<Vector<Entry>> fGroups;
   
-  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Diary diary, final String outputDir, final Encode encoder) {
-    EntryRecordDocumentCreator creator = new EntryRecordDocumentCreator(diary, outputDir, encoder);
+  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Diary diary, final String outputDir) {
+    EntryRecordDocumentCreator creator = new EntryRecordDocumentCreator(diary, outputDir);
     creator.create(backgrounder, backgroundable);
     creator.createStats(backgrounder, backgroundable);
   }
   
-  private EntryRecordDocumentCreator(final Diary diary, final String outputDir, final Encode encoder) {
-    super(diary, outputDir, true, encoder);
+  private EntryRecordDocumentCreator(final Diary diary, final String outputDir) {
+    super(diary, outputDir, true);
     fIndex = createIndex();
     fGroups = createGroups();
   }
@@ -102,11 +102,11 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   }
   
   private com.bolsinga.web.Record getEntryRecord(final Entry entry) {
-    return EntryRecordDocumentCreator.createEntryRecord(entry, fLinks, fEncoder, true);
+    return EntryRecordDocumentCreator.createEntryRecord(entry, fLinks, true);
   }
   
   // This is used for the main page and entry pages, which is why it is public static
-  public static com.bolsinga.web.Record createEntryRecord(final Entry entry, final Links links, final Encode encoder, final boolean upOneLevel) {
+  public static com.bolsinga.web.Record createEntryRecord(final Entry entry, final Links links, final boolean upOneLevel) {
     String title = entry.getTitle();
     if (title == null) {
         title = Util.getDisplayTitle(entry);
@@ -116,7 +116,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     }
     return com.bolsinga.web.Record.createRecordPermalink(
       Util.createNamedTarget(entry.getID(), title), 
-      encoder.embedLinks(entry, upOneLevel),
+      Encode.embedLinks(entry, upOneLevel),
       Util.createPermaLink(links.getLinkTo(entry)));
   }
 
