@@ -13,19 +13,17 @@ import org.apache.ecs.html.*;
 
 public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
-  private final Encode fEncoder;
   private final java.util.Map<String, IndexPair> fIndex;
   private final Collection<Vector<Show>> fGroups;
 
-  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final Encode encoder, final String outputDir) {
-    ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir, encoder);
+  public static void createDocuments(final Backgrounder backgrounder, final Backgroundable backgroundable, final Music music, final String outputDir) {
+    ShowRecordDocumentCreator creator = new ShowRecordDocumentCreator(music, outputDir);
     creator.create(backgrounder, backgroundable);
     creator.createStats(backgrounder, backgroundable);
   }
     
-  private ShowRecordDocumentCreator(final Music music, final String outputDir, final Encode encoder) {
+  private ShowRecordDocumentCreator(final Music music, final String outputDir) {
     super(music, outputDir);
-    fEncoder = encoder;
     fIndex = createIndex();
     fGroups = createGroups();
   }
@@ -261,11 +259,11 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private com.bolsinga.web.Record getShowRecord(final Show show) {
-    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, false);
+    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, false);
   }
   
   // This is used for the main page.
-  public static com.bolsinga.web.Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean titleIsLink) {
+  public static com.bolsinga.web.Record createShowRecord(final Show show, final Links links, final Lookup lookup, final boolean titleIsLink) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<? extends Artist> bi = show.getArtists().iterator();
@@ -289,7 +287,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
     String comment = show.getComment();
     if (comment != null) {
-      comment = encoder.embedLinks(show);
+      comment = Util.toHTMLSafe(comment);
     }
     
     String dateString = Util.toString(show.getDate());
