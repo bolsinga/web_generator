@@ -155,21 +155,17 @@ public class Main implements Backgroundable {
   }
   
   private void generateMainPage(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) {
-    final Encode encoder = Encode.getEncode();
-
-    MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, encoder, music);
+    MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, music);
   }
 
   private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) throws Exception {
     CSS.install(output);
 
     dumpSimilarArtists(music);
-    
-    final Encode encoder = Encode.getEncode();
 
     // Diary items
-    MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, encoder, music);
-    EntryRecordDocumentCreator.createDocuments(fBackgrounder, this, diary, output, encoder);
+    MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, music);
+    EntryRecordDocumentCreator.createDocuments(fBackgrounder, this, diary, output);
     AltDocumentCreator.createDocuments(fBackgrounder, this, diary, output);
 
     // Music items
