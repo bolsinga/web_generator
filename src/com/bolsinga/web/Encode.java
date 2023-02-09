@@ -11,7 +11,6 @@ import java.util.regex.*;
 public abstract class Encode {
 
   private static final Pattern sRootURLPattern = Pattern.compile("@@ROOT_URL@@");
-  private static final Pattern sTransitionalPattern = Pattern.compile("<\\W*a[^>]*target[^=>]*=[^>]*>");
   
   private static final Pattern sHTMLTagPattern = Pattern.compile("<(pre|code|a)[^>]*>[^<]*</\\1>", Pattern.DOTALL);
 
@@ -35,13 +34,6 @@ public abstract class Encode {
       return sRootURLPattern.matcher(s).replaceAll(replacement);
     }
     return null;
-  }
-  
-  public static boolean requiresTransitional(final String s) {
-    if (s != null) {
-      return sTransitionalPattern.matcher(s).find();
-    }
-    return false;
   }
 
   static String encodeUntagged(final String source, final UntaggedEncoder encoder) {
