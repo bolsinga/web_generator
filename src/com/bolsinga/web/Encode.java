@@ -53,16 +53,10 @@ public abstract class Encode {
     return sb.toString();
   }
 
-  public abstract String embedLinks(Show show);
-
   public abstract String embedLinks(Entry entry, boolean upOneLevel);
 }
 
 class HashEncode extends Encode {
-
-  public String embedLinks(final Show show) {
-    return Util.toHTMLSafe(show.getComment());
-  }
 
   public String embedLinks(final Entry entry, final boolean upOneLevel) {
     String result = Util.toHTMLSafe(entry.getComment());

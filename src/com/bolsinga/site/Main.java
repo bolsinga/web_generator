@@ -175,7 +175,7 @@ public class Main implements Backgroundable {
     // Music items
     ArtistRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
     VenueRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
-    ShowRecordDocumentCreator.createDocuments(fBackgrounder, this, music, encoder, output);
+    ShowRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
     CityRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
     TracksRecordDocumentCreator.createDocuments(fBackgrounder, this, music, output);
 

@@ -255,7 +255,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
       } else if (o instanceof Show) {
         // This appears at the top level
         // TODO: This shouldn't call getElement().
-        diaryDiv.addElement(ShowRecordDocumentCreator.createShowRecord((Show)o, fLinks, fLookup, fEncoder, true).getElement());
+        diaryDiv.addElement(ShowRecordDocumentCreator.createShowRecord((Show)o, fLinks, fLookup, true).getElement());
       } else {
         System.err.println("Unknown recent item: " + o.toString());
       }
