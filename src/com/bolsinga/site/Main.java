@@ -155,7 +155,7 @@ public class Main implements Backgroundable {
   }
   
   private void generateMainPage(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) {
-    final Encode encoder = Encode.getEncode(music, diary);
+    final Encode encoder = Encode.getEncode();
 
     MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, encoder, music);
   }
@@ -165,7 +165,7 @@ public class Main implements Backgroundable {
 
     dumpSimilarArtists(music);
     
-    final Encode encoder = Encode.getEncode(music, diary);
+    final Encode encoder = Encode.getEncode();
 
     // Diary items
     MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, encoder, music);

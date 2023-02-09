@@ -95,10 +95,6 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
     return fProperties.getProperty("friendsTitle");
   }
 
-  public boolean isEmbedLinks() {
-    return Boolean.parseBoolean(fProperties.getProperty("embedLinks"));
-  }
-
   public int getShowTime() {
     return Integer.parseInt(fProperties.getProperty("showTime"));
   }
