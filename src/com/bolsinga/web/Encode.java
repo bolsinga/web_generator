@@ -30,7 +30,7 @@ public abstract class Encode {
     return Encode.encodeROOT_URL(s, Util.getSettings().getRoot());
   }
   
-  public static String encodeROOT_URL(final String s, final String replacement) {
+  static String encodeROOT_URL(final String s, final String replacement) {
     if (s != null) {
       return sRootURLPattern.matcher(s).replaceAll(replacement);
     }
@@ -44,7 +44,7 @@ public abstract class Encode {
     return false;
   }
 
-  public static String encodeUntagged(final String source, final UntaggedEncoder encoder) {
+  static String encodeUntagged(final String source, final UntaggedEncoder encoder) {
     StringBuilder sb = new StringBuilder();
     Matcher html = sHTMLTagPattern.matcher(source);
     if (html.find()) {
@@ -73,7 +73,7 @@ class EncoderData {
   private static final Pattern sSpecialCharsPattern = Pattern.compile("([\\(\\)\\?\\+\\.])");
 
   // Don't use venues with lower case names, these are 'vague' venues.
-  public static final Pattern sStartsLowerCase = Pattern.compile("^\\p{Lower}+$");
+  static final Pattern sStartsLowerCase = Pattern.compile("^\\p{Lower}+$");
   
   private static final Pattern sStartsWord = Pattern.compile("^\\w");
   private static final Pattern sEndsWord = Pattern.compile("\\w$");
@@ -86,7 +86,7 @@ class EncoderData {
   private final String fStandardLink;
   private final String fUpLink;
   
-  public static final Comparator<EncoderData> ENCODERDATA_COMPARATOR = new Comparator<EncoderData>() {
+  static final Comparator<EncoderData> ENCODERDATA_COMPARATOR = new Comparator<EncoderData>() {
       public int compare(final EncoderData d1, final EncoderData d2) {
         int result = d2.getName().length() - d1.getName().length();
         if (result == 0) {
@@ -126,7 +126,7 @@ class EncoderData {
     fUpLink = Util.createInternalA(upLinks.getLinkTo(album), EncoderData.sLinkGroup, t).toString();
   }
 
-  public static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
+  static String addLinks(final String source, final boolean upOneLevel, final Collection<EncoderData> encodings) {
     String result = source;
 
     // The general idea is to replace text not within HTML tags with links to each EncoderData pattern.
