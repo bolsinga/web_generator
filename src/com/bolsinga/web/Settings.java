@@ -50,7 +50,6 @@ public interface Settings {
   public String getIcalName();
   public String getLinksTitle();
   public String getFriendsTitle();
-  public boolean isEmbedLinks();
   public int getShowTime();
   public int getCopyrightStartYear();
   public int getDiaryEntryTime();

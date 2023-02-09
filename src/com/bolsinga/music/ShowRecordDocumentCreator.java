@@ -261,11 +261,11 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
   }
 
   private com.bolsinga.web.Record getShowRecord(final Show show) {
-    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, false, true);
+    return ShowRecordDocumentCreator.createShowRecord(show, fLinks, fLookup, fEncoder, false);
   }
   
   // This is used for the main page.
-  public static com.bolsinga.web.Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean titleIsLink, final boolean upOneLevel) {
+  public static com.bolsinga.web.Record createShowRecord(final Show show, final Links links, final Lookup lookup, final Encode encoder, final boolean titleIsLink) {
     Vector<Element> e = new Vector<Element>();
     StringBuilder sb = new StringBuilder();
     Iterator<? extends Artist> bi = show.getArtists().iterator();
@@ -289,7 +289,7 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
 
     String comment = show.getComment();
     if (comment != null) {
-      comment = encoder.embedLinks(show, upOneLevel);
+      comment = encoder.embedLinks(show);
     }
     
     String dateString = Util.toString(show.getDate());
