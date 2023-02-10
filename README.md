@@ -28,7 +28,7 @@ iTunes data is obtained from the iTunes program running on a mac. This data is u
 
 ## Details
 
-All items can contain external links or internal links. The internal links can be hand built with a `@@ROOT_URL@@` root. There is also an encoder that runs across all the artist names and venue names. It will look at all the text and automatically generate links to a matching band or venue.
+All items can contain external links or internal links. The internal links can be hand built with a `@@ROOT_URL@@` root. <del>There is also an encoder that runs across all the artist names and venue names. It will look at all the text and automatically generate links to a matching band or venue.</del>
 
 Artists and venues can be related to each other, for any reason. Artists are sorted using iTunes sorting rules, and there is an additional data file for sorting artists not in iTunes (for artists only seen at shows).
 
