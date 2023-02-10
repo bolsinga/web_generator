@@ -639,4 +639,16 @@ public class Util {
     }
     return f;
   }
+
+  public static org.apache.ecs.Element getSearchForm() {
+    Form form = new Form("https://duckduckgo.com/", Form.get);
+    form.addElement(new Input(Input.hidden, "sites", "bolsinga.com"));
+    form.addElement(new Input("search", "q"));
+    Input i = new Input(Input.submit, "", "Search");
+    i.removeAttribute("name");
+    form.addElement(i);
+    form.removeAttribute("accept-charset");
+    form.removeAttribute("enctype");
+    return form;
+  }
 }
