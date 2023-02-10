@@ -68,13 +68,13 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   private Document createDocument(final RecordFactory factory) {
     Document d = new Document(ECSDefaults.getDefaultCodeset());
                 
-    d.getHtml().setPrettyPrint(Util.getPrettyOutput());
+    d.getHtml().setPrettyPrint(true);
                 
     d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
     d.appendTitle(getSitePageTitle(factory.getTitle()));
                 
     Head h = d.getHead();
-    h.setPrettyPrint(Util.getPrettyOutput());
+    h.setPrettyPrint(true);
     h.addElement(Util.getIconLink());
     h.addElement(Util.getWebClipIcon());
     h.addElement(fLinks.getLinkToRSS());
@@ -88,7 +88,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     h.addElement(new Meta().setContent(Util.getGenerator()).setName("Generator"));
     h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
     
-    d.getBody().setPrettyPrint(Util.getPrettyOutput());
+    d.getBody().setPrettyPrint(true);
 
     d.getBody().addElement(getHeaderDiv(factory));
     

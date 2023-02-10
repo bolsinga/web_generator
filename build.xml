@@ -174,7 +174,8 @@
 </target>
 
 <!--    Add the following property to any web using code to have the output's
-                container tags be pretty printed. This can assist in debugging the output.
+                container tags be debug printed. This can assist in debugging the output. 
+                It will do things such as not render dates which can change from run to run.
 
                 <sysproperty key="web.debug_output" value="true" />
 -->

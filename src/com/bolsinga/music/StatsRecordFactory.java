@@ -51,11 +51,11 @@ public abstract class StatsRecordFactory implements RecordFactory {
       public TR getRow(final int row) {
         TR trow = new TR();
         TH thh = new TH(names.get(row));
-        thh.setPrettyPrint(Util.getPrettyOutput());
+        thh.setPrettyPrint(true);
         trow.addElement(thh);
         int value = values.get(row);
-        trow.addElement(new TD(Integer.toString(value)).setPrettyPrint(Util.getPrettyOutput()));
-        trow.addElement(new TD(Util.toString((double)value / total * 100.0)).setPrettyPrint(Util.getPrettyOutput()));
+        trow.addElement(new TD(Integer.toString(value)).setPrettyPrint(true));
+        trow.addElement(new TD(Util.toString((double)value / total * 100.0)).setPrettyPrint(true));
         return trow;
       }
       
