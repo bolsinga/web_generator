@@ -23,7 +23,6 @@ public class Util {
 
   private static com.bolsinga.web.Settings sSettings = null;
   private static final boolean sDebugOutput = Boolean.getBoolean("web.debug_output");
-  private static final boolean sPrettyOutput = Boolean.parseBoolean(System.getProperty("web.pretty_output", Boolean.valueOf(sDebugOutput).toString()));
   private static final String sLineSeparator = System.getProperty("line.separator");
   private static final Pattern sHTMLPattern = Pattern.compile("&([^agl])");
   private static final Pattern sNewLinePattern = Pattern.compile("\\n");
@@ -74,9 +73,7 @@ public class Util {
   }
   
   public static StringBuilder appendPretty(StringBuilder sb) {
-    if (Util.getPrettyOutput()) {
-      sb.append(sLineSeparator);
-    }
+    sb.append(sLineSeparator);
     return sb;
   }
 
@@ -84,10 +81,6 @@ public class Util {
     return sHTMLPattern.matcher(s).replaceAll("&amp;$1");
   }
 
-  public static boolean getPrettyOutput() {
-    return sPrettyOutput;
-  }
-  
   public static boolean getDebugOutput() {
     return sDebugOutput;
   }
@@ -129,12 +122,12 @@ public class Util {
 
   public static UL convertToUnOrderedList(final List<String> lines) {
     UL list = new UL();
-    list.setPrettyPrint(Util.getPrettyOutput());
+    list.setPrettyPrint(true);
 
     // Convert each line to a li tag.
     for (String line : lines) {
       LI item = new LI(line);
-      item.setPrettyPrint(Util.getPrettyOutput());
+      item.setPrettyPrint(true);
       list.addElement(item);
     }
 
@@ -157,7 +150,7 @@ public class Util {
   public static Div createDiv(final String className) {
     Div d = new Div();
     d.setClass(className);
-    d.setPrettyPrint(Util.getPrettyOutput());
+    d.setPrettyPrint(true);
     return d;
   }
         
@@ -207,11 +200,11 @@ public class Util {
 
   public static UL createUnorderedList(final Vector<org.apache.ecs.Element> elements, final org.apache.ecs.Element curElement) {
     UL list = new UL();
-    list.setPrettyPrint(Util.getPrettyOutput());
+    list.setPrettyPrint(true);
 
     for (org.apache.ecs.Element e : elements) {
       LI item = new LI(e);
-      item.setPrettyPrint(Util.getPrettyOutput());
+      item.setPrettyPrint(true);
       if (e.equals(curElement)) {
         item.setClass(CSS.ACTIVE);
       }
@@ -224,7 +217,7 @@ public class Util {
   public static UL appendToUnorderedList(final UL list, final Vector<org.apache.ecs.Element> elements) {
     for (org.apache.ecs.Element e : elements) {
       LI item = new LI(e);
-      item.setPrettyPrint(Util.getPrettyOutput());
+      item.setPrettyPrint(true);
       list.addElement(item);
     }
 
@@ -233,11 +226,11 @@ public class Util {
 
   public static OL createOrderedList(final Vector<org.apache.ecs.Element> elements) {
     OL list = new OL();
-    list.setPrettyPrint(Util.getPrettyOutput());
+    list.setPrettyPrint(true);
 
     for (org.apache.ecs.Element e : elements) {
       LI item = new LI(e);
-      item.setPrettyPrint(Util.getPrettyOutput());
+      item.setPrettyPrint(true);
       list.addElement(item);
     }
 
@@ -247,15 +240,15 @@ public class Util {
   public static Table makeTable(final String caption, final String summary, final TableHandler handler) {
     Table t = new Table();
     t.setSummary(summary);
-    t.setPrettyPrint(Util.getPrettyOutput());
+    t.setPrettyPrint(true);
     Caption capt = new Caption();
-    capt.setPrettyPrint(Util.getPrettyOutput());
+    capt.setPrettyPrint(true);
     capt.addElement(caption);
     t.addElement(capt);
     
     TR trow = handler.getHeaderRow();
     trow.setClass(CSS.TABLE_HEADER);
-    trow.setPrettyPrint(Util.getPrettyOutput());
+    trow.setPrettyPrint(true);
     t.addElement(trow);
 
     int i = 0;
@@ -263,7 +256,7 @@ public class Util {
     while (i < count) {
       trow = handler.getRow(i);
       
-      trow.setPrettyPrint(Util.getPrettyOutput());
+      trow.setPrettyPrint(true);
       if (((i + 1) % 2) == 0) {
         trow.setClass(CSS.TABLE_ROW_ALT);
       }
@@ -275,7 +268,7 @@ public class Util {
     
     trow = handler.getFooterRow();
     if (trow != null) {
-        trow.setPrettyPrint(Util.getPrettyOutput());
+        trow.setPrettyPrint(true);
         trow.setClass(CSS.TABLE_FOOTER);
         t.addElement(trow);
     }
@@ -624,11 +617,7 @@ public class Util {
 
   public static void writeJSON(final JSONObject json, final String outputFile) throws com.bolsinga.web.WebException {    
     try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(outputFile), java.nio.charset.Charset.forName("UTF-8"))) {
-      if (com.bolsinga.web.Util.getPrettyOutput()) {
-        osw.write(json.toString(2));
-      } else {
-        json.write(osw);
-      }
+      osw.write(json.toString(2));
     } catch (IOException e) {
       StringBuilder sb = new StringBuilder();
       sb.append("Can't find file: ");

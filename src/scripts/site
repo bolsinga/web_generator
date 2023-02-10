@@ -86,7 +86,6 @@ done
 
 if [ $ACTION = "json" ] ; then
   DATA_FILES="$DATA_FILES \"${DATA_HOME}/diary.json\" \"${DATA_HOME}/music.json\""
-  JAVA_OPTS="$JAVA_OPTS -Dweb.pretty_output=true"
 elif [ $ACTION = "json-site" ] ; then
   for i in \
     "${DATA_HOME}/diary.json" \
