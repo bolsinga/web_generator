@@ -36,7 +36,7 @@ The file formats for all of these data inputs are arbitrary and different for ea
 
 The program is multi-threaded using java concurrency queues. It looks like I first released the [concurrent build](http://www.bolsinga.com/archives/2006.html#e246) in mid-2006. This is when I was working at Azul. At the time they built expensive computers with 384 cores to run java programs. Interestingly, we found they were mostly used to parse XML. I guess I was influenced by what I was working on then.
 
-It has CSS to style it. It's clear my style isn't very modern. At some point, I'd decided to *save some space*, and mangle the CSS names to single letters. It makes things smaller and harder to read, but my 2020 hunch is that it is a pre-mature optimization.
+It has CSS to style it. It's clear my style isn't very modern. <del>At some point, I'd decided to *save some space*, and mangle the CSS names to single letters. It makes things smaller and harder to read, but my 2020 hunch is that it is a pre-mature optimization.</del>
 
 ## Saga
 
