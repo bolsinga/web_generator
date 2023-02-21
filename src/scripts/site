@@ -63,12 +63,7 @@ if [ ! -d "${DATA_HOME}" ] ; then
     usage "No $DATA_HOME"
 fi
 
-ITUNES_DATA_FILE="$4"
-if [ -z "$ITUNES_DATA_FILE" ] ; then
-  usage "No itunes json file"
-else
-  DATA_FILES=$ITUNES_DATA_FILE
-fi
+DATA_FILES=""
 
 for i in \
     "${DATA_HOME}/shows.txt" \
@@ -83,6 +78,13 @@ for i in \
   fi
   DATA_FILES="$DATA_FILES \"$i\""
 done
+
+ITUNES_DATA_FILE="$4"
+if [ -z "$ITUNES_DATA_FILE" ] ; then
+  usage "No itunes json file"
+else
+  DATA_FILES="$DATA_FILES $ITUNES_DATA_FILE"
+fi
 
 if [ $ACTION = "json-site" ] ; then
   for i in \

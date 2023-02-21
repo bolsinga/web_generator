@@ -20,7 +20,6 @@ public class Main implements Backgroundable {
 
     String output = args[i++];
 
-    String itunes = args[i++];
     String shows = args[i++];
     String venue = args[i++];
     String sort = args[i++];
@@ -29,7 +28,9 @@ public class Main implements Backgroundable {
     String statics = args[i++];
     
     String settingsFile = args[i++];
-        
+
+    String itunes = args[i++];
+
     String diaryFile = args[i++];
     String musicFile = args[i++];
 
