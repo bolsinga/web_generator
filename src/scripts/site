@@ -97,8 +97,6 @@ elif [ $ACTION = "json-site" ] ; then
   done
 elif [ $ACTION = "site" ] ; then
   DATA_FILES="$DATA_FILES dummy_diary dummy_music"
-else
-  DATA_FILES="$DATA_FILES ${DATA_HOME} dummy"
 fi
 
 COMMAND="exec \"$JAVA_CMD\" --finalization=disabled -Xms256m -Xmx256m -ea:com.bolsinga..."
