@@ -39,8 +39,6 @@ public class Main implements Backgroundable {
       Main main = new Main(backgrounder, settingsFile);
       if (command.equals("site")) {
         main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output);
-      } else if (command.equals("json")) {
-        main.generateJSON(diaryFile, musicFile, itunes, shows, venue, sort, relations, comments, statics);
       } else if (command.equals("json-site")) {
         main.generateJSONSite(diaryFile, musicFile, output);
       } else {
@@ -70,14 +68,6 @@ public class Main implements Backgroundable {
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
 
     generateSite(music, diary, output);
-  }
-  
-  private void generateJSON(final String diaryFile, final String musicFile, final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics) throws Exception {
-    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
-    com.bolsinga.music.data.json.Music.export(music, musicFile);
-
-    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
-    com.bolsinga.diary.data.json.Diary.export(diary, diaryFile);
   }
 
   private void generateJSONSite(final String diaryFile, final String musicFile, final String output) throws Exception {

@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "site <json | json-site | site> output_dir data_dir itunes_json_file"
+    echo "site <json-site | site> output_dir data_dir itunes_json_file"
     echo $1
     exit 1
 }
@@ -84,9 +84,7 @@ for i in \
   DATA_FILES="$DATA_FILES \"$i\""
 done
 
-if [ $ACTION = "json" ] ; then
-  DATA_FILES="$DATA_FILES \"${DATA_HOME}/diary.json\" \"${DATA_HOME}/music.json\""
-elif [ $ACTION = "json-site" ] ; then
+if [ $ACTION = "json-site" ] ; then
   for i in \
     "${DATA_HOME}/diary.json" \
     "${DATA_HOME}/music.json" ; do
@@ -97,6 +95,8 @@ elif [ $ACTION = "json-site" ] ; then
   done
 elif [ $ACTION = "site" ] ; then
   DATA_FILES="$DATA_FILES dummy_diary dummy_music"
+else
+  usage "Unknown action: $ACTION"
 fi
 
 COMMAND="exec \"$JAVA_CMD\" --finalization=disabled -Xms256m -Xmx256m -ea:com.bolsinga..."
