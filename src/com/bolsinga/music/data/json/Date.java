@@ -3,12 +3,10 @@ package com.bolsinga.music.data.json;
 import org.json.*;
 
 public class Date implements com.bolsinga.music.data.Date {
-  private static final String UNKNOWN = "unknown";
   private static final String YEAR = "year";
   private static final String MONTH = "month";
   private static final String DAY = "day";
 
-  private boolean unknown;
   private int year;
   private int month;
   private int day;
@@ -24,10 +22,6 @@ public class Date implements com.bolsinga.music.data.Date {
   static JSONObject createJSON(com.bolsinga.music.data.Date date) throws JSONException {
     JSONObject json = new JSONObject();
     
-    boolean unknown = date.isUnknown();
-    if (unknown) {
-      json.put(UNKNOWN, true);
-    }
     int i = date.getYear();
     if (i != com.bolsinga.music.data.Date.UNKNOWN) {
       json.put(YEAR, i);
@@ -49,21 +43,19 @@ public class Date implements com.bolsinga.music.data.Date {
   }
   
   private Date(final com.bolsinga.music.data.Date date) {
-    unknown = date.isUnknown();
     year = date.getYear();
     month = date.getMonth();
     day = date.getDay();
   }
   
   private Date(final JSONObject json) throws JSONException {
-    unknown = json.optBoolean(UNKNOWN, false);
     year = json.optInt(YEAR, com.bolsinga.music.data.Date.UNKNOWN);
     month = json.optInt(MONTH, com.bolsinga.music.data.Date.UNKNOWN);
     day = json.optInt(DAY, com.bolsinga.music.data.Date.UNKNOWN);
   }
   
   public boolean isUnknown() {
-    return unknown;
+    return (year == com.bolsinga.music.data.Date.UNKNOWN) || (month == com.bolsinga.music.data.Date.UNKNOWN) || (day == com.bolsinga.music.data.Date.UNKNOWN);
   }
   
   public int getYear() {
