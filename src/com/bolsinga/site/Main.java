@@ -16,6 +16,8 @@ public class Main implements Backgroundable {
     }
 
     int i = 0;
+    String command = args[i++];
+
     String itunes = args[i++];
     String shows = args[i++];
     String venue = args[i++];
@@ -30,8 +32,6 @@ public class Main implements Backgroundable {
     String musicFile = args[i++];
 
     String output = args[i++];
-
-    String command = args[i++];
 
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     
