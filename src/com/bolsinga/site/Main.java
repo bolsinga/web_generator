@@ -4,8 +4,6 @@ import com.bolsinga.diary.*;
 import com.bolsinga.music.*;
 import com.bolsinga.web.*;
 
-import org.json.*;
-
 import java.util.*;
 
 public class Main implements Backgroundable {
@@ -45,11 +43,6 @@ public class Main implements Backgroundable {
         main.generateJSON(diaryFile, musicFile, itunes, shows, venue, sort, relations, comments, statics);
       } else if (command.equals("json-site")) {
         main.generateJSONSite(diaryFile, musicFile, output);
-      } else if (command.startsWith("gen-json-")) {
-        String type = command.substring("gen-json-".length());
-        // In this case, diaryFile is the output directory.
-        String outputDir = diaryFile;
-        main.generateJSONFile(itunes, shows, venue, sort, relations, comments, statics, type, outputDir);
       } else {
         Main.usage(args, "Invalid action");
       }
@@ -92,36 +85,6 @@ public class Main implements Backgroundable {
     final com.bolsinga.music.data.Music music = com.bolsinga.music.data.json.Music.create(musicFile);
     
     generateSite(music, diary, output);
-  }
-
-  private void generateJSONFile(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String type, final String outputDir) throws Exception {
-    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
-    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
-
-    JSONObject json = new JSONObject();
-    try {
-      if (type.equals("entries")) {
-        json.put(type, com.bolsinga.diary.data.json.Diary.createEntriesJSON(diary.getEntries()));
-      } else if (type.equals("venues")) {
-        json.put(type, com.bolsinga.music.data.json.Music.createVenuesJSON(music.getVenues()));
-      } else if (type.equals("artists")) {
-        json.put(type, com.bolsinga.music.data.json.Music.createArtistsJSON(music.getArtists()));
-      } else if (type.equals("relations")) {
-        json.put(type, com.bolsinga.music.data.json.Music.createRelationsJSON(music.getRelations()));
-      } else if (type.equals("songs")) {
-        json.put(type, com.bolsinga.music.data.json.Music.createSongsJSON(music.getSongs()));
-      } else if (type.equals("albums")) {
-        json.put(type, com.bolsinga.music.data.json.Music.createAlbumsJSON(music.getAlbums()));
-      } else if (type.equals("shows")) {
-        json.put(type, com.bolsinga.music.data.json.Music.createShowsJSON(music.getShows()));
-      } else {
-        Main.usage(null, "Unknown JSON type: " + type);
-      }
-    } catch (JSONException e) {
-      throw new com.bolsinga.web.WebException("Can't export music to json", e);
-    }
-    java.io.File result = new java.io.File(outputDir, type + ".json");
-    com.bolsinga.web.Util.writeJSON(json, result.getPath());
   }
 
   private void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
