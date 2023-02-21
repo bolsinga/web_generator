@@ -66,13 +66,13 @@ fi
 DATA_FILES=""
 
 for i in \
+    "${DATA_HOME}/settings.properties" \
     "${DATA_HOME}/shows.txt" \
     "${DATA_HOME}/venuemap.txt" \
     "${DATA_HOME}/bandsort.txt" \
     "${DATA_HOME}/relations.txt" \
     "${DATA_HOME}/comments.txt" \
-    "${DATA_HOME}/statics.txt" \
-    "${DATA_HOME}/settings.properties" ; do
+    "${DATA_HOME}/statics.txt" ; do
   if [ ! -f "$i" ] ; then
       usage "Can't find $i"
   fi
