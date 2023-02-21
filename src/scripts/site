@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "site <json | json-site | site> data_dir output_dir itunes_json_file"
+    echo "site <json | json-site | site> output_dir data_dir itunes_json_file"
     echo $1
     exit 1
 }
@@ -41,17 +41,7 @@ if [ -z "$ACTION" ] ; then
    usage "No action"
 fi
 
-DATA_DIR="$2"
-if [ -z "$DATA_DIR" ] ; then
-    usage "No data_dir"
-fi
-
-DATA_HOME=`cd "$DATA_DIR" && pwd`
-if [ ! -d "${DATA_HOME}" ] ; then
-    usage "No $DATA_HOME"
-fi
-
-OUTPUT_DIR="$3"
+OUTPUT_DIR="$2"
 if [ -z "$OUTPUT_DIR" ] ; then
     usage "No output_dir"
 fi
@@ -61,6 +51,16 @@ fi
 OUTPUT_HOME=`cd "$OUTPUT_DIR" && pwd`
 if [ ! -d "${OUTPUT_HOME}" ] ; then
     usage "Can't find ${OUTPUT_HOME}"
+fi
+
+DATA_DIR="$3"
+if [ -z "$DATA_DIR" ] ; then
+    usage "No data_dir"
+fi
+
+DATA_HOME=`cd "$DATA_DIR" && pwd`
+if [ ! -d "${DATA_HOME}" ] ; then
+    usage "No $DATA_HOME"
 fi
 
 ITUNES_DATA_FILE="$4"
@@ -103,7 +103,7 @@ COMMAND="exec \"$JAVA_CMD\" --finalization=disabled -Xms256m -Xmx256m -ea:com.bo
 if [ ! -z "$JAVA_OPTS" ] ; then
     COMMAND="$COMMAND $JAVA_OPTS"
 fi
-COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $ACTION $DATA_FILES $OUTPUT_HOME"
+COMMAND="$COMMAND -classpath \"$LOCAL_CLASSPATH\" com.bolsinga.site.Main $ACTION $OUTPUT_HOME $DATA_FILES"
 
 if [ ! -z "$DUMP" ] ; then
     echo "$COMMAND"
