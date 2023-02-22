@@ -2,7 +2,9 @@
 
 usage()
 {
-    echo "site <json-site | site> output_dir data_dir itunes_json_file"
+    echo "site site output_dir data_dir itunes_json_file"
+    echo "- or -"
+    echo "site json-site output_dir settings_file json_dir"
     echo $1
     exit 1
 }
@@ -53,50 +55,65 @@ if [ ! -d "${OUTPUT_HOME}" ] ; then
     usage "Can't find ${OUTPUT_HOME}"
 fi
 
-DATA_DIR="$3"
-if [ -z "$DATA_DIR" ] ; then
-    usage "No data_dir"
-fi
-
-DATA_HOME=`cd "$DATA_DIR" && pwd`
-if [ ! -d "${DATA_HOME}" ] ; then
-    usage "No $DATA_HOME"
-fi
-
 DATA_FILES=""
 
-for i in \
-    "${DATA_HOME}/settings.properties" \
-    "${DATA_HOME}/shows.txt" \
-    "${DATA_HOME}/venuemap.txt" \
-    "${DATA_HOME}/bandsort.txt" \
-    "${DATA_HOME}/relations.txt" \
-    "${DATA_HOME}/comments.txt" \
-    "${DATA_HOME}/statics.txt" ; do
-  if [ ! -f "$i" ] ; then
-      usage "Can't find $i"
-  fi
-  DATA_FILES="$DATA_FILES \"$i\""
-done
-
-ITUNES_DATA_FILE="$4"
-if [ -z "$ITUNES_DATA_FILE" ] ; then
-  usage "No itunes json file"
-else
-  DATA_FILES="$DATA_FILES $ITUNES_DATA_FILE"
-fi
-
 if [ $ACTION = "json-site" ] ; then
+  SETTINGS_FILE="$3"
+  if [ -z "$SETTINGS_FILE" ] ; then
+    usage "No settings file"
+  else
+    DATA_FILES="$DATA_FILES $SETTINGS_FILE"
+  fi
+
+  JSON_DIR="$4"
+  if [ -z "$JSON_DIR" ] ; then
+      usage "No json_dir"
+  fi
+
+  JSON_HOME=`cd "$JSON_DIR" && pwd`
+  if [ ! -d "${JSON_HOME}" ] ; then
+      usage "No $JSON_HOME"
+  fi
+
   for i in \
-    "${DATA_HOME}/diary.json" \
-    "${DATA_HOME}/music.json" ; do
+    "${JSON_HOME}/diary.json" \
+    "${JSON_HOME}/music.json" ; do
     if [ ! -f "$i" ] ; then
       usage "Can't find $i"
     fi
   DATA_FILES="$DATA_FILES \"$i\""
   done
 elif [ $ACTION = "site" ] ; then
-  DATA_FILES="$DATA_FILES dummy_diary dummy_music"
+  DATA_DIR="$3"
+  if [ -z "$DATA_DIR" ] ; then
+      usage "No data_dir"
+  fi
+
+  DATA_HOME=`cd "$DATA_DIR" && pwd`
+  if [ ! -d "${DATA_HOME}" ] ; then
+      usage "No $DATA_HOME"
+  fi
+
+  for i in \
+      "${DATA_HOME}/settings.properties" \
+      "${DATA_HOME}/shows.txt" \
+      "${DATA_HOME}/venuemap.txt" \
+      "${DATA_HOME}/bandsort.txt" \
+      "${DATA_HOME}/relations.txt" \
+      "${DATA_HOME}/comments.txt" \
+      "${DATA_HOME}/statics.txt" ; do
+    if [ ! -f "$i" ] ; then
+        usage "Can't find $i"
+    fi
+    DATA_FILES="$DATA_FILES \"$i\""
+  done
+
+  ITUNES_DATA_FILE="$4"
+  if [ -z "$ITUNES_DATA_FILE" ] ; then
+    usage "No itunes json file"
+  else
+    DATA_FILES="$DATA_FILES $ITUNES_DATA_FILE"
+  fi
 else
   usage "Unknown action: $ACTION"
 fi
