@@ -103,7 +103,10 @@ public class Music implements com.bolsinga.music.data.Music {
     json.put(RELATIONS, Music.createRelationsJSON(music.getRelations()));
     json.put(SONGS, Music.createSongsJSON(music.getSongs()));
     json.put(ALBUMS, Music.createAlbumsJSON(music.getAlbums()));
-    json.put(SHOWS, Music.createShowsJSON(music.getShows()));
+
+    List<? extends com.bolsinga.music.data.Show> shows = music.getShowsCopy();
+    Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
+    json.put(SHOWS, Music.createShowsJSON(shows));
     
     return json;
   }
