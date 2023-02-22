@@ -118,6 +118,8 @@ else
   usage "Unknown action: $ACTION"
 fi
 
+# JAVA_OPTS="-Dweb.debug_output=true"
+
 COMMAND="exec \"$JAVA_CMD\" --finalization=disabled -Xms256m -Xmx256m -ea:com.bolsinga..."
 if [ ! -z "$JAVA_OPTS" ] ; then
     COMMAND="$COMMAND $JAVA_OPTS"
