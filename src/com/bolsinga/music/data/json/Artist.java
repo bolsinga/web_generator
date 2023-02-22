@@ -78,6 +78,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
       for (final com.bolsinga.music.data.Album album : albums) {
         albumIDs.add(album.getID());
       }
+      Collections.sort(albumIDs);
       json.put(ALBUMS, albumIDs);
     }
     
