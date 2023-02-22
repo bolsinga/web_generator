@@ -11,8 +11,8 @@ public class Main implements Backgroundable {
   private final Backgrounder fBackgrounder;
   
   public static void main(String[] args) {
-    if (args.length != 12) {
-      Main.usage(args, "Wrong number of arguments");
+    if (args.length < 3) {
+      Main.usage(args, "Initial: Wrong number of arguments: " + args.length);
     }
 
     int i = 0;
@@ -20,25 +20,32 @@ public class Main implements Backgroundable {
     String output = args[i++];
     String settingsFile = args[i++];
 
-    String shows = args[i++];
-    String venue = args[i++];
-    String sort = args[i++];
-    String relations = args[i++];
-    String comments = args[i++];
-    String statics = args[i++];
-
-    String itunes = args[i++];
-
-    String diaryFile = args[i++];
-    String musicFile = args[i++];
-
     Backgrounder backgrounder = Backgrounder.getBackgrounder();
     
     try {
       Main main = new Main(backgrounder, settingsFile);
       if (command.equals("site")) {
+        if (args.length != 10) {
+          Main.usage(args, "site: Wrong number of arguments: " + args.length);
+        }
+
+        String shows = args[i++];
+        String venue = args[i++];
+        String sort = args[i++];
+        String relations = args[i++];
+        String comments = args[i++];
+        String statics = args[i++];
+        String itunes = args[i++];
+
         main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output);
       } else if (command.equals("json-site")) {
+        if (args.length != 5) {
+          Main.usage(args, "json-site: Wrong number of arguments: " + args.length);
+        }
+
+        String diaryFile = args[i++];
+        String musicFile = args[i++];
+
         main.generateJSONSite(diaryFile, musicFile, output);
       } else {
         Main.usage(args, "Invalid action");
