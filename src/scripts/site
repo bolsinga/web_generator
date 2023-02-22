@@ -25,7 +25,7 @@ PROG_HOME=`cd "$PROG_HOME" && pwd`
 
 SITE_LIB_DIR="$PROG_HOME/lib"
 if [ ! -d "${SITE_LIB_DIR}" ] ; then
-    usage "Can't find ${SITE_LIB_DIR}"
+    usage "Can't find site library: ${SITE_LIB_DIR}"
 fi
 
 for i in "${SITE_LIB_DIR}" ; do
@@ -52,7 +52,7 @@ if [ ! -d "$OUTPUT_DIR" ] ; then
 fi
 OUTPUT_HOME=`cd "$OUTPUT_DIR" && pwd`
 if [ ! -d "${OUTPUT_HOME}" ] ; then
-    usage "Can't find ${OUTPUT_HOME}"
+    usage "Can't find output home ${OUTPUT_HOME}"
 fi
 
 DATA_FILES=""
@@ -79,7 +79,7 @@ if [ $ACTION = "json-site" ] ; then
     "${JSON_HOME}/diary.json" \
     "${JSON_HOME}/music.json" ; do
     if [ ! -f "$i" ] ; then
-      usage "Can't find $i"
+      usage "Can't find json file $i"
     fi
   DATA_FILES="$DATA_FILES \"$i\""
   done
@@ -103,7 +103,7 @@ elif [ $ACTION = "site" ] ; then
       "${DATA_HOME}/comments.txt" \
       "${DATA_HOME}/statics.txt" ; do
     if [ ! -f "$i" ] ; then
-        usage "Can't find $i"
+        usage "Can't find data file $i"
     fi
     DATA_FILES="$DATA_FILES \"$i\""
   done
