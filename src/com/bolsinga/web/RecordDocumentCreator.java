@@ -17,14 +17,16 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     String rootURL = Util.getSettings().getRoot();
     fSiteRoot = rootURL;
     try {
-      String[] parts = new java.net.URL(rootURL).getHost().split("\\.");
+      java.net.URI uri = new java.net.URI(rootURL);
+      String hostName = uri.getHost();
+      String[] parts = hostName.split("\\.");
       if (parts.length >= 2) {
         StringBuilder sb = new StringBuilder(parts[parts.length - 2]);
         sb.append(".");
         sb.append(parts[parts.length - 1]);
         fSiteRoot = sb.toString();
       }
-    } catch (java.net.MalformedURLException e) {
+    } catch (java.net.URISyntaxException e) {
       // drop it.
     }
   }
