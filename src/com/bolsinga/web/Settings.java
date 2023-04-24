@@ -55,4 +55,5 @@ public interface Settings {
   public int getDiaryEntryTime();
   public String getDiaryJsonFile();
   public String getMusicJsonFile();
+  public String getShowsJsonFile();
 }
