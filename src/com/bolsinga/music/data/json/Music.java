@@ -35,10 +35,10 @@ public class Music implements com.bolsinga.music.data.Music {
     }
   }
   
-  public static void export(final com.bolsinga.music.data.Music music, final String outputFile) throws com.bolsinga.web.WebException {    
+  public static void export(final com.bolsinga.music.data.Music music, final String outputFile, final boolean showsOnly) throws com.bolsinga.web.WebException {
     JSONObject json = null;
     try {
-      json = Music.createJSON(music);
+      json = Music.createJSON(music, showsOnly);
     } catch (JSONException e) {
       throw new com.bolsinga.web.WebException("Can't export music to json", e);
     }
@@ -93,7 +93,7 @@ public class Music implements com.bolsinga.music.data.Music {
     return json;
   }
   
-  static JSONObject createJSON(final com.bolsinga.music.data.Music music) throws JSONException {
+  static JSONObject createJSON(final com.bolsinga.music.data.Music music, final boolean showsOnly) throws JSONException {
     JSONObject json = new JSONObject();
 
     json.put(TIMESTAMP, com.bolsinga.web.Util.conformingISO8601String(music.getTimestamp()));
@@ -101,8 +101,10 @@ public class Music implements com.bolsinga.music.data.Music {
     json.put(VENUES, Music.createVenuesJSON(music.getVenues()));
     json.put(ARTISTS, Music.createArtistsJSON(music.getArtists()));
     json.put(RELATIONS, Music.createRelationsJSON(music.getRelations()));
-    json.put(SONGS, Music.createSongsJSON(music.getSongs()));
-    json.put(ALBUMS, Music.createAlbumsJSON(music.getAlbums()));
+    if (!showsOnly) {
+      json.put(SONGS, Music.createSongsJSON(music.getSongs()));
+      json.put(ALBUMS, Music.createAlbumsJSON(music.getAlbums()));
+    }
 
     List<? extends com.bolsinga.music.data.Show> shows = music.getShowsCopy();
     Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);

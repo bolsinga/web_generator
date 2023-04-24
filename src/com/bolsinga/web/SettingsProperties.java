@@ -114,4 +114,8 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
   public String getMusicJsonFile() {
     return fProperties.getProperty("musicJsonFile");
   }
+
+  public String getShowsJsonFile() {
+    return fProperties.getProperty("showsJsonFile");
+  }
 }
