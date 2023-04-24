@@ -101,7 +101,10 @@ public class Music implements com.bolsinga.music.data.Music {
     json.put(VENUES, Music.createVenuesJSON(music.getVenues()));
     json.put(ARTISTS, Music.createArtistsJSON(music.getArtists()));
     json.put(RELATIONS, Music.createRelationsJSON(music.getRelations()));
-    if (!showsOnly) {
+    if (showsOnly) {
+      json.put(SONGS, new JSONArray());
+      json.put(ALBUMS, new JSONArray());
+    } else {
       json.put(SONGS, Music.createSongsJSON(music.getSongs()));
       json.put(ALBUMS, Music.createAlbumsJSON(music.getAlbums()));
     }
