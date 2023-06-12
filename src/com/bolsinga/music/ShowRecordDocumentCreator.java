@@ -40,6 +40,21 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
               
               for (Vector<Show> item : getMonthlies(group)) {
                 records.add(getShowMonthRecordSection(item));
+
+                for (Show show : item) {
+                  backgrounder.execute(backgroundable, new Runnable() {
+                    public void run() {
+                      createRedirectDocument(new RedirectFactory() {
+                        public String getInternalURL() {
+                          return fLinks.getInternalLinkTo(show);
+                        }
+                        public String getFilePath() {
+                          return fLinks.getIdentifierPath(show);
+                        }
+                      });
+                    }
+                  });
+                }
               }
               
               return records;
