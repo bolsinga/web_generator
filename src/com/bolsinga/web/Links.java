@@ -162,6 +162,36 @@ public class Links {
     return sb.toString();
   }
 
+  // This is the path for the file with the identifier that redirects into the grouped page.
+  public String getIdentifierPath(final Artist artist) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(ARTIST_DIR);
+    sb.append(File.separator);
+    sb.append(artist.getID());
+    sb.append(HTML_EXT);
+    return sb.toString();
+  }
+
+  // This is the path for the file with the identifier that redirects into the grouped page.
+  public String getIdentifierPath(final Venue venue) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(VENUE_DIR);
+    sb.append(File.separator);
+    sb.append(venue.getID());
+    sb.append(HTML_EXT);
+    return sb.toString();
+  }
+
+  // This is the path for the file with the identifier that redirects into the grouped page.
+  public String getIdentifierPath(final Show show) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(SHOW_DIR);
+    sb.append(File.separator);
+    sb.append(show.getID());
+    sb.append(HTML_EXT);
+    return sb.toString();
+  }
+
   public String getLinkToPage(final Artist artist) {
     StringBuilder sb = new StringBuilder();
     sb.append(getDirectoryPath(ARTIST_DIR));
@@ -201,32 +231,63 @@ public class Links {
     return sb.toString();
   }
 
-  public String getLinkTo(final Artist artist) {
+  // These are the internal links, not shared. They go to the named anchor on the page.
+  public String getInternalLinkTo(final Artist artist) {
     StringBuilder sb = new StringBuilder();
                 
     sb.append(getLinkToPage(artist));
     sb.append(HASH);
     sb.append(artist.getID());
-                
     return sb.toString();
   }
-        
-  public String getLinkTo(final Venue venue) {
+
+  // These are the internal links, not shared. They go to the named anchor on the page.
+  public String getInternalLinkTo(final Venue venue) {
     StringBuilder sb = new StringBuilder();
-                
     sb.append(getLinkToPage(venue));
     sb.append(HASH);
     sb.append(venue.getID());
+    return sb.toString();
+  }
+
+  // These are the internal links, not shared. They go to the named anchor on the page.
+  public String getInternalLinkTo(final Show show) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(getLinkToPage(show));
+    sb.append(HASH);
+    sb.append(show.getID());
+    return sb.toString();
+  }
+
+  // This now links to the redirect page for this Artist. Copy/paste a link on any page will be one of these.
+  public String getLinkTo(final Artist artist) {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append(getDirectoryPath(ARTIST_DIR));
+    sb.append(artist.getID());
+    sb.append(HTML_EXT);
                 
     return sb.toString();
   }
         
+  // This now links to the redirect page for this Venue. Copy/paste a link on any page will be one of these.
+  public String getLinkTo(final Venue venue) {
+    StringBuilder sb = new StringBuilder();
+                
+    sb.append(getDirectoryPath(VENUE_DIR));
+    sb.append(venue.getID());
+    sb.append(HTML_EXT);
+                
+    return sb.toString();
+  }
+        
+  // This now links to the redirect page for this Show. Copy/paste a link on any page will be one of these.
   public String getLinkTo(final Show show) {
     StringBuilder sb = new StringBuilder();
                 
-    sb.append(getLinkToPage(show));
-    sb.append(HASH);
+    sb.append(getDirectoryPath(SHOW_DIR));
     sb.append(show.getID());
+    sb.append(HTML_EXT);
                 
     return sb.toString();
   }

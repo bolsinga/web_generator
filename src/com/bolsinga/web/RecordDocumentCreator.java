@@ -38,7 +38,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
   
   protected void create(final RecordFactory factory) {
     Document d = populate(factory);
-    writeDocument(factory, d);
+    writeDocument(factory.getFilePath(), d);
   }
   
   protected Document populate(final RecordFactory factory) {
@@ -56,6 +56,23 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
   
+  public void createRedirectDocument(final RedirectFactory factory) {
+    Document d = new Document(ECSDefaults.getDefaultCodeset());
+
+    d.getHtml().setPrettyPrint(true);
+
+    d.setDoctype(new org.apache.ecs.Doctype.Html401Strict());
+
+    Head h = d.getHead();
+    h.setPrettyPrint(true);
+
+    h.addElement(new Meta().setContent("0;url=" + factory.getInternalURL()).setHttpEquiv("refresh"));
+    h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
+    h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
+
+    writeDocument(factory.getFilePath(), d);
+  }
+
   protected abstract String getCopyright();
   
   protected String getMainDivClass() {
@@ -124,8 +141,8 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     return d;
   }
         
-  private void writeDocument(final RecordFactory factory, final Document d) {  
-    File f = new File(fOutputDir, factory.getFilePath());
+  private void writeDocument(final String filePath, final Document d) {
+    File f = new File(fOutputDir, filePath);
     File parent = new File(f.getParent());
     if (!parent.mkdirs()) {
       if (!parent.exists()) {

@@ -37,6 +37,19 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
               
               for (Venue item : group) {
                 records.add(getVenueRecordSection(item));
+
+                backgrounder.execute(backgroundable, new Runnable() {
+                  public void run() {
+                    createRedirectDocument(new RedirectFactory() {
+                      public String getInternalURL() {
+                        return fLinks.getInternalLinkTo(item);
+                      }
+                      public String getFilePath() {
+                        return fLinks.getIdentifierPath(item);
+                      }
+                    });
+                  }
+                });
               }
               
               return records;

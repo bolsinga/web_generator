@@ -37,6 +37,19 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
               
               for (Artist item : group) {
                 records.add(getArtistRecordSection(item));
+
+                backgrounder.execute(backgroundable, new Runnable() {
+                  public void run() {
+                    createRedirectDocument(new RedirectFactory() {
+                      public String getInternalURL() {
+                        return fLinks.getInternalLinkTo(item);
+                      }
+                      public String getFilePath() {
+                        return fLinks.getIdentifierPath(item);
+                      }
+                    });
+                  }
+                });
               }
               
               return records;
