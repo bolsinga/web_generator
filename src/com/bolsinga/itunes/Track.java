@@ -20,6 +20,7 @@ class Track {
   private static final String TKIND_IPHONE_IPOD_TOUCH_IPAD_APP = "iPhone/iPod touch/iPad app";
   private static final String TKIND_ITUNES_EXTRAS = "iTunes Extras";
   private static final String TKIND_MPEG_AUDIO_STREAM = "MPEG audio stream";
+  private static final String TKIND_ITUNES_LP = "iTunes LP";
 
   private static final HashSet<String> sKinds = new HashSet<String>();
   private static final Set<String> sNewKinds = new TreeSet<String>();
@@ -43,6 +44,7 @@ class Track {
     sKinds.add(TKIND_IPHONE_IPOD_TOUCH_IPAD_APP);
     sKinds.add(TKIND_ITUNES_EXTRAS);
     sKinds.add(TKIND_MPEG_AUDIO_STREAM);
+    sKinds.add(TKIND_ITUNES_LP);
 
     sAudioKinds.add(TKIND_AAC_AUDIO_FILE);
     sAudioKinds.add(TKIND_MPEG_AUDIO_FILE);
