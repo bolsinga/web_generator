@@ -97,8 +97,4 @@ public class Show implements com.bolsinga.music.data.Show {
   public String getID() {
     return id;
   }
-  
-  public void setID(final String id) {
-    this.id = id;
-  }
 }

@@ -8,5 +8,4 @@ public interface Show {
   public Venue getVenue();
   public String getComment();
   public String getID();
-  public void setID(final String id);
 }
