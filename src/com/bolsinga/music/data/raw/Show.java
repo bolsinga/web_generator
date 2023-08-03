@@ -22,7 +22,9 @@ public class Show implements com.bolsinga.music.data.Show {
       try {
         while ((l = in.readLine()) != null) {
           st = new StringTokenizer(l, SHOW_DELIMITER, true);
-          
+
+          String id = st.nextToken();         // id
+          st.nextToken();                     // delim
           String date = st.nextToken();       // date
           st.nextToken();                     // delim
           String bandstring = st.nextToken(); // delimited bands
@@ -45,7 +47,7 @@ public class Show implements com.bolsinga.music.data.Show {
             bands.add(Artist.createOrGet(bt.nextToken()));
           }
           
-          shows.add(new Show(Date.create(date), bands, Venue.get(venue), comment));
+          shows.add(new Show(id, Date.create(date), bands, Venue.get(venue), comment));
         }
       } catch (IOException e) {
         StringBuilder sb = new StringBuilder();
@@ -67,15 +69,23 @@ public class Show implements com.bolsinga.music.data.Show {
 
     java.util.Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
 
-    int index = 0;
-    for (Show show : shows) {
-      show.setID("sh" + index++);
+    HashMap<String, Show> idMap = new HashMap<String, Show>();
+    for (Show s : shows) {
+      String id = s.getID();
+      if (idMap.get(id) != null) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Duplicate Show ID: ");
+        sb.append(id);
+        throw new com.bolsinga.web.WebException(sb.toString());
+      }
+      idMap.put(id, s);
     }
-               
+
     return shows;
   }
   
-  private Show(final com.bolsinga.music.data.Date date, final List<Artist> artists, final Venue venue, final String comment) {
+  private Show(final String id, final com.bolsinga.music.data.Date date, final List<Artist> artists, final Venue venue, final String comment) {
+    fID = id;
     fDate = date;
     fArtists = artists;
     fVenue = venue;
@@ -101,9 +111,5 @@ public class Show implements com.bolsinga.music.data.Show {
   public String getID() {
     assert fID != null : "No ID";
     return fID;
-  }
-  
-  public void setID(final String id) {
-    fID = id;
   }
 }
