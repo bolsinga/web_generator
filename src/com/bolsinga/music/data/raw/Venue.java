@@ -17,11 +17,12 @@ public class Venue implements com.bolsinga.music.data.Venue {
     try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
       String s = null;
       StringTokenizer st = null;
-      String name, city, state, address, url, sortname;
+      String id, name, city, state, address, url, sortname;
       try {
         while ((s = in.readLine()) != null) {
           st = new StringTokenizer(s, "*");
 
+          id = st.nextToken();
           name = st.nextToken();
           city = st.nextToken();
           state = st.nextToken();
@@ -44,7 +45,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
             sortname = null;
           }
 
-          Venue v = new Venue(name, Location.create(address, city, state, url), sortname);
+          Venue v = new Venue(id, name, Location.create(address, city, state, url), sortname);
 
           sMap.put(name, v);
         }
@@ -69,11 +70,18 @@ public class Venue implements com.bolsinga.music.data.Venue {
     ArrayList<Venue> venues = new ArrayList<Venue>(sMap.values());
     java.util.Collections.sort(venues, com.bolsinga.music.Compare.VENUE_COMPARATOR);
 
-    int index = 0;
+    HashMap<String, Venue> idMap = new HashMap<String, Venue>();
     for (Venue v : venues) {
-      v.setID("v" + index++);
+      String id = v.getID();
+      if (idMap.get(id) != null) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Duplicate Venue ID: ");
+        sb.append(id);
+        throw new com.bolsinga.web.WebException(sb.toString());
+      }
+      idMap.put(id, v);
     }
-    
+
     return venues;
   }
   
@@ -91,7 +99,8 @@ public class Venue implements com.bolsinga.music.data.Venue {
     }
   }
   
-  private Venue(final String name, final Location location, final String sortname) {
+  private Venue(final String id, final String name, final Location location, final String sortname) {
+    fID = id;
     fName = name;
     fLocation = location;
     fSortname = sortname;
@@ -101,11 +110,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
     assert fID != null : "No ID";
     return fID;
   }
-  
-  public void setID(final String id) {
-    fID = id;
-  }
-  
+
   public String getName() {
     return fName;
   }

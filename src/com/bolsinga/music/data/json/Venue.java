@@ -94,11 +94,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
   public String getID() {
     return id;
   }
-  
-  public void setID(final String id) {
-    this.id = id;
-  }
-  
+
   public String getName() {
     return name;
   }
