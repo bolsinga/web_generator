@@ -78,6 +78,49 @@ public class Artist implements com.bolsinga.music.data.Artist {
     }
   }
 
+  private static void setIDs(final String filename) throws com.bolsinga.web.WebException {
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
+      String s = null;
+      StringTokenizer st = null;
+      try {
+        while ((s = in.readLine()) != null) {
+          st = new StringTokenizer(s, "^");
+
+          String id = st.nextToken();
+          String name = st.nextToken();
+
+          Artist a = Artist.get(name);
+          if (a != null) {
+            a.setID(id);
+          } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Artist: ");
+            sb.append(name);
+            sb.append(" (");
+            sb.append(id);
+            sb.append(") does not exist.");
+            throw new com.bolsinga.web.WebException(sb.toString());
+          }
+        }
+      } catch (IOException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't read artistIDs file: ");
+        sb.append(filename);
+        throw new com.bolsinga.web.WebException(sb.toString(), e);
+      }
+    } catch (UnsupportedEncodingException e)  {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Unsupported Encoding: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    } catch (IOException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't find file: ");
+      sb.append(filename);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    }
+  }
+
   static Artist get(final String name) {
     synchronized (sMap) {
       return sMap.get(name);
@@ -95,10 +138,12 @@ public class Artist implements com.bolsinga.music.data.Artist {
     }
   }
   
-  static List<Artist> getList(final String bandFile) throws com.bolsinga.web.WebException {
+  static List<Artist> getList(final String bandFile, final String artistIDsFile) throws com.bolsinga.web.WebException {
     synchronized (sMap) {
       setSortNames(bandFile);
-      
+
+      setIDs(artistIDsFile);
+
       for (Artist a : sMap.values()) {
         a.sortAlbums();
       }
@@ -106,11 +151,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
       List<Artist> artists = new ArrayList<Artist>(sMap.values());
       java.util.Collections.sort(artists, com.bolsinga.music.Compare.ARTIST_COMPARATOR);
 
-      int index = 0;
-      for (Artist a : artists) {
-        a.setID("ar" + index++);
-      }
-            
       return artists;
     }
   }
@@ -122,7 +162,7 @@ public class Artist implements com.bolsinga.music.data.Artist {
   }
   
   public String getID() {
-    assert fID != null : "No ID";
+    assert fID != null : "No ID for: " + fName;
     return fID;
   }
   

@@ -101,7 +101,8 @@ elif [ $ACTION = "site" ] ; then
       "${DATA_HOME}/bandsort.txt" \
       "${DATA_HOME}/relations.txt" \
       "${DATA_HOME}/comments.txt" \
-      "${DATA_HOME}/statics.txt" ; do
+      "${DATA_HOME}/statics.txt" \
+      "${DATA_HOME}/artistids.txt" ; do
     if [ ! -f "$i" ] ; then
         usage "Can't find data file $i"
     fi
