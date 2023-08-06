@@ -25,7 +25,7 @@ public class Main implements Backgroundable {
     try {
       Main main = new Main(backgrounder, settingsFile);
       if (command.equals("site")) {
-        if (args.length != 10) {
+        if (args.length != 11) {
           Main.usage(args, "site: Wrong number of arguments: " + args.length);
         }
 
@@ -35,9 +35,10 @@ public class Main implements Backgroundable {
         String relations = args[i++];
         String comments = args[i++];
         String statics = args[i++];
+        String artistIDs = args[i++];
         String itunes = args[i++];
 
-        main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, output);
+        main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, artistIDs, output);
       } else if (command.equals("json-site")) {
         if (args.length != 5) {
           Main.usage(args, "json-site: Wrong number of arguments: " + args.length);
@@ -69,8 +70,8 @@ public class Main implements Backgroundable {
     fBackgrounder.removeInterest(this);
   }
 
-  private void generateDirect(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String output) throws Exception {
-    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes);
+  private void generateDirect(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String artistIDs, final String output) throws Exception {
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.raw.Music.create(shows, venue, sort, relations, itunes, artistIDs);
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
 
     generateSite(music, diary, output);

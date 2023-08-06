@@ -13,14 +13,14 @@ public class Music implements com.bolsinga.music.data.Music {
   private List<Album> fAlbums;
   private List<Show> fShows;
 
-  public static Music create(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile) throws com.bolsinga.web.WebException {
+  public static Music create(final String showsFile, final String venueFile, final String bandFile, final String relationFile, final String iTunesFile, final String artistIDsFile) throws com.bolsinga.web.WebException {
     List<Venue> venues = Venue.create(venueFile);
     List<Show> shows = Show.create(showsFile);
 
     Media media = Media.createMedia(iTunesFile);
 
     // This sets all of the artist IDs
-    List<Artist> artists = Artist.getList(bandFile);
+    List<Artist> artists = Artist.getList(bandFile, artistIDsFile);
 
     // This needs to be read after all artists are created
     List<Relation> relations = Relation.create(relationFile);
