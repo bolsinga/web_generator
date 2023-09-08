@@ -1,4 +1,5 @@
 # Web Generator
+<img src="https://www.bolsinga.com/comp.gif">
 
 ## History
 This java program generates [bolsinga.com](http://www.bolsinga.com/). It is a collection of code I've been working on starting sometime in 1997 or so.
