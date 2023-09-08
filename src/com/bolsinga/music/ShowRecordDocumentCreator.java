@@ -52,7 +52,8 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
                           return fLinks.getIdentifierPath(show);
                         }
                         public String getTitle() {
-                          return Util.toString(show.getDate()) + " @ " + show.getVenue().getName();
+                          Object[] args = { show.getArtists().get(0).getName(), show.getVenue().getName() };
+                          return MessageFormat.format(Util.getResourceString("showdetail"), args);
                         }
                       });
                     }
