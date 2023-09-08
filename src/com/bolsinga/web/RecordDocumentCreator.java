@@ -65,7 +65,10 @@ public abstract class RecordDocumentCreator implements Backgroundable {
 
     Head h = d.getHead();
     h.setPrettyPrint(true);
+    h.addElement(Util.getIconLink());
+    h.addElement(Util.getWebClipIcon());
 
+    h.addElement(new Meta().setContent(factory.getTitle()).addAttribute("property", "og:title"));
     h.addElement(new Meta().setContent("0;url=" + factory.getInternalURL()).setHttpEquiv("refresh"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
     h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
