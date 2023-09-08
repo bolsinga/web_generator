@@ -47,6 +47,9 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
                       public String getFilePath() {
                         return fLinks.getIdentifierPath(item);
                       }
+                      public String getTitle() {
+                        return item.getName();
+                      }
                     });
                   }
                 });
