@@ -48,7 +48,13 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
                         return fLinks.getIdentifierPath(item);
                       }
                       public String getTitle() {
-                        return item.getName();
+                        boolean hasAlbums = item.getAlbums().size() > 0;
+                        Object[] args = { item.getName() };
+                        if (hasAlbums) {
+                          return MessageFormat.format(Util.getResourceString("artistshowsandalbumsdetail"), args);
+                        } else {
+                          return MessageFormat.format(Util.getResourceString("artistshowsonlydetail"), args);
+                        }
                       }
                     });
                   }
