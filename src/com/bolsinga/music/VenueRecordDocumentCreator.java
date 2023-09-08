@@ -48,7 +48,8 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
                         return fLinks.getIdentifierPath(item);
                       }
                       public String getTitle() {
-                        return item.getName();
+                        Object[] args = { item.getName() };
+                        return MessageFormat.format(Util.getResourceString("venuedetail"), args);
                       }
                     });
                   }
