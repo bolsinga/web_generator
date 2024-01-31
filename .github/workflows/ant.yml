@@ -17,14 +17,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
         java-version: '21'
     - name: Build with Ant
       run: ant -noinput -buildfile build.xml -Dbuild.id=$GITHUB_SHA
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: web_generator
         path: output/dst
