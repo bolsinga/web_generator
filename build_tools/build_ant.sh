@@ -41,7 +41,7 @@ if [ -z "$BUILD_ID" ] ; then
 fi
 
 if [ -z "$ANT_PATH" ] ; then
-	ANT_PATH=/Data/Applications/java_libs/apache-ant-1.9.3/bin/ant
+	ANT_PATH=$HOME/Documents/code/java_libs/apache-ant-1.9.3/bin/ant
 fi
 
 ARGS="-Dsym.dir=$SYM_DIR -Dobj.dir=$OBJ_DIR -Ddst.dir=$DST_DIR -Dbuild.id=$BUILD_ID"
