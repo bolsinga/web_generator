@@ -7,17 +7,13 @@ usage ()
   exit 1
 }
 
-# The preferred order is build.xml, Makefile
+# The preferred order is build.xml
 
 TEST_FILES="$@"
 
 for word in $TEST_FILES ; do
   if [ $word = build.xml ] ; then
     echo ant
-    exit 0
-  fi
-  if [ $word = Makefile ] ; then
-    echo make
     exit 0
   fi
 done

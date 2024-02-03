@@ -4,14 +4,13 @@ This directory contains tools used (and related to) automatic builds.
 dir_get_builder.sh
 get_builder_type.sh
 
-- These scripts will return, in order of precedence, 'ant', or 'make' as what should
+- These scripts will return, in order of precedence, 'ant' as what should
   be used to build. dir_get_builder.sh takes a directory name. get_builder_type.sh is used by
   the other scripts and simply takes a list of filenames. It could be extended to recognize
   new build tools. Please see the next section for more about new build tools.
 
 ----------
 build_ant.sh
-build_makefile.sh
 
 - These scripts will build the type of project given in their name. If new build tools are
   introduced, they would be supported by adding a "build_<newtool>.sh" script. Their
