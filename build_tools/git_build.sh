@@ -33,7 +33,7 @@ PROG_HOME=`dirname "$PRG"`
 PROG_HOME=`cd "$PROG_HOME" && pwd`
 
 if [ -z "$BUILD_DIR" ] ; then
-    BUILD_DIR=/tmp/git-build/$$/
+    BUILD_DIR=$HOME/Documents/code/BUILDS
 fi
 
 pushd $SRC_DIR
