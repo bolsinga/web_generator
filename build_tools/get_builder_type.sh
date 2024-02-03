@@ -7,19 +7,11 @@ usage ()
   exit 1
 }
 
-# The preferred order is *.xcodeproj, build.xml, Makefile
+# The preferred order is build.xml, Makefile
 
 TEST_FILES="$@"
 
 for word in $TEST_FILES ; do
-  # Get extension
-  XCODE=${word#*.*}
-  # Strip trailing '/'
-  XCODE=${XCODE%/}
-  if [ $XCODE = "xcodeproj" ] ; then
-    echo xcode
-    exit 0
-  fi
   if [ $word = build.xml ] ; then
     echo ant
     exit 0
