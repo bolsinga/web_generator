@@ -162,7 +162,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
   }
   
   public String getID() {
-    assert fID != null : "No ID for: " + fName;
     return fID;
   }
   

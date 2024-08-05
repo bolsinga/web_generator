@@ -105,10 +105,28 @@ public class Main implements Backgroundable {
     }
   }
 
+  private boolean dumpMissingArtistIDs(final com.bolsinga.music.data.Music music) {
+    boolean displayed = false;
+    List<? extends com.bolsinga.music.data.Artist> artists = music.getArtists();
+    for (com.bolsinga.music.data.Artist artist : artists) {
+      if (artist.getID() == null) {
+        if (!displayed) {
+          System.out.println("--Artist Missing IDs--");
+          displayed = true;
+        }
+        System.out.println(artist.getName());
+      }
+    }
+    return displayed;
+  }
+
   private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) throws Exception {
     CSS.install(output);
 
     dumpSimilarArtists(music);
+    if (dumpMissingArtistIDs(music)) {
+      throw new com.bolsinga.web.WebException("Missing Artist IDs");
+    }
 
     // Diary items
     MainDocumentCreator.createDocuments(fBackgrounder, this, diary, output, music);
