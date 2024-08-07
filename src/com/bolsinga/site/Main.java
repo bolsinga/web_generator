@@ -106,18 +106,23 @@ public class Main implements Backgroundable {
   }
 
   private boolean dumpMissingArtistIDs(final com.bolsinga.music.data.Music music) {
-    boolean displayed = false;
     List<? extends com.bolsinga.music.data.Artist> artists = music.getArtists();
+    List<String> artistsMissingIDs = new ArrayList<String>();
     for (com.bolsinga.music.data.Artist artist : artists) {
       if (artist.getID() == null) {
-        if (!displayed) {
-          System.out.println("--Artist Missing IDs--");
-          displayed = true;
-        }
-        System.out.println(artist.getName());
+        artistsMissingIDs.add(artist.getName());
       }
     }
-    return displayed;
+    boolean hasMissingArtistIDs = artistsMissingIDs.size() != 0;
+    if (hasMissingArtistIDs) {
+      int nextID = artists.size() - artistsMissingIDs.size();
+      System.out.println("--Artist Missing IDs--");
+      for (String artistName : artistsMissingIDs) {
+        System.out.println("ar" + nextID + "^" + artistName);
+        nextID++;
+      }
+    }
+    return hasMissingArtistIDs;
   }
 
   private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) throws Exception {
