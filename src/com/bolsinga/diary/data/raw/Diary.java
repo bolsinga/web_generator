@@ -69,10 +69,10 @@ public class Diary implements com.bolsinga.diary.data.Diary {
       
       CharBuffer cb = null;
       try {
-        cb = Charset.forName("US-ASCII").newDecoder().decode(bb);
+        cb = Charset.forName("UTF-8").newDecoder().decode(bb);
       } catch (java.nio.charset.CharacterCodingException e) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Bad Encoding US-ASCII: ");
+        sb.append("Bad Encoding UTF-8: ");
         sb.append(filename);
         throw new com.bolsinga.web.WebException(sb.toString(), e);
       }
