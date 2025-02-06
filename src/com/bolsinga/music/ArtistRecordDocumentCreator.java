@@ -38,25 +38,21 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
               for (Artist item : group) {
                 records.add(getArtistRecordSection(item));
 
-                backgrounder.execute(backgroundable, new Runnable() {
-                  public void run() {
-                    createRedirectDocument(new RedirectFactory() {
-                      public String getInternalURL() {
-                        return fLinks.getInternalLinkTo(item);
-                      }
-                      public String getFilePath() {
-                        return fLinks.getIdentifierPath(item);
-                      }
-                      public String getTitle() {
-                        boolean hasAlbums = item.getAlbums().size() > 0;
-                        Object[] args = { item.getName() };
-                        if (hasAlbums) {
-                          return MessageFormat.format(Util.getResourceString("artistshowsandalbumsdetail"), args);
-                        } else {
-                          return MessageFormat.format(Util.getResourceString("artistshowsonlydetail"), args);
-                        }
-                      }
-                    });
+                createRedirectDocument(new RedirectFactory() {
+                  public String getInternalURL() {
+                    return fLinks.getInternalLinkTo(item);
+                  }
+                  public String getFilePath() {
+                    return fLinks.getIdentifierPath(item);
+                  }
+                  public String getTitle() {
+                    boolean hasAlbums = item.getAlbums().size() > 0;
+                    Object[] args = { item.getName() };
+                    if (hasAlbums) {
+                      return MessageFormat.format(Util.getResourceString("artistshowsandalbumsdetail"), args);
+                    } else {
+                      return MessageFormat.format(Util.getResourceString("artistshowsonlydetail"), args);
+                    }
                   }
                 });
               }
