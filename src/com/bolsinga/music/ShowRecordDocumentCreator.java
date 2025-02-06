@@ -42,20 +42,16 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
                 records.add(getShowMonthRecordSection(item));
 
                 for (Show show : item) {
-                  backgrounder.execute(backgroundable, new Runnable() {
-                    public void run() {
-                      createRedirectDocument(new RedirectFactory() {
-                        public String getInternalURL() {
-                          return fLinks.getInternalLinkTo(show);
-                        }
-                        public String getFilePath() {
-                          return fLinks.getIdentifierPath(show);
-                        }
-                        public String getTitle() {
-                          Object[] args = { show.getArtists().get(0).getName(), show.getVenue().getName() };
-                          return MessageFormat.format(Util.getResourceString("showdetail"), args);
-                        }
-                      });
+                  createRedirectDocument(new RedirectFactory() {
+                    public String getInternalURL() {
+                      return fLinks.getInternalLinkTo(show);
+                    }
+                    public String getFilePath() {
+                      return fLinks.getIdentifierPath(show);
+                    }
+                    public String getTitle() {
+                      Object[] args = { show.getArtists().get(0).getName(), show.getVenue().getName() };
+                      return MessageFormat.format(Util.getResourceString("showdetail"), args);
                     }
                   });
                 }
