@@ -438,21 +438,28 @@ public class Links {
 
   public String getLinkToPage(final Entry entry) {
     StringBuilder sb = new StringBuilder();
-    
     sb.append(getDirectoryPath(ARCHIVES_DIR));
     sb.append(getPageFileName(entry));
     sb.append(HTML_EXT);
-                
     return sb.toString();
   }
-        
-  public String getLinkTo(final Entry entry) {
+
+  // This is the path for the file with the identifier that redirects into the grouped page.
+  public String getIdentifierPath(final Entry entry) {
     StringBuilder sb = new StringBuilder();
-                
+    sb.append(ARCHIVES_DIR);
+    sb.append(File.separator);
+    sb.append(entry.getID());
+    sb.append(HTML_EXT);
+    return sb.toString();
+  }
+
+  // These are the internal links, not shared. They go to the named anchor on the page.
+  public String getInternalLinkTo(final Entry entry) {
+    StringBuilder sb = new StringBuilder();
     sb.append(getLinkToPage(entry));
     sb.append(HASH);
     sb.append(entry.getID());
-                
     return sb.toString();
   }
 
