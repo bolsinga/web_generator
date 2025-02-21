@@ -88,6 +88,17 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
     return Collections.unmodifiableCollection(result.values());
   }
 
+  private static String getTitle(final Entry entry) {
+    String title = entry.getTitle();
+    if (title == null) {
+        title = Util.getDisplayTitle(entry);
+    } else {
+        Object[] args = { title, Util.getTimestamp(entry) };
+        title = MessageFormat.format(Util.getResourceString("entrytitle"), args);
+    }
+    return title;
+  }
+
   private com.bolsinga.web.Record getEntryMonthRecordSection(final Vector<Entry> entries) {
     Vector<com.bolsinga.web.Record> items = new Vector<com.bolsinga.web.Record>();
     
@@ -102,22 +113,28 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   }
   
   private com.bolsinga.web.Record getEntryRecord(final Entry entry) {
+    createRedirectDocument(new RedirectFactory() {
+      public String getInternalURL() {
+        return fLinks.getInternalLinkTo(entry);
+      }
+      public String getFilePath() {
+        return fLinks.getIdentifierPath(entry);
+      }
+      public String getTitle() {
+        return EntryRecordDocumentCreator.getTitle(entry);
+      }
+    });
+
     return EntryRecordDocumentCreator.createEntryRecord(entry, fLinks, true);
   }
   
   // This is used for the main page and entry pages, which is why it is public static
   public static com.bolsinga.web.Record createEntryRecord(final Entry entry, final Links links, final boolean upOneLevel) {
-    String title = entry.getTitle();
-    if (title == null) {
-        title = Util.getDisplayTitle(entry);
-    } else {
-        Object[] args = { title, Util.getTimestamp(entry) };
-        title = MessageFormat.format(Util.getResourceString("entrytitle"), args);
-    }
+    String title = EntryRecordDocumentCreator.getTitle(entry);
     return com.bolsinga.web.Record.createRecordPermalink(
       Util.createNamedTarget(entry.getID(), title), 
       Encode.embedLinks(entry, upOneLevel),
-      Util.createPermaLink(links.getLinkTo(entry)));
+      Util.createPermaLink(links.getIdentifierPath(entry)));
   }
 
   private void createStats(final Backgrounder backgrounder, final Backgroundable backgroundable) {
