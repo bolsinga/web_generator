@@ -123,6 +123,9 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
       public String getTitle() {
         return EntryRecordDocumentCreator.getTitle(entry);
       }
+      public String getDescription() {
+        return Util.getSentences(entry.getComment(), 2);
+      }
     });
 
     return EntryRecordDocumentCreator.createEntryRecord(entry, fLinks, true);

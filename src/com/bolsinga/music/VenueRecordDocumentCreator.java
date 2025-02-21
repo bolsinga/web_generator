@@ -49,6 +49,7 @@ public class VenueRecordDocumentCreator extends MusicRecordDocumentCreator {
                     Object[] args = { item.getName() };
                     return MessageFormat.format(Util.getResourceString("venuedetail"), args);
                   }
+                  public String getDescription() { return ""; }
                 });
               }
               
