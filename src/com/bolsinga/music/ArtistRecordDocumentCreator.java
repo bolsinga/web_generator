@@ -54,7 +54,9 @@ public class ArtistRecordDocumentCreator extends MusicRecordDocumentCreator {
                       return MessageFormat.format(Util.getResourceString("artistshowsonlydetail"), args);
                     }
                   }
-                  public String getDescription() { return ""; }
+                  public String getDescription() {
+                    return Util.createTitle("moreinfo", item.getName());
+                   }
                 });
               }
               
