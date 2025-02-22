@@ -7,6 +7,7 @@ import java.time.*;
 import java.time.format.*;
 import java.util.*;
 import java.util.regex.*;
+import java.util.stream.*;
 
 import org.apache.ecs.*;
 import org.apache.ecs.html.*;
@@ -650,5 +651,20 @@ public class Util {
     form.removeAttribute("accept-charset");
     form.removeAttribute("enctype");
     return form;
+  }
+
+  public static String getSentences(final String s, final int count) {
+    try (Scanner scanner = new Scanner(s.replaceAll("<.*?>", ""))) {
+      Pattern pattern = Pattern.compile("(.*?\\.)");
+      List<String> sentences = scanner.findAll(pattern).map(MatchResult::group).collect(Collectors.toList());
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < Math.min(count, sentences.size()); i++) {
+        sb.append(sentences.get(i));
+        sb.append(" ");
+      }
+      return sb.toString();
+    } catch (Exception e) {
+      return "";
+    }
   }
 }
