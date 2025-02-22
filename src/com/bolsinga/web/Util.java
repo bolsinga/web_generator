@@ -660,7 +660,6 @@ public class Util {
       StringBuilder sb = new StringBuilder();
       for (int i = 0; i < Math.min(count, sentences.size()); i++) {
         sb.append(sentences.get(i));
-        sb.append(" ");
       }
       return sb.toString();
     } catch (Exception e) {
