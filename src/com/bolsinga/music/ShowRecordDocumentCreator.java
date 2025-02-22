@@ -53,7 +53,9 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
                       Object[] args = { show.getArtists().get(0).getName(), show.getVenue().getName() };
                       return MessageFormat.format(Util.getResourceString("showdetail"), args);
                     }
-                    public String getDescription() { return ""; }
+                    public String getDescription() {
+                      return Util.getSentences(show.getComment(), 2);
+                    }
                   });
                 }
               }
