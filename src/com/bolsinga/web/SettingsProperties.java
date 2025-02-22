@@ -55,6 +55,10 @@ public class SettingsProperties implements com.bolsinga.web.Settings {
     return fProperties.getProperty("webClipIcon");
   }
 
+  public String getLargeImage() {
+    return fProperties.getProperty("largeImage");
+  }
+
   public Image getLogoImage() {
     return fLogoImage;
   }

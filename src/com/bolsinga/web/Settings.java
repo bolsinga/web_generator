@@ -40,6 +40,7 @@ public interface Settings {
   public String getContact();
   public String getIco();
   public String getWebClipIcon();
+  public String getLargeImage();
   public Image getLogoImage();
   public String getCssFile();
   public String getRssFile();

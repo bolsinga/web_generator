@@ -73,7 +73,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     if (description.length() > 0) {
       h.addElement(new Meta().setContent(description).addAttribute("property", "og:description"));
     }
-    h.addElement(new Meta().setContent(Util.getSettings().getWebClipIcon()).addAttribute("property", "og:image"));
+    h.addElement(new Meta().setContent(Util.getSettings().getLargeImage()).addAttribute("property", "og:image"));
 
     h.addElement(new Meta().setContent("0;url=" + factory.getInternalURL()).setHttpEquiv("refresh"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
@@ -109,7 +109,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     h.addElement(fLinks.getLinkToStyleSheet());
 
     h.addElement(new Meta().setContent(factory.getTitle()).addAttribute("property", "og:title"));
-    h.addElement(new Meta().setContent(Util.getSettings().getWebClipIcon()).addAttribute("property", "og:image"));
+    h.addElement(new Meta().setContent(Util.getSettings().getLargeImage()).addAttribute("property", "og:image"));
 
     h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
