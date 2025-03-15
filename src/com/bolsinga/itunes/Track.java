@@ -22,6 +22,7 @@ class Track {
   private static final String TKIND_MPEG_AUDIO_STREAM = "MPEG audio stream";
   private static final String TKIND_ITUNES_LP = "iTunes LP";
   private static final String TKIND_QUICKTIME_MOVIE_FILE = "QuickTime movie file";
+  private static final String TKIND_APPLE_LOSSLESS_AUDIO_FILE = "Apple Lossless audio file";
 
   private static final HashSet<String> sKinds = new HashSet<String>();
   private static final Set<String> sNewKinds = new TreeSet<String>();
@@ -47,11 +48,13 @@ class Track {
     sKinds.add(TKIND_MPEG_AUDIO_STREAM);
     sKinds.add(TKIND_ITUNES_LP);
     sKinds.add(TKIND_QUICKTIME_MOVIE_FILE);
+    sKinds.add(TKIND_APPLE_LOSSLESS_AUDIO_FILE);
 
     sAudioKinds.add(TKIND_AAC_AUDIO_FILE);
     sAudioKinds.add(TKIND_MPEG_AUDIO_FILE);
     sAudioKinds.add(TKIND_PROTECTED_AAC_AUDIO_FILE);
     sAudioKinds.add(TKIND_PURCHASED_AAC_AUDIO_FILE);
+    sAudioKinds.add(TKIND_APPLE_LOSSLESS_AUDIO_FILE);
   }
 
   static {
