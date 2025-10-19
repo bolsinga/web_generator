@@ -20,7 +20,7 @@ public class Show implements com.bolsinga.music.data.Show {
       String l = null;
       StringTokenizer st = null, bt = null;
       try {
-        while ((l = in.readLine()) != null) {
+        while ((l = in.readLine()) != null && !l.isEmpty()) {
           st = new StringTokenizer(l, SHOW_DELIMITER, true);
 
           String id = st.nextToken();         // id
