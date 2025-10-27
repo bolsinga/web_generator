@@ -24,7 +24,7 @@ jobs:
     - name: Build with Ant
       run: ant -noinput -buildfile build.xml -Dbuild.id=$GITHUB_SHA
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: web_generator
         path: output/dst
