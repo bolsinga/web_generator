@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-java@v5
       with:
         distribution: 'zulu'
-        java-version: '23'
+        java-version: '25'
     - name: Build with Ant
       run: ant -noinput -buildfile build.xml -Dbuild.id=$GITHUB_SHA
     - name: Upload artifact
