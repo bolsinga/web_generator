@@ -558,9 +558,17 @@ public class Util {
     return val.toString();
   }
   
+  // https://maps.apple.com/place?place-id=IF149E70A3B3C4CB2
   // http://maps.apple.com/maps?f=q&hl=en&q=603+Red+River+Austin+TX
-  public static String getMapsURL(final Location l) {
+  public static String getMapsURL(final Venue v) {
     StringBuilder map = new StringBuilder();
+    String mapKitID = v.getMapKitID();
+    if (mapKitID != null) {
+      map.append("https://maps.apple.com/place?place-id=");
+      map.append(mapKitID);
+      return map.toString();
+    }
+    Location l = v.getLocation();
     map.append("http://maps.apple.com/maps?f=q&amp;hl=en&amp;q=");
     String s = l.getStreet();
     if (s != null) {
