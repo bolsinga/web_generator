@@ -9,4 +9,6 @@ public interface Venue {
   public void setComment(final String comment);
   public String getSortname();
   public void setSortname(final String name);
+  public String getMapKitID();
+  public void setMapKitID(final String mapKitID);
 }
