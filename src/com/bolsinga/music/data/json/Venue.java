@@ -10,12 +10,14 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private static final String LOCATION = "location";
   private static final String COMMENT = "comment";
   private static final String SORTNAME = "sortname";
+  private static final String MAPKIT = "mapkit";
 
   private String id;
   private String name;
   private Location location = null;
   private String comment = null;
   private String sortname = null;
+  private String mapKitID = null;
   
   private static final Map<String, Venue> sMap = new HashMap<String, Venue>();
   
@@ -65,7 +67,11 @@ public class Venue implements com.bolsinga.music.data.Venue {
     if (sortname != null) {
       json.put(SORTNAME, sortname);
     }
-    
+    String mapKitID = venue.getMapKitID();
+    if (mapKitID != null) {
+      json.put(MAPKIT, mapKitID);
+    }
+
     return json;
   }
   
@@ -78,6 +84,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
     this.name = venue.getName();
     this.location = Location.create(venue.getLocation());
     this.comment = venue.getComment();
+    this.mapKitID = venue.getMapKitID();
   }
   
   private Venue(final JSONObject json) throws JSONException {
@@ -89,6 +96,7 @@ public class Venue implements com.bolsinga.music.data.Venue {
     }
     comment = json.optString(COMMENT, null);
     sortname = json.optString(SORTNAME, null);
+    mapKitID = json.optString(MAPKIT, null);
   }
   
   public String getID() {
@@ -121,5 +129,13 @@ public class Venue implements com.bolsinga.music.data.Venue {
 
   public void setSortname(final String name) {
     this.sortname = name;
+  }
+
+  public String getMapKitID() {
+    return mapKitID;
+  }
+
+  public void setMapKitID(final String mapKitID) {
+    this.mapKitID = mapKitID;
   }
 }

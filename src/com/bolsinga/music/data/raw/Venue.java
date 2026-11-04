@@ -7,17 +7,21 @@ public class Venue implements com.bolsinga.music.data.Venue {
   // name -> Venue
   private static final HashMap<String, Venue> sMap = new HashMap<String, Venue>();
 
+  // Optional field, may follow any of the other optional fields.
+  private static final String MAPKIT_TAG = "mapkit=";
+
   private String fID;
   private String fName;
   private Location fLocation;
   private String fComment;
   private String fSortname;
-  
+  private String fMapKitID;
+
   static List<Venue> create(final String filename) throws com.bolsinga.web.WebException {
     try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
       String s = null;
       StringTokenizer st = null;
-      String id, name, city, state, address, url, sortname;
+      String id, name, city, state, address, url, sortname, mapKitID, token;
       try {
         while ((s = in.readLine()) != null) {
           st = new StringTokenizer(s, "*");
@@ -27,25 +31,25 @@ public class Venue implements com.bolsinga.music.data.Venue {
           city = st.nextToken();
           state = st.nextToken();
           
-          if (st.hasMoreElements()) {
-            address = st.nextToken();
-          } else {
-            address = null;
-          }
-          
-          if (st.hasMoreElements()) {
-            url = st.nextToken();
-          } else {
-            url = null;
-          }
-          
-          if (st.hasMoreElements()) {
-            sortname = st.nextToken();
-          } else {
-            sortname = null;
+          address = null;
+          url = null;
+          sortname = null;
+          mapKitID = null;
+
+          while (st.hasMoreElements()) {
+            token = st.nextToken();
+            if (token.startsWith(MAPKIT_TAG)) {
+              mapKitID = token.substring(MAPKIT_TAG.length());
+            } else if (address == null) {
+              address = token;
+            } else if (url == null) {
+              url = token;
+            } else if (sortname == null) {
+              sortname = token;
+            }
           }
 
-          Venue v = new Venue(id, name, Location.create(address, city, state, url), sortname);
+          Venue v = new Venue(id, name, Location.create(address, city, state, url), sortname, mapKitID);
 
           sMap.put(name, v);
         }
@@ -99,11 +103,12 @@ public class Venue implements com.bolsinga.music.data.Venue {
     }
   }
   
-  private Venue(final String id, final String name, final Location location, final String sortname) {
+  private Venue(final String id, final String name, final Location location, final String sortname, final String mapKitID) {
     fID = id;
     fName = name;
     fLocation = location;
     fSortname = sortname;
+    fMapKitID = mapKitID;
   }
   
   public String getID() {
@@ -137,5 +142,13 @@ public class Venue implements com.bolsinga.music.data.Venue {
 
   public void setSortname(final String name) {
     fSortname = name;
+  }
+
+  public String getMapKitID() {
+    return fMapKitID;
+  }
+
+  public void setMapKitID(final String mapKitID) {
+    fMapKitID = mapKitID;
   }
 }
