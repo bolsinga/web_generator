@@ -59,9 +59,10 @@ letter a page is filed under both use `Compare.simplify`, which lowercases, drop
 "the ", "a " or "an ", and drops leading non-word characters. "The" is never stored in the
 sort name.
 
-Raw input also derives artist sort names: when a name contains characters that NFD normalization
-changes (accented letters), the NFD form becomes the sortname, even without a bandsort entry
-(`raw/Artist.getSortName`). JSON input takes `sortname` exactly as written.
+Raw input also derives artist sort names: when a name contains accented letters, Unicode canonical
+decomposition splits each one into its base letter followed by a separate accent mark, and that
+decomposed name becomes the sortname, even without a bandsort entry (`raw/Artist.getSortName`).
+The accent marks are kept, not removed. JSON input takes `sortname` exactly as written.
 
 ## Identity
 
