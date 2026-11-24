@@ -1,0 +1,213 @@
+# RFC 002: Inputs: raw files and JSON
+
+Status: Describes existing behavior · Updated: 2026-11-24 · Code: `src/com/bolsinga/music/data/raw`,
+`src/com/bolsinga/music/data/json`, `src/com/bolsinga/diary/data/{raw,json}`,
+`src/com/bolsinga/itunes`, `src/com/bolsinga/site/Main.java`, `src/scripts/site`
+
+## Summary
+
+There are two ways to build the `Music` and `Diary` of [RFC 001](001-data-model.md):
+
+- **`site`** reads the raw text files plus an iTunes JSON export. This is how the site is made today.
+- **`json-site`** reads a `music.json` and a `diary.json`, as this program exports them.
+
+Every run of either command also writes `json/music.json`, `json/shows.json` and `json/diary.json`
+into the site, so the JSON is always current with the raw files. `bolsinga/site` reads
+`json/shows.json` from the website, which makes that format a public contract.
+
+## Commands
+
+`src/scripts/site` (installed as `output/dst/site`) wraps `com.bolsinga.site.Main`:
+
+```
+site site      <output_dir> <data_dir> <itunes.json>
+site json-site <output_dir> <settings.properties> <json_dir>
+```
+
+| Command | Reads | Builds with |
+|---|---|---|
+| `site` | `data_dir/` `settings.properties`, `shows.txt`, `venuemap.txt`, `bandsort.txt`, `relations.txt`, `comments.txt`, `statics.txt`, `artistids.txt`, and the iTunes file | `raw.Music.create`, `raw.Diary.create` |
+| `json-site` | `json_dir/diary.json`, `json_dir/music.json` | `json.Music.create`, `json.Diary.create` |
+
+The script runs Java with `-ea:com.bolsinga...`, so asserts are on. Set `DUMP=1` to print the
+command instead of running it. `Main.usage` is out of date and exits 0.
+
+The iTunes file is required by `site`; there is no way to build without it. `json-site` reads one
+music file, so iTunes data and shows must be in the same file.
+
+## Raw files
+
+All raw files are UTF-8, one record per line, split with `StringTokenizer`. `StringTokenizer`
+treats repeated delimiters as one, so **a field can't be empty**, and a delimiter inside a value
+splits it. Records refer to each other by **name**, not ID.
+
+### shows.txt
+
+```
+shN^M-D-YYYY^Headliner|Opener|Opener^Venue Name[^comment]
+```
+
+- Reading stops at the first empty line.
+- In the date, a month or day of `0`, or a year of `1900`, means unknown.
+- Each artist name creates the artist the first time it is seen.
+- The venue name must match a venue in `venuemap.txt`, or the run stops.
+- Duplicate show IDs stop the run.
+
+### venuemap.txt
+
+```
+vN*Name*City*State[*street][*url][*sortname][*mapkit=ID]
+```
+
+- street, url and sortname are positional, so a url needs a street, and a sortname needs both.
+- `mapkit=ID` is tagged, may come anywhere after the state, and becomes `mapKitID`.
+- Two venues with the same name: the last one wins, silently.
+- Duplicate venue IDs stop the run.
+- `bolsinga/site`'s Venue Places tool writes this file.
+
+### bandsort.txt
+
+```
+Artist Name*Sort Name
+```
+
+Applied after iTunes, so it overrides iTunes sort names. An unknown artist stops the run.
+
+### artistids.txt
+
+```
+arN^Artist Name
+```
+
+An unknown artist stops the run. An artist with no line stops the run after printing suggested
+lines ([RFC 001](001-data-model.md)).
+
+### relations.txt
+
+```
+band|reason|Artist A|Artist B...
+venue|reason|Venue A|Venue B...
+```
+
+- A reason of `^` means none.
+- Relation IDs are `r` plus the line index.
+- An unknown artist is reported on stderr and left out.
+- An unknown venue stops the run (`raw.Venue.get` throws), despite the code that looks like it
+  would warn.
+- Any other type stops the run.
+
+### comments.txt and statics.txt (diary)
+
+Pseudo-XML, matched with regular expressions, not parsed:
+
+```
+<comment><date>M-D-YYYY</date><title>optional</title><data>text</data></comment>
+<static><location>left|header|links|title|colophon</location><data>text</data></static>
+```
+
+Entries are sorted by date and numbered `e0`, `e1`, … in that order.
+
+### iTunes
+
+`itunes.Parser` reads an iTunes library export in JSON (`itunes.JSONParser`). It becomes albums
+and songs, and creates any artist not already seen at a show. iTunes sort names are applied to
+artists.
+
+### Order of assembly
+
+`raw.Music.create`:
+
+1. venues (`venuemap.txt`)
+2. shows (`shows.txt`), creating artists
+3. iTunes, creating more artists and setting sort names
+4. `bandsort.txt` sort names
+5. `artistids.txt` IDs
+6. relations (`relations.txt`), which need every artist
+
+Venues are sorted by `VENUE_COMPARATOR`, artists by `ARTIST_COMPARATOR`, shows by `SHOW_COMPARATOR`.
+
+## JSON
+
+Written by `json.Music.export` / `json.Diary.export` with `org.json`, indented 2 spaces, keys in no
+particular order. A key marked `?` is left out when the value is null, 0 or empty.
+
+### music.json
+
+```
+{
+  "timestamp": "2026-11-24T10:00:00-08:00",
+  "venues": [
+    { "id": "v1", "name": "…",
+      "location": { "street"?: "…", "city": "…", "state": "…", "zip"?: 0, "web"?: "https://…" },
+      "comment"?: "…", "sortname"?: "…", "mapkit"?: "I…" }
+  ],
+  "artists": [
+    { "id": "ar1", "name": "…", "sortname"?: "…", "location"?: {…}, "comment"?: "…",
+      "albums"?: ["a1", …] }
+  ],
+  "relations": [ { "id": "r0", "reason"?: "…", "members": ["ar1", "ar2"] } ],
+  "songs": [ … ],
+  "albums": [ … ],
+  "shows": [
+    { "id": "sh1", "date": { "year"?: 1998, "month"?: 9, "day"?: 6 },
+      "venue": "v1", "artists": ["ar1", "ar2"], "comment"?: "…" }
+  ]
+}
+```
+
+- **References** are ID strings: `show.venue`, `show.artists`, `relation.members`,
+  `artist.albums`, and the album and song references.
+- **Unknown date parts** are left out. A wholly unknown date is `{}`. Never write `0` or `1900`.
+- **Order:** shows are written sorted by `SHOW_COMPARATOR` and sorted again on read. Venues and
+  artists are written in input order and not sorted on read; the pages sort copies.
+- **Required on read:** `timestamp` (parsed by `ZonedDateTime.parse`), and all six arrays, though
+  they may be empty. Each venue, artist and show needs `id` and `name` (or `date` and `venue`).
+- **Read order:** venues, then artists, relations, songs, albums, shows, each resolving references
+  to what came before.
+- **Ignored on read:** `artist.albums`. Albums attach themselves to their performers instead.
+- **Album keys:** `id`, `title`, `performer`, `compilation`, `release`, `purchase`, `comment`,
+  `songs`. **Song keys:** `id`, `artist`, `title`, `release`, `lastPlayed`, `track`, `genre`,
+  `playCount`, `digitized`, `live`.
+
+### shows.json
+
+The same as `music.json`, except `songs` and `albums` are `[]`. Every artist is still written,
+including artists known only from iTunes, along with their `albums` IDs, which now point nowhere.
+`bolsinga/site` drops artists with no shows after it reads the file.
+
+### diary.json
+
+```
+{ "timestamp": "…", "title": "…",
+  "statics": ["…"], "header": ["…"], "friends": ["…"], "colophon": ["…"],
+  "entries": [ { "id": "e0", "timestamp": "…", "title"?: "…", "comment": "…" } ] }
+```
+
+Every key is required except an entry's `title`.
+
+## Checks
+
+| Problem | Raw | JSON |
+|---|---|---|
+| Duplicate show or venue ID | stops | not checked; both stay in the list, and references resolve to the later one |
+| Show names an unknown venue | stops | assert fails (asserts are on in the script) |
+| Show names an unknown artist | n/a, created | assert fails |
+| Show with no artists | can't happen | `SHOW_COMPARATOR` throws on `get(0)` |
+| Show without an `artists` key | n/a | `NullPointerException` |
+| Unknown relation member | artist: warning; venue: stops | stops |
+| Mixed artist and venue relation | can't happen | `ClassCastException` while building pages |
+| Venue without `location` | can't happen | `NullPointerException` while building pages |
+| Artist with no ID | stops, prints suggestions | not possible, `id` is required |
+
+## Gaps for another writer of the JSON
+
+These are what any program other than web_generator must get right to write `music.json` that
+`json-site` turns into the same site:
+
+1. Keep the iTunes `songs` and `albums`, and the artists that only iTunes knows. `json-site` has
+   no way to read shows and iTunes data from separate files.
+2. Never reuse or renumber show, venue or artist IDs. They are URLs.
+3. Resolve every reference, give every show at least one artist, and give every venue a location
+   with city and state.
+4. Write `sortname` where it's wanted. JSON input does not derive one.
+5. Keep relations to one kind of member.
