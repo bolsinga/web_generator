@@ -360,6 +360,7 @@ public class Util {
     return cp.toString();
   }
  
+  // The count most recent shows and entries together, newest first; fewer if there aren't count of them.
   public static List<Object> getRecentItems(final int count, final Music music, final Diary diary) {
     List<? extends Show> shows = music.getShowsCopy();
     Collections.sort(shows, com.bolsinga.music.Compare.SHOW_COMPARATOR);
@@ -370,13 +371,13 @@ public class Util {
     Collections.reverse(entries);
     
     List<Object> items = new Vector<Object>(count * 2);
-    items.addAll(shows.subList(0, count));
-    items.addAll(entries.subList(0, count));
+    items.addAll(shows.subList(0, Math.min(count, shows.size())));
+    items.addAll(entries.subList(0, Math.min(count, entries.size())));
     
     Collections.sort(items, CHANNEL_ITEM_COMPARATOR);
     Collections.reverse(items);
     
-    return Collections.unmodifiableList(items.subList(0, count));
+    return Collections.unmodifiableList(items.subList(0, Math.min(count, items.size())));
   }
 
   public static final Comparator<Object> CHANNEL_ITEM_COMPARATOR = new Comparator<Object>() {
