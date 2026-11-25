@@ -68,10 +68,10 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     h.addElement(Util.getIconLink());
     h.addElement(Util.getWebClipIcon());
 
-    h.addElement(new Meta().setContent(factory.getTitle()).addAttribute("property", "og:title"));
+    h.addElement(new Meta().setContent(Util.toHTMLSafe(factory.getTitle())).addAttribute("property", "og:title"));
     String description = factory.getDescription();
     if (description.length() > 0) {
-      h.addElement(new Meta().setContent(description).addAttribute("property", "og:description"));
+      h.addElement(new Meta().setContent(Util.toHTMLSafe(description)).addAttribute("property", "og:description"));
     }
     h.addElement(new Meta().setContent(Util.getSettings().getLargeImage()).addAttribute("property", "og:image"));
 
@@ -108,7 +108,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     h.addElement(fLinks.getLinkToRSS());
     h.addElement(fLinks.getLinkToStyleSheet());
 
-    h.addElement(new Meta().setContent(factory.getTitle()).addAttribute("property", "og:title"));
+    h.addElement(new Meta().setContent(Util.toHTMLSafe(factory.getTitle())).addAttribute("property", "og:title"));
     h.addElement(new Meta().setContent(Util.getSettings().getLargeImage()).addAttribute("property", "og:image"));
 
     h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));

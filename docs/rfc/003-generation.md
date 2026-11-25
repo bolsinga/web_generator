@@ -88,7 +88,9 @@ Music + Diary
 - Names, titles, show comments and diary entries are HTML, written into pages as they are, except
   that `Util.toHTMLSafe` escapes each `&` that doesn't start `&amp;`, `&gt;` or `&lt;`. So text may
   use tags and those three entities, and any other entity, such as `&#x267c;`, shows as written.
-  `og:` meta tags don't go through it.
+- `og:title` and `og:description` go through `toHTMLSafe` too, in `RecordDocumentCreator`.
+  A show's or entry's `og:description` is the first two sentences of its comment
+  (`Util.getSentences`), with tags removed; an artist's or venue's is the `moreinfo` resource.
 
 Every page has the same header: icon, CSS, RSS link, `og:` tags, a navigator of nine sections,
 and a DuckDuckGo search form (`Util.getSearchForm`). The site's domain is the last two parts of the
