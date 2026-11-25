@@ -79,7 +79,7 @@ expect only the differences listed above.
 ## Tests
 
 `src/com/bolsinga/test` has `CSSTest`, `ICalTest` and `RSSTest`. They are `main` programs, not
-JUnit, and Ant only compiles them. `CSSTest` checks for 2 arguments and then reads the third.
+JUnit, and Ant only compiles them.
 
 ## Known problems
 
