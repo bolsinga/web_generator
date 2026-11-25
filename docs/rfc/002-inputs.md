@@ -169,12 +169,16 @@ Which tracks count (`Parser.addTrack`):
 - A `compilation` track's album has no artist. Otherwise an album is its title and artist, so two
   artists' albums with the same title are two albums.
 
-How they're ordered:
+Their IDs and order:
 
-- Albums are kept in a `TreeMap` keyed by title followed by the artist's name, and that order gives
-  them their IDs, `a0`, `a1`, …. Songs are numbered `s0`, `s1`, … album by album in that order, and
-  within an album by disc and then track number. So the same export always gives the same IDs, but
-  an album added to iTunes renumbers every album, and every song, after it.
+- A song's ID is `s` and its track's `persistentID`, the 64-bit unsigned number iTunes gives a track
+  and keeps for as long as the track is in the library: `s1122626557726769096`. An album's ID is `a`
+  and the smallest `persistentID` of its songs. So adding, removing or retitling one album or song
+  changes no other ID. An album's ID changes only when that smallest song leaves the album, or a
+  song with a smaller one joins it (`raw.Media.getAlbumID`, #236).
+- A track with no `persistentID`, or one that isn't a 64-bit number, stops the run, naming it.
+- Albums are kept in a `TreeMap` keyed by title followed by the artist's name, which is the order of
+  `Music.getAlbums()`; within an album, songs are ordered by disc and then track number.
 - An album with no year of its own takes its songs' year when they all have the same one.
 
 It prints to the log, without stopping: `Artist not Added:` with the artists of skipped tracks,

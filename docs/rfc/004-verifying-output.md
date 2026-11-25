@@ -99,9 +99,9 @@ JUnit, and Ant only compiles them.
 
 Record any found here, so they are not mistaken for intended behavior.
 
-- **IDs that aren't stable.** Diary entry IDs renumber when an older entry is added, and album and
-  song IDs renumber when an album is added to iTunes ([RFC 001](001-data-model.md#identity)).
-  These are URLs or anchors, so old links can point at the wrong item.
+- **Diary IDs aren't stable.** Diary entry IDs renumber when an older entry is added
+  ([RFC 001](001-data-model.md#identity)). They are URLs, so old links can point at the wrong
+  entry. Album and song IDs were the same until #236 gave them iTunes' persistent IDs.
 - **One site per JVM.** The readers and `Settings`, `Lookup`, `Compare` and `Links` keep static
   state ([RFC 001](001-data-model.md#gaps), [RFC 003](003-generation.md#threading)).
 - **720 entries on a day.** More diary entries on one day than minutes before `diaryEntryTime`

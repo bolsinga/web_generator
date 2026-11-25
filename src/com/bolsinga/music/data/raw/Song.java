@@ -13,7 +13,8 @@ public class Song implements com.bolsinga.music.data.Song {
   private String fGenre;
   private int fPlayCount;
   
-  static Song create(final int id, final String title, final Artist artist, final ZonedDateTime lastPlayed, final int playCount, final String genre, final com.bolsinga.music.data.Date releaseDate, final int track) {
+  // id is the number after "s"; see Media.
+  static Song create(final String id, final String title, final Artist artist, final ZonedDateTime lastPlayed, final int playCount, final String genre, final com.bolsinga.music.data.Date releaseDate, final int track) {
     return new Song("s" + id, title, artist, lastPlayed, playCount, genre, releaseDate, track);
   }
   

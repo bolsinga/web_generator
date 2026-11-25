@@ -66,12 +66,12 @@ public class Media {
             songReleaseYear = Date.create(itAlbumSong.getReleaseYear());
           }
 
-          Song song = Song.create(songs.size(), itAlbumSong.getTitle(), songArtist, itAlbumSong.getLastPlayed(), itAlbumSong.getPlayCount(), itAlbumSong.getGenre(), songReleaseYear, itAlbumSong.getTrack());
+          Song song = Song.create(Media.getSongID(itAlbumSong), itAlbumSong.getTitle(), songArtist, itAlbumSong.getLastPlayed(), itAlbumSong.getPlayCount(), itAlbumSong.getGenre(), songReleaseYear, itAlbumSong.getTrack());
           albumSongs.add(song);
           songs.add(song);
       }
 
-      Album album = Album.create(albums.size(), itAlbum.getTitle(), albumArtist, albumReleaseYear, albumSongs);
+      Album album = Album.create(Media.getAlbumID(itAlbumSongs), itAlbum.getTitle(), albumArtist, albumReleaseYear, albumSongs);
       albums.add(album);
 
       for (Artist artist : albumArtists) {
@@ -81,6 +81,36 @@ public class Media {
 
     Media media = new Media(albums, songs, sortnames);
     return media;
+  }
+
+  // IDs come from iTunes' persistent IDs, which stay the same for a track as long as it is in the
+  // library, so a new album or song doesn't renumber the others (#236). A song's ID is its track's
+  // persistent ID, as a decimal number. An album's is its songs' smallest persistent ID, so it only
+  // changes if that song is removed or a song with a smaller one is added to the album.
+  private static String getSongID(final com.bolsinga.itunes.Song song) throws com.bolsinga.web.WebException {
+    String id = song.getPersistentID();
+    try {
+      Long.parseUnsignedLong(id);
+    } catch (NumberFormatException | NullPointerException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("iTunes track has no persistentID, or one that isn't a 64-bit number: \"");
+      sb.append(song.getTitle());
+      sb.append("\" ");
+      sb.append(id);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    }
+    return id;
+  }
+
+  private static String getAlbumID(final List<com.bolsinga.itunes.Song> songs) throws com.bolsinga.web.WebException {
+    String result = null;
+    for (com.bolsinga.itunes.Song song : songs) {
+      String id = Media.getSongID(song);
+      if (result == null || Long.compareUnsigned(Long.parseUnsignedLong(id), Long.parseUnsignedLong(result)) < 0) {
+        result = id;
+      }
+    }
+    return result;
   }
 
   private Media(final List<Album> albums, final List<Song> songs, final Map<String, String> sortnames) {

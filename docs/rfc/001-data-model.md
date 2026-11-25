@@ -77,7 +77,7 @@ been published is a permanent URL**.
 | Venue | `vN` | hand, first field of `venuemap.txt` | yes | `venues/<id>.html` |
 | Artist | `arN` | hand, `artistids.txt` | yes | `bands/<id>.html` |
 | Relation | `rN` | its line's position in `relations.txt`, from `r0` | no | none |
-| Album, Song | `aN`, `sN` | position in the iTunes parser's sorted album order ([RFC 002](002-inputs.md#itunes)) | no, a new album renumbers later albums and songs | anchors on `tracks/` pages |
+| Album, Song | `aN`, `sN` | iTunes: a song's track `persistentID`, an album's smallest song one ([RFC 002](002-inputs.md#itunes)) | yes, while the tracks stay in iTunes | album anchors on `tracks/` pages |
 | Diary entry | `eN` | position in timestamp order | no, inserting an older entry renumbers later ones | `archives/<id>.html` |
 
 When an artist has no ID, `Main.dumpMissingArtistIDs` prints suggested `arN^Name` lines, numbering

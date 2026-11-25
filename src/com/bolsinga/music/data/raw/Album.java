@@ -12,8 +12,8 @@ public class Album implements com.bolsinga.music.data.Album {
   private String fComment;
   private final List<Song> fSongs;
   
-  static Album create(final int id, final String title, final Artist artist, final com.bolsinga.music.data.Date releaseDate, final List<Song> songs) {
-    String s = (artist != null) ? artist.getName() : "null";
+  // id is the number after "a"; see Media.
+  static Album create(final String id, final String title, final Artist artist, final com.bolsinga.music.data.Date releaseDate, final List<Song> songs) {
     return new Album("a" + id, title, artist, releaseDate, songs);
   }
   
