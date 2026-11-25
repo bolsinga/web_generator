@@ -16,6 +16,7 @@ bolsinga.com with rsync, which is outside this repo.
 ```
 Music + Diary
    │
+   ├─ check: every venue has a show (stop)
    ├─ CSS.install                         styles/
    ├─ checks: similar artist names (printed), missing artist IDs (stop)
    │
