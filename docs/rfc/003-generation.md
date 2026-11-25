@@ -114,7 +114,7 @@ This is the field list `json-site` must supply for the site to be unchanged.
 | tracks | albums and songs only |
 | home | the `diaryCount` most recent shows and entries, counts of shows, artists, venues, songs and albums, and the **last played song** |
 | RSS | the `recentCount` most recent shows and entries |
-| iCal | every show with a full date, as an all-day event on that date that repeats yearly, so the calendar shows each show's anniversaries; shows with any unknown date part are left out |
+| iCal | every show with a full date, as an all-day event on that date that repeats yearly, so the calendar shows each show's anniversaries; shows with any unknown date part are left out. The summary is the artists, venue and year. Following RFC 5545, `,`, `;`, `\` and line breaks in TEXT values are escaped, and lines longer than 75 octets are folded without splitting a character (`VCalendar`) |
 | diary | `Diary` title, statics, header, friends, colophon; entry `id`, `timestamp`, `title`, `comment` |
 
 The most recent items (`Util.getRecentItems`) are shows and entries together, newest first. With
