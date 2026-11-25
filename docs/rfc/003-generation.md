@@ -85,12 +85,15 @@ Music + Diary
   points at the redirect page, so the page an item is filed on can change without breaking links.
 - **Anchors** inside a page are the item's ID.
 - `@@ROOT_URL@@` in text becomes a relative path to the site root (`Encode`).
-- Names, titles, show comments and diary entries are HTML, written into pages as they are, except
-  that `Util.toHTMLSafe` escapes each `&` that doesn't start `&amp;`, `&gt;` or `&lt;`. So text may
-  use tags and those three entities, and any other entity, such as `&#x267c;`, shows as written.
+- Names, titles (diary entry titles included), addresses, show comments and diary entries are
+  HTML, written into pages as they are, except that `Util.toHTMLSafe` escapes each `&` that doesn't
+  start `&amp;`, `&gt;` or `&lt;`. So text may use tags and those three entities, and any other
+  entity, such as `&#x267c;`, shows as written.
 - `og:title` and `og:description` go through `toHTMLSafe` too, in `RecordDocumentCreator`.
   A show's or entry's `og:description` is the first two sentences of its comment
   (`Util.getSentences`), with tags removed; an artist's or venue's is the `moreinfo` resource.
+- A venue's Apple Maps link (`Util.getMapsURL`) uses its `mapKitID`. Without one, it searches for
+  the street, city and state, URL-encoded as one query value, so an `&` in the street is `%26`.
 
 Every page has the same header: icon, CSS, RSS link, `og:` tags, a navigator of nine sections,
 and a DuckDuckGo search form (`Util.getSearchForm`). The site's domain is the last two parts of the
