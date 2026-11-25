@@ -75,14 +75,8 @@ if [ $ACTION = "json-site" ] ; then
       usage "No $JSON_HOME"
   fi
 
-  for i in \
-    "${JSON_HOME}/diary.json" \
-    "${JSON_HOME}/music.json" ; do
-    if [ ! -f "$i" ] ; then
-      usage "Can't find json file $i"
-    fi
-  DATA_FILES="$DATA_FILES \"$i\""
-  done
+  # The diary and music file names come from the settings, as the export writes them.
+  DATA_FILES="$DATA_FILES \"$JSON_HOME\""
 elif [ $ACTION = "site" ] ; then
   DATA_DIR="$3"
   if [ -z "$DATA_DIR" ] ; then

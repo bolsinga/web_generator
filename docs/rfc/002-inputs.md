@@ -12,7 +12,9 @@ There are two ways to build the `Music` and `Diary` of [RFC 001](001-data-model.
 - **`json-site`** reads a `music.json` and a `diary.json`, as this program exports them.
 
 Every run of either command also writes `json/music.json`, `json/shows.json` and `json/diary.json`
-into the site, so the JSON is always current with the raw files. `bolsinga/site` reads
+into the site, so the JSON is always current with the raw files. The names are the
+`musicJsonFile`, `showsJsonFile` and `diaryJsonFile` settings plus `.json`; this RFC calls them by
+their usual names. `bolsinga/site` reads
 `json/shows.json` from the website, which makes that format a public contract.
 
 ## Commands
@@ -27,7 +29,7 @@ site json-site <output_dir> <settings.properties> <json_dir>
 | Command | Reads | Builds with |
 |---|---|---|
 | `site` | `data_dir/` `settings.properties`, `shows.txt`, `venuemap.txt`, `bandsort.txt`, `relations.txt`, `comments.txt`, `statics.txt`, `artistids.txt`, and the iTunes file | `raw.Music.create`, `raw.Diary.create` |
-| `json-site` | `json_dir/diary.json`, `json_dir/music.json` | `json.Music.create`, `json.Diary.create` |
+| `json-site` | `settings.properties`, and in `json_dir` the diary and music files named by its `diaryJsonFile` and `musicJsonFile`, as the export writes them | `json.Music.create`, `json.Diary.create` |
 
 The script runs Java with `-ea:com.bolsinga...`, so asserts are on. Set `DUMP=1` to print the
 command instead of running it. `Main.usage` is out of date and exits 0.
