@@ -101,7 +101,8 @@ This is the field list `json-site` must supply for the site to be unchanged.
 | cities | venue `location.city` and `location.state` for every show |
 | tracks | albums and songs only |
 | home | recent shows and entries, counts of shows, artists, venues, songs and albums, and the **last played song** |
-| RSS, iCal | recent shows and entries; shows by month and day |
+| RSS | recent shows and entries |
+| iCal | every show with a full date, as an all-day event on that date that repeats yearly, so the calendar shows each show's anniversaries; shows with any unknown date part are left out |
 | diary | `Diary` title, statics, header, friends, colophon; entry `id`, `timestamp`, `title`, `comment` |
 
 Pages that change without iTunes data: artist pages (no album list, and a different redirect
