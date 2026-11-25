@@ -30,7 +30,8 @@ Music + Diary
    │    RSS.generate         alt/<rssFile>
    │    JSON export          json/<musicJsonFile>.json, <showsJsonFile>.json, <diaryJsonFile>.json
    │
-   └─ Main.complete: the pool shuts down; the JVM exits when the tasks finish
+   └─ Main.complete: the pool shuts down, Main waits for every task, and the run fails
+                     if any task failed
 ```
 
 ## Derived data
@@ -125,7 +126,12 @@ build copies to `web.properties` with the build ID filled in.
 `Backgrounder` is a fixed pool with one thread per processor, or `-Dweb.poolthreadcount=N`. Each
 task writes one page group, and its redirect pages as a side effect.
 
-- An exception in a task is printed and the run continues. **The exit code is still 0.**
+- Anything a task throws, `Error`s included, is printed and counted, and the other tasks go on.
+  When they have all finished, `Main.complete` fails the run if any failed. A page that can't be
+  written throws from `RecordDocumentCreator`, so it counts as a failure.
+- Anything thrown on the main thread, `Error`s included, ends the run with `System.exit(1)`, which
+  also stops the pool's threads.
+- **A run that exits 0 wrote every page.** Exit 1 means something failed; don't copy that site up.
 - `Settings`, `Lookup`, `Compare` and `Links` are static, so a JVM can build one site.
 - `json.Artist` builds its album list lazily without a lock, from several threads.
 

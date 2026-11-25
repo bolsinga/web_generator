@@ -20,6 +20,8 @@ public class Backgrounder {
   
   private final ExecutorService fExec = Executors.newFixedThreadPool(Backgrounder.sPoolThreadCount);
   
+  private final java.util.concurrent.atomic.AtomicInteger fFailures = new java.util.concurrent.atomic.AtomicInteger();
+
   private final Set<Backgroundable> fClientSet = new HashSet<Backgroundable>();
   private final Object fClientSetLock = new Object();
   
@@ -63,14 +65,35 @@ public class Backgrounder {
   
   // Registers the Backgroundable with the Backgrounder (if it hasn't
   //  been registered already). Adds the Runnable to the Backgrounder's
-  //  Executor.
-  public void execute(Backgroundable backgroundable, Runnable task) {
+  //  Executor. A task that throws anything is reported and counted, so
+  //  awaitTermination() can say the run failed.
+  public void execute(Backgroundable backgroundable, final Runnable task) {
     if (!hasInterest()) {
       throw new Error("Excecuting a Backgrounder that has no interest!");
     }
     if (!fExec.isShutdown()) {
-      fExec.execute(task);
+      fExec.execute(new Runnable() {
+        public void run() {
+          try {
+            task.run();
+          } catch (Throwable t) {
+            fFailures.incrementAndGet();
+            System.err.println("Background task failed: " + t);
+            t.printStackTrace();
+          }
+        }
+      });
     }
+  }
+
+  // Waits for every task to finish once the last Backgroundable has been
+  //  removed, and returns how many tasks failed.
+  public int awaitTermination() throws InterruptedException {
+    if (!fExec.isShutdown()) {
+      throw new IllegalStateException("Backgrounder is still running; remove every interest first.");
+    }
+    fExec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+    return fFailures.get();
   }
   
   // Unregisters the Backgroundable from the Backgrounder. This
