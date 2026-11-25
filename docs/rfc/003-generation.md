@@ -102,10 +102,13 @@ This is the field list `json-site` must supply for the site to be unchanged.
 | artist (`bands/`) | artist `id`, `name`, `sortname`, related artists, the artist's shows, and **albums** |
 | cities | venue `location.city` and `location.state` for every show |
 | tracks | albums and songs only |
-| home | recent shows and entries, counts of shows, artists, venues, songs and albums, and the **last played song** |
-| RSS | recent shows and entries |
+| home | the `diaryCount` most recent shows and entries, counts of shows, artists, venues, songs and albums, and the **last played song** |
+| RSS | the `recentCount` most recent shows and entries |
 | iCal | every show with a full date, as an all-day event on that date that repeats yearly, so the calendar shows each show's anniversaries; shows with any unknown date part are left out |
 | diary | `Diary` title, statics, header, friends, colophon; entry `id`, `timestamp`, `title`, `comment` |
+
+The most recent items (`Util.getRecentItems`) are shows and entries together, newest first. With
+fewer shows and entries than the count, as in a small test archive, all of them are used.
 
 Pages that change without iTunes data: artist pages (no album list, and a different redirect
 title), all of `tracks/`, and the home page's counts and last played song.
