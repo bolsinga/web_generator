@@ -153,7 +153,8 @@ task writes one page group, and its redirect pages as a side effect.
   also stops the pool's threads.
 - **A run that exits 0 wrote every page.** Exit 1 means something failed; don't copy that site up.
 - `Settings`, `Lookup`, `Compare` and `Links` are static, so a JVM can build one site.
-- `json.Artist` builds its album list lazily without a lock, from several threads.
+- The data is read before the pool starts and isn't changed after, so tasks share it without
+  locks. `json.Music` finishes each artist's album list right after reading the albums.
 
 ## System properties
 

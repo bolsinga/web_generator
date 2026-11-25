@@ -171,6 +171,9 @@ public class Music implements com.bolsinga.music.data.Music {
       JSONObject jsonItem = jsonArray.getJSONObject(j);
       albums.add(Album.createFromJSON(jsonItem));
     }
+    for (Artist artist : artists) {
+      artist.finishAlbums();
+    }
 
     jsonArray = json.getJSONArray(SHOWS);
     shows = new ArrayList<Show>(jsonArray.length());
