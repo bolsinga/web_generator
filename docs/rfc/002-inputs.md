@@ -6,12 +6,14 @@ Status: Describes existing behavior · Updated: 2026-11-24 · Code: `src/com/bol
 
 ## Summary
 
-There are two ways to build the `Music` and `Diary` of [RFC 001](001-data-model.md):
+There are three ways to build the `Music` and `Diary` of [RFC 001](001-data-model.md):
 
 - **`site`** reads the raw text files plus an iTunes JSON export. This is how the site is made today.
 - **`json-site`** reads a `music.json` and a `diary.json`, as this program exports them.
+- **`shows-site`** reads `bolsinga/site`'s shows file plus an iTunes JSON export and the raw diary
+  files ([RFC 005](005-shows-site.md)). It replaces `site` once the app edits the shows file.
 
-Every run of either command also writes `json/music.json`, `json/shows.json` and `json/diary.json`
+Every run of any command also writes `json/music.json`, `json/shows.json` and `json/diary.json`
 into the site, so the JSON is always current with the raw files. The names are the
 `musicJsonFile`, `showsJsonFile` and `diaryJsonFile` settings plus `.json`; this RFC calls them by
 their usual names. `bolsinga/site` reads
@@ -22,22 +24,24 @@ their usual names. `bolsinga/site` reads
 `src/scripts/site` (installed as `output/dst/site`) wraps `com.bolsinga.site.Main`:
 
 ```
-site site      <output_dir> <data_dir> <itunes.json>
-site json-site <output_dir> <settings.properties> <json_dir>
+site site       <output_dir> <data_dir> <itunes.json>
+site json-site  <output_dir> <settings.properties> <json_dir>
+site shows-site <output_dir> <data_dir> <itunes.json>
 ```
 
 | Command | Reads | Builds with |
 |---|---|---|
 | `site` | `data_dir/` `settings.properties`, `shows.txt`, `venuemap.txt`, `bandsort.txt`, `relations.txt`, `comments.txt`, `statics.txt`, `artistids.txt`, and the iTunes file | `raw.Music.create`, `raw.Diary.create` |
 | `json-site` | `settings.properties`, and in `json_dir` the diary and music files named by its `diaryJsonFile` and `musicJsonFile`, as the export writes them | `json.Music.create`, `json.Diary.create` |
+| `shows-site` | `data_dir/` `settings.properties`, the shows file named by its `showsJsonFile` (`shows.json`), `comments.txt`, `statics.txt`, and the iTunes file | `json.Music.createFromShows`, `raw.Diary.create` |
 
 The script runs Java with `-ea:com.bolsinga...`, so asserts are on. Set `DUMP=1` to print the
 command instead of running it. `Main` checks the command and its number of arguments before
-reading anything; when they're wrong, `Main.usage` prints the problem and both forms of the
+reading anything; when they're wrong, `Main.usage` prints the problem and every form of the
 command to stderr and exits 1.
 
-The iTunes file is required by `site`; there is no way to build without it. `json-site` reads one
-music file, so iTunes data and shows must be in the same file.
+The iTunes file is required by `site` and `shows-site`; there is no way to build without it.
+`json-site` reads one music file, so iTunes data and shows must be in the same file.
 
 ## Raw files
 
@@ -198,11 +202,13 @@ Every key is required except an entry's `title`.
 | Problem | Raw | JSON |
 |---|---|---|
 | Duplicate show, venue or artist ID | show or venue: stops | stops |
+| An ID that isn't its kind's prefix and a number (`v`, `ar`, `r`, `sh`, `a`, `s`) | can't happen | stops |
+| A show date that can't be: month not 1–12, or a day its month doesn't have | not checked | stops |
 | Show names an unknown venue | stops | stops |
 | Show names an unknown artist | n/a, created | stops |
 | Show with no artists, or no `artists` key | can't happen | stops |
 | Unknown relation member | stops | stops |
-| Two venues with the same name | stops | not checked |
+| Two venues with the same name | stops | stops |
 | Mixed artist and venue relation | can't happen | stops |
 | Venue without a location, city or state | can't happen | stops |
 | Venue that no show names | stops | stops |
@@ -219,14 +225,17 @@ music.json has 2 problem(s):
   relations[3] r3 mixes artists and venues.
 ```
 
-A venue that no show names is checked after either reader, by `Main.generateSite`, because its page
+`shows-site` makes the same checks on the shows file, and those of
+[RFC 005](005-shows-site.md#checks) that only a shows file needs.
+
+A venue that no show names is checked after any reader, by `Main.generateSite`, because its page
 would list its shows. The run stops before writing anything and names every such venue. Its `vN`
 ID stays retired; don't give it to another venue.
 
 ### Markup warnings
 
 Show comments, diary entries and their titles, and the diary's statics, header, friends and
-colophon are HTML. After either reader, `MarkupCheck` prints warnings under `--Markup Warnings--`
+colophon are HTML. After any reader, `MarkupCheck` prints warnings under `--Markup Warnings--`
 for markup that pages would show wrongly. Each warning names the show or entry ID. They don't stop
 the run.
 
@@ -238,7 +247,7 @@ the run.
 ### Name warnings
 
 Artists are joined by name, so a name that looks right but is spelled differently underneath won't
-match the same name typed elsewhere. After either reader, `NameCheck` prints warnings under
+match the same name typed elsewhere. After any reader, `NameCheck` prints warnings under
 `--Name Warnings--` for every artist name and album and song title that has spaces at either end or
 two in a row, or accents stored decomposed rather than precomposed (not NFC). Album and song
 warnings name the artist, to find the track in the Music app. Sort names aren't checked, because
@@ -250,14 +259,16 @@ the source: the Music app, or the raw files. They don't stop the run.
 These are what any program other than web_generator must get right to write `music.json` that
 `json-site` turns into the same site:
 
-1. Keep the iTunes `songs` and `albums`, and the artists that only iTunes knows. `json-site` has
-   no way to read shows and iTunes data from separate files.
+1. Keep the iTunes `songs` and `albums`, and the artists that only iTunes knows. Or write a
+   shows file, with `songs` and `albums` empty, and run `shows-site` with the iTunes export
+   ([RFC 005](005-shows-site.md)).
 2. Never reuse or renumber show, venue or artist IDs. They are URLs.
 3. Resolve every reference, give every show at least one artist, and give every venue a location
    with city and state and at least one show.
 4. Write `sortname` where it's wanted. JSON input does not derive one.
 5. Keep relations to one kind of member.
-6. Give every artist its own name. The raw files and iTunes join artists by name.
+6. Give every artist and every venue its own name. The raw files and iTunes join them by name.
+7. Give IDs their kind's prefix and a number, and give shows dates that can be.
 
-`json-site` stops on a file that breaks 2's duplicate IDs, 3, 5 or 6 ([Checks](#checks)). It can't
+`json-site` stops on a file that breaks 2's duplicate IDs, 3, 5, 6 or 7 ([Checks](#checks)). It can't
 tell whether an ID was renumbered, a sortname is missing, or iTunes data was dropped.

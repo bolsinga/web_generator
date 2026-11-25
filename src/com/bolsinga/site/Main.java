@@ -22,6 +22,10 @@ public class Main implements Backgroundable {
       if (args.length != 4) {
         Main.usage(args, "json-site needs 3 arguments after the command, not " + (args.length - 1) + ".");
       }
+    } else if (args[0].equals("shows-site")) {
+      if (args.length != 7) {
+        Main.usage(args, "shows-site needs 6 arguments after the command, not " + (args.length - 1) + ".");
+      }
     } else {
       Main.usage(args, "Unknown command: " + args[0]);
     }
@@ -46,6 +50,13 @@ public class Main implements Backgroundable {
         String itunes = args[i++];
 
         main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, artistIDs, output);
+      } else if (command.equals("shows-site")) {
+        String showsDir = args[i++];
+        String comments = args[i++];
+        String statics = args[i++];
+        String itunes = args[i++];
+
+        main.generateShowsSite(showsDir, comments, statics, itunes, output);
       } else {
         String jsonDir = args[i++];
 
@@ -91,6 +102,15 @@ public class Main implements Backgroundable {
     final java.io.File jsonDirectory = new java.io.File(jsonDir);
     final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.json.Diary.create(Main.getJSONFile(jsonDirectory, Util.getSettings().getDiaryJsonFile()).getPath());
     final com.bolsinga.music.data.Music music = com.bolsinga.music.data.json.Music.create(Main.getJSONFile(jsonDirectory, Util.getSettings().getMusicJsonFile()).getPath());
+
+    generateSite(music, diary, output);
+  }
+
+  // Reads the shows file in showsDir, named as the export names json/shows.json (RFC 005).
+  private void generateShowsSite(final String showsDir, final String comments, final String statics, final String itunes, final String output) throws Exception {
+    final java.io.File showsFile = Main.getJSONFile(new java.io.File(showsDir), Util.getSettings().getShowsJsonFile());
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.json.Music.createFromShows(showsFile.getPath(), itunes);
+    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.raw.Diary.create(comments, statics);
 
     generateSite(music, diary, output);
   }
@@ -232,8 +252,10 @@ public class Main implements Backgroundable {
     System.err.println("Usage:");
     System.err.println("  Main site <output_dir> <settings.properties> <shows.txt> <venuemap.txt> <bandsort.txt> <relations.txt> <comments.txt> <statics.txt> <artistids.txt> <itunes.json>");
     System.err.println("  Main json-site <output_dir> <settings.properties> <json_dir>");
+    System.err.println("  Main shows-site <output_dir> <settings.properties> <shows_dir> <comments.txt> <statics.txt> <itunes.json>");
     System.err.println("json_dir holds the diary and music JSON, named by diaryJsonFile and musicJsonFile in the settings.");
-    System.err.println("The site script runs these for you: site site <output_dir> <data_dir> <itunes.json>, or site json-site <output_dir> <settings.properties> <json_dir>.");
+    System.err.println("shows_dir holds the shows file, named by showsJsonFile in the settings.");
+    System.err.println("The site script runs these for you: site site <output_dir> <data_dir> <itunes.json>, site json-site <output_dir> <settings.properties> <json_dir>, or site shows-site <output_dir> <data_dir> <itunes.json>.");
     if (badargs != null && badargs.length > 0) {
       System.err.println("Arguments given: " + String.join(" ", badargs));
     }

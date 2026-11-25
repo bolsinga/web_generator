@@ -38,6 +38,8 @@ and JSON formats are interchangeable ways to fill them, and the page code only s
 - The runnable program is `output/dst/site`. `output/` is a build product; never commit it.
 - `output/dst/site site <out> <data_dir> <itunes.json>` builds from the raw files.
   `output/dst/site json-site <out> <settings.properties> <json_dir>` builds from JSON.
+  `output/dst/site shows-site <out> <data_dir> <itunes.json>` builds from `bolsinga/site`'s
+  `shows.json` in `data_dir`, with iTunes and the raw diary files.
 - The data and `settings.properties` live outside this repo. Don't go looking for them; ask.
 - There are no automated tests of the output. To check a change, generate the site before and after
   with `JAVA_OPTS=-Dweb.debug_output=true` and `diff -r` the trees
@@ -60,14 +62,14 @@ for the area you're changing. A change that alters what an RFC describes updates
 
 - [`docs/rfc/001-data-model.md`](docs/rfc/001-data-model.md): the `Music` and `Diary` types, which
   fields are optional, dates, relations, sort names, and who assigns each ID.
-- [`docs/rfc/002-inputs.md`](docs/rfc/002-inputs.md): the `site` and `json-site` commands, every raw
-  file format, the JSON schema, the checks each reader makes, and what another JSON writer must get
-  right.
+- [`docs/rfc/002-inputs.md`](docs/rfc/002-inputs.md): the `site`, `json-site` and `shows-site`
+  commands, every raw file format, the JSON schema, the checks each reader makes, and what another
+  JSON writer must get right.
 - [`docs/rfc/003-generation.md`](docs/rfc/003-generation.md): the generation stages, `Lookup` and
   `Compare`, the site's layout and URLs, which fields each page uses, settings, and threading.
 - [`docs/rfc/004-verifying-output.md`](docs/rfc/004-verifying-output.md): building, running, comparing
   generated sites, and known problems.
-- [`docs/rfc/005-shows-site.md`](docs/rfc/005-shows-site.md) (proposed): the `shows-site` command,
-  which makes the site from `bolsinga/site`'s shows file, the iTunes export and the raw diary files.
+- [`docs/rfc/005-shows-site.md`](docs/rfc/005-shows-site.md): the `shows-site` command, which
+  makes the site from `bolsinga/site`'s shows file, the iTunes export and the raw diary files.
 
 `docs/notes.txt` is an old sketch of the model and the iCalendar format; the RFCs supersede it.
