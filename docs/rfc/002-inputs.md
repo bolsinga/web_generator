@@ -200,6 +200,7 @@ Every key is required except an entry's `title`.
 | Unknown relation member | artist: warning; venue: stops | stops |
 | Mixed artist and venue relation | can't happen | stops |
 | Venue without a location, city or state | can't happen | stops |
+| Venue that no show names | stops | stops |
 | Artist with no ID | stops, prints suggestions | stops |
 | Two artists with the same name | can't happen, artists are joined by name | stops |
 
@@ -212,6 +213,10 @@ music.json has 2 problem(s):
   relations[3] r3 mixes artists and venues.
 ```
 
+A venue that no show names is checked after either reader, by `Main.generateSite`, because its page
+would list its shows. The run stops before writing anything and names every such venue. Its `vN`
+ID stays retired; don't give it to another venue.
+
 ## Gaps for another writer of the JSON
 
 These are what any program other than web_generator must get right to write `music.json` that
@@ -221,7 +226,7 @@ These are what any program other than web_generator must get right to write `mus
    no way to read shows and iTunes data from separate files.
 2. Never reuse or renumber show, venue or artist IDs. They are URLs.
 3. Resolve every reference, give every show at least one artist, and give every venue a location
-   with city and state.
+   with city and state and at least one show.
 4. Write `sortname` where it's wanted. JSON input does not derive one.
 5. Keep relations to one kind of member.
 6. Give every artist its own name. The raw files and iTunes join artists by name.

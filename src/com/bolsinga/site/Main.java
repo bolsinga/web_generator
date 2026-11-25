@@ -140,7 +140,33 @@ public class Main implements Backgroundable {
     return hasMissingArtistIDs;
   }
 
+  // Every venue gets a page that lists its shows, so a venue with no shows is an error, from either reader.
+  private void checkVenuesHaveShows(final com.bolsinga.music.data.Music music) throws com.bolsinga.web.WebException {
+    Set<String> used = new HashSet<String>();
+    for (com.bolsinga.music.data.Show show : music.getShows()) {
+      used.add(show.getVenue().getID());
+    }
+    StringBuilder sb = new StringBuilder();
+    int count = 0;
+    for (com.bolsinga.music.data.Venue venue : music.getVenues()) {
+      if (!used.contains(venue.getID())) {
+        sb.append("\n  ");
+        sb.append(venue.getID());
+        sb.append(" ");
+        sb.append(venue.getName());
+        count++;
+      }
+    }
+    if (count > 0) {
+      sb.insert(0, " venue(s) with no shows:");
+      sb.insert(0, count);
+      throw new com.bolsinga.web.WebException(sb.toString());
+    }
+  }
+
   private void generateSite(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary, final String output) throws Exception {
+    checkVenuesHaveShows(music);
+
     CSS.install(output);
 
     dumpSimilarArtists(music);
