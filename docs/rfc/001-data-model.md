@@ -34,7 +34,7 @@ Each list has an unmodifiable getter (`getShows()`) and a copy (`getShowsCopy()`
 | `Location` | `street?`, `city`, `state`, `zip`, `web?` | `zip` is an `int`, 0 when unknown. Nothing sets it today. |
 | `Date` | `year`, `month`, `day` | See below. |
 | `Relation` | `id`, `reason?`, `members` | `members` is `List<Object>` holding `Artist` or `Venue` objects. |
-| `Album`, `Song` | see `Album.java`, `Song.java` | Only from iTunes. Out of scope here except where pages depend on them ([RFC 003](003-generation.md)). |
+| `Album`, `Song` | see `Album.java`, `Song.java` | Only from iTunes. Titles are plain text, not HTML. Out of scope here except where pages depend on them ([RFC 003](003-generation.md)). |
 
 `?` means the value may be null. `comment` on `Venue` exists in the interface and the JSON, but
 raw input never sets it.

@@ -84,6 +84,12 @@ public class Util {
     return sHTMLPattern.matcher(s).replaceAll("&amp;");
   }
 
+  // For plain text from iTunes, such as song and album titles, which never holds tags: escapes & as
+  // toHTMLSafe does, and every < and >.
+  public static String toHTMLText(final String s) {
+    return Util.toHTMLSafe(s).replace("<", "&lt;").replace(">", "&gt;");
+  }
+
   public static boolean getDebugOutput() {
     return sDebugOutput;
   }

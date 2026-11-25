@@ -227,7 +227,7 @@ public class MainDocumentCreator extends DiaryEncoderRecordDocumentCreator {
 
       String linkToArtist = Util.createInternalA(fLinks.getLinkTo(artist), fLookup.getHTMLName(artist), Util.createTitle("moreinfoartist", artist.getName())).toString();
 
-      Object[] args = { lastPlayedSong.getTitle(), linkToArtist, Integer.valueOf(lastPlayedSong.getPlayCount()) };
+      Object[] args = { Util.toHTMLText(lastPlayedSong.getTitle()), linkToArtist, Integer.valueOf(lastPlayedSong.getPlayCount()) };
 
       return com.bolsinga.web.Record.createRecordPermalink(
         new StringElement(Util.getResourceString("lastplayed")),

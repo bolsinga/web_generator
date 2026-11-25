@@ -89,6 +89,9 @@ Music + Diary
   HTML, written into pages as they are, except that `Util.toHTMLSafe` escapes each `&` that doesn't
   start `&amp;`, `&gt;` or `&lt;`. So text may use tags and those three entities, and any other
   entity, such as `&#x267c;`, shows as written.
+- Album and song titles from iTunes are plain text. `Util.toHTMLText` escapes them as
+  `toHTMLSafe` does, and also every `<` and `>`, on the tracks pages, the artist pages' album lists
+  and the home page's last played song.
 - `og:title` and `og:description` go through `toHTMLSafe` too, in `RecordDocumentCreator`.
   A show's or entry's `og:description` is the first two sentences of its comment
   (`Util.getSentences`), with tags removed; an artist's or venue's is the `moreinfo` resource.
