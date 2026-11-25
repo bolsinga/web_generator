@@ -13,7 +13,7 @@ public class CSSTest {
     try {
       Util.createSettings(args[0]);
     
-      CSS.install(args[2]);
+      CSS.install(args[1]);
     } catch (WebException e) {
       System.err.println(e);
       e.printStackTrace();
