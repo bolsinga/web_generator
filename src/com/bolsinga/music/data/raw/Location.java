@@ -4,7 +4,6 @@ public class Location implements com.bolsinga.music.data.Location {
   private String fStreet;
   private String fCity;
   private String fState;
-  private int fZip;
   private String fWeb;
   
   static Location create(final String street, final String city, final String state, final String web) {
@@ -40,14 +39,6 @@ public class Location implements com.bolsinga.music.data.Location {
   
   public void setState(final String state) {
     fState = state;
-  }
-  
-  public int getZip() {
-    return fZip;
-  }
-  
-  public void setZip(final int zip) {
-    fZip = zip;
   }
   
   public String getWeb() {

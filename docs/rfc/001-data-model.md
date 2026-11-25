@@ -31,7 +31,7 @@ Each list has an unmodifiable getter (`getShows()`) and a copy (`getShowsCopy()`
 | `Show` | `id`, `date`, `venue`, `artists`, `comment?` | Read-only. `artists` is ordered headliner first, then openers, and must not be empty. |
 | `Venue` | `id`, `name`, `location`, `comment?`, `sortname?`, `mapKitID?` | `location` is effectively required: city and state group the cities pages. The venue's website is `location.web`. |
 | `Artist` | `id`, `name`, `sortname?`, `location?`, `comment?`, `albums` | `albums` comes from iTunes. Nothing sets `location` or `comment` today. |
-| `Location` | `street?`, `city`, `state`, `zip`, `web?` | `zip` is an `int`, 0 when unknown. Nothing sets it today. |
+| `Location` | `street?`, `city`, `state`, `web?` | There is no zip code; nothing ever set the old `zip`, and it was removed. |
 | `Date` | `year`, `month`, `day` | See below. |
 | `Relation` | `id`, `reason?`, `members` | `members` is `List<Object>` holding `Artist` or `Venue` objects. |
 | `Album`, `Song` | see `Album.java`, `Song.java` | Only from iTunes. Titles are plain text, not HTML. Out of scope here except where pages depend on them ([RFC 003](003-generation.md)). |
