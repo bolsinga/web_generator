@@ -32,7 +32,9 @@ site json-site <output_dir> <settings.properties> <json_dir>
 | `json-site` | `settings.properties`, and in `json_dir` the diary and music files named by its `diaryJsonFile` and `musicJsonFile`, as the export writes them | `json.Music.create`, `json.Diary.create` |
 
 The script runs Java with `-ea:com.bolsinga...`, so asserts are on. Set `DUMP=1` to print the
-command instead of running it. `Main.usage` is out of date and exits 0.
+command instead of running it. `Main` checks the command and its number of arguments before
+reading anything; when they're wrong, `Main.usage` prints the problem and both forms of the
+command to stderr and exits 1.
 
 The iTunes file is required by `site`; there is no way to build without it. `json-site` reads one
 music file, so iTunes data and shows must be in the same file.

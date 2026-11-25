@@ -11,8 +11,19 @@ public class Main implements Backgroundable {
   private final Backgrounder fBackgrounder;
   
   public static void main(String[] args) {
-    if (args.length < 3) {
-      Main.usage(args, "Initial: Wrong number of arguments: " + args.length);
+    // Check the command and its arguments before anything is read.
+    if (args.length == 0) {
+      Main.usage(args, "No command.");
+    } else if (args[0].equals("site")) {
+      if (args.length != 11) {
+        Main.usage(args, "site needs 10 arguments after the command, not " + (args.length - 1) + ".");
+      }
+    } else if (args[0].equals("json-site")) {
+      if (args.length != 4) {
+        Main.usage(args, "json-site needs 3 arguments after the command, not " + (args.length - 1) + ".");
+      }
+    } else {
+      Main.usage(args, "Unknown command: " + args[0]);
     }
 
     int i = 0;
@@ -25,10 +36,6 @@ public class Main implements Backgroundable {
     try {
       Main main = new Main(backgrounder, settingsFile);
       if (command.equals("site")) {
-        if (args.length != 11) {
-          Main.usage(args, "site: Wrong number of arguments: " + args.length);
-        }
-
         String shows = args[i++];
         String venue = args[i++];
         String sort = args[i++];
@@ -39,16 +46,10 @@ public class Main implements Backgroundable {
         String itunes = args[i++];
 
         main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, artistIDs, output);
-      } else if (command.equals("json-site")) {
-        if (args.length != 4) {
-          Main.usage(args, "json-site: Wrong number of arguments: " + args.length);
-        }
-
+      } else {
         String jsonDir = args[i++];
 
         main.generateJSONSite(jsonDir, output);
-      } else {
-        Main.usage(args, "Invalid action");
       }
       main.complete();
     } catch (Throwable t) {
@@ -177,17 +178,18 @@ public class Main implements Backgroundable {
     }
   }
 
+  // Says what is wrong and how to run it, then fails the run.
   private static void usage(final String[] badargs, final String reason) {
-    System.out.println("Usage: Main [itunes.json] [shows.txt] [venuemap.txt] [bandsort.txt] [relations.txt] [comments.txt] [statics.txt] [settings.properties] [diary input/output file] [music input/output file] [output.dir] <json|json-site|site|index>");
-    System.out.println(reason);
-    if (badargs != null) {
-      System.out.println("Arguments:");
-      for (int i = 0; i < badargs.length; i++) {
-        System.out.print(badargs[i] + " ");
-      }
+    System.err.println(reason);
+    System.err.println("Usage:");
+    System.err.println("  Main site <output_dir> <settings.properties> <shows.txt> <venuemap.txt> <bandsort.txt> <relations.txt> <comments.txt> <statics.txt> <artistids.txt> <itunes.json>");
+    System.err.println("  Main json-site <output_dir> <settings.properties> <json_dir>");
+    System.err.println("json_dir holds the diary and music JSON, named by diaryJsonFile and musicJsonFile in the settings.");
+    System.err.println("The site script runs these for you: site site <output_dir> <data_dir> <itunes.json>, or site json-site <output_dir> <settings.properties> <json_dir>.");
+    if (badargs != null && badargs.length > 0) {
+      System.err.println("Arguments given: " + String.join(" ", badargs));
     }
-    System.out.println();
-    System.exit(0);
+    System.exit(1);
   }
 
 }
