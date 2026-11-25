@@ -57,10 +57,26 @@ another program writing the JSON:
 
 Differences that come from the environment, not the change:
 
+- the `timestamp` in `music.json`, `shows.json` and `diary.json` is when the raw files were read,
+  so two `site` runs differ in that one line of each export; `json-site` carries the timestamp
+  through unchanged
 - the `Author` meta tag is the `user.name` of whoever ran it
-- `music.json`'s `timestamp` is when the raw files were read
-- the `.ics` file sets month and day on the current calendar, so its years follow today's date
+- the `.ics` file sets month and day on the current calendar, so its years follow today's date,
+  and two runs in different years differ (#196)
 - dates are formatted in the default time zone and locale
+
+### Results on the real data
+
+Both checks were run on 2026-11-24 with the real data, `master` at 188dc85, a fresh iTunes export
+and `web.debug_output` on (#184). Each run writes 3,562 files in a few seconds.
+
+- **`site` twice from the same data:** all HTML, CSS, RSS and `.ics` files are identical. The only
+  differences are the three JSON `timestamp` lines.
+- **Raw and JSON:** `diff -r -x json A B` finds no differences. The JSON in `B/json/` is also
+  byte-identical to `A/json/`, timestamps included.
+
+Raw and JSON input give the same site. Run these again after changing a reader or the JSON, and
+expect only the differences listed above.
 
 ## Tests
 
