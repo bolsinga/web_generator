@@ -130,6 +130,16 @@ public class Main implements Backgroundable {
     }
   }
 
+  private void dumpNameWarnings(final com.bolsinga.music.data.Music music) {
+    List<String> warnings = NameCheck.warnings(music);
+    if (!warnings.isEmpty()) {
+      System.out.println("--Name Warnings--");
+      for (String warning : warnings) {
+        System.out.println(warning);
+      }
+    }
+  }
+
   private boolean dumpMissingArtistIDs(final com.bolsinga.music.data.Music music) {
     List<? extends com.bolsinga.music.data.Artist> artists = music.getArtists();
     List<String> artistsMissingIDs = new ArrayList<String>();
@@ -181,6 +191,7 @@ public class Main implements Backgroundable {
 
     dumpSimilarArtists(music);
     dumpMarkupWarnings(music, diary);
+    dumpNameWarnings(music);
     if (dumpMissingArtistIDs(music)) {
       throw new com.bolsinga.web.WebException("Missing Artist IDs");
     }
