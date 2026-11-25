@@ -67,5 +67,7 @@ for the area you're changing. A change that alters what an RFC describes updates
   `Compare`, the site's layout and URLs, which fields each page uses, settings, and threading.
 - [`docs/rfc/004-verifying-output.md`](docs/rfc/004-verifying-output.md): building, running, comparing
   generated sites, and known problems.
+- [`docs/rfc/005-shows-site.md`](docs/rfc/005-shows-site.md) (proposed): the `shows-site` command,
+  which makes the site from `bolsinga/site`'s shows file, the iTunes export and the raw diary files.
 
 `docs/notes.txt` is an old sketch of the model and the iCalendar format; the RFCs supersede it.
