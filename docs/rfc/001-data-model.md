@@ -97,8 +97,7 @@ pages are written.
 
 ## Gaps
 
-- The `json` classes have copy constructors (`json.Music(Music)`, `Venue.createOrGet`, and
-  others) that would convert any `Music` to the JSON classes. Nothing calls them. The `Venue` one
-  does not copy `sortname`.
+- The `json` classes are only read from JSON. There is no way to turn another `Music` or `Diary`
+  into them; export writes from the interfaces with the static `createJSON` methods.
 - Every `json` class keeps a static map from ID to object, so a JVM can load only one `Music`.
 - `Lookup`, `Compare`, `Links` and the settings are static singletons too ([RFC 003](003-generation.md)).

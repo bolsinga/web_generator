@@ -13,10 +13,6 @@ public class Relation implements com.bolsinga.music.data.Relation {
   private String reason;
   private List<Object> members;
 
-  static Relation create(final com.bolsinga.music.data.Relation relation) {
-    return new Relation(relation);
-  }
-  
   static Relation create(final JSONObject json) throws Exception {
     return new Relation(json);
   }
@@ -48,26 +44,6 @@ public class Relation implements com.bolsinga.music.data.Relation {
   
   private Relation() {
   
-  }
-  
-  private Relation(final com.bolsinga.music.data.Relation relation) {
-    id = relation.getID();
-    reason = relation.getReason();
-    
-    List<Object> srcMembers = relation.getMembers();
-    members = new ArrayList<Object>(srcMembers.size());
-    for (Object o : srcMembers) {
-      Object member = null;
-
-      if (o instanceof com.bolsinga.music.data.Artist) {
-        member = Artist.get((com.bolsinga.music.data.Artist)o);
-      } else if (o instanceof com.bolsinga.music.data.Venue) {
-        member = Venue.get((com.bolsinga.music.data.Venue)o);
-      } else {
-        throw new Error("No Relation: " + o.toString());
-      }
-      members.add(member);
-    }
   }
   
   private Relation(final JSONObject json) throws Exception {

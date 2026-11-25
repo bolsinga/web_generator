@@ -27,21 +27,6 @@ public class Venue implements com.bolsinga.music.data.Venue {
     }
   }
 
-  static Venue get(final com.bolsinga.music.data.Venue src) {
-    return Venue.get(src.getID());
-  }
-  
-  static Venue createOrGet(final com.bolsinga.music.data.Venue src) {
-    synchronized (sMap) {
-      Venue result = sMap.get(src.getID());
-      if (result == null) {
-        result = new Venue(src);
-        sMap.put(src.getID(), result);
-      }
-      return result;
-    }
-  }
-  
   static Venue createFromJSON(final JSONObject json) throws JSONException {
     Venue result = new Venue(json);
     synchronized (sMap) {
@@ -77,14 +62,6 @@ public class Venue implements com.bolsinga.music.data.Venue {
   
   private Venue() {
   
-  }
-  
-  private Venue(final com.bolsinga.music.data.Venue venue) {
-    this.id = venue.getID();
-    this.name = venue.getName();
-    this.location = Location.create(venue.getLocation());
-    this.comment = venue.getComment();
-    this.mapKitID = venue.getMapKitID();
   }
   
   private Venue(final JSONObject json) throws JSONException {

@@ -37,17 +37,6 @@ public class Album implements com.bolsinga.music.data.Album {
     }
   }
   
-  static Album createOrGet(final com.bolsinga.music.data.Album src) {
-    synchronized (sMap) {
-      Album result = sMap.get(src.getID());
-      if (result == null) {
-        result = new Album(src);
-        sMap.put(src.getID(), result);
-      }
-      return result;
-    }
-  }
-
   static Album createFromJSON(final JSONObject json) throws JSONException {
     Album result = new Album(json);
     Artist performer = result.getPerformer();
@@ -105,22 +94,6 @@ public class Album implements com.bolsinga.music.data.Album {
   
   }
   
-  private Album(final com.bolsinga.music.data.Album src) {
-    id = src.getID();
-    title = src.getTitle();
-    performer = Artist.createOrGet(src.getPerformer());
-    compilation = src.isCompilation();
-    release = Date.create(src.getReleaseDate());
-    purchase = Date.create(src.getPurchaseDate());
-    comment = src.getComment();
-
-    List<? extends com.bolsinga.music.data.Song> srcSongs = src.getSongs();
-    songs = new ArrayList<Song>(srcSongs.size());
-    for (com.bolsinga.music.data.Song song : srcSongs) {
-      songs.add(Song.createOrGet(song));
-    }
-  }
-
   private Album(final JSONObject json) throws JSONException {
     id = json.getString(ID);
     title = json.getString(TITLE);

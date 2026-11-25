@@ -17,10 +17,6 @@ public class Show implements com.bolsinga.music.data.Show {
   private String comment = null;
   private String id;
 
-  static Show create(final com.bolsinga.music.data.Show show) {
-    return new Show(show);
-  }
-  
   static Show create(final JSONObject json) throws JSONException {
     return new Show(json);
   }
@@ -47,19 +43,6 @@ public class Show implements com.bolsinga.music.data.Show {
   
   private Show() {
   
-  }
-  
-  private Show(final com.bolsinga.music.data.Show show) {
-    id = show.getID();
-    comment = show.getComment();
-    date = Date.create(show.getDate());
-    venue = Venue.createOrGet(show.getVenue());
-
-    List<? extends com.bolsinga.music.data.Artist> srcArtists = show.getArtists();
-    artists = new ArrayList<Artist>(srcArtists.size());
-    for (final com.bolsinga.music.data.Artist artist : srcArtists) {
-      artists.add(Artist.createOrGet(artist));
-    }
   }
   
   private Show(final JSONObject json) throws JSONException {

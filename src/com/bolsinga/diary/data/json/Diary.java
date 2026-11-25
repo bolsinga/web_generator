@@ -75,22 +75,6 @@ public class Diary implements com.bolsinga.diary.data.Diary {
   
   }
 
-  private Diary(final com.bolsinga.diary.data.Diary diary) {
-    setTimestamp(diary.getTimestamp());
-    title = diary.getTitle();
-    statics = diary.getStatic();
-    header = diary.getHeader();
-    friends = diary.getFriends();
-    colophon = diary.getColophon();
-    
-    List<? extends com.bolsinga.diary.data.Entry> srcEntries = diary.getEntries();
-    
-    List<Entry> entries = new ArrayList<Entry>(srcEntries.size());
-    for (com.bolsinga.diary.data.Entry entry : srcEntries) {
-      entries.add(Entry.create(entry));
-    }
-  }
-  
   private Diary(final JSONObject json) throws JSONException {
     setTimestamp(ZonedDateTime.parse(json.getString(TIMESTAMP)));
     title = json.getString(TITLE);

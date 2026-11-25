@@ -40,17 +40,6 @@ public class Song implements com.bolsinga.music.data.Song {
     return Song.get(src.getID());
   }
   
-  static Song createOrGet(final com.bolsinga.music.data.Song src) {
-    synchronized (sMap) {
-      Song result = sMap.get(src.getID());
-      if (result == null) {
-        result = new Song(src);
-        sMap.put(src.getID(), result);
-      }
-      return result;
-    }
-  }
-
   static Song createFromJSON(final JSONObject json) throws JSONException {
     Song result = new Song(json);
     synchronized (sMap) {
@@ -92,19 +81,6 @@ public class Song implements com.bolsinga.music.data.Song {
     }
     
     return json;
-  }
-  
-  private Song(final com.bolsinga.music.data.Song song) {
-    id = song.getID();
-    artist = Artist.createOrGet(song.getPerformer());
-    title = song.getTitle();
-    release = Date.create(song.getReleaseDate());
-    lastPlayed = song.getLastPlayed();
-    track = song.getTrack();
-    genre = song.getGenre();
-    playCount = song.getPlayCount();
-    digitized = song.isDigitized();
-    live = song.isLive();
   }
   
   private Song(final JSONObject json) throws JSONException {

@@ -30,23 +30,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
     }
   }
 
-  static Artist get(final com.bolsinga.music.data.Artist src) {
-    synchronized (sMap) {
-      return sMap.get(src.getID());
-    }
-  }
-  
-  static Artist createOrGet(final com.bolsinga.music.data.Artist src) {
-    synchronized (sMap) {
-      Artist result = sMap.get(src.getID());
-      if (result == null) {
-        result = new Artist(src);
-        sMap.put(src.getID(), result);
-      }
-      return result;
-    }
-  }
-
   static Artist createFromJSON(final JSONObject json) throws JSONException {
     Artist result = new Artist(json);
     synchronized (sMap) {
@@ -87,20 +70,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
 
   private Artist() {
   
-  }
-  
-  private Artist(final com.bolsinga.music.data.Artist artist) {
-    id = artist.getID();
-    name = artist.getName();
-    sortname = artist.getSortname();
-    location = Location.create(artist.getLocation());
-    comment = artist.getComment();
-
-    List<? extends com.bolsinga.music.data.Album> srcAlbums = artist.getAlbums();
-    albums = new ArrayList<Album>(srcAlbums.size());
-    for (com.bolsinga.music.data.Album album : srcAlbums) {
-      albums.add(Album.createOrGet(album));
-    }
   }
   
   private Artist(final JSONObject json) throws JSONException {

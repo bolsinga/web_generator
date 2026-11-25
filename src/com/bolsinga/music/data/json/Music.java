@@ -133,46 +133,6 @@ public class Music implements com.bolsinga.music.data.Music {
   
   }
 
-  private Music(final com.bolsinga.music.data.Music music) {
-    setTimestamp(music.getTimestamp());
-    
-    List<? extends com.bolsinga.music.data.Venue> srcVenues = music.getVenues();
-    venues = new ArrayList<Venue>(srcVenues.size());
-    for (com.bolsinga.music.data.Venue a : srcVenues) {
-      venues.add(Venue.createOrGet(a));
-    }
-    
-    List<? extends com.bolsinga.music.data.Artist> srcArtists = music.getArtists();
-    artists = new ArrayList<Artist>(srcArtists.size());
-    for (com.bolsinga.music.data.Artist a : srcArtists) {
-      artists.add(Artist.createOrGet(a));
-    }
-
-    List<? extends com.bolsinga.music.data.Relation> srcRelations = music.getRelations();
-    relations = new ArrayList<Relation>(srcRelations.size());
-    for (com.bolsinga.music.data.Relation a : srcRelations) {
-      relations.add(Relation.create(a));
-    }
-
-    List<? extends com.bolsinga.music.data.Song> srcSongs = music.getSongs();
-    songs = new ArrayList<Song>(srcSongs.size());
-    for (com.bolsinga.music.data.Song a : srcSongs) {
-      songs.add(Song.createOrGet(a));
-    }
-
-    List<? extends com.bolsinga.music.data.Album> srcAlbums = music.getAlbums();
-    albums = new ArrayList<Album>(srcAlbums.size());
-    for (com.bolsinga.music.data.Album a : srcAlbums) {
-      albums.add(Album.createOrGet(a));
-    }
-    
-    List<? extends com.bolsinga.music.data.Show> srcShows = music.getShows();
-    shows = new ArrayList<Show>(srcShows.size());
-    for (com.bolsinga.music.data.Show a : srcShows) {
-      shows.add(Show.create(a));
-    }
-  }
-  
   private Music(final JSONObject json) throws Exception {
     setTimestamp(ZonedDateTime.parse(json.getString(TIMESTAMP)));
     
