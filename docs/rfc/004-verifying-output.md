@@ -71,7 +71,6 @@ JUnit, and Ant only compiles them. `CSSTest` checks for 2 arguments and then rea
 
 Recorded here so they are not mistaken for intended behavior:
 
-- A failed page task does not fail the run (exit code 0).
 - `Main.usage` lists commands that don't exist and exits 0.
 - `Util.getRecentItems` fails if there are fewer shows or entries than `recentCount` or
   `diaryCount`.

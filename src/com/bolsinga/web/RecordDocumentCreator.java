@@ -169,9 +169,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
       sb.append("The RecordDocument: ");
       sb.append(f);
       sb.append(" could not be written.");
-      System.err.println(sb.toString());
-      System.err.println(e);
-      e.printStackTrace();
+      throw new UncheckedIOException(sb.toString(), e);
     }
   }
 }

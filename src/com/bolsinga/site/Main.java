@@ -51,9 +51,10 @@ public class Main implements Backgroundable {
         Main.usage(args, "Invalid action");
       }
       main.complete();
-    } catch (Exception e) {
-      System.err.println(e);
-      e.printStackTrace();
+    } catch (Throwable t) {
+      // Throwable, not Exception: an Error here must still end the run, or the pool's threads keep the JVM alive.
+      System.err.println(t);
+      t.printStackTrace();
       System.exit(1);
     }
   }
@@ -65,8 +66,16 @@ public class Main implements Backgroundable {
     Util.createSettings(settingsFile);
   }
   
-  private void complete() {
+  // Waits for every page to be written, and fails the run if any page failed.
+  private void complete() throws InterruptedException, WebException {
     fBackgrounder.removeInterest(this);
+    int failures = fBackgrounder.awaitTermination();
+    if (failures > 0) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(failures);
+      sb.append(" page task(s) failed; see the errors above.");
+      throw new WebException(sb.toString());
+    }
   }
 
   private void generateDirect(final String itunes, final String shows, final String venue, final String sort, final String relations, final String comments, final String statics, final String artistIDs, final String output) throws Exception {
