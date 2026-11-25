@@ -108,7 +108,10 @@ Pseudo-XML, matched with regular expressions, not parsed:
 <static><location>left|header|links|title|colophon</location><data>text</data></static>
 ```
 
-Entries are sorted by date and numbered `e0`, `e1`, … in that order.
+Entries are written newest first. An entry dated after the one above it stops the run, naming both
+dates; entries on the same day are allowed. Entries are sorted by date and numbered `e0`, `e1`, … in
+that order, oldest first, so the file's order is the numbering's order reversed. Entries on the same
+day keep their order in the file.
 
 ### iTunes
 
@@ -205,6 +208,7 @@ Every key is required except an entry's `title`.
 | Venue that no show names | stops | stops |
 | Artist with no ID | stops, prints suggestions | stops |
 | Two artists with the same name | can't happen, artists are joined by name | stops |
+| Diary entry dated after the entry above it | stops | n/a, entries have IDs |
 
 The JSON reader checks `music.json` (`json.Check`) before it builds anything, and stops with a list
 of every problem it found, each naming the array, the index and the ID:
