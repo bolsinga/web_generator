@@ -181,7 +181,7 @@ particular order. A key marked `?` is left out when the value is null, 0 or empt
   "timestamp": "2026-11-24T10:00:00-08:00",
   "venues": [
     { "id": "v1", "name": "…",
-      "location": { "street"?: "…", "city": "…", "state": "…", "zip"?: 0, "web"?: "https://…" },
+      "location": { "street"?: "…", "city": "…", "state": "…", "web"?: "https://…" },
       "comment"?: "…", "sortname"?: "…", "mapkit"?: "I…" }
   ],
   "artists": [
@@ -207,7 +207,9 @@ particular order. A key marked `?` is left out when the value is null, 0 or empt
   they may be empty. Each venue, artist and show needs `id` and `name` (or `date` and `venue`).
 - **Read order:** venues, then artists, relations, songs, albums, shows, each resolving references
   to what came before.
-- **Ignored on read:** `artist.albums`. Albums attach themselves to their performers instead.
+- **Ignored on read:** `artist.albums`. Albums attach themselves to their performers instead. A
+  `location.zip`, which older writers could have written but none did, is ignored like any other
+  unknown key.
 - **Album keys:** `id`, `title`, `performer`, `compilation`, `release`, `purchase`, `comment`,
   `songs`. **Song keys:** `id`, `artist`, `title`, `release`, `lastPlayed`, `track`, `genre`,
   `playCount`, `digitized`, `live`.

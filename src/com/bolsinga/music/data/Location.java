@@ -7,8 +7,6 @@ public interface Location {
   public void setCity(final String city);
   public String getState();
   public void setState(final String state);
-  public int getZip();  // return 0 if unknown
-  public void setZip(final int zip);
   public String getWeb();
   public void setWeb(final String web);
 }

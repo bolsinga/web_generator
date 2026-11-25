@@ -559,11 +559,6 @@ public class Util {
     val.append(l.getCity());
     val.append(", ");
     val.append(l.getState());
-    int zip = l.getZip();
-    if (zip != 0) {
-      val.append(" ");
-      val.append(Integer.toString(zip));
-    }
     return val.toString();
   }
   

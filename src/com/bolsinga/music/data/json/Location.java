@@ -6,13 +6,11 @@ public class Location implements com.bolsinga.music.data.Location {
   private static final String STREET = "street";
   private static final String CITY = "city";
   private static final String STATE = "state";
-  private static final String ZIP = "zip";
   private static final String WEB = "web";
 
   private String street;
   private String city;
   private String state;
-  private int zip = 0;
   private String web = null;
   
   static Location create(final JSONObject json) throws JSONException {
@@ -34,10 +32,6 @@ public class Location implements com.bolsinga.music.data.Location {
     if (state != null) {
       json.put(STATE, state);
     }
-    int zip = location.getZip();
-    if (zip != 0) {
-      json.put(ZIP, zip);
-    }
     String web = location.getWeb();
     if (web != null) {
       json.put(WEB, web);
@@ -54,7 +48,6 @@ public class Location implements com.bolsinga.music.data.Location {
     street = json.optString(STREET, null);
     city = json.optString(CITY, null);
     state = json.optString(STATE, null);
-    zip = json.optInt(ZIP);
     web = json.optString(WEB, null);
   }
   
@@ -80,15 +73,6 @@ public class Location implements com.bolsinga.music.data.Location {
   
   public void setState(final String state) {
     this.state = state;
-  }
-  
-  // return 0 if unknown
-  public int getZip() {
-    return zip;
-  }
-
-  public void setZip(final int zip) {
-    this.zip = zip;
   }
   
   public String getWeb() {

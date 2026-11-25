@@ -26,7 +26,6 @@ class Check {
   private static final String YEAR = "year";
   private static final String MONTH = "month";
   private static final String DAY = "day";
-  private static final String ZIP = "zip";
   private static final String COMMENT = "comment";
 
   // Each kind's IDs are its prefix and a number. Songs and albums are only checked when present,
@@ -80,10 +79,6 @@ class Check {
       JSONObject venue = venues.optJSONObject(i);
       if (venue == null) {
         continue;
-      }
-      JSONObject location = venue.optJSONObject(LOCATION);
-      if (location != null && location.has(ZIP)) {
-        problems.add(Check.describe(VENUES, i, venue) + " has a zip.");
       }
       if (venue.has(COMMENT)) {
         problems.add(Check.describe(VENUES, i, venue) + " has a comment.");
