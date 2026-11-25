@@ -133,7 +133,7 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
   
   // This is used for the main page and entry pages, which is why it is public static
   public static com.bolsinga.web.Record createEntryRecord(final Entry entry, final Links links, final boolean upOneLevel) {
-    String title = EntryRecordDocumentCreator.getTitle(entry);
+    String title = Util.toHTMLSafe(EntryRecordDocumentCreator.getTitle(entry));
     return com.bolsinga.web.Record.createRecordPermalink(
       Util.createNamedTarget(entry.getID(), title), 
       Encode.embedLinks(entry, upOneLevel),

@@ -571,16 +571,19 @@ public class Util {
       map.append(mapKitID);
       return map.toString();
     }
+    // The address is one query value, so it is URL-encoded: a space becomes +, and & or # can't end it.
     Location l = v.getLocation();
-    map.append("http://maps.apple.com/maps?f=q&amp;hl=en&amp;q=");
+    StringBuilder query = new StringBuilder();
     String s = l.getStreet();
     if (s != null) {
-      map.append(s.replaceAll(" ", "+"));
-      map.append("+");
+      query.append(s);
+      query.append(" ");
     }
-    map.append(l.getCity().replaceAll(" ", "+"));
-    map.append("+");
-    map.append(l.getState());
+    query.append(l.getCity());
+    query.append(" ");
+    query.append(l.getState());
+    map.append("http://maps.apple.com/maps?f=q&amp;hl=en&amp;q=");
+    map.append(java.net.URLEncoder.encode(query.toString(), java.nio.charset.StandardCharsets.UTF_8));
     return map.toString();
   }
   
