@@ -13,7 +13,6 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private String fID;
   private String fName;
   private Location fLocation;
-  private String fComment;
   private String fSortname;
   private String fMapKitID;
 
@@ -159,14 +158,6 @@ public class Venue implements com.bolsinga.music.data.Venue {
     return fLocation;
   }
   
-  public String getComment() {
-    return fComment;
-  }
-  
-  public void setComment(final String comment) {
-    fComment = comment;
-  }
-
   public String getSortname() {
     return fSortname;
   }

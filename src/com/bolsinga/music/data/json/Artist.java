@@ -8,15 +8,11 @@ public class Artist implements com.bolsinga.music.data.Artist {
   private static final String ID = "id";
   private static final String NAME = "name";
   private static final String SORTNAME = "sortname";
-  private static final String LOCATION = "location";
-  private static final String COMMENT = "comment";
   private static final String ALBUMS = "albums";
 
   private String id;
   private String name;
   private String sortname; // optional
-  private Location location; // optional
-  private String comment; // optional
   private List<Album> albums = Collections.emptyList(); // optional
 
   // Albums are read after artists and add themselves here; finishAlbums() turns this into albums.
@@ -47,14 +43,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
     if (sortname != null) {
       json.put(SORTNAME, sortname);
     }
-    com.bolsinga.music.data.Location location = artist.getLocation();
-    if (location != null) {
-      json.put(LOCATION, Location.createJSON(location));
-    }
-    String comment = artist.getComment();
-    if (comment != null) {
-      json.put(COMMENT, comment);
-    }
     List<? extends com.bolsinga.music.data.Album> albums = artist.getAlbums();
     if (albums != null && albums.size() > 0) {
       List<String> albumIDs = new ArrayList<String>(albums.size());
@@ -76,11 +64,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
     id = json.getString(ID);
     name = json.getString(NAME);
     sortname = json.optString(SORTNAME, null);
-    JSONObject optJSON = json.optJSONObject(LOCATION);
-    if (optJSON != null) {
-      location = Location.create(optJSON);
-    }
-    comment = json.optString(COMMENT, null);
 
     // Albums refer to their artists, so they are read later and add themselves: see addAlbum() and
     // finishAlbums() below.
@@ -108,18 +91,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
   
   public void setSortname(final String name) {
     this.sortname = name;
-  }
-  
-  public Location getLocation() {
-    return location;
-  }
-  
-  public String getComment() {
-    return comment;
-  }
-  
-  public void setComment(final String comment) {
-    this.comment = comment;
   }
   
   public List<Album> getAlbums() {

@@ -182,11 +182,10 @@ particular order. A key marked `?` is left out when the value is null, 0 or empt
   "venues": [
     { "id": "v1", "name": "…",
       "location": { "street"?: "…", "city": "…", "state": "…", "web"?: "https://…" },
-      "comment"?: "…", "sortname"?: "…", "mapkit"?: "I…" }
+      "sortname"?: "…", "mapkit"?: "I…" }
   ],
   "artists": [
-    { "id": "ar1", "name": "…", "sortname"?: "…", "location"?: {…}, "comment"?: "…",
-      "albums"?: ["a1", …] }
+    { "id": "ar1", "name": "…", "sortname"?: "…", "albums"?: ["a1", …] }
   ],
   "relations": [ { "id": "r0", "reason"?: "…", "members": ["ar1", "ar2"] } ],
   "songs": [ … ],
@@ -207,9 +206,9 @@ particular order. A key marked `?` is left out when the value is null, 0 or empt
   they may be empty. Each venue, artist and show needs `id` and `name` (or `date` and `venue`).
 - **Read order:** venues, then artists, relations, songs, albums, shows, each resolving references
   to what came before.
-- **Ignored on read:** `artist.albums`. Albums attach themselves to their performers instead. A
-  `location.zip`, which older writers could have written but none did, is ignored like any other
-  unknown key.
+- **Ignored on read:** `artist.albums`. Albums attach themselves to their performers instead.
+  `location.zip`, `venue.comment`, `artist.location` and `artist.comment`, which older writers
+  could have written but none did, are ignored like any other unknown key.
 - **Album keys:** `id`, `title`, `performer`, `compilation`, `release`, `purchase`, `comment`,
   `songs`. **Song keys:** `id`, `artist`, `title`, `release`, `lastPlayed`, `track`, `genre`,
   `playCount`, `digitized`, `live`.
