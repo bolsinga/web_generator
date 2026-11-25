@@ -5,7 +5,7 @@ import java.util.*;
 import org.json.*;
 
 // Checks music JSON before it is read, for what the raw reader stops on or the pages need:
-// unique IDs, references that resolve, shows with artists, venues with a city and state, and
+// unique IDs, unique artist names, references that resolve, shows with artists, venues with a city and state, and
 // relations of one kind. Returns every problem found, so a file from another writer can be fixed
 // in one pass.
 class Check {
@@ -19,6 +19,7 @@ class Check {
   private static final String CITY = "city";
   private static final String STATE = "state";
   private static final String MEMBERS = "members";
+  private static final String NAME = "name";
 
   static List<String> problems(final JSONObject json) {
     List<String> problems = new ArrayList<String>();
@@ -27,6 +28,7 @@ class Check {
     Set<String> artistIDs = Check.ids(json.optJSONArray(ARTISTS), ARTISTS, problems);
     Check.ids(json.optJSONArray(SHOWS), SHOWS, problems);
 
+    Check.artists(json.optJSONArray(ARTISTS), problems);
     Check.venues(json.optJSONArray(VENUES), problems);
     Check.shows(json.optJSONArray(SHOWS), venueIDs, artistIDs, problems);
     Check.relations(json.optJSONArray(RELATIONS), venueIDs, artistIDs, problems);
@@ -65,6 +67,29 @@ class Check {
       }
     }
     return ids;
+  }
+
+  // The raw files and iTunes join artists by name, so two artists can't share one.
+  private static void artists(final JSONArray artists, final List<String> problems) {
+    if (artists == null) {
+      return;
+    }
+    Map<String, String> names = new HashMap<String, String>();
+    for (int i = 0; i < artists.length(); i++) {
+      JSONObject artist = artists.optJSONObject(i);
+      if (artist == null) {
+        continue;
+      }
+      String name = artist.optString(NAME, null);
+      if (name == null) {
+        problems.add(Check.describe(ARTISTS, i, artist) + " has no name.");
+        continue;
+      }
+      String existing = names.putIfAbsent(name, artist.optString(ID, null));
+      if (existing != null) {
+        problems.add(Check.describe(ARTISTS, i, artist) + " has the same name as " + existing + ": " + name);
+      }
+    }
   }
 
   private static void venues(final JSONArray venues, final List<String> problems) {

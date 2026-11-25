@@ -201,6 +201,7 @@ Every key is required except an entry's `title`.
 | Mixed artist and venue relation | can't happen | stops |
 | Venue without a location, city or state | can't happen | stops |
 | Artist with no ID | stops, prints suggestions | stops |
+| Two artists with the same name | can't happen, artists are joined by name | stops |
 
 The JSON reader checks `music.json` (`json.Check`) before it builds anything, and stops with a list
 of every problem it found, each naming the array, the index and the ID:
@@ -223,6 +224,7 @@ These are what any program other than web_generator must get right to write `mus
    with city and state.
 4. Write `sortname` where it's wanted. JSON input does not derive one.
 5. Keep relations to one kind of member.
+6. Give every artist its own name. The raw files and iTunes join artists by name.
 
-`json-site` stops on a file that breaks 2's duplicate IDs, 3 or 5 ([Checks](#checks)). It can't
+`json-site` stops on a file that breaks 2's duplicate IDs, 3, 5 or 6 ([Checks](#checks)). It can't
 tell whether an ID was renumbered, a sortname is missing, or iTunes data was dropped.
