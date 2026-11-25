@@ -18,7 +18,8 @@ Music + Diary
    │
    ├─ check: every venue has a show (stop)
    ├─ CSS.install                         styles/
-   ├─ checks: similar artist names (printed), markup warnings (printed), missing artist IDs (stop)
+   ├─ checks: similar artist names, markup warnings, name warnings (printed);
+   │          missing artist IDs (stop)
    │
    ├─ singletons, made on first use: Settings, Lookup, Compare, Links
    │

@@ -231,6 +231,16 @@ the run.
   replacement, such as `<del>`.
 - An `href` or `src` that starts or ends with whitespace, such as `href=" https://…"`.
 
+### Name warnings
+
+Artists are joined by name, so a name that looks right but is spelled differently underneath won't
+match the same name typed elsewhere. After either reader, `NameCheck` prints warnings under
+`--Name Warnings--` for every artist name and album and song title that has spaces at either end or
+two in a row, or accents stored decomposed rather than precomposed (not NFC). Album and song
+warnings name the artist, to find the track in the Music app. Sort names aren't checked, because
+the raw reader makes them decomposed on purpose ([RFC 001](001-data-model.md)). The fix belongs in
+the source: the Music app, or the raw files. They don't stop the run.
+
 ## Gaps for another writer of the JSON
 
 These are what any program other than web_generator must get right to write `music.json` that
