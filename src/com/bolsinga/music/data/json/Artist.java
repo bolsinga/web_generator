@@ -17,9 +17,9 @@ public class Artist implements com.bolsinga.music.data.Artist {
   private String sortname; // optional
   private Location location; // optional
   private String comment; // optional
-  private List<Album> albums; // optional
-  
-  // This is for getting Albums lazily due to circular references
+  private List<Album> albums = Collections.emptyList(); // optional
+
+  // Albums are read after artists and add themselves here; finishAlbums() turns this into albums.
   private Map<String, Album> albumMap;
   
   private static final Map<String, Artist> sMap = new HashMap<String, Artist>();
@@ -82,8 +82,8 @@ public class Artist implements com.bolsinga.music.data.Artist {
     }
     comment = json.optString(COMMENT, null);
 
-    // Circular reference for Album, so Album are created lazily.
-    //  see addAlbum(), getAlbumsInternal() below.
+    // Albums refer to their artists, so they are read later and add themselves: see addAlbum() and
+    // finishAlbums() below.
   }
   
   public String getID() {
@@ -122,25 +122,21 @@ public class Artist implements com.bolsinga.music.data.Artist {
     this.comment = comment;
   }
   
-  private List<Album> getAlbumsInternal() {
-    if (albums == null) {
-      // This lazily builds the Album list
-      if (albumMap != null) {
-        albums = new ArrayList<Album>(albumMap.values());
-        albumMap = null;
-      } else {
-        albums = new ArrayList<Album>();
-      }
-    }
-    return albums;
-  }
-  
   public List<Album> getAlbums() {
-    return Collections.unmodifiableList(getAlbumsInternal());
+    return Collections.unmodifiableList(albums);
   }
   
   public List<Album> getAlbumsCopy() {
-    return new ArrayList<Album>(getAlbumsInternal());
+    return new ArrayList<Album>(albums);
+  }
+
+  // Called by Music once every album is read, before any page runs, so pool threads only ever read
+  // a finished list.
+  void finishAlbums() {
+    if (albumMap != null) {
+      albums = new ArrayList<Album>(albumMap.values());
+      albumMap = null;
+    }
   }
 
   void addAlbum(final Album album) {
