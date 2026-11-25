@@ -150,11 +150,36 @@ Anything that replaces this reader, or reads its output, must:
 
 ### iTunes
 
-`itunes.Parser` reads an iTunes library export in JSON (`itunes.JSONParser`). It becomes albums
-and songs, and creates any artist not already seen at a show. iTunes sort names are applied to
-artists. Album and song titles are kept as iTunes gives them, as plain text, so `music.json` has
-`"UFO>UFO>UFO"`. Exports written before #218 have `&lt;` and `&gt;` in a few song titles instead;
-they give the same pages.
+`itunes.Parser` reads an iTunes library export in JSON (`itunes.JSONParser`), a list of tracks
+keyed as iTunes names them (`name`, `artist`, `sortArtist`, `album`, `kind`, `compilation`,
+`hasVideo`, `podcast`, `genre`, `year`, `trackNumber`, `discNumber`, `playCount`, `playDateUTC`;
+the reader knows the rest of iTunes' keys but the parser uses only these).
+[`bolsinga/itunes_json`](https://github.com/bolsinga/itunes_json) writes the export. The tracks
+become albums and songs, and create any artist not already seen at a show. iTunes sort names are
+applied to artists. Album and song titles are kept as iTunes gives them, as plain text, so
+`music.json` has `"UFO>UFO>UFO"`. Exports written before #218 have `&lt;` and `&gt;` in a few song
+titles instead; they give the same pages.
+
+Which tracks count (`Parser.addTrack`):
+
+- A track is kept only if its `kind` is an audio file (AAC, MPEG, protected or purchased AAC, or
+  Apple Lossless), it isn't a video (`hasVideo`) or a podcast, its genre isn't `Voice Memo`, it
+  has an `artist`, and its album isn't `Apple Financial Results`.
+- A track with no album is put on an album named after it: `<name> - Single`.
+- A `compilation` track's album has no artist. Otherwise an album is its title and artist, so two
+  artists' albums with the same title are two albums.
+
+How they're ordered:
+
+- Albums are kept in a `TreeMap` keyed by title followed by the artist's name, and that order gives
+  them their IDs, `a0`, `a1`, …. Songs are numbered `s0`, `s1`, … album by album in that order, and
+  within an album by disc and then track number. So the same export always gives the same IDs, but
+  an album added to iTunes renumbers every album, and every song, after it.
+- An album with no year of its own takes its songs' year when they all have the same one.
+
+It prints to the log, without stopping: `Artist not Added:` with the artists of skipped tracks,
+`Song: … is not sorted in iTunes.` for a track missing a sort artist that the artist has
+elsewhere, and `iTunes added new kinds:` for a `kind` it hasn't seen.
 
 ### Order of assembly
 

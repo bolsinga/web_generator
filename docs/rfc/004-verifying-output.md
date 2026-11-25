@@ -19,7 +19,7 @@ ant -Dbuild.id=<id>
   the `site` script and `lib/` with `web_generator.jar`, `ecs-1.4.2.jar` and `json-20200518.jar`.
 - `build.id`, the build date and the copyright year are filled into `web.properties` from
   `src/properties/config.properties`; they show up in the generated pages.
-- `ant clean` removes `output/`. `output/` is not ignored by git; don't commit it.
+- `ant clean` removes `output/`, which `.gitignore` ignores; don't commit it.
 - CI (`.github/workflows/ant.yml`) builds every push and pull request to `master` with Zulu
   JDK 26 and uploads `output/dst`.
 - `build_tools/` holds older wrapper scripts. `build_ant.sh` expects Ant at
@@ -86,6 +86,10 @@ and `web.debug_output` on (#184). Each run writes 3,562 files in a few seconds.
 Raw and JSON input give the same site. Run these again after changing a reader or the JSON, and
 expect only the differences listed above.
 
+- **Raw and the shows file** (#185, [RFC 005](005-shows-site.md#verifying)): `diff -r A C` finds
+  only `diary.json`'s `timestamp`, because the raw diary is read again. The pages, the other JSON
+  exports and the run's warnings are identical.
+
 ## Tests
 
 `src/com/bolsinga/test` has `CSSTest`, `ICalTest` and `RSSTest`. They are `main` programs, not
@@ -93,4 +97,12 @@ JUnit, and Ant only compiles them.
 
 ## Known problems
 
-None are known. Record any found here, so they are not mistaken for intended behavior.
+Record any found here, so they are not mistaken for intended behavior.
+
+- **IDs that aren't stable.** Diary entry IDs renumber when an older entry is added, and album and
+  song IDs renumber when an album is added to iTunes ([RFC 001](001-data-model.md#identity)).
+  These are URLs or anchors, so old links can point at the wrong item.
+- **One site per JVM.** The readers and `Settings`, `Lookup`, `Compare` and `Links` keep static
+  state ([RFC 001](001-data-model.md#gaps), [RFC 003](003-generation.md#threading)).
+- **720 entries on a day.** More diary entries on one day than minutes before `diaryEntryTime`
+  run into the day before ([RFC 002](002-inputs.md#timestamps-and-more-than-one-entry-on-a-day)).

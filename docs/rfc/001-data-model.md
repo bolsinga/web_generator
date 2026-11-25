@@ -56,8 +56,9 @@ venues**. The raw files can't mix them, and the JSON reader stops on a relation 
 ### Sort names
 
 `sortname` is optional on artists and venues. Where it is null, `name` is used. Sorting and the
-letter a page is filed under both use `Compare.simplify`, which lowercases, drops one leading
-"the ", "a " or "an ", and drops leading non-word characters. "The" is never stored in the
+letter a page is filed under both use `Compare.simplify`, which lowercases, drops a leading "the ",
+then a leading "a ", then a leading "an " (so "The A Team" sorts as "team"), and drops leading
+non-word characters. "The" is never stored in the
 sort name.
 
 Raw input also derives artist sort names: when a name contains accented letters, Unicode canonical
@@ -75,8 +76,8 @@ been published is a permanent URL**.
 | Show | `shN` | hand, first field of `shows.txt` | yes | `dates/<id>.html` |
 | Venue | `vN` | hand, first field of `venuemap.txt` | yes | `venues/<id>.html` |
 | Artist | `arN` | hand, `artistids.txt` | yes | `bands/<id>.html` |
-| Relation | `rN` | line number in `relations.txt` | no | none |
-| Album, Song | `aN`, `sN` | position while parsing iTunes | no | anchors on `tracks/` pages |
+| Relation | `rN` | its line's position in `relations.txt`, from `r0` | no | none |
+| Album, Song | `aN`, `sN` | position in the iTunes parser's sorted album order ([RFC 002](002-inputs.md#itunes)) | no, a new album renumbers later albums and songs | anchors on `tracks/` pages |
 | Diary entry | `eN` | position in timestamp order | no, inserting an older entry renumbers later ones | `archives/<id>.html` |
 
 When an artist has no ID, `Main.dumpMissingArtistIDs` prints suggested `arN^Name` lines, numbering
@@ -105,5 +106,7 @@ pages are written.
 
 - The `json` classes are only read from JSON. There is no way to turn another `Music` or `Diary`
   into them; export writes from the interfaces with the static `createJSON` methods.
-- Every `json` class keeps a static map from ID to object, so a JVM can load only one `Music`.
+- Every `json` class keeps a static map from ID to object, and `raw.Artist` one from name to
+  artist, so a JVM can load only one `Music`. `shows-site` fills `raw.Artist`'s map while it parses
+  iTunes, then reads its `Music` through the `json` classes ([RFC 005](005-shows-site.md)).
 - `Lookup`, `Compare`, `Links` and the settings are static singletons too ([RFC 003](003-generation.md)).

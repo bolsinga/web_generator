@@ -11,10 +11,10 @@ shows file ([site RFC 018](https://github.com/bolsinga/site/blob/main/docs/rfc/0
 This RFC describes the third command, **`shows-site`**, that makes the site from that file, the
 iTunes export and the raw diary files. It is site RFC 018's rule 13.
 
-Neither of the other commands can do this. `site` reads the raw text files, and `json-site` reads one music
-file that holds shows and iTunes data together. A shows-only file given to `json-site` makes artist
-pages with no albums, empty `tracks/` pages, and a home page with no song counts or last played
-song.
+Neither of the other commands can do this. `site` reads the raw text files, and `json-site` reads
+one music file that holds shows and iTunes data together. A shows-only file given to `json-site`
+makes artist pages with no albums, empty `tracks/` pages, and a home page with no song counts or
+last played song.
 
 ## The shows file
 
@@ -51,10 +51,12 @@ The diary is read by `raw.Diary.create`, as `site` reads it. `site` and `json-si
    `albums` must be empty; if not, the run stops, because they'd collide with the IDs iTunes is
    given in step 2.
 2. Parse the iTunes export as `raw.Media.createMedia` does today. Albums and songs get IDs `aN` and
-   `sN` in the order the export is read, so the same export gives the same IDs as `site`.
+   `sN` in the parser's sorted album order ([RFC 002](002-inputs.md#itunes)), so the same export
+   gives the same IDs as `site`.
 3. Join each album and song artist to a shows file artist by **name**, exactly as the raw files join
    today (no trimming or Unicode normalizing). An iTunes artist name that no shows file artist has
-   stops the run, listing every such name at once, album artists before song artists, each in iTunes' order:
+   stops the run, listing every such name at once, album artists before song artists, each in
+   iTunes' order:
 
    ```
    shows.json is missing 2 iTunes artist(s); add them, then run again:
@@ -66,7 +68,7 @@ The diary is read by `raw.Diary.create`, as `site` reads it. `site` and `json-si
 4. Give each joined artist the shows file's ID, and write the albums and songs into the
    `JSONObject`'s `albums` and `songs` with the existing `json.Album` and `json.Song` writers.
 5. **Sort names.** An artist's `sortname` in the shows file wins. When it has none and iTunes gives
-   one, the iTunes sort name is written in, made diacritic-free as `raw.Artist.setSortname` does.
+   one, the iTunes sort name is written in, decomposed (NFD) as `raw.Artist.setSortname` does.
    `raw.Media` keeps these in `fSortnames`, apart from sort names derived from names.
    Otherwise the artist has no sort name. Nothing is derived from the name; site derives one when it
    creates an artist (its rule 12).
