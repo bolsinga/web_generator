@@ -11,10 +11,6 @@ public class Date implements com.bolsinga.music.data.Date {
   private int month;
   private int day;
   
-  static Date create(final com.bolsinga.music.data.Date date) {
-    return new Date(date);
-  }
-  
   static Date create(final JSONObject json) throws JSONException {
     return new Date(json);
   }
@@ -40,12 +36,6 @@ public class Date implements com.bolsinga.music.data.Date {
   
   private Date() {
   
-  }
-  
-  private Date(final com.bolsinga.music.data.Date date) {
-    year = date.getYear();
-    month = date.getMonth();
-    day = date.getDay();
   }
   
   private Date(final JSONObject json) throws JSONException {

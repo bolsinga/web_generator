@@ -83,6 +83,4 @@ JUnit, and Ant only compiles them.
 
 ## Known problems
 
-Recorded here so they are not mistaken for intended behavior:
-
-- The json `Venue` copy constructor does not copy `sortname`. It is never called.
+None are known. Record any found here, so they are not mistaken for intended behavior.

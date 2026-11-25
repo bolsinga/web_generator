@@ -15,13 +15,6 @@ public class Location implements com.bolsinga.music.data.Location {
   private int zip = 0;
   private String web = null;
   
-  static Location create(final com.bolsinga.music.data.Location location) {
-    if (location == null) {
-      return null;
-    }
-    return new Location(location);
-  }
-  
   static Location create(final JSONObject json) throws JSONException {
     return new Location(json);
   }
@@ -55,14 +48,6 @@ public class Location implements com.bolsinga.music.data.Location {
   
   private Location() {
   
-  }
-  
-  private Location(final com.bolsinga.music.data.Location location) {
-    street = location.getStreet();
-    city = location.getCity();
-    state = location.getState();
-    zip = location.getZip();
-    web = location.getWeb();
   }
   
   private Location(final JSONObject json) throws JSONException {

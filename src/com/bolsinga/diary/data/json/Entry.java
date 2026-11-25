@@ -16,10 +16,6 @@ public class Entry implements com.bolsinga.diary.data.Entry {
   private String comment;
   private String title;
   
-  static Entry create(final com.bolsinga.diary.data.Entry entry) {
-    return new Entry(entry);
-  }
-  
   static Entry create(final JSONObject json) throws JSONException {
     return new Entry(json);
   }
@@ -36,13 +32,6 @@ public class Entry implements com.bolsinga.diary.data.Entry {
   }
   
   private Entry() {
-  }
-  
-  private Entry(final com.bolsinga.diary.data.Entry entry) {
-    setTimestamp(entry.getTimestamp());
-    id = entry.getID();
-    comment = entry.getComment();
-    title = entry.getTitle();
   }
   
   private Entry(final JSONObject json) throws JSONException {
