@@ -176,8 +176,8 @@ public class Parser {
     int albumYear, songYear;
     for (Album a : fAlbumMap.values()) {
       if (a.getReleaseYear() != Album.UNKNOWN_YEAR) {
-        // The album already has a date; don't change it.
-        break;
+        // The album already has a date; don't change it, and go on to the next album.
+        continue;
       }
                         
       albumYear = Album.UNKNOWN_YEAR;
