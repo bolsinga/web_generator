@@ -25,7 +25,8 @@ public class Util {
   private static com.bolsinga.web.Settings sSettings = null;
   private static final boolean sDebugOutput = Boolean.getBoolean("web.debug_output");
   private static final String sLineSeparator = System.getProperty("line.separator");
-  private static final Pattern sHTMLPattern = Pattern.compile("&([^agl])");
+  // An & that doesn't start &amp;, &gt; or &lt;. Other entities in the text are shown as written.
+  private static final Pattern sHTMLPattern = Pattern.compile("&(?!(?:amp|gt|lt);)");
   private static final Pattern sNewLinePattern = Pattern.compile("\\n");
   private static String sNewLineReplacement = null;
 
@@ -78,8 +79,9 @@ public class Util {
     return sb;
   }
 
+  // Escapes each & except those already starting &amp;, &gt; or &lt;.
   public static String toHTMLSafe(final String s) {
-    return sHTMLPattern.matcher(s).replaceAll("&amp;$1");
+    return sHTMLPattern.matcher(s).replaceAll("&amp;");
   }
 
   public static boolean getDebugOutput() {
