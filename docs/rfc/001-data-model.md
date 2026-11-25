@@ -50,7 +50,8 @@ go on `dates/other.html`.
 
 A relation says that artists, or venues, belong together, with an optional reason. `Lookup`
 casts every member to the type of the first member, so **a relation must hold only artists or only
-venues**. Nothing checks this; a mixed relation throws `ClassCastException` while building pages.
+venues**. The raw files can't mix them, and the JSON reader stops on a relation that does
+([RFC 002](002-inputs.md)).
 
 ### Sort names
 

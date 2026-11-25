@@ -193,15 +193,23 @@ Every key is required except an entry's `title`.
 
 | Problem | Raw | JSON |
 |---|---|---|
-| Duplicate show or venue ID | stops | not checked; both stay in the list, and references resolve to the later one |
-| Show names an unknown venue | stops | assert fails (asserts are on in the script) |
-| Show names an unknown artist | n/a, created | assert fails |
-| Show with no artists | can't happen | `SHOW_COMPARATOR` throws on `get(0)` |
-| Show without an `artists` key | n/a | `NullPointerException` |
+| Duplicate show, venue or artist ID | show or venue: stops | stops |
+| Show names an unknown venue | stops | stops |
+| Show names an unknown artist | n/a, created | stops |
+| Show with no artists, or no `artists` key | can't happen | stops |
 | Unknown relation member | artist: warning; venue: stops | stops |
-| Mixed artist and venue relation | can't happen | `ClassCastException` while building pages |
-| Venue without `location` | can't happen | `NullPointerException` while building pages |
-| Artist with no ID | stops, prints suggestions | not possible, `id` is required |
+| Mixed artist and venue relation | can't happen | stops |
+| Venue without a location, city or state | can't happen | stops |
+| Artist with no ID | stops, prints suggestions | stops |
+
+The JSON reader checks `music.json` (`json.Check`) before it builds anything, and stops with a list
+of every problem it found, each naming the array, the index and the ID:
+
+```
+music.json has 2 problem(s):
+  shows[12] sh12 names an unknown venue: v999
+  relations[3] r3 mixes artists and venues.
+```
 
 ## Gaps for another writer of the JSON
 
@@ -215,3 +223,6 @@ These are what any program other than web_generator must get right to write `mus
    with city and state.
 4. Write `sortname` where it's wanted. JSON input does not derive one.
 5. Keep relations to one kind of member.
+
+`json-site` stops on a file that breaks 2's duplicate IDs, 3 or 5 ([Checks](#checks)). It can't
+tell whether an ID was renumbered, a sortname is missing, or iTunes data was dropped.

@@ -25,6 +25,19 @@ public class Music implements com.bolsinga.music.data.Music {
 
   public static Music create(final String sourceFile) throws com.bolsinga.web.WebException {
     JSONObject json = com.bolsinga.web.Util.createJSON(sourceFile);
+    List<String> problems = Check.problems(json);
+    if (!problems.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(sourceFile);
+      sb.append(" has ");
+      sb.append(problems.size());
+      sb.append(" problem(s):");
+      for (String problem : problems) {
+        sb.append("\n  ");
+        sb.append(problem);
+      }
+      throw new com.bolsinga.web.WebException(sb.toString());
+    }
     try {
       return new Music(json);
     } catch (Exception e) {
