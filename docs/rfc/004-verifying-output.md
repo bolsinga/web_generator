@@ -61,8 +61,6 @@ Differences that come from the environment, not the change:
   so two `site` runs differ in that one line of each export; `json-site` carries the timestamp
   through unchanged
 - the `Author` meta tag is the `user.name` of whoever ran it
-- the `.ics` file sets month and day on the current calendar, so its years follow today's date,
-  and two runs in different years differ (#196)
 - dates are formatted in the default time zone and locale
 
 ### Results on the real data

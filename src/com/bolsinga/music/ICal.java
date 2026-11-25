@@ -75,9 +75,10 @@ public class ICal {
         
   private static void addItem(final Show show, final VCalendar calendar) {
     com.bolsinga.music.data.Date d = show.getDate();
+    // The event starts on the show's own date and repeats yearly, so the file doesn't depend on when it is made.
     Calendar date = Calendar.getInstance(); // UTC isn't required
-    date.set(Calendar.MONTH, d.getMonth() - 1);
-    date.set(Calendar.DAY_OF_MONTH, d.getDay());
+    date.clear();
+    date.set(d.getYear(), d.getMonth() - 1, d.getDay());
                 
     StringBuilder summary = new StringBuilder();
 
