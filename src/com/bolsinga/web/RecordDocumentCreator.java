@@ -143,7 +143,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     e.add(navigator.getAlbumNavigator());
     e.add(navigator.getColophonNavigator());
 
-    e.add(Util.getSearchForm());
+    e.add(Util.getSearchForm(fSiteRoot));
 
     Div indexNavigator = Util.createDiv(CSS.ENTRY_INDEX);
     indexNavigator.addElement(Util.createUnorderedList(e, navigator.getCurrentNavigator()));

@@ -88,5 +88,4 @@ Recorded here so they are not mistaken for intended behavior:
 - `Util.getRecentItems` fails if there are fewer shows or entries than `recentCount` or
   `diaryCount`.
 - `Util.toHTMLSafe` escapes `&` only when it is not followed by `a`, `g` or `l`.
-- The search form's site is fixed to `bolsinga.com`.
 - The json `Venue` copy constructor does not copy `sortname`. It is never called.

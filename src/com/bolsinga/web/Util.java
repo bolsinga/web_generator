@@ -649,9 +649,10 @@ public class Util {
     return f;
   }
 
-  public static org.apache.ecs.Element getSearchForm() {
+  // A DuckDuckGo search limited to site, a domain such as example.com.
+  public static org.apache.ecs.Element getSearchForm(final String site) {
     Form form = new Form("https://duckduckgo.com/", Form.get);
-    form.addElement(new Input(Input.hidden, "sites", "bolsinga.com"));
+    form.addElement(new Input(Input.hidden, "sites", site));
     form.addElement(new Input("search", "q"));
     Input i = new Input(Input.submit, "", "Search");
     i.removeAttribute("name");
