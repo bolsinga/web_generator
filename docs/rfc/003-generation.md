@@ -96,6 +96,9 @@ Music + Diary
 - `og:title` and `og:description` go through `toHTMLSafe` too, in `RecordDocumentCreator`.
   A show's or entry's `og:description` is the first two sentences of its comment
   (`Util.getSentences`), with tags removed; an artist's or venue's is the `moreinfo` resource.
+- Every page and redirect page has `og:url`: the `root` setting and the page's own path, so a
+  redirect page's is itself, not the page it redirects to. A folder's `index.html` is the folder:
+  `https://www.bolsinga.com/` and `…/alt/`.
 - A venue's Apple Maps link (`Util.getMapsURL`) uses its `mapKitID`. Without one, it searches for
   the street, city and state, URL-encoded as one query value, so an `&` in the street is `%26`.
 
