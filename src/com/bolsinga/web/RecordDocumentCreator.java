@@ -9,7 +9,8 @@ import org.apache.ecs.html.*;
 
 public abstract class RecordDocumentCreator implements Backgroundable {
 
-  // Open Graph types (ogp.me): a diary entry is an article; every other page is a website.
+  // Open Graph types (ogp.me): a diary entry or a show, which may have a comment, is an article;
+  // every other page is a website.
   public static final String OG_TYPE_WEBSITE = "website";
   public static final String OG_TYPE_ARTICLE = "article";
 
