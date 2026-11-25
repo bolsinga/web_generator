@@ -77,10 +77,11 @@ been published is a permanent URL**.
 | Artist | `arN` | hand, `artistids.txt` | yes | `bands/<id>.html` |
 | Relation | `rN` | line number in `relations.txt` | no | none |
 | Album, Song | `aN`, `sN` | position while parsing iTunes | no | anchors on `tracks/` pages |
-| Diary entry | `eN` | position in date order | no, inserting an older entry renumbers later ones | `archives/<id>.html` |
+| Diary entry | `eN` | position in timestamp order | no, inserting an older entry renumbers later ones | `archives/<id>.html` |
 
 When an artist has no ID, `Main.dumpMissingArtistIDs` prints suggested `arN^Name` lines, numbering
-from the count of artists that have IDs, and stops the run. No ID format is checked anywhere.
+from the count of artists that have IDs, and stops the run. The raw reader checks no ID format; the
+JSON reader stops on an ID that isn't its kind's prefix and a number ([RFC 002](002-inputs.md#checks)).
 
 In JSON, relation members are looked up as artists first and then venues, so artist and venue IDs
 must never be equal. The prefixes keep them apart.
@@ -91,6 +92,11 @@ must never be equal. The prefixes keep them apart.
 |---|---|
 | `Diary` | `timestamp`, `title`, `static`, `header`, `friends`, `colophon` (each a `List<String>` of HTML fragments), `entries` |
 | `Entry` | `id`, `timestamp` (`ZonedDateTime`), `title?`, `comment` |
+
+A day can have more than one entry. `comments.txt` gives only a date, so the raw reader gives each
+entry the `diaryEntryTime` hour, and each later entry on the same day one minute less. The minutes
+keep same-day entries in order and give them their IDs. See
+[RFC 002](002-inputs.md#timestamps-and-more-than-one-entry-on-a-day).
 
 Text may contain `@@ROOT_URL@@`, which is replaced with a relative path to the site root when
 pages are written.

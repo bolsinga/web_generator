@@ -113,9 +113,40 @@ Pseudo-XML, matched with regular expressions, not parsed:
 ```
 
 Entries are written newest first. An entry dated after the one above it stops the run, naming both
-dates; entries on the same day are allowed. Entries are sorted by date and numbered `e0`, `e1`, … in
-that order, oldest first, so the file's order is the numbering's order reversed. Entries on the same
-day keep their order in the file.
+dates; entries on the same day are allowed. Entries are sorted by timestamp and numbered `e0`, `e1`,
+… in that order, oldest first, so the file's order is the numbering's order reversed.
+
+#### Timestamps, and more than one entry on a day
+
+An entry's `<date>` has no time, but its `timestamp` does (`raw/Entry.toZDT`):
+
+1. The time is the `diaryEntryTime` setting's hour, `12` for the site, on the entry's date, in the
+   JVM's default time zone.
+2. The first entry in the file with a date gets that time. Each later entry with the same date is
+   one minute earlier than the one before it: 12:00, 11:59, 11:58, …
+3. Because the file is newest first, the first entry of a day is the newest. The minutes keep the
+   file's order within the day, so the later an entry is in the file, the lower its ID:
+
+   ```
+   <comment><date>1-3-2009</date><title>Ha'ena Beach (Kaua'i Day 3)</title>…     2009-01-03T12:00 e365
+   <comment><date>1-3-2009</date><title>Lazy in Hanalei (Kaua'i Day 2)</title>… 2009-01-03T11:59 e364
+   ```
+
+The timestamp is what orders entries everywhere (`Util.ENTRY_COMPARATOR`), and what `diary.json`
+writes. Pages show only the date (`Util.getTimestamp`, `M/d/yyyy`). The RSS `pubDate` shows the
+minutes.
+
+This came in with 6a3284e (2009-01-02; see #117). Before it, a second entry on a day replaced the
+first. Its message names the one limit: a day with more entries than there are minutes before
+`diaryEntryTime` (720 at noon) runs back into the day before, and its entries are filed and dated
+there. The site's most on a day is two; six days have two.
+
+Anything that replaces this reader, or reads its output, must:
+
+- keep more than one entry on a day, in the file's order, newest first;
+- give them distinct timestamps in that order, or carry the order some other way, so that sorting
+  and numbering match. Sorting by date alone ties them, and the tie decides which is `eN`;
+- keep each `diary.json` entry's whole `timestamp`, not only its date.
 
 ### iTunes
 
@@ -195,7 +226,9 @@ including artists known only from iTunes, along with their `albums` IDs, which n
   "entries": [ { "id": "e0", "timestamp": "…", "title"?: "…", "comment": "…" } ] }
 ```
 
-Every key is required except an entry's `title`.
+Every key is required except an entry's `title`. An entry's `timestamp` includes the minutes that
+order entries on the same day ([above](#timestamps-and-more-than-one-entry-on-a-day)), and the JSON
+reader keeps it as written.
 
 ## Checks
 
