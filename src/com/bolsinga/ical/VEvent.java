@@ -29,12 +29,12 @@ public class VEvent {
     
     StringBuilder sb = new StringBuilder();
     sb.append("UID:");
-    sb.append(fUID);
+    sb.append(VCalendar.escapeText(fUID));
     VCalendar.write(w, sb.toString());
     
     sb = new StringBuilder();
     sb.append("SUMMARY:");
-    sb.append(fSummary);
+    sb.append(VCalendar.escapeText(fSummary));
     VCalendar.write(w, sb.toString());
 
     VCalendar.write(w, "RRULE:FREQ=YEARLY;INTERVAL=1");
