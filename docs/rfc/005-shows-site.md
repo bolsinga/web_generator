@@ -51,8 +51,7 @@ The diary is read by `raw.Diary.create`, as `site` reads it. `site` and `json-si
    `albums` must be empty; if not, the run stops, because they'd collide with the IDs iTunes is
    given in step 2.
 2. Parse the iTunes export as `raw.Media.createMedia` does today. Albums and songs get IDs `aN` and
-   `sN` in the parser's sorted album order ([RFC 002](002-inputs.md#itunes)), so the same export
-   gives the same IDs as `site`.
+   `sN` from iTunes' persistent IDs ([RFC 002](002-inputs.md#itunes)), the same IDs as `site`.
 3. Join each album and song artist to a shows file artist by **name**, exactly as the raw files join
    today (no trimming or Unicode normalizing). An iTunes artist name that no shows file artist has
    stops the run, listing every such name at once, album artists before song artists, each in

@@ -6,6 +6,7 @@ import java.util.*;
 public class Song {
   static final int UNKNOWN_TRACK = 0;
 
+  private final String fPersistentID; // iTunes' ID for the track, a 64-bit unsigned number; stable
   private final Artist fArtist;
   private final String fTitle;
   private final int fReleaseYear;
@@ -15,7 +16,8 @@ public class Song {
   private final int fPlayCount;
   private final int fDiscIndex;
 
-  Song(final Artist artist, final String title, final int year, final ZonedDateTime lastPlayed, final int track, final String genre, final int playCount, final int discIndex) {
+  Song(final String persistentID, final Artist artist, final String title, final int year, final ZonedDateTime lastPlayed, final int track, final String genre, final int playCount, final int discIndex) {
+    fPersistentID = persistentID;
     fArtist = artist;
     fTitle = title;
     fReleaseYear = year;
@@ -24,6 +26,10 @@ public class Song {
     fGenre = genre;
     fPlayCount = playCount;
     fDiscIndex = discIndex;
+  }
+
+  public String getPersistentID() {
+    return fPersistentID;
   }
 
   public Artist getArtist() {
