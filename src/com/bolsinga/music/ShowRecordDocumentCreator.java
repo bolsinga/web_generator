@@ -56,6 +56,9 @@ public class ShowRecordDocumentCreator extends MusicRecordDocumentCreator {
                     public String getDescription() {
                       return Util.getSentences(show.getComment(), 2);
                     }
+                    public String getType() {
+                      return RecordDocumentCreator.OG_TYPE_ARTICLE;
+                    }
                   });
                 }
               }

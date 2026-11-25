@@ -126,6 +126,9 @@ public class EntryRecordDocumentCreator extends DiaryEncoderRecordDocumentCreato
       public String getDescription() {
         return Util.getSentences(entry.getComment(), 2);
       }
+      public String getType() {
+        return RecordDocumentCreator.OG_TYPE_ARTICLE;
+      }
     });
 
     return EntryRecordDocumentCreator.createEntryRecord(entry, fLinks, true);

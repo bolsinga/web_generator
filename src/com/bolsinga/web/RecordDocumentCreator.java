@@ -9,6 +9,11 @@ import org.apache.ecs.html.*;
 
 public abstract class RecordDocumentCreator implements Backgroundable {
 
+  // Open Graph types (ogp.me): a diary entry or a show, which may have a comment, is an article;
+  // every other page is a website.
+  public static final String OG_TYPE_WEBSITE = "website";
+  public static final String OG_TYPE_ARTICLE = "article";
+
   protected final Links fLinks;
   private final String fOutputDir;
   private static String fSiteRoot;
@@ -75,6 +80,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     }
     h.addElement(new Meta().setContent(Util.getSettings().getLargeImage()).addAttribute("property", "og:image"));
     h.addElement(new Meta().setContent(RecordDocumentCreator.getPageURL(factory.getFilePath())).addAttribute("property", "og:url"));
+    h.addElement(new Meta().setContent(factory.getType()).addAttribute("property", "og:type"));
 
     h.addElement(new Meta().setContent("0;url=" + factory.getInternalURL()).setHttpEquiv("refresh"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
@@ -130,6 +136,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
     h.addElement(new Meta().setContent(Util.toHTMLSafe(factory.getTitle())).addAttribute("property", "og:title"));
     h.addElement(new Meta().setContent(Util.getSettings().getLargeImage()).addAttribute("property", "og:image"));
     h.addElement(new Meta().setContent(RecordDocumentCreator.getPageURL(factory.getFilePath())).addAttribute("property", "og:url"));
+    h.addElement(new Meta().setContent(OG_TYPE_WEBSITE).addAttribute("property", "og:type"));
 
     h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));

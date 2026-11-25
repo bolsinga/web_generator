@@ -99,6 +99,9 @@ Music + Diary
 - Every page and redirect page has `og:url`: the `root` setting and the page's own path, so a
   redirect page's is itself, not the page it redirects to. A folder's `index.html` is the folder:
   `https://www.bolsinga.com/` and `…/alt/`.
+- Every page and redirect page has `og:type`, an [Open Graph](https://ogp.me/#types) type. The
+  redirect pages of diary entries and shows, which may have a comment, are `article`; every other
+  page is `website`, the type for a page that is nothing more specific (`RedirectFactory.getType`).
 - A venue's Apple Maps link (`Util.getMapsURL`) uses its `mapKitID`. Without one, it searches for
   the street, city and state, URL-encoded as one query value, so an `&` in the street is `%26`.
 
