@@ -2,17 +2,12 @@ package com.bolsinga.itunes;
 
 import java.time.*;
 import java.util.*;
-import java.util.regex.*;
 
 public class Parser {
   private static final String TK_GENRE_VOICE_MEMO = "Voice Memo";
 
   private static final HashSet<String> sArtistNotAdded = new HashSet<String>();
 
-  private static final Pattern sLTPattern = Pattern.compile("<");
-  private static final String sLTReplacement = "&lt;";
-  private static final Pattern sGTPattern = Pattern.compile(">");
-  private static final String sGTReplacement = "&gt;";
 
   // ArtistName -> Artist
   private final HashMap<String, Artist> fArtistMap = new HashMap<String, Artist>();
@@ -153,14 +148,7 @@ public class Parser {
     }
   }
   
-  private static String cleanHTML(final String s) {
-    // This is strictly for the song "Bad Days <aurally excited version>".
-    // This keeps 'bad' titles out of the XML for simplicity sake.
-    return sGTPattern.matcher(sLTPattern.matcher(s).replaceAll(sLTReplacement)).replaceAll(sGTReplacement);
-  }
-  
   private Song createSong(final Artist artist, final String songTitle, final int year, final int index, final String genre, final ZonedDateTime lastPlayed, final int playCount, final int discIndex) {
-    String cleanTitle = Parser.cleanHTML(songTitle);
     int releaseYear = Album.UNKNOWN_YEAR;
     if (year != -1) {
       releaseYear = year;
@@ -169,7 +157,7 @@ public class Parser {
     if (index != -1) {
       track = index;
     }
-    return new Song(artist, cleanTitle, releaseYear, lastPlayed, track, genre, playCount, discIndex);
+    return new Song(artist, songTitle, releaseYear, lastPlayed, track, genre, playCount, discIndex);
   }
 
   private void sortAlbumOrder() {

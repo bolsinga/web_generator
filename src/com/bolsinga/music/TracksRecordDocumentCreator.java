@@ -235,7 +235,7 @@ public class TracksRecordDocumentCreator extends MusicRecordDocumentCreator {
         sb.append(" - ");
       }
                         
-      sb.append(Util.toHTMLSafe(song.getTitle()));
+      sb.append(Util.toHTMLText(song.getTitle()));
                         
       if (albumRelease == null) {
         com.bolsinga.music.data.Date songRelease = song.getReleaseDate();

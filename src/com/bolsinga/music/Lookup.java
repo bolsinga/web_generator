@@ -45,7 +45,7 @@ public class Lookup {
     }
 
     for (Album album : music.getAlbums()) {
-      fAlbumHTMLMap.put(album.getID(), Util.toHTMLSafe(album.getTitle()));
+      fAlbumHTMLMap.put(album.getID(), Util.toHTMLText(album.getTitle()));
     }
 
     for (Venue venue : music.getVenues()) {

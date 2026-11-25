@@ -115,7 +115,9 @@ Entries are sorted by date and numbered `e0`, `e1`, … in that order.
 
 `itunes.Parser` reads an iTunes library export in JSON (`itunes.JSONParser`). It becomes albums
 and songs, and creates any artist not already seen at a show. iTunes sort names are applied to
-artists.
+artists. Album and song titles are kept as iTunes gives them, as plain text, so `music.json` has
+`"UFO>UFO>UFO"`. Exports written before #218 have `&lt;` and `&gt;` in a few song titles instead;
+they give the same pages.
 
 ### Order of assembly
 
