@@ -11,6 +11,8 @@ public class Relation implements com.bolsinga.music.data.Relation {
   static List<Relation> create(final String filename) throws com.bolsinga.web.WebException {
     ArrayList<Relation> relations = new ArrayList<Relation>();
     int index = 0;
+    // Every member must be a known artist or venue, as the JSON reader requires.
+    List<String> unknown = new ArrayList<String>();
     
     try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
       String s = null;
@@ -33,27 +35,17 @@ public class Relation implements com.bolsinga.music.data.Relation {
                 if (a != null) {
                   members.add(a);
                 } else {
-                  StringBuilder sb = new StringBuilder();
-                  sb.append("Unknown artist relation: ");
-                  sb.append(reason);
-                  sb.append(" -> ");
-                  sb.append(member);
-                  System.err.println(sb.toString());
+                  unknown.add(Relation.describe("artist", reason, member));
                 }
               }
           } else if (type.equals("venue")) {
               while (st.hasMoreElements()) {
                 String member = st.nextToken();
-                Venue v = Venue.get(member);
+                Venue v = Venue.find(member);
                 if (v != null) {
                   members.add(v);
                 } else {
-                  StringBuilder sb = new StringBuilder();
-                  sb.append("Unknown venue relation: ");
-                  sb.append(reason);
-                  sb.append(" -> ");
-                  sb.append(member);
-                  System.err.println(sb.toString());
+                  unknown.add(Relation.describe("venue", reason, member));
                 }
               }
           } else {
@@ -84,7 +76,33 @@ public class Relation implements com.bolsinga.music.data.Relation {
       throw new com.bolsinga.web.WebException(sb.toString(), e);
     }
 
+    if (!unknown.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(filename);
+      sb.append(" names ");
+      sb.append(unknown.size());
+      sb.append(" unknown member(s):");
+      for (String u : unknown) {
+        sb.append("\n  ");
+        sb.append(u);
+      }
+      throw new com.bolsinga.web.WebException(sb.toString());
+    }
+
     return relations;
+  }
+
+  private static String describe(final String kind, final String reason, final String member) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(kind);
+    sb.append(" ");
+    sb.append(member);
+    if (reason != null) {
+      sb.append(" (");
+      sb.append(reason);
+      sb.append(")");
+    }
+    return sb.toString();
   }
   
   private Relation(final String id, final String reason, final List<Object> members) {

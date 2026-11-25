@@ -18,6 +18,8 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private String fMapKitID;
 
   static List<Venue> create(final String filename) throws com.bolsinga.web.WebException {
+    // Shows and relations name venues, so two venues with one name can't both be reached.
+    List<String> duplicateNames = new ArrayList<String>();
     try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8"))) {
       String s = null;
       StringTokenizer st = null;
@@ -51,7 +53,16 @@ public class Venue implements com.bolsinga.music.data.Venue {
 
           Venue v = new Venue(id, name, Location.create(address, city, state, url), sortname, mapKitID);
 
-          sMap.put(name, v);
+          Venue existing = sMap.put(name, v);
+          if (existing != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(existing.getID());
+            sb.append(" and ");
+            sb.append(id);
+            sb.append(": ");
+            sb.append(name);
+            duplicateNames.add(sb.toString());
+          }
         }
       } catch (IOException e) {
         StringBuilder sb = new StringBuilder();
@@ -69,6 +80,19 @@ public class Venue implements com.bolsinga.music.data.Venue {
       sb.append("Can't find file: ");
       sb.append(filename);
       throw new com.bolsinga.web.WebException(sb.toString(), e);
+    }
+
+    if (!duplicateNames.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(filename);
+      sb.append(" has ");
+      sb.append(duplicateNames.size());
+      sb.append(" duplicate venue name(s):");
+      for (String d : duplicateNames) {
+        sb.append("\n  ");
+        sb.append(d);
+      }
+      throw new com.bolsinga.web.WebException(sb.toString());
     }
 
     ArrayList<Venue> venues = new ArrayList<Venue>(sMap.values());
@@ -89,6 +113,13 @@ public class Venue implements com.bolsinga.music.data.Venue {
     return venues;
   }
   
+  // The venue with this name, or null.
+  static Venue find(final String name) {
+    synchronized (sMap) {
+      return sMap.get(name);
+    }
+  }
+
   static Venue get(final String name) throws com.bolsinga.web.WebException {
     synchronized (sMap) {
       Venue result = sMap.get(name);
