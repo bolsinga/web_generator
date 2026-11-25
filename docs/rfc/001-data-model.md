@@ -29,15 +29,15 @@ Each list has an unmodifiable getter (`getShows()`) and a copy (`getShowsCopy()`
 |---|---|---|
 | `Music` | `timestamp` (`ZonedDateTime`), `venues`, `artists`, `relations`, `songs`, `albums`, `shows` | Raw input sets `timestamp` to now. The HTML does not use it. |
 | `Show` | `id`, `date`, `venue`, `artists`, `comment?` | Read-only. `artists` is ordered headliner first, then openers, and must not be empty. |
-| `Venue` | `id`, `name`, `location`, `comment?`, `sortname?`, `mapKitID?` | `location` is effectively required: city and state group the cities pages. The venue's website is `location.web`. |
-| `Artist` | `id`, `name`, `sortname?`, `location?`, `comment?`, `albums` | `albums` comes from iTunes. Nothing sets `location` or `comment` today. |
+| `Venue` | `id`, `name`, `location`, `sortname?`, `mapKitID?` | `location` is effectively required: city and state group the cities pages. The venue's website is `location.web`. |
+| `Artist` | `id`, `name`, `sortname?`, `albums` | `albums` comes from iTunes. |
 | `Location` | `street?`, `city`, `state`, `web?` | There is no zip code; nothing ever set the old `zip`, and it was removed. |
 | `Date` | `year`, `month`, `day` | See below. |
 | `Relation` | `id`, `reason?`, `members` | `members` is `List<Object>` holding `Artist` or `Venue` objects. |
 | `Album`, `Song` | see `Album.java`, `Song.java` | Only from iTunes. Titles are plain text, not HTML. Out of scope here except where pages depend on them ([RFC 003](003-generation.md)). |
 
-`?` means the value may be null. `comment` on `Venue` exists in the interface and the JSON, but
-raw input never sets it.
+`?` means the value may be null. Venues and artists have no comment, and artists no location.
+Nothing ever set them, and they were removed, as was `Location.zip`.
 
 ### Dates
 

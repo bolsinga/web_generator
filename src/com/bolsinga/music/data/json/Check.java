@@ -26,7 +26,6 @@ class Check {
   private static final String YEAR = "year";
   private static final String MONTH = "month";
   private static final String DAY = "day";
-  private static final String COMMENT = "comment";
 
   // Each kind's IDs are its prefix and a number. Songs and albums are only checked when present,
   // so a file written before they were checked still reads.
@@ -62,8 +61,7 @@ class Check {
     return problems;
   }
 
-  // A shows file (RFC 005) has what music JSON has, minus what iTunes gives, and minus the fields
-  // bolsinga/site doesn't model: the raw files never set them, and the app would drop them.
+  // A shows file (RFC 005) has what music JSON has, minus what iTunes gives.
   static List<String> showsFileProblems(final JSONObject json) {
     List<String> problems = Check.problems(json);
 
@@ -71,31 +69,6 @@ class Check {
       JSONArray items = json.optJSONArray(kind);
       if (items != null && items.length() != 0) {
         problems.add(kind + " isn't empty; iTunes gives them.");
-      }
-    }
-
-    JSONArray venues = json.optJSONArray(VENUES);
-    for (int i = 0; venues != null && i < venues.length(); i++) {
-      JSONObject venue = venues.optJSONObject(i);
-      if (venue == null) {
-        continue;
-      }
-      if (venue.has(COMMENT)) {
-        problems.add(Check.describe(VENUES, i, venue) + " has a comment.");
-      }
-    }
-
-    JSONArray artists = json.optJSONArray(ARTISTS);
-    for (int i = 0; artists != null && i < artists.length(); i++) {
-      JSONObject artist = artists.optJSONObject(i);
-      if (artist == null) {
-        continue;
-      }
-      if (artist.has(LOCATION)) {
-        problems.add(Check.describe(ARTISTS, i, artist) + " has a location.");
-      }
-      if (artist.has(COMMENT)) {
-        problems.add(Check.describe(ARTISTS, i, artist) + " has a comment.");
       }
     }
 

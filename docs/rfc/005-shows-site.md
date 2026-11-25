@@ -92,25 +92,22 @@ already made most of them ([RFC 002](002-inputs.md#checks)). This RFC added:
 | Each ID starts with its kind's prefix: `v`, `ar`, `r`, `sh`, and `a` and `s` for albums and songs | stops | stops |
 | A show's date is possible: month 1–12, and a day that exists in its month, in a leap year when the year is unknown | stops | stops |
 | Two venues have the same name | stops | stops |
-| `venue.comment`, `artist.location` or `artist.comment` is present | not checked | stops |
 | `songs` or `albums` is not empty | n/a | stops |
 | An iTunes artist name isn't a shows file artist | n/a | stops |
 
 - The first three are cheap and true of every `music.json` web_generator writes, so they apply to
   `json-site` as well, and are in RFC 002's Checks table. Album and song IDs are checked when the
   arrays are present.
-- The fields of the fourth row are never set by the raw files, and site doesn't model them (its rule
-  6). A shows file that has them was not written from the raw files or by the app, and the app would
-  drop them on its next save. `json-site` keeps reading them, because `music.json` may carry them.
-  `location.zip` was on this list until web_generator dropped zip codes; now neither program has
-  one, and a `zip` key is ignored.
+- Site's rule 6 names `Location.zip`, `Venue.comment`, `Artist.location` and `Artist.comment`,
+  which the raw files never set and the app doesn't model. A check for them was here until
+  web_generator removed them too; now neither program has them, and the keys are ignored.
 - As for `json-site`, every problem is listed at once, each naming the array, the index and the ID:
 
   ```
   shows.json has 3 problem(s):
     relations[0] rel0 isn't r and a number.
     shows[1] sh3 has an impossible day: 29
-    venues[3] v3 has a comment.
+    songs isn't empty; iTunes gives them.
   ```
 
 ## Verifying

@@ -10,8 +10,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
   private String fID;
   private String fName;
   private String fSortname;
-  private Location fLocation;
-  private String fComment;
   private List<Album> fAlbums;
   private HashSet<Album> fAlbumSet;
 
@@ -183,18 +181,6 @@ public class Artist implements com.bolsinga.music.data.Artist {
   
   public void setSortname(final String name) {
     fSortname = Artist.getSortName(fName, name);
-  }
-  
-  public Location getLocation() {
-    return fLocation;
-  }
-  
-  public String getComment() {
-    return fComment;
-  }
-  
-  public void setComment(final String comment) {
-    fComment = comment;
   }
   
   public List<Album> getAlbums() {

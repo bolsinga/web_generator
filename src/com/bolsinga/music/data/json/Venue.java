@@ -8,14 +8,12 @@ public class Venue implements com.bolsinga.music.data.Venue {
   private static final String ID = "id";
   private static final String NAME = "name";
   private static final String LOCATION = "location";
-  private static final String COMMENT = "comment";
   private static final String SORTNAME = "sortname";
   private static final String MAPKIT = "mapkit";
 
   private String id;
   private String name;
   private Location location = null;
-  private String comment = null;
   private String sortname = null;
   private String mapKitID = null;
   
@@ -44,10 +42,6 @@ public class Venue implements com.bolsinga.music.data.Venue {
     if (location != null) {
       json.put(LOCATION, Location.createJSON(location));
     }
-    String comment = venue.getComment();
-    if (comment != null) {
-      json.put(COMMENT, comment);
-    }
     String sortname = venue.getSortname();
     if (sortname != null) {
       json.put(SORTNAME, sortname);
@@ -71,7 +65,6 @@ public class Venue implements com.bolsinga.music.data.Venue {
     if (optJSON != null) {
       location = Location.create(optJSON);
     }
-    comment = json.optString(COMMENT, null);
     sortname = json.optString(SORTNAME, null);
     mapKitID = json.optString(MAPKIT, null);
   }
@@ -92,14 +85,6 @@ public class Venue implements com.bolsinga.music.data.Venue {
     return location;
   }
   
-  public String getComment() {
-    return comment;
-  }
-  
-  public void setComment(final String comment) {
-    this.comment = comment;
-  }
-
   public String getSortname() {
     return sortname;
   }
