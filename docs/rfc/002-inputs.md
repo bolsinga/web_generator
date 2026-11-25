@@ -65,7 +65,8 @@ vN*Name*City*State[*street][*url][*sortname][*mapkit=ID]
 
 - street, url and sortname are positional, so a url needs a street, and a sortname needs both.
 - `mapkit=ID` is tagged, may come anywhere after the state, and becomes `mapKitID`.
-- Two venues with the same name: the last one wins, silently.
+- Two venues with the same name stop the run, naming both IDs. Shows and relations name venues,
+  so only one of them could be reached.
 - Duplicate venue IDs stop the run.
 - `bolsinga/site`'s Venue Places tool writes this file.
 
@@ -95,9 +96,7 @@ venue|reason|Venue A|Venue B...
 
 - A reason of `^` means none.
 - Relation IDs are `r` plus the line index.
-- An unknown artist is reported on stderr and left out.
-- An unknown venue stops the run (`raw.Venue.get` throws), despite the code that looks like it
-  would warn.
+- An unknown artist or venue stops the run. Every unknown member is listed at once.
 - Any other type stops the run.
 
 ### comments.txt and statics.txt (diary)
@@ -199,7 +198,8 @@ Every key is required except an entry's `title`.
 | Show names an unknown venue | stops | stops |
 | Show names an unknown artist | n/a, created | stops |
 | Show with no artists, or no `artists` key | can't happen | stops |
-| Unknown relation member | artist: warning; venue: stops | stops |
+| Unknown relation member | stops | stops |
+| Two venues with the same name | stops | not checked |
 | Mixed artist and venue relation | can't happen | stops |
 | Venue without a location, city or state | can't happen | stops |
 | Venue that no show names | stops | stops |
