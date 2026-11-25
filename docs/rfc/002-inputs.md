@@ -217,6 +217,18 @@ A venue that no show names is checked after either reader, by `Main.generateSite
 would list its shows. The run stops before writing anything and names every such venue. Its `vN`
 ID stays retired; don't give it to another venue.
 
+### Markup warnings
+
+Show comments, diary entries and their titles, and the diary's statics, header, friends and
+colophon are HTML. After either reader, `MarkupCheck` prints warnings under `--Markup Warnings--`
+for markup that pages would show wrongly. Each warning names the show or entry ID. They don't stop
+the run.
+
+- A tag that isn't in HTML 4.01 Strict. Text like `Set<String>` is read as a tag and disappears;
+  write `Set&lt;String&gt;`. A Transitional-only tag such as `<strike>` gets the Strict
+  replacement, such as `<del>`.
+- An `href` or `src` that starts or ends with whitespace, such as `href=" https://…"`.
+
 ## Gaps for another writer of the JSON
 
 These are what any program other than web_generator must get right to write `music.json` that

@@ -120,6 +120,16 @@ public class Main implements Backgroundable {
     }
   }
 
+  private void dumpMarkupWarnings(final com.bolsinga.music.data.Music music, final com.bolsinga.diary.data.Diary diary) {
+    List<String> warnings = MarkupCheck.warnings(music, diary);
+    if (!warnings.isEmpty()) {
+      System.out.println("--Markup Warnings--");
+      for (String warning : warnings) {
+        System.out.println(warning);
+      }
+    }
+  }
+
   private boolean dumpMissingArtistIDs(final com.bolsinga.music.data.Music music) {
     List<? extends com.bolsinga.music.data.Artist> artists = music.getArtists();
     List<String> artistsMissingIDs = new ArrayList<String>();
@@ -170,6 +180,7 @@ public class Main implements Backgroundable {
     CSS.install(output);
 
     dumpSimilarArtists(music);
+    dumpMarkupWarnings(music, diary);
     if (dumpMissingArtistIDs(music)) {
       throw new com.bolsinga.web.WebException("Missing Artist IDs");
     }
