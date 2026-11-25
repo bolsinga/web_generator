@@ -14,8 +14,9 @@ public class Artist implements com.bolsinga.music.data.Artist {
   private HashSet<Album> fAlbumSet;
 
   private static String getSortName(final String name, final String sortName) {
-    // This will return a diacritical-free sortName, based upon sortName if it is provided, otherwise name.
-    //  It will return null if sortName is null and name does not include diacriticals.
+    // This returns sortName, or name if sortName is null, decomposed (NFD): each accented letter
+    // becomes its base letter followed by a combining accent mark, which is kept. It returns null if
+    // sortName is null and name has no accented letters.
     String result = null;
     
     String nameToBeStripped = (sortName != null) ? sortName : name;

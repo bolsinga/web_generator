@@ -5,8 +5,8 @@ import java.util.*;
 public class Media {
   public List<Album> fAlbums;
   public List<Song> fSongs;
-  // The sort names iTunes gave, by artist name, made diacritic-free as Artist.setSortname makes
-  // them. The artists' own sort names can also be derived from their names; these can't.
+  // The sort names iTunes gave, by artist name, decomposed (NFD) as Artist.setSortname makes them.
+  // The artists' own sort names can also be derived from their names; these can't.
   public Map<String, String> fSortnames;
 
   public static Media createMedia(final String iTunesFile) throws com.bolsinga.web.WebException {

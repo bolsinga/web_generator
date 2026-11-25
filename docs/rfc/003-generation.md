@@ -40,7 +40,7 @@ Music + Diary
 
 `Lookup` is built once from `Music`:
 
-- HTML-escaped names for artists and venues.
+- HTML-escaped artist and venue names (`toHTMLSafe`) and album titles (`toHTMLText`).
 - Shows per artist, per venue, and per city. The city key is the `cityformat` resource
   (`{0}, {1}`, city and state), so it needs every show's venue to have a location.
 - Shows per state.
@@ -80,7 +80,7 @@ Music + Diary
 | `json/*.json` | exports ([RFC 002](002-inputs.md)) |
 
 - **Letter pages.** The letter is the first character of `Compare.simplify(sortname ?: name)`,
-  uppercased. A non-word character files under `other`.
+  uppercased, so digits get pages too (`bands/1.html`). A non-word character files under `other`.
 - **Redirect pages.** Every artist, venue, show and diary entry has its own
   `<dir>/<id>.html` with `og:` metadata and a `meta refresh` to `<page>#<id>`. Every internal link
   points at the redirect page, so the page an item is filed on can change without breaking links.

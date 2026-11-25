@@ -11,13 +11,15 @@ website. The JSON this program writes is a public contract.
 ## How it works
 
 ```
-raw text files + iTunes JSON ─► raw.Music / raw.Diary ─┐
-                                                       ├─► Music / Diary interfaces ─► HTML, CSS, RSS, iCal, JSON
-music.json + diary.json ──────► json.Music / json.Diary ┘
+site:       raw text files + iTunes JSON ──────► raw.Music / raw.Diary ──┐
+json-site:  music.json + diary.json ───────────► json.Music / json.Diary ├─► Music / Diary ─► HTML, CSS, RSS, iCal, JSON
+shows-site: shows.json + iTunes + raw diary ───► json.Music / raw.Diary ──┘
 ```
 
 The Java types in `com.bolsinga.music.data` and `com.bolsinga.diary.data` are what matter. The raw
 and JSON formats are interchangeable ways to fill them, and the page code only sees the interfaces.
+`shows-site` joins iTunes to `bolsinga/site`'s shows file and reads the result as JSON
+([RFC 005](docs/rfc/005-shows-site.md)).
 
 ## Layout
 
@@ -28,6 +30,7 @@ and JSON formats are interchangeable ways to fill them, and the page code only s
 - `src/com/bolsinga/music`, `diary`, `rss`, `ical`: the page generators, plus `Lookup` and
   `Compare`.
 - `src/com/bolsinga/site/Main.java`: the entry point. `src/scripts/site` is the script that runs it.
+  `MarkupCheck` and `NameCheck` there print the markup and name warnings.
 - `src/properties/config.properties`: the site's text and formats.
 - `lib/`: the ECS and org.json jars.
 
@@ -49,8 +52,8 @@ and JSON formats are interchangeable ways to fill them, and the page code only s
 
 - Show, venue and artist IDs are URLs (`dates/shN.html`, `venues/vN.html`, `bands/arN.html`).
   Never renumber or reuse them.
-- Keep the raw and JSON readers able to produce the same `Music` and `Diary`. A field added to an
-  interface is read by both and written to the JSON.
+- Keep the raw files, the JSON and the shows file able to produce the same `Music` and `Diary`. A
+  field added to an interface is read by every reader and written to the JSON.
 - A change to the JSON is a change to `bolsinga/site`'s input; keep old readers working.
 - Match the style of the file being edited: 2-space indent, `StringBuilder` for messages,
   `WebException` for data errors.
