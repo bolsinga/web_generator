@@ -64,7 +64,12 @@ public class Entry implements com.bolsinga.diary.data.Entry {
       }
       
       TreeMap<ZonedDateTime, Entry> entries = new TreeMap<ZonedDateTime, Entry>();
-      
+
+      // Entries are written newest first. One dated after the entry above it stops the run, so the
+      // file's order is the date order that numbers the entries.
+      ZonedDateTime previousDate = null;
+      String previousDateString = null;
+
       Matcher commentMatcher = sCommentPattern.matcher(cb);
       if (commentMatcher.find()) {
         do {
@@ -72,6 +77,20 @@ public class Entry implements com.bolsinga.diary.data.Entry {
           Matcher dateMatcher = sDatePattern.matcher(entry);
           if (dateMatcher.find()) {
             ZonedDateTime date = Entry.toZDT(dateMatcher.group(1));
+            if (previousDate != null && date.isAfter(previousDate)) {
+              StringBuilder sb = new StringBuilder();
+              sb.append(filename);
+              sb.append(": entry ");
+              sb.append(entries.size() + 1);
+              sb.append(" dated ");
+              sb.append(dateMatcher.group(1));
+              sb.append(" comes after one dated ");
+              sb.append(previousDateString);
+              sb.append("; entries go newest first.");
+              throw new com.bolsinga.web.WebException(sb.toString());
+            }
+            previousDate = date;
+            previousDateString = dateMatcher.group(1);
             Matcher titleMatcher = sTitlePattern.matcher(entry);
             String title = null;
             if (titleMatcher.find()) {
