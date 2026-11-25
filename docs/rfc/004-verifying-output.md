@@ -34,8 +34,8 @@ output/dst/site site      /tmp/site <data_dir> <itunes.json>
 output/dst/site json-site /tmp/site-json <data_dir>/settings.properties /tmp/site/json
 ```
 
-`json-site` looks for `diary.json` and `music.json` in `json_dir`, so the exports must be named
-that way by `diaryJsonFile` and `musicJsonFile`, or copied.
+`json-site` reads the diary and music files in `json_dir` by the names in the settings, the same
+names the export writes, so a site's `json/` folder can be passed as it is.
 
 ## Comparing output
 

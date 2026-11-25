@@ -40,14 +40,13 @@ public class Main implements Backgroundable {
 
         main.generateDirect(itunes, shows, venue, sort, relations, comments, statics, artistIDs, output);
       } else if (command.equals("json-site")) {
-        if (args.length != 5) {
+        if (args.length != 4) {
           Main.usage(args, "json-site: Wrong number of arguments: " + args.length);
         }
 
-        String diaryFile = args[i++];
-        String musicFile = args[i++];
+        String jsonDir = args[i++];
 
-        main.generateJSONSite(diaryFile, musicFile, output);
+        main.generateJSONSite(jsonDir, output);
       } else {
         Main.usage(args, "Invalid action");
       }
@@ -77,11 +76,17 @@ public class Main implements Backgroundable {
     generateSite(music, diary, output);
   }
 
-  private void generateJSONSite(final String diaryFile, final String musicFile, final String output) throws Exception {
-    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.json.Diary.create(diaryFile);
-    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.json.Music.create(musicFile);
-    
+  // Reads the files the export in generateSite writes, by the names in the settings.
+  private void generateJSONSite(final String jsonDir, final String output) throws Exception {
+    final java.io.File jsonDirectory = new java.io.File(jsonDir);
+    final com.bolsinga.diary.data.Diary diary = com.bolsinga.diary.data.json.Diary.create(Main.getJSONFile(jsonDirectory, Util.getSettings().getDiaryJsonFile()).getPath());
+    final com.bolsinga.music.data.Music music = com.bolsinga.music.data.json.Music.create(Main.getJSONFile(jsonDirectory, Util.getSettings().getMusicJsonFile()).getPath());
+
     generateSite(music, diary, output);
+  }
+
+  private static java.io.File getJSONFile(final java.io.File jsonDirectory, final String name) {
+    return new java.io.File(jsonDirectory, name + com.bolsinga.web.Links.JSON_EXT);
   }
 
   private void dumpSimilarArtists(final com.bolsinga.music.data.Music music) {
@@ -152,19 +157,13 @@ public class Main implements Backgroundable {
     {
       java.io.File jsonDirectory = com.bolsinga.web.Util.createJSONDirectory(output);
 
-      StringBuilder musicFile = new StringBuilder(com.bolsinga.web.Util.getSettings().getMusicJsonFile());
-      musicFile.append(com.bolsinga.web.Links.JSON_EXT);
-      java.io.File musicJSON = new java.io.File(jsonDirectory, musicFile.toString());
+      java.io.File musicJSON = Main.getJSONFile(jsonDirectory, com.bolsinga.web.Util.getSettings().getMusicJsonFile());
       com.bolsinga.music.data.json.Music.export(music, musicJSON.getAbsolutePath(), false);
 
-      StringBuilder showsFile = new StringBuilder(com.bolsinga.web.Util.getSettings().getShowsJsonFile());
-      showsFile.append(com.bolsinga.web.Links.JSON_EXT);
-      java.io.File showsJSON = new java.io.File(jsonDirectory, showsFile.toString());
+      java.io.File showsJSON = Main.getJSONFile(jsonDirectory, com.bolsinga.web.Util.getSettings().getShowsJsonFile());
       com.bolsinga.music.data.json.Music.export(music, showsJSON.getAbsolutePath(), true);
 
-      StringBuilder diaryFile = new StringBuilder(com.bolsinga.web.Util.getSettings().getDiaryJsonFile());
-      diaryFile.append(com.bolsinga.web.Links.JSON_EXT);
-      java.io.File diaryJSON = new java.io.File(jsonDirectory, diaryFile.toString());
+      java.io.File diaryJSON = Main.getJSONFile(jsonDirectory, com.bolsinga.web.Util.getSettings().getDiaryJsonFile());
       com.bolsinga.diary.data.json.Diary.export(diary, diaryJSON.getAbsolutePath());
     }
   }
