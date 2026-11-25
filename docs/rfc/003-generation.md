@@ -86,8 +86,10 @@ Music + Diary
 - `@@ROOT_URL@@` in text becomes a relative path to the site root (`Encode`).
 
 Every page has the same header: icon, CSS, RSS link, `og:` tags, a navigator of nine sections,
-and a DuckDuckGo search form fixed to `bolsinga.com` (`Util`). The page title is built from the
-`sitepagetitle` resource and the domain in the `root` setting.
+and a DuckDuckGo search form (`Util.getSearchForm`). The site's domain is the last two parts of the
+host in the `root` setting (`https://www.bolsinga.com` gives `bolsinga.com`), or the whole `root`
+if it has no such host. The search form is limited to that domain, and the page title is built from
+it and the `sitepagetitle` resource.
 
 ## What each page uses
 
