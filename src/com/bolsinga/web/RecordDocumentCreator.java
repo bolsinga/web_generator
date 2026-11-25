@@ -74,12 +74,31 @@ public abstract class RecordDocumentCreator implements Backgroundable {
       h.addElement(new Meta().setContent(Util.toHTMLSafe(description)).addAttribute("property", "og:description"));
     }
     h.addElement(new Meta().setContent(Util.getSettings().getLargeImage()).addAttribute("property", "og:image"));
+    h.addElement(new Meta().setContent(RecordDocumentCreator.getPageURL(factory.getFilePath())).addAttribute("property", "og:url"));
 
     h.addElement(new Meta().setContent("0;url=" + factory.getInternalURL()).setHttpEquiv("refresh"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
     h.addElement(new Meta().setContent(getCopyright()).setName("Copyright"));
 
     writeDocument(factory.getFilePath(), d);
+  }
+
+  // The page's own absolute URL, for og:url: the root setting and the page's path in the site. A
+  // redirect page's is its own URL, not the page it redirects to, so a shared link keeps its og: tags.
+  // A folder's index.html is the folder. Page paths are IDs and letters, so need no escaping.
+  static String getPageURL(final String filePath) {
+    String root = Util.getSettings().getRoot();
+    StringBuilder sb = new StringBuilder(root.endsWith("/") ? root.substring(0, root.length() - 1) : root);
+    sb.append("/");
+    String path = filePath.replace(File.separatorChar, '/');
+    String index = "index" + Links.HTML_EXT;
+    if (path.equals(index)) {
+      path = "";
+    } else if (path.endsWith("/" + index)) {
+      path = path.substring(0, path.length() - index.length());
+    }
+    sb.append(path);
+    return sb.toString();
   }
 
   protected abstract String getCopyright();
@@ -110,6 +129,7 @@ public abstract class RecordDocumentCreator implements Backgroundable {
 
     h.addElement(new Meta().setContent(Util.toHTMLSafe(factory.getTitle())).addAttribute("property", "og:title"));
     h.addElement(new Meta().setContent(Util.getSettings().getLargeImage()).addAttribute("property", "og:image"));
+    h.addElement(new Meta().setContent(RecordDocumentCreator.getPageURL(factory.getFilePath())).addAttribute("property", "og:url"));
 
     h.addElement(new Meta().setContent("text/html; charset=" + d.getCodeset()).setHttpEquiv("Content-Type"));
     h.addElement(new Meta().setContent(System.getProperty("user.name")).setName("Author"));
