@@ -32,6 +32,7 @@ See [RFC 002](002-inputs.md) for the commands. For example:
 ```
 output/dst/site site      /tmp/site <data_dir> <itunes.json>
 output/dst/site json-site /tmp/site-json <data_dir>/settings.properties /tmp/site/json
+output/dst/site shows-site /tmp/site-shows <shows_data_dir> <itunes.json>
 ```
 
 `json-site` reads the diary and music files in `json_dir` by the names in the settings, the same
@@ -54,6 +55,15 @@ another program writing the JSON:
 1. Run `site` into `A`.
 2. Run `json-site` on `A/json/` into `B`.
 3. `diff -r -x json A B`.
+
+**Raw and the shows file give the same site** ([RFC 005](005-shows-site.md#verifying)):
+
+1. Run `site` into `A`.
+2. Make a data folder with `settings.properties`, `comments.txt`, `statics.txt` and
+   `A/json/shows.json`.
+3. Run `shows-site` on it, with the same iTunes export, into `C`.
+4. `diff -r A C`. Only the HTML must match; on the real data the whole tree does, apart from
+   `diary.json`'s `timestamp`.
 
 Differences that come from the environment, not the change:
 

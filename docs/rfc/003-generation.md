@@ -107,7 +107,7 @@ it and the `sitepagetitle` resource.
 
 ## What each page uses
 
-This is the field list `json-site` must supply for the site to be unchanged.
+This is the field list `json-site` and `shows-site` must supply for the site to be unchanged.
 
 | Page | Uses |
 |---|---|

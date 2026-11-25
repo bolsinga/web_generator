@@ -5,6 +5,8 @@ usage()
     echo "site site output_dir data_dir itunes_json_file"
     echo "- or -"
     echo "site json-site output_dir settings_file json_dir"
+    echo "- or -"
+    echo "site shows-site output_dir data_dir itunes_json_file"
     echo $1
     exit 1
 }
@@ -77,6 +79,38 @@ if [ $ACTION = "json-site" ] ; then
 
   # The diary and music file names come from the settings, as the export writes them.
   DATA_FILES="$DATA_FILES \"$JSON_HOME\""
+elif [ $ACTION = "shows-site" ] ; then
+  DATA_DIR="$3"
+  if [ -z "$DATA_DIR" ] ; then
+      usage "No data_dir"
+  fi
+
+  DATA_HOME=`cd "$DATA_DIR" && pwd`
+  if [ ! -d "${DATA_HOME}" ] ; then
+      usage "No $DATA_HOME"
+  fi
+
+  if [ ! -f "${DATA_HOME}/settings.properties" ] ; then
+      usage "Can't find data file ${DATA_HOME}/settings.properties"
+  fi
+  # The shows file's name comes from the settings, as the export writes it.
+  DATA_FILES="$DATA_FILES \"${DATA_HOME}/settings.properties\" \"${DATA_HOME}\""
+
+  for i in \
+      "${DATA_HOME}/comments.txt" \
+      "${DATA_HOME}/statics.txt" ; do
+    if [ ! -f "$i" ] ; then
+        usage "Can't find data file $i"
+    fi
+    DATA_FILES="$DATA_FILES \"$i\""
+  done
+
+  ITUNES_DATA_FILE="$4"
+  if [ -z "$ITUNES_DATA_FILE" ] ; then
+    usage "No itunes json file"
+  else
+    DATA_FILES="$DATA_FILES $ITUNES_DATA_FILE"
+  fi
 elif [ $ACTION = "site" ] ; then
   DATA_DIR="$3"
   if [ -z "$DATA_DIR" ] ; then

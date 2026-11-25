@@ -14,6 +14,9 @@ public class Music implements com.bolsinga.music.data.Music {
   private static final String SONGS = "songs";
   private static final String ALBUMS = "albums";
   private static final String SHOWS = "shows";
+  private static final String ID = "id";
+  private static final String NAME = "name";
+  private static final String SORTNAME = "sortname";
 
   private String timestamp;
   private List<Venue> venues;
@@ -25,7 +28,80 @@ public class Music implements com.bolsinga.music.data.Music {
 
   public static Music create(final String sourceFile) throws com.bolsinga.web.WebException {
     JSONObject json = com.bolsinga.web.Util.createJSON(sourceFile);
-    List<String> problems = Check.problems(json);
+    Music.stopOnProblems(sourceFile, Check.problems(json));
+    return Music.create(json, sourceFile);
+  }
+
+  // Makes Music from a shows file and an iTunes export (RFC 005). iTunes albums and songs are joined
+  // to the shows file's artists by name, then read as music JSON.
+  public static Music createFromShows(final String showsFile, final String iTunesFile) throws com.bolsinga.web.WebException {
+    JSONObject json = com.bolsinga.web.Util.createJSON(showsFile);
+    Music.stopOnProblems(showsFile, Check.showsFileProblems(json));
+
+    com.bolsinga.music.data.raw.Media media = com.bolsinga.music.data.raw.Media.createMedia(iTunesFile);
+
+    Map<String, JSONObject> artistsByName = new HashMap<String, JSONObject>();
+    JSONArray artists = json.getJSONArray(ARTISTS);
+    for (int i = 0; i < artists.length(); i++) {
+      JSONObject artist = artists.getJSONObject(i);
+      artistsByName.put(artist.getString(NAME), artist);
+    }
+
+    // Every artist iTunes names, in the order it names them.
+    Set<com.bolsinga.music.data.raw.Artist> iTunesArtists = new LinkedHashSet<com.bolsinga.music.data.raw.Artist>();
+    for (com.bolsinga.music.data.raw.Album album : media.fAlbums) {
+      if (album.getPerformer() != null) {
+        iTunesArtists.add(album.getPerformer());
+      }
+    }
+    for (com.bolsinga.music.data.raw.Song song : media.fSongs) {
+      if (song.getPerformer() != null) {
+        iTunesArtists.add(song.getPerformer());
+      }
+    }
+
+    List<String> missing = new ArrayList<String>();
+    for (com.bolsinga.music.data.raw.Artist iTunesArtist : iTunesArtists) {
+      String name = iTunesArtist.getName();
+      JSONObject artist = artistsByName.get(name);
+      if (artist == null) {
+        missing.add(name);
+        continue;
+      }
+      iTunesArtist.setID(artist.getString(ID));
+      // The shows file's sort name wins; nothing is derived from the name.
+      String sortname = media.fSortnames.get(name);
+      if (sortname != null && !artist.has(SORTNAME)) {
+        artist.put(SORTNAME, sortname);
+      }
+    }
+    if (!missing.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(showsFile);
+      sb.append(" is missing ");
+      sb.append(missing.size());
+      sb.append(" iTunes artist(s); add them, then run again:");
+      for (String name : missing) {
+        sb.append("\n  ");
+        sb.append(name);
+      }
+      throw new com.bolsinga.web.WebException(sb.toString());
+    }
+
+    try {
+      json.put(SONGS, Music.createSongsJSON(media.fSongs));
+      json.put(ALBUMS, Music.createAlbumsJSON(media.fAlbums));
+    } catch (JSONException e) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Can't add iTunes to ");
+      sb.append(showsFile);
+      throw new com.bolsinga.web.WebException(sb.toString(), e);
+    }
+
+    return Music.create(json, showsFile);
+  }
+
+  private static void stopOnProblems(final String sourceFile, final List<String> problems) throws com.bolsinga.web.WebException {
     if (!problems.isEmpty()) {
       StringBuilder sb = new StringBuilder();
       sb.append(sourceFile);
@@ -38,6 +114,9 @@ public class Music implements com.bolsinga.music.data.Music {
       }
       throw new com.bolsinga.web.WebException(sb.toString());
     }
+  }
+
+  private static Music create(final JSONObject json, final String sourceFile) throws com.bolsinga.web.WebException {
     try {
       return new Music(json);
     } catch (Exception e) {
